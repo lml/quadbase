@@ -184,9 +184,11 @@ module ApplicationHelper
     object.respond_to?(:base_class) ? object.base_class : object.class
   end
   
-  def link_to_help(topic)
+  def link_to_help(topic, text="")
     @include_help_dialog = true
-    link_to image_tag('help_button_v2.png'), topic_help_path(topic), :remote => true
+    link_to (text.blank? ? image_tag('help_button_v2.png') : text), 
+            topic_help_path(topic), 
+            :remote => true
   end
   
 end
