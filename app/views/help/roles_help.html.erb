@@ -1,0 +1,44 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%=pageHeading("Roles and Role Requests")%>
+<div class="sectionHeading" id="roles"> Roles</div>
+<p>There are several roles that must be assigned to each question before a question can be published: author, copyright, project manager, and project member.The rights that come associated with each role are listed in the table below</p>
+<center>
+	<%=image_tag("roles_table.png", {:border => 0})%>
+</center>
+<div class= "sectionNoHeading" id= "author"><b>Author</b></div>
+<p>The author role belongs to the author of a certain question. Now the author need not be the person who actually just inputs the question into the Quadbase repository. However, in order to assign the role of author to the "true" author of the question, that "true" author must have a Quadbase account</p>
+<p> The author of the question holds  and can utilize all possible rights on a question. When a question is derived from another, the person listed on the account who holds the author roles receives attribution on that derived question. </p>
+<div class= "sectionNoHeading" id= "copyright_holder"><b>Copyright Holder</b></div>
+<p> A copyright holder holds the copyrights on the question. The copyright holder may or may not be the same account as the author. Like the author, the copyright holder holds and can utilize all possible rights on a question.</p>
+<div class= "sectionNoHeading" id= "proxy"><b>Proxy</b></div>
+<p> A proxy is a role that can be assigned any time and can be permanently set by an account. A proxy is given "on behalf of rights" by the assigning account, meaning that the user inherits all of the rights of the account that gave him or her the role, and preforms actions on behalf of the assigning account, as if that account were making changes and not the project manager.</p>
+<p> When attributions for changes that the proxy made are necessary, those attributions would go to the account that gave the proxy his or her role. This implies that the role of proxy cannot be passed on. For example, if account1 holds authoring and copyrights and he assigns account2 the role of proxy, and then account2 assigned account3 the role of project manager, account3 would not have "on behalf rights" for account1, just for account2.</p>
+<div class="sectionNoHeading" id="workspace_member"><b>Project Member</b></div>
+<p>A project member is someone who contributes to a question, but does not have any roles on that question, so receives no attribution of any kind for any contribution the project member makes. The project member can however derive a copy of the question he or she is contributing to, and thereby become the author and copyright holder of said question and assuming all rights on that question</p>
+<div class ="sectionHeading" id="role requests">Role Requests</div>
+<p>Once your question is published, you can find that question in your default project. The question can be moved from this project to any project of your choosing.</p>
+<center>
+	<%=image_tag("workspace_selection.png", {:border => 1})%>
+</center>
+<p> You can add members to this project by clicking the add members button toward the bottom of the page, from here you can search for the members that you want to add to your project</p>
+<center>
+	<%=image_tag("add_a_member.png", {:border => 1})%>
+</center>
+<p>Once you have added someone to your project, that user will assume the role of project member for any question that is added to the project. To manage the roles on any question in a project, click on the question whose roles you want to manage, and click on the edit roles link on the left side of the screen</p>
+<center>
+	<%=image_tag("edit_roles_link.png",{:border => 1})%>
+</center>
+<p> Clicking on the link will bring you to a screen much like this one below.</p>
+<center>
+	<%=image_tag("add_collaborator.png", {:border => 1})%>
+</center>
+<p> By clicking on the find collaborators button, you can search for any account on Quadbase to give a role. Once you have added an account, you can give them a request they accept a role by clicking the toggle link under the yes/no under each role</p>
+<center>
+	<%=image_tag("assigning_roles.png", {:border => 1})%>
+</center>
+<p> The request to change roles will come via message. The user who is having his or her roles altered has to approve the change by clicking accept/reject in the notification message. Refer to the image below for an illustrative explanation<p>
+<center>
+	<%=image_tag("message_roles.png", {:border => 1})%>
+</center>
+<p> If the user accepts the role request, he or she becomes the author or copyright holder or whatever role was assigned to them. If the user rejects the role request, the roles remain unchanged and as they were before the role change request was made.</p>

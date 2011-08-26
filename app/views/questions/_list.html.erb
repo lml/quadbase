@@ -1,0 +1,71 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%# Example usage for this partial: 
+
+        render :partial => 'questions/list', 
+               :locals => {:entries => @project.project_questions,
+                           :row_id_base => "project_question_",
+                           :method_for_question => "question",
+                           :checkbox_options => {:method_for_value => "id",
+                                                 :name_base => "project_question_ids"}
+                          }
+
+    :method_for_question gives the method that can be called on elements of 
+      :entries to return a question.  If not specified, it is assumed that 
+      the elements of :entries are themselves questions.
+      
+    :checkbox_options gives directions for how to implement checkboxes along
+      to the left of each question row.  If specified, both of its child 
+      values must be provided.  
+          :method_for_value gives the method name to call on each entry to 
+            retrieve the checkbox value.  
+          :name_base gives the base for the name of each checkbox element.
+          :row_id_base gives the base of the ID used for each row in the table
+            the id for the row will be this value with the checkbox value 
+            concatenated on the end (defaults to "list_row_")
+%>
+
+
+<%# Option initialization %>
+
+<% entries ||= [] %>
+<% row_id_base ||= "question_" %>
+<% show_checkboxes = !local_assigns[:checkbox_options].nil? %>
+<% method_for_question ||= nil %>
+<% if show_checkboxes %>
+  <% checkbox_options[:name_base] ||= "question_ids" %>
+  <% checkbox_options[:method_for_value] ||= 'id' %>
+<% end %>
+
+<% num_cols = 4 %>
+
+<table class="list" width="100%">
+   <tr>
+      <% if show_checkboxes %>
+        <% num_cols += 1 %>
+        <th style='padding-right:25px'></th>
+      <% end %>
+      <th width="15%"># , Version</th>
+      <th width="10%" style="text-align:center">Type</th>
+      <th width="15%" style="text-align:center">Modified Date</th>
+      <th width="60%">Quick Look</th>
+   </tr>
+   <tr id="none_row" <% if !entries.empty? %>style="display:none"<% end %>>
+      <td colspan="<%= num_cols %>" style="text-align:center">[ No questions ]</td>
+   </tr>
+   
+     <% entries.each do |entry| %>
+       <% question = method_for_question.nil? ? entry : entry.method(method_for_question).call() %>
+     
+     <tr id="<%= row_id_base + question.id.to_s %>"%>
+       <% if show_checkboxes %>
+         <% checkbox_value = entry.method(checkbox_options[:method_for_value]).call() %>
+         <td><%= check_box_tag("#{checkbox_options[:name_base]}[]", checkbox_value) %></td>
+       <% end %>
+           <td><%= question_id_link(question) %></td>
+           <td style="text-align:center"><%= question_type_abbreviation(question) %></td>
+           <td style="text-align:center"><%= question.modified_at.strftime('%b %d %Y') %></td>
+           <td><%= trim(question.content_summary_string || "",80) %></td>
+         </tr>
+     <% end %>
+  </table>

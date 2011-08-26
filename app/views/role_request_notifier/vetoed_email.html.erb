@@ -1,0 +1,16 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<html>
+<head></head>
+<body>
+<p>Greetings Quadbase users,</p>
+
+<p>The request to add <%= @requestee.full_name %> as <%= @role_request.toggle_is_author ? "an author" : "a copyright holder"%> on a <%= link_to "draft of question #{@question.number}", question_url(@question) %> has been <b>vetoed</b> by the question's current role holders.</p>
+
+<p>Regards,</p>
+
+<%= render 'shared/email_signature' %>
+<%= render 'shared/email_footer' %>
+       
+</body>
+</html>

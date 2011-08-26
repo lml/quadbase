@@ -1,0 +1,19 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% if user_signed_in? %>
+Welcome, <%= current_user.first_name %><br/><br/>
+                  <%= link_to "Sign out", destroy_user_session_path %>
+<% else %>
+<%= form_for("user", :url => user_session_path) do |f| %>
+  <p><%= f.label :username %><br />
+  <%= f.text_field :username %></p>
+
+  <p><%= f.label :password %><br />
+  <%= f.password_field :password %></p>
+
+    <p><%= f.check_box :remember_me %> <%= f.label :remember_me %></p>
+
+  <p><%= f.submit "Sign in", :class => "#{submit_classes}" %></p>
+<% end %>
+
+<% end %>

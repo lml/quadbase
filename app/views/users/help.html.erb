@@ -1,0 +1,24 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("Account Help") %>
+
+<p>Having trouble with your account?  Follow one of the links below for assistance.<p>
+
+<ul>
+  <li><%= link_to "Sign in", new_user_session_path %></li>
+  <li><%= link_to "Sign up", new_user_registration_path %></li>
+  <li><%= link_to "Forgot your password?", new_user_password_path %></li>
+  <li><%= link_to "Didn't receive confirmation instructions?", new_user_confirmation_path %></li>
+  <%- if User.unlock_strategy_enabled?(:email)  %>
+  <li><%= link_to "Didn't receive unlock instructions?", new_user_unlock_path %></li>
+  <% end -%>
+
+<% if false %>
+
+  <%- User.omniauth_providers.each do |provider| %>
+    <li><%= link_to "Sign in with #{provider.to_s.titleize}", 
+                omniauth_authorize_path(resource_name, provider) %></li>
+  <% end -%>
+
+<% end %>
+</ul>

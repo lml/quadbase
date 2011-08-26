@@ -1,0 +1,67 @@
+/* Copyright (c) 2011 Rice University.  All rights reserved. */
+
+div.quad-question {
+	width: 400px;
+	font-family: sans-serif;
+	font-size: 18px;
+	font-weight: normal;
+	font-color: #000;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div.quad-question p {
+   margin-top: 0px;
+}
+
+div.quad-question_setup {
+	margin-bottom: 10px;
+}
+
+div.quad-question_content {
+	margin-bottom: 10px;
+}
+
+div.quad-answer_choices {
+
+}
+
+.quad-answer_choice p {
+	margin-bottom: 5px;
+	margin-top: 5px;
+}
+
+.quad-answer_choice_index {
+	font-weight: bold;
+	padding-right: 5px;
+}
+
+.quad-quid {
+	font-size: 14px;
+	color: #666;
+	font-style: italic;
+	padding-bottom: 15px;
+}
+
+.quad-attribution {
+	font-size: 10px;
+	color: #666;
+}
+
+.quad-attribution a:link {
+	color: #666;
+	text-decoration: underline;
+}
+
+.quad-attribution a:visited {
+	color: #666;
+	text-decoration: none;
+}
+
+.quad-attribution a:hover {
+	color: #B22222;
+}
+
+.quad-attribution a:active {
+	color: #000;
+}

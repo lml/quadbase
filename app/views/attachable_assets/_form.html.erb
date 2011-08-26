@@ -1,0 +1,104 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% # Clients of this partial must supply the following variable:
+   # attachable
+%>
+<% @include_uploadify = true %>
+
+<div id="file_div" title="Add a file">
+
+  <%= form_for(AttachableAsset.new(:asset => Asset.new), 
+              :id => "upload_file_form", 
+              :html => { :multipart => true }, 
+              :remote => true) do |f| %>
+
+    Upload a new file
+    
+    <div id="file_submit">
+      <button class="ui-state-default ui-corner-all" 
+              style="float:right; font-size:12px" 
+              id="uploadify_file_submit">Upload</button>
+      <button class="ui-state-default ui-corner-all" 
+              style="float:right; font-size:12px; display:none" 
+              id="uploadify_file_cancel">Cancel</button>
+    </div>
+
+      <%= f.fields_for :asset do |asset_form| %>
+         <div id="file_uploader">
+           <%= asset_form.file_field :attachment, :id => 'asset_file' %>
+         </div>
+      <% end %>                
+
+    <% end %>
+  
+</div>
+
+<%= content_for :javascript do %>
+  <%= javascript_tag do %>
+
+  <% 
+  file_description = 'Attachments'
+  allowed_extensions = [:jpg, :jpeg, :gif, :png, :pdf] 
+  max_size = 10.megabyte
+  allow_multiple_files = false
+  url = attachable_assets_path
+  file_field = '#asset_file'
+  %>
+  <%- session_key_name = Rails.application.config.session_options[:key] -%> 
+  
+  $(document).ready(function() {
+
+    var allowed_ext = '<%= allowed_extensions.collect { |ext| "*.#{ext}" }.join(';') %>';
+
+    $('<%= file_field %>').uploadify({
+      uploader      : '/javascripts/jquery.uploadify/uploadify.swf',
+      script        : '<%= url %>',
+      fileDataName  : $('#file_uploader input:file')[0].name, // Extract file name from form field
+      cancelImg     : '/javascripts/jquery.uploadify/cancel.png',
+      buttonText    : 'Browse',
+      buttonImg     : '/javascripts/jquery.uploadify/browse_button.png',    
+      fileDesc      : '<%= file_description %> (' + allowed_ext + ')',
+      fileExt       : allowed_ext,
+      sizeLimit     : <%= max_size %>,    
+      multi         : <%= allow_multiple_files %>,
+      onComplete    : function(event, queueID, fileObj, response, data) {  
+        eval(response);
+      },
+      onAllComplete : function(event, data){
+        $('#uploadify_file_cancel').hide('blind');
+        $('#uploadify_file_submit').show('blind');      
+      },
+      onSelect: function(event, queueID, fileObj){
+        if (fileObj.size > <%= max_size %>) {
+          alert('The file' + fileObj.name + ' is too large.')
+          return false;
+        }
+      },  
+      scriptData  : {
+        '<%= session_key_name %>' : encodeURIComponent('<%= u cookies[session_key_name] %>'),
+        'authenticity_token' : encodeURIComponent('<%= u form_authenticity_token %>'),
+        'attachable_asset[attachable_id]' : encodeURIComponent('<%= attachable.id %>'),
+        'attachable_asset[attachable_type]' : encodeURIComponent('<%= attachable.class.to_s %>')
+      },
+      onError : function (event, ID, fileObj, errorObj) {}
+    });
+
+    $('#uploadify_file_submit').click(function(event){
+      event.preventDefault();
+      $('<%= file_field %>').uploadifyUpload();
+      $('#uploadify_file_submit').hide();
+      $('#uploadify_file_cancel').show();
+    });
+
+    $('#uploadify_file_cancel').click(function(event){
+      event.preventDefault();
+      $('<%= file_field %>').uploadifyClearQueue();
+      $('#uploadify_file_cancel').hide();
+      $('#uploadify_file_submit').show();
+    });
+
+
+  });
+
+  <% end %>
+<% end %>

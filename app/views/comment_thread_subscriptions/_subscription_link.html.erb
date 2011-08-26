@@ -1,0 +1,15 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% # Clients of this partial must supply the following variable:
+   # commentable
+   # Additionally, they can override the following variable:
+   subscription ||= false
+%>
+<% sub_string = subscription ? "Unsubscribe" : "Subscribe" %>
+<% show_confirm = (subscription && commentable.comment_thread.commentable_type == 'Message') %>
+<%= link_to sub_string,
+            polymorphic_path([sub_string.downcase, commentable, :comments]),
+            :confirm => (show_confirm ? "Are you sure?\n" +
+                                        "Once you unsubscribe from this message, " +
+                                        "you will not be able to see it anymore." : nil),
+            :remote => true %>

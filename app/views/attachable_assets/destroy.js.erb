@@ -1,0 +1,7 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= display_flash(false) %>
+
+$("#<%= "attachable_asset_#{@attachable_asset.id.to_s}" %>").remove();
+
+<%= show_none if @attachable_asset.attachable.attachable_assets.blank? %>

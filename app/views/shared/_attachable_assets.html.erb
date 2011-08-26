@@ -1,0 +1,24 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% # Clients of this partial must supply the following variable:
+   #
+   # attachable
+   #
+   # Additionally, they can override the following variable:
+   #
+   show_images ||= false
+%>
+<% attachable_assets = show_images ? attachable.attachable_assets :
+                        AttachableAsset.no_images(attachable.attachable_assets) %>
+<table id="<%= "#{attachable.class.to_s.tableize.singularize}_#{attachable.id.to_s}_assets" %>">
+  <tr>
+    <td>Attachments:</td>
+  </tr>
+  <tr id="none_row" <% if !attachable_assets.empty? %>style="display:none"<% end %>>
+    <td>[No Attachments]</td>
+  </tr>
+<% attachable_assets.each do |aa| %>
+  <%= render :partial => "attachable_assets/single_asset",
+             :locals => {:attachable_asset => aa} %>
+<% end %>
+</table>

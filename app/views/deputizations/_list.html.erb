@@ -1,0 +1,8 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% deputizations = current_user.owned_deputizations %>
+<% deputy_user_infos = deputizations.map{|d| [d.deputy, deputization_path(d)]} %>
+
+<%= render :partial => 'shared/name_only_user_list',
+           :locals => { :user_infos => deputy_user_infos, 
+                        :confirm_question_end => " as a deputy?"}%>

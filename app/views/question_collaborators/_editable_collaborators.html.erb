@@ -1,0 +1,66 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%
+   left_margin = "auto" if local_assigns[:left_margin].nil?
+   right_margin = "auto" if local_assigns[:right_margin].nil?
+   width = "100%" if local_assigns[:width].nil?
+%>
+
+<% can_create_role_requests = question.role_requests_can_be_created_by?(present_user) %>
+
+<table class="list" 
+       width="<%= width %>" 
+       style="margin-left: <%= left_margin %>; margin-right:<%= right_margin %>;">
+
+   <tr>
+      <th style="padding-right: 20px"></th>
+      <th width="65%">Collaborator</th>
+      <th width="15%" style="text-align:center">Author?</th>
+      <th width="15%" style="text-align:center">Copyright<br/>Holder?</th>
+      <th width="5%"></th>
+   </tr>
+   <tr id="none_row" <% if !collaborators.empty? %>style="display:none"<% end %>>
+      <td colspan="6">None</td>
+   </tr>
+   <tbody id="collaborator_list_tbody">
+   <% collaborators.each do |collaborator| %>
+      <%= render :partial => 'editable_single_collaborator', 
+                 :locals => {:collaborator => collaborator,
+                             :can_create_role_requests => can_create_role_requests} %>
+   <% end %>
+   </tbody>
+</table>
+
+<%# The following JS manages the sorting of the role table %>
+<%# See http://www.foliotek.com/devblog/make-table-rows-sortable-using-jquery-ui-sortable/ %>   
+<%# plus adding in normal jquery sorting options %>     
+<% content_for :javascript do %>
+   <%= javascript_tag do %>
+      function makeSortable() {
+             var fixHelper = function(e, ui) {
+             ui.children().each(function() {
+                 $(this).width($(this).width());
+             });
+             return ui;
+         };
+ 
+         $("#collaborator_list_tbody").sortable({
+            dropOnEmpty: false,
+            handle: '.handle',
+            items: 'tr',
+            opacity: 0.7,
+            scroll: true,
+            update: function(){
+               $.ajax({
+                  type: 'post',
+                  data: $('#collaborator_list_tbody').sortable('serialize'),
+                  dataType: 'script',
+                  url: '<%= sort_question_question_collaborators_path(question) %>'
+               });
+            },
+            helper: fixHelper
+         }).disableSelection();                     
+      }
+      $(document).ready(makeSortable());
+   <% end %>
+<% end %>

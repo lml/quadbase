@@ -1,0 +1,130 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% @selected_tab = :account %>
+<% @include_jquery = true %>
+
+<style type="text/css">
+  div.regForm {
+    padding: 0 15px;
+  }
+  div.fieldset {
+    padding: 10px;
+    width: 440px;
+  }
+</style>
+
+<%= pageHeading("Edit Account") %>
+<div style="width:100%"></div>
+
+<div class="fieldset" style="float:left;">
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
+  <%= devise_error_messages! %>
+
+  <fieldset>
+    <div class="subSectionHeading">Personal Information</div>
+    
+    <div class="regForm">
+      <p>First Name<br/>
+      <%= f.text_field :first_name %></p>
+
+      <p>Last Name<br/>
+      <%= f.text_field :last_name %></p>
+
+      <p>Email<br />
+      <%= f.email_field :email %></p>
+    </div>
+
+    <div class="subSectionHeading">Change Your Password</div>
+
+    <span style="font-size:12px; color:#555"><i>
+      (Leave these fields blank if you don't want to change your password)
+    </i></span>
+    
+    <div class="regForm">
+      <p>New Password<br />
+      <%= f.password_field :password %></p>
+
+      <p>New Password Confirmation<br />
+      <%= f.password_field :password_confirmation %></p>
+    </div>
+
+    <div class="subSectionHeading">Email Settings</div>
+    
+    <div class="regForm">
+      <%= f.fields_for :user_profile do |profile| %>
+       <table>
+         <tr>
+           <td>Receive administrative announcements?</td>
+           <td><%= profile.check_box :announcement_email %></td>
+         </tr>
+         <tr>
+           <td>Receive notifications of your project membership changes?</td>
+           <td><%= profile.check_box :project_member_email %></td>
+         </tr>
+         <tr>
+           <td>Receive notifications of role change requests?</td>
+           <td><%= profile.check_box :role_request_email %></td>
+         </tr>
+       </table>
+      <% end %>
+    </div>
+
+    <br/>
+    <div class="subSectionHeading">Confirm and Save</div>
+    
+    <div class="regForm">
+      <p>Current Password (to confirm you are you)<br/>
+      <%= f.password_field :current_password %></p>
+
+      <p><%= f.submit "Save", :class => "#{submit_classes}" %></p>
+    </div>
+    </fieldset>
+<% end %>
+</div>
+
+<div class="fieldset" style="float:right">
+  <fieldset>
+    <div class="subSectionHeading">My Deputies</div>
+    
+    <p>A deputy is another user whom you have given the right to take actions in 
+    Quadbase on your behalf.</p>
+    
+    <div class="regForm">    
+      <span id="deputy_list">
+        <%= render :partial => 'deputizations/list' %>
+      </span>
+    </div>
+
+    <br/>
+    <%= link_to "Add deputies...", new_deputization_path, :remote => true %>      
+  
+  </fieldset>
+  
+  <fieldset style="margin-top:20px">
+    <div class="subSectionHeading">Profile Picture</div>
+    
+    <p>Quadbase.org uses <%= link_to "Gravatar", "http://www.gravatar.com" %> for profile
+    pictures.  Please sign up on their site using your Quadbase.org email address and 
+    upload a picture.</p>
+    
+    <p>Your current profile picture is:</p>
+    
+    <center><%= gravatar_image current_user %></center>
+  </fieldset>
+</div>
+
+      
+
+<br clear="all"/><br/>
+<center>
+<%= form_tag(registration_path(resource_name),
+             :method => :delete,
+             :id => 'cancel_account_form') do %>
+  <p>Unhappy?
+  <%= submit_tag "Click here to disable your account.",
+        :onclick => 'return confirm("Are you sure you wish to disable your account?' + 
+                    '\nYou will not be able to use this system or receive emails from it' +
+                    ' until you contact the administration!")',
+        :class => "button_link big" %>
+            <% end %></p>
+</center>

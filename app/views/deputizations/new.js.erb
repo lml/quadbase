@@ -1,0 +1,13 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+if ($('#user_action_dialog').exists()) { $('#user_action_dialog').remove(); }
+
+$("body").append("<%= escape_javascript(render :partial => 'users/action_dialog') %>");
+  
+$("#user_action_dialog").dialog({ 
+ modal: true, 
+ height:600, 
+ width:600, 
+ buttons: { "Close": function() { $(this).dialog("close"); }},  
+            open: function(event, ui) { $("#text_query").val(''); $("#selected_type").val(''); }
+});

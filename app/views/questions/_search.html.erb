@@ -1,0 +1,58 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%
+  @selected_type ||= 'All Questions'
+  @selected_where ||= 'All Places'
+  @text_query ||= ''
+  use_checkboxes_in_results ||= false
+  question_form_action ||= nil
+  form_button_text ||= ""
+%>
+
+<%= form_tag(questions_search_path, 
+             :method => "post",
+             :id => 'find_question_form',
+             :remote => true) do %>
+             
+  <%= hidden_field_tag :use_checkboxes, use_checkboxes_in_results %>
+  
+  <table width="100%" align="center">
+    <tr>
+      <td><%= label_tag 'Search For:' %></td>
+      <td>
+        <%= select_tag 'selected_type', 
+                       options_for_select(['All Questions', 
+                                           'Simple Questions', 
+                                           'Matching Questions', 
+                                           'Multipart Questions'], 
+                                           @selected_type) %>
+      </td>
+      <td><%= label_tag 'in:' %></td>
+      <td>
+        <% locations = ['All Places', 'Published Questions'] 
+           locations.push('My Drafts', 'My Projects') if user_signed_in? %>
+        <%= select_tag 'selected_where', options_for_select(locations, @selected_where) %>
+      </td>
+      <td><%= label_tag 'containing:' %></td>
+      <td><%= text_field_tag 'text_query', @text_query %></td>
+      <td><%= submit_tag 'Search', :class => "#{submit_classes}" %></td>
+    </tr>
+  </table>
+<% end %>
+
+<% if question_form_action %>
+<%= form_tag question_form_action, :remote => true do %>
+<div id="question_list">
+  <%= render :partial => 'questions/list', 
+             :locals => { :entries => @questions,
+                          :checkbox_options => use_checkboxes_in_results ? {} : nil } %>
+</div>
+<%= submit_tag form_button_text, :class => "#{submit_classes}" %>
+<% end %>
+<% else %>
+<div id="question_list">
+  <%= render :partial => 'questions/list', 
+             :locals => { :entries => @questions,
+                          :checkbox_options => use_checkboxes_in_results ? {} : nil } %>
+</div>
+<% end %>

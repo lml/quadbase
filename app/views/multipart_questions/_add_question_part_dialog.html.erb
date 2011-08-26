@@ -1,0 +1,32 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<div id="question_part_dialog" style="display:none;" title="Add a new question part">
+
+  <div id="dialog_message_bar"></div>
+  
+  <%= render :partial => 'questions/search',
+             :locals => { :use_checkboxes_in_results => true,
+                          :question_form_action => multipart_question_add_existing_parts_path(question),
+                          :form_button_text => "Add Selected Questions" } %>
+  
+  <br/>
+
+</div>
+
+<%= content_for :javascript do %>
+  <%= javascript_tag do %>
+  
+  var html_id_to_append_to;
+  
+  function open_add_question_part_dialog()  {
+    $( "#question_part_dialog" ).dialog({
+      	resizable: true,
+      	height:400,
+      	width:950,
+      	modal: true
+      });
+  }
+  
+  <% end %>
+<% end %>
+

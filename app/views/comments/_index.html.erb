@@ -1,0 +1,43 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% # Clients of this partial must supply the following variable:
+   # commentable
+   # Additionally, they can override the following variables:
+   comment_thread ||= commentable.comment_thread
+   comments ||= comment_thread.comments
+   subscription ||= comment_thread.subscription_for(current_user)
+   hide_header ||= false
+   comment_name ||= 'Comment'
+   hide_link ||= false
+   hide_votes ||= false
+%>
+<% unless hide_header %>
+<span class="sectionHeadingNoUnder"><%= comment_name.pluralize %></span>
+<% end %>
+
+<span id="subscription_link_span" style="float:right">
+    <%= render :partial => 'comment_thread_subscriptions/subscription_link',
+               :locals => {:commentable => commentable,
+                           :subscription => subscription} %>
+</span>
+
+<div>
+  <div id="comment_list">
+    <% comments.each do |comment| %>
+      <%= render :partial => 'comments/single_comment',
+                 :locals => {:comment => comment,
+                             :show_link => !hide_link,
+                             :hide_votes => hide_votes} %>
+      <% #even = !even %>
+    <% end %>
+  </div>
+  <div id="new_comment_div" style="display:none"></div>
+  <p>
+  <div>
+    <span id="new_comment_link_span" style="float:left">
+      <%= render :partial => 'comments/new_comment_link',
+                 :locals => {:commentable => commentable,
+                             :comment_name => comment_name} %>
+    </span>
+  </div>
+</div>

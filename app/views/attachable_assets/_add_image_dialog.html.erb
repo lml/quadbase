@@ -1,0 +1,168 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% # Clients of this partial must supply the following variable:
+   #    attachable
+   #
+   # Clients may provide the following variables (otherwise they have defaults):
+   #    dialog_div_id
+   #    include_open_insert_close_js ||= true
+%>
+<% 
+  @include_uploadify = true 
+  dialog_div_id ||= "image_dialog"
+  include_open_insert_close_js ||= true
+%>
+
+<%
+  image_field_id = dialog_div_id + '_asset_image'
+  upload_button_id = dialog_div_id + '_upload_button'
+  cancel_button_id = dialog_div_id + '_cancel_button'
+  image_uploader_id = dialog_div_id + '_image_uploader'
+%>
+
+<div id="<%= dialog_div_id %>" style="display:none;" title="Add an image">
+
+  <% if attachable.id.nil? %>
+
+  <p>Images cannot be added to this resource until it has been saved.</p>
+  <p>Please close this window and then save the resource before trying to add images again.</p>
+
+  <% else %>
+
+    <div id="dialog_message_bar"></div>
+
+    <%= form_for(AttachableAsset.new(:asset => Asset.new), 
+                :id => "upload_image_form", 
+                :html => { :multipart => true }, 
+                :remote => true) do |f| %>
+
+    Upload a new image
+    
+    <fieldset class="standard">
+    
+      <div id="image_submit">
+        <button class="<%= submit_classes %>" 
+                style="float:right; font-size:12px; display:none" 
+                id="<%= upload_button_id %>">Upload</button>
+        <button class="<%= submit_classes %>" 
+                style="float:right; font-size:12px; display:none" 
+                id="<%= cancel_button_id %>">Cancel</button>
+      </div>
+
+      <%= f.fields_for :asset do |asset_form| %>
+         <div id="<%= image_uploader_id %>">
+           <%= asset_form.file_field :attachment, :id => image_field_id %>
+         </div>
+      <% end %>
+    
+    </fieldset>                   
+
+    <% end %>
+ 
+    Double-click an image below to add it
+  
+    <fieldset class="standard">
+
+    <div id="<%= dialog_div_id %>_image_selection_window">
+      <% attachable.attachable_assets.each do |aa| %>
+        <%= render :partial => 'attachable_assets/selectable_image', 
+                   :locals => {:attachable_asset => aa} %>
+      <% end %>
+    </div>
+  
+    </fieldset>
+    
+  <% end %>
+  
+</div>
+
+<% if include_open_insert_close_js %>
+  <%= render :partial => 'attachable_assets/image_dialog_open_insert_close' %>
+<% end %>
+
+<% if !attachable.id.nil? %>
+
+<%= javascript_tag "window._token = '#{form_authenticity_token}'" %>
+
+<%= content_for :javascript do %>
+  <%= javascript_tag do %>
+
+  <% 
+  dialog_file_description = 'Images'
+  allowed_extensions = [:jpg, :jpeg, :gif, :png] 
+  max_size = 0.5.megabyte
+  allow_multiple_files = false
+  url = attachable_assets_path
+  
+  %>
+  <%- session_key_name = Rails.application.config.session_options[:key] -%> 
+  
+  $(document).ready(function() {
+
+    var allowed_ext = '<%= allowed_extensions.collect { |ext| "*.#{ext}" }.join(';') %>';
+
+    $('#<%= image_field_id %>').uploadify({
+      uploader      : '/javascripts/jquery.uploadify/uploadify.swf',
+      script        : '<%= url %>',
+      fileDataName  : $('#<%= image_uploader_id %> input:file')[0].name, // Extract file name from form field
+      cancelImg     : '/javascripts/jquery.uploadify/cancel.png',
+      buttonText    : 'Browse',
+      buttonImg     : '/javascripts/jquery.uploadify/browse_button.png',    
+      fileDesc      : '<%= dialog_file_description %> (' + allowed_ext + ')',
+      fileExt       : allowed_ext,
+      sizeLimit     : <%= max_size %>,    
+      multi         : <%= allow_multiple_files %>,
+      onComplete    : function(event, queueID, fileObj, response, data) {
+        <%# Uploadify is limited in what it can do with the response. To run 
+            the needed js.erb file, we make the following get JS request; that
+            controller method will then send back js.erb that will be run. %>
+        $.ajax({
+          url: '/attachable_assets/' + response + '/finish_create',
+          dataType: 'script'
+        });
+        return true;
+      },
+      onAllComplete : function(event, data){
+        $('#<%= cancel_button_id %>').hide('blind');
+        $('#<%= upload_button_id %>').hide();      
+      },
+      onSelect: function(event, queueID, fileObj){
+        if (fileObj.size > <%= max_size %>) {
+          alert('The image' + fileObj.name + ' is too large.')
+          return false;
+        }
+        $('#<%= upload_button_id %>').show();
+      },  
+      onOpen: function(event, queueID, fileObj){
+        $('#<%= cancel_button_id %>').show('blind');
+      },
+      scriptData  : {
+        '<%= session_key_name %>' : encodeURIComponent('<%= u cookies[session_key_name] %>'),
+        'authenticity_token'  : encodeURIComponent('<%= u form_authenticity_token %>'),
+        'attachable_asset[attachable_id]' : encodeURIComponent('<%= attachable.id %>'),
+        'attachable_asset[attachable_type]' : encodeURIComponent('<%= base_class(attachable).to_s %>')
+      },
+      onError : function (event, ID, fileObj, errorObj) {}
+    });
+
+    $('#<%= upload_button_id %>').click(function(event){
+      event.preventDefault();
+      $('#<%= image_field_id %>').uploadifyUpload();
+      $('#<%= upload_button_id %>').hide();
+      $('#<%= cancel_button_id %>').show();
+    });
+
+    $('#<%= cancel_button_id %>').click(function(event){
+      event.preventDefault();
+      $('#<%= image_field_id %>').uploadifyClearQueue();
+      $('#<%= cancel_button_id %>').hide();
+      $('#<%= upload_button_id %>').show();
+    });
+
+
+  });
+
+  <% end %>
+<% end %> 
+
+<% end %>

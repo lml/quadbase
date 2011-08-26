@@ -1,0 +1,43 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= content_for :javascript do %>
+  <%= javascript_tag do %>
+  
+  var target;
+  var div_id;
+  
+  function open_add_image_dialog(markitup)  {
+    target = markitup;
+
+    div_id = $(target.textarea).attr('data-attachable_type');
+    if (div_id == undefined) { 
+      div_id = "";
+    }
+    else {
+      div_id = "_" + div_id;
+    }
+    
+    div_id = "image_dialog" + div_id;
+    
+    $(".active_selection_window").removeClass("active_selection_window");
+    
+    $("#" + div_id + "_image_selection_window").addClass("active_selection_window");
+    
+    $( "#"+div_id ).dialog({
+      	resizable: true,
+      	height:300,
+      	width:550,
+      	modal: true
+      });
+  }
+  
+  $(document).ready(function() {
+    $('.image_thumb').live("dblclick", function(evt, data, status, xhr){
+       var image_tag = "{img:" + $(this).attr("data-local_name") + "}";
+       $(target.textarea).trigger('insertion', [{replaceWith: image_tag}]);
+       $("#"+div_id).dialog('close');
+    });
+  })
+  
+  <% end %>
+<% end %>

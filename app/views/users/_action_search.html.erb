@@ -1,0 +1,32 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%
+   # Clients of this partial must supply the following variables:
+   #   action_search_path
+   # Additionally, the client can override any of the following:
+  
+  @selected_type ||= 'Any'
+  @text_query ||= ''
+  
+%>
+
+<%= form_tag(action_search_path, 
+             :method => "post",
+             :id => 'action_search_form',
+             :remote => true) do %>
+
+  <table width="550px" align="center">
+    <tr>
+      <td><%= label_tag 'Search For:' %></td>
+      <td><%= text_field_tag 'text_query', @text_query %></td>
+      <td><%= label_tag 'in:' %></td>
+      <td>
+        <%= select_tag 'selected_type', 
+            options_for_select(['Any', 'Name', 'Username', 'Email'], @selected_type) %>
+      </td>
+      <td>
+        <%= submit_tag 'Search', :class => "#{submit_classes}" %>
+      </td>
+    </tr>
+  </table>
+<% end %>

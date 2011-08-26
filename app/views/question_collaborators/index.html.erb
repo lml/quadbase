@@ -1,0 +1,14 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% @show_source_link = true %>
+<% @show_embed_link = true %>
+<% @show_edit_question_link = true %>
+<% @show_question_link = true %>
+
+<%= pageHeading("Question Collaborators") %>
+
+<%= render :partial => 'editable_collaborators', 
+           :locals => {:collaborators => @question_collaborators,
+                       :question => @question }%>
+
+<%= render :partial => 'shared/add_user_form', :locals => {:add_path => @add_path, :container_type => 'question', :container_id => @question.id, :form_label => 'Add a collaborator', :search_label => 'Find collaborators', :add_label => 'Add collaborator', :cannot_add_label => 'Already collaborating'} %>

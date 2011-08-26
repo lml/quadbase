@@ -1,0 +1,18 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<div id="pageHeading">Forgot your password?</div>
+
+<%= form_for(resource, 
+             :as => resource_name, 
+             :url => password_path(resource_name), 
+             :html => { :method => :post }) do |f| %>
+  <%= devise_error_messages! %>
+
+  <p><%= f.label :email %><br />
+  <%= f.email_field :email %></p>
+
+  <p><%= f.submit "Send me reset password instructions", :class => "#{submit_classes}" %></p>
+<% end %>
+
+<br/>
+<p>Need other help with your account?  <%= link_to "Click here", account_help_path %>.</p>

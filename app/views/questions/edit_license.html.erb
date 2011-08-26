@@ -1,0 +1,33 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% @errors = @question.errors %>
+
+<% @show_question_link = true %>
+<% @show_edit_question_link = true %>
+
+<%= pageHeading("Select a License") %>
+
+<%# We also have to make sure to use the Questions controller no matter what
+    the question_type is, hence the :url directive %>
+       
+<%= form_for @question, 
+             :as => :question, 
+             :url => question_license_path(@question) do |f| %>
+
+   <p>Choose the license for this question.  Don't know which one to pick?  Check out the <%= link_to "description of the available licenses", help_path %>.</p>
+
+   <p></p>
+   <%= f.select(:license_id,  options_from_collection_for_select(License.all, 
+                                                                'id', 
+                                                                'short_name',  
+                                                                @question.license_id)) %>
+
+   <br/><br/><br/>
+   <div class="actions">
+     <center>
+      <%= f.submit "Save", :class => "#{submit_classes}" %>
+     </center>
+   </div>
+<% end %>
+
+

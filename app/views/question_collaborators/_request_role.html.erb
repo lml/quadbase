@@ -1,0 +1,8 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= button_to 'Toggle', question_role_requests_path(
+    :question_role_request => {:question_collaborator_id => question_collaborator_id, 
+                               :toggle_is_author => role == :author,
+                               :toggle_is_copyright_holder => role == :copyright}),
+    :class => "button_link small", :remote => true,
+    :onclick => please_wait_js %>

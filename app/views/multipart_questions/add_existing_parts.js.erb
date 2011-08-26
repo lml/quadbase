@@ -1,0 +1,20 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= display_flash %>
+
+$('#question_part_dialog').dialog("close");
+
+<% if @multipart_question.errors.blank? %>
+
+<%= update_multipart_nav(@multipart_question, @multipart_question) %>
+
+$("#question_part_rows").html(
+   "<%= escape_javascript(render(:partial => 'multipart_questions/question_part_rows', 
+                                 :locals => {:question => @multipart_question})) %>");
+                                 
+// Change the intro field and its form ID
+// TODO soon, change the field to disable it if the setup is no longer editable
+
+$("#intro_field").val("<%= @multipart_question.question_setup.content %>");
+$("#question_question_setup_attributes_id").val("<%= @multipart_question.question_setup.id %>");
+<% end %>

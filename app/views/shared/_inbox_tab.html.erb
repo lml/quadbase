@@ -1,0 +1,10 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%# INBOX COUNTS ARE CURRENTLY INACCURATE AND HAVE BEEN DEACTIVATED %>
+<%# inbox_count = current_user.inbox_count %>
+<%# if inbox_count > 0 %>
+  <%#= link_to "<strong>Inbox (".html_safe +
+     inbox_count.to_s + ")</strong>".html_safe, inbox_path, :id => "inbox_tab" %>
+<%# else %>
+  <%= link_to "Inbox", inbox_path, :id => "inbox_tab" %>
+<%# end %>

@@ -1,0 +1,17 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("Listing your subscriptions") %>
+
+<table>
+  <tr>
+    <th>Comment Thread</th>
+    <th></th>
+  </tr>
+
+<% @commentables.each do |commentable| %>
+  <tr>
+    <td><%= get_commentable_name(commentable.comment_thread) %></td>
+    <td><%= link_to 'Unsubscribe', polymorphic_path([:unsubscribe, commentable, :comments]), :confirm => 'Are you sure?' %></td>
+  </tr>
+<% end %>
+</table>

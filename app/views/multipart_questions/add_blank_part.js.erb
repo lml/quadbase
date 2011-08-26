@@ -1,0 +1,10 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= display_flash %>
+
+<%= update_multipart_nav(@multipart_question, @multipart_question) %>
+
+$("#question_part_rows").append("<%= escape_javascript(
+  render :partial => 'question_part_summary',
+         :locals => { :part => @new_part,
+                      :all_parts => @all_parts }) %>");

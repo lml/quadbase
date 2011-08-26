@@ -1,0 +1,31 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<div id="multipartNav" class="roundedCorners20" style="width:90%; border: 1px solid #ccc" >
+  
+  <div style="text-align:center; padding:10px 0 3px 0"><i>Multipart Navigation</i></div>
+  
+  <div style="border: 1px solid #ccc; margin-bottom:5px"></div>
+
+  <div style="margin-left:10px" 
+       class="multipartEntry <%= 'multipartSelected leftRoundedCorners5' \
+                                    if current_question == multipart_question %>">
+    <%= link_to_unless_current "Main Question", edit_question_path(multipart_question) %>
+  </div>
+  
+  <div style="margin-left:25px">
+
+  <% multipart_question.child_question_parts.each do |part|
+       child_question = part.child_question
+       highlight = child_question == current_question %>
+    <div class="multipartEntry <%= 'multipartSelected leftRoundedCorners5' if highlight %>">
+      <%= link_to_if !highlight, 
+                     "Part #{part.order}", 
+                     part_edit_or_show_path(part)
+                  %>
+                     
+                  
+    </div>
+  <% end %>
+
+  </div>
+</div>

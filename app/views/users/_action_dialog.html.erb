@@ -1,0 +1,10 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<div id="user_action_dialog" style="display:none" title="<%= @action_dialog_title %>">
+  <%= render :partial => 'users/action_search', 
+             :locals => { :action_search_path => @action_search_path } %>
+                          
+  <div id="user_action_list">
+    <%= render('users/action_list') %>
+  </div>
+</div>

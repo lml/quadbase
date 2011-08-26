@@ -1,0 +1,73 @@
+# Copyright (c) 2011 Rice University.  All rights reserved.
+
+class QuestionPart < ActiveRecord::Base
+  belongs_to :multipart_question
+  belongs_to :child_question, :class_name => 'Question'
+  
+  validates_presence_of :multipart_question_id, :child_question_id
+  validates_uniqueness_of :child_question_id, :scope => :multipart_question_id
+  validates_uniqueness_of :order, :scope => :multipart_question_id, :allow_nil => true
+  # nil is used as a temporary value to avoid conflicts when sorting
+  
+  before_create :assign_order
+  
+  def content_copy
+    kopy = QuestionPart.new(:multipart_question => multipart_question, 
+                            :child_question => child_question,
+                            :order => order)
+  end
+
+  def self.sort(sorted_ids)
+    QuestionPart.transaction do
+      next_position = 1
+      sorted_ids.each do |sorted_id|
+        part = QuestionPart.find(sorted_id)
+        if (part.order != next_position) && (
+             conflicting_part = QuestionPart.find_by_order_and_multipart_question_id(
+                                               next_position, part.multipart_question_id))
+          conflicting_part.order = nil
+          conflicting_part.save!
+        end
+        part.order = next_position
+        next_position += 1
+        part.save!
+      end
+    end
+  end
+  
+  #############################################################################
+  # Access control methods
+  #############################################################################
+
+  # def can_be_read_by?(user)
+  #   !user.is_anonymous? && ...
+  # end
+  #   
+  # def can_be_created_by?(user)
+  #   !user.is_anonymous?
+  # end
+
+  def can_be_updated_by?(user)
+    !user.is_anonymous? && multipart_question.can_be_updated_by?(user)
+  end
+  
+  def can_be_destroyed_by?(user)
+    !user.is_anonymous? && multipart_question.can_be_updated_by?(user)
+  end
+
+  def can_be_sorted_by?(user)
+    !user.is_anonymous? && multipart_question.can_be_updated_by?(user)
+  end
+  
+protected
+  
+  # Opting to go with 1-based indexing here; the first part will likely be
+  # referred to as part "1", so better for the order number to match
+  def assign_order
+    self.order ||= (QuestionPart.where(:multipart_question_id => multipart_question_id) \
+                                .maximum(:order) || 
+                    0) + 1
+  end
+  
+  
+end

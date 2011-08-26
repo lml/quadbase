@@ -1,0 +1,122 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% @hide_tabs = true %>
+<% @home_page = true %>
+
+<div style="font-size:16px; width:600px; float:left">
+  <div id="tagline">Question banking made easy.</div>
+
+  <div style="width:600px; clear:both; float:left">
+     <div style="clear:both">
+       <div class="infoBox">
+         <h2>Create</h2>
+         Contribute free-form, multiple choice, matching, 
+         and multi-step questions in any subject area!
+         <div style="font-size:20px; padding-top: 10px;">
+           <%= link_to '>> Write a question!', get_started_questions_path %>
+			
+         </div>
+       </div>
+       <div class="infoBox">
+         <h2>Find</h2>
+         Search for questions related to e-texts, concepts,
+         interactive simulations, or other questions.
+         <div style="font-size:20px; padding-top: 10px">
+           <%= link_to ">> Search for questions!", questions_path %>
+		
+         </div>
+       </div>
+     </div>
+     <div style="clear:both">
+       <div class="infoBox">
+         <h2>Use</h2>
+         Easily use questions in tests and homeworks, or embed
+         in your online learning platform.
+         <div style="font-size:20px; padding-top: 10px">
+           <%= link_to ">> See examples!", nil %>
+         </div>
+       </div>
+       <div class="infoBox">
+         <h2>Share</h2>
+         Open licenses recognize authors and make our questions
+         free for others to use and re-use.
+         <div style="font-size:20px; padding-top: 10px">
+           <%= link_to ">> Learn more!" %>
+         </div>
+       </div>
+     </div>
+   </div>
+  </div>
+
+  <style type="text/css">
+    #homeCarousel {
+      border: 1px solid rgb(0, 0, 0); 
+      visibility: visible; 
+      overflow: hidden; 
+      position: relative; 
+      z-index: 2; 
+      width: 300px; 
+      height: 400px;
+    }
+    #homeCarousel ul {
+      margin: 0pt; 
+      padding: 0pt; 
+      position: relative; 
+      list-style-type: none; 
+      z-index: 1; 
+      left: 10px;
+    }
+    div.carouselQuestion {
+      margin: 10pt; 
+      padding: 0pt; 
+      position: relative; 
+      list-style-type: none; 
+      z-index: 3; 
+      width: 300px; 
+      height: 500px; 
+      left:0px; 
+      cursor: pointer;
+    }
+  </style>
+
+  <div id="homeCarousel" class="carousel">
+	  <ul>
+		<% WebsiteConfiguration.get_value(:home_highlighted_questions).split(',').each do |param|%>
+		  <% question = Question.from_param(param)%>
+  		<li>
+  			<div class="quad-question carouselQuestion" 
+  			     onclick="window.location.replace('<%= question_path(question)%>')">
+    			<%= render :partial => "questions/show", 
+                     :locals => {:question => question} %>
+  			</div>			
+  		</li>
+		<%end%>
+	  </ul>
+	</div>
+		
+</div>	
+	
+<%= content_for :javascript do %>
+  <%= javascript_tag do %>
+
+    $(function() {
+    	$(".carousel").jCarouselLite({
+    		circular: true,
+    		visible: 1,
+    		scroll: 1,
+    		start: 1,
+    		auto: 8500,
+    		speed: 0,
+    		beforeStart: function(a) {
+    			$(a).parent().fadeTo(1000, 0);
+    		},
+    		afterEnd: function(a) {
+    			$(a).parent().fadeTo(1000, 1);
+    		}
+    	});
+    });
+
+  <% end %>
+<% end %>
+
+

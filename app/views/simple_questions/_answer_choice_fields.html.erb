@@ -1,0 +1,25 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<tr class="fields">
+   <td valign="top"><i>Answer choice<br/>text:</i></td>
+   <td><%= f.text_area :content, :rows => 5, :class => "mark_it_up" %></td>
+   <td valign="middle" >
+
+      <% # Couldn't get the buttons to be checked on load without manually %>
+      <% # checking the status %>
+   
+      <%= f.radio_button :credit, 1, {:checked => f.object.credit == 1}%>
+      Right<br/>
+      <%= f.radio_button :credit, 0, {:checked => f.object.credit != 1} %>
+      Wrong
+      <center>  
+      <p><%= link_to_remove_fields "Delete this answer", f %>
+      </center>
+   </td>
+</tr>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+     refresh_mark_it_up_textareas();
+   });
+</script>

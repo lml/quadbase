@@ -1,0 +1,8 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%# Use a non-number as the start of the ID so Firefox accepts it %>
+<% id = '_' + attachable_asset.asset.file_base_name %>
+
+<div id="<%= id %>" class="image_thumb" data-local_name="<%= attachable_asset.local_name %>">
+  <%= image_tag attachable_asset.asset.attachment.url(:thumb) %>
+</div>

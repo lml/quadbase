@@ -1,0 +1,40 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% if user_is_admin? %>
+<div id="upperCornerLinks"><%= link_to 'Edit', edit_user_path(@user) %> | <%= link_to 'List', users_path %></div>
+<% end %>
+
+<%= pageHeading("User Detail") %>
+
+<table class="left_heading" style="margin-left:40px; margin-right:150px;">
+   <tr>
+      <th width="40%">Name</th>
+      <td width="60%"><%= auth_only(@user.full_name) %></td>
+   </tr>
+   <tr>
+      <th>Email</th>
+      <td><%= auth_only(hide_email(@user.email)) %></td>
+   </tr>
+   <% if user_is_admin? %>
+   <tr>
+      <th>Administrator?</th>
+      <td><%= tf_to_yn(@user.is_administrator) %></td>
+   </tr>
+   <tr>
+      <th>Account Disabled?</th>
+      <td><%= tf_to_yn(@user.is_disabled?) %></td>
+   </tr>
+   <% end %>
+</table>
+<p>
+<% if user_is_admin? %>
+  <%= button_to 'Sign-in as this user',
+      user_become_path(@user),
+        :method => :post,
+        :class => submit_classes,
+        :onclick => please_wait_js %>
+<% end %>
+
+
+
+

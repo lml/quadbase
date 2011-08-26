@@ -1,0 +1,124 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= content_for :stylesheets do %>
+<% end %>
+
+<%= content_for :main do %>
+   <% if @use_columns %>
+   <div id="column_container">
+      <div id="center_column" class="column">
+         <%= content_for?(:question_content) ? yield(:question_content) : yield %>
+      </div>
+
+      <div id="left_column" class="column">
+        <% if @show_back_link %>
+          <%= link_to "Back", :back %>
+        <% end %>
+       <% if !@question.nil? %>
+         <%= render :partial => 'questions/info', :locals => {:question => @question }%>
+
+         <% if @show_question_link && present_user.can_read?(@question) %>
+           <p><%= link_to "Show Question",
+                          question_path(@question) %></p>
+         <% end %>
+                  
+         <% if @show_source_link && present_user.can_read?(@question)%>
+           <p><%= link_to "Show Source", 
+                          question_source_path(@question)  %></p>                                 
+         <% end %>
+         
+         <% if @show_embed_link && @question.is_published? %>
+           <p><%= link_to "Embed", nil, :onclick => "alert('Coming soon!');" %>
+         <% end %>
+                     
+         <% if @show_edit_question_link %>
+            <% if present_user.can_update?(@question) %>
+              <p><%= link_to "Edit Question",
+                             edit_question_path(@question) %></p>
+            <% end %>
+            <% if @question.can_be_new_versioned_by?(present_user) %>
+                <p><%= link_to "Edit Question", 
+                               question_new_version_path(@question),
+                               :method => :put %>
+            <% end %>
+         <% end %>
+         
+         <% if @show_edit_roles_link && present_user.can_update?(@question) %>
+            <p><%= link_to "Edit Roles",
+                           question_question_collaborators_path(@question) %></p>
+         <% end %>
+
+         <% if @question.can_be_read_by?(present_user) %>
+           <p><%= link_to "Solutions", question_solutions_path(@question) %>
+         <% end %>
+
+         <% if @show_edit_license_link && present_user.can_update?(@question) %>
+           <p><%= link_to "Select License",
+                          question_edit_license_path(@question) %></p>
+         <% end %>
+
+         <% if @show_project_link && !@question.is_published? %>
+           <% project = @question.project_questions.first.project %>
+           <% if present_user.can_read?(project) %>
+             <p><%= link_to "Open Project", 
+                            project_path(project) %></p>
+           <% end %>         
+         <% end %>
+        
+         <% if @show_publish_link && @question.can_be_published_by?(present_user) %>                        
+            <p><%= link_to "Publish...", 
+                           publish_questions_path(:question_ids => [@question.id]) %></p>                        
+         <% end %>
+         
+         <% if @question.can_be_derived_by?(present_user) %>
+           <p><%= link_to "Derive a copy and ...",
+                          question_derivation_dialog_path(@question), :remote => true %>
+           </p>
+         <% end %>
+
+         <% if present_user.can_destroy?(@question) %>
+            <p><%= form_tag question_path(@question), :method => :delete do %>
+                  <%= submit_tag 'Delete Draft', :class => 'button_link big',
+                    :onclick => 'return confirm("' + 
+                    (@question.latest_published_same_number.nil? ?
+                    'Are you sure you want to delete this question? This cannot be undone!' :
+                    'Are you sure you want to delete your work?\n' +
+                    'This will erase any changes you have made to this question,' +
+                    ' returning it to its last published state.') +
+                    '");' %>
+               <% end %></p>
+               
+               <% if false # had been the following, keeping if we want to go back %>
+               <p><%= link_to "Delete Question",
+                              question_path(@question), 
+                              :confirm => "Are you sure you want to delete this question?" + 
+                                          "  This cannot be undone",
+                              :method => :delete %></p>
+               <% end %>
+         <% end %>
+         
+         <% if @question.is_draft_in_multipart? || @multipart_question %>
+           <% @multipart_question ||= @question.multipart_questions.first %>
+           <div class="leftColumnSep"></div>
+           <%= render :partial => 'layouts/multipart_nav',
+                      :locals => { :multipart_question => @multipart_question,
+                                   :current_question => @question } %>
+         <% end %>        
+         
+         <% if @question.is_multipart? %>
+           <div class="leftColumnSep"></div>
+           <%= render :partial => 'layouts/multipart_nav',
+                      :locals => { :multipart_question => @question,
+                                   :current_question => @question } %>
+         <% end %>
+        <% end %>
+      </div>
+
+      <div id="right_column" class="column">
+
+      </div>
+   </div>
+   <% end %>
+<% end %>
+
+<%= render :file => 'layouts/application' %>

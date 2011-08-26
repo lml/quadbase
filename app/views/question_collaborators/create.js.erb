@@ -1,0 +1,13 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= display_flash %>
+
+$("<%= "input[name='username'][type='hidden'][value='" + escape_javascript(params[:username]) + "']" %>").parent().html("<%= escape_javascript(label_tag "Collaborator added") %>")
+
+<%= hide_none %>
+
+$("#collaborator_list_tbody").append("<%= escape_javascript(
+  render :partial => 'editable_single_collaborator',
+    :locals => { :collaborator => @question_collaborator}) %>")
+
+makeSortable()

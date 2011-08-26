@@ -1,0 +1,14 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% @show_question_link = true %>
+<% @show_embed_link = true %>
+
+<div class="quad-question">
+   
+   <%= render :partial => "#{view_dir(@question)}/source", 
+              :locals => {:question => @question} %>
+   <p></p>
+   <%= render :partial => 'questions/attribution', 
+              :locals => {:question => @question }%>
+
+</div>

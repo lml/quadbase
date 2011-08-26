@@ -1,0 +1,96 @@
+This document contains current plans and ideas for the Quadbase site.
+
+---------------
+License Options
+---------------
+
+Currently, Quadbase has a Licenses table and associates each question with an
+entry in that table.  CC-BY 3.0 is the first license we'll be using, but there
+has been at least initial consideration for allowing the user to choose from
+a set of allowed open licenses.  This seems like a reasonable idea, but it does
+raise a number of issues that will need to be dealt with before a multi-license
+system can be implemented:
+
+* Of course, just as with our current setup with CC-BY 3.0, each license would 
+  need its own agreement view partial.
+  
+* Different license place different restrictions on whether or not the license
+  can be changed in derived questions or in new versions of questions.  This 
+  might be achievable with simple "can_change_on_new_version" or "can_change_
+  on_derivation" boolean flags on each license record.  However, depending on 
+  the ins and outs of various licenses, we might need something more complex 
+  like a matrix of sorts that keeps track of which licenses can be changed to
+  which other licenses for versions and derivations.
+  
+* Things get more complicated if, as might be necessary, we need to look back
+  through the version/deriviation history to make sure a license change is
+  allowed (e.g. maybe license A can be changed to license B, and license B
+  can be changed to C, but A can't be changed to C).  This sounds hard.
+  
+* With multiple licenses in a history of derivations and versions, it may be
+  difficult to make sure we get attribution statements correct. 
+  
+For the time being, the system will be restricted to have only one license. We
+will leave the Licenses table as it is, and will continue to link questions to
+licenses.  We may end up modifying the views (and some initialization) routines
+so that folks don't even really see that there is a 1-choice-only option for 
+which license to choose (which may be confusing).
+
+-- Possible idea for simplifying multiple licenses --
+
+If we do end up pursuing a multi-license strategy for Quadbase, one nice
+simplification might be to allow the author of a brand new question to 
+choose whichever license they want, but to disallow folks who make new
+derivations/versions from changing from that initial license.  This is not
+to say that all licenses require this "never change me" behavior, but just
+that Quadbase would say that.  In this approach, Quadbase isn't limiting 
+folks' ability to change licenses as allowed by whatever license they're 
+dealing with; Quadbase is just saying that possibility is not allowed on
+the Quadbase site.
+
+----------------------------
+Question Dependencies vs Supports
+----------------------------
+
+Sometimes an author will write a multi-part question where there answer 
+from one part is required to answer a following part, e.g.:
+
+  Intro: x(t) = t^2
+  
+  Q1: Calculate y(t) = \int x(t).
+  Q2: What is y(t) at t = 0?
+  
+We call Q1 a prerequisite question for Q2.  Q2 can never be shown without
+showing Q1 first.  Q2 is dependent on Q1.
+
+There are also times when the answer to one question might help a student
+answer another question (though that helping question doesn't have to be
+seen first).e.g:
+
+  Intro: A 1 kg sphere falls from a height of 1 km in a uniform atmosphere
+         with constant pressure of 1 atmosphere.
+  
+  Q1: what is the balls terminal velocity?
+  Q2: when will the ball hit the ground?
+  
+A student could be asked Q2 independently.  The answer to Q1 helps solve
+Q2, so if it is marked as a supporting question for Q2, the student could
+be asked Q1 if he/she misses Q2.  That is, it can be used as a scaffold
+through which the student can work to answer the final question Q2.
+
+Eventually, these supporting questions could be rated by how much they
+support another question ("gives it away", "only helps a little bit", etc)
+and these levels of support could be used in deciding how much to help
+the student.
+
+These two types of data essentially just need to be recorded as pairs of
+question IDs in a table.  Since they are logically different and the 
+support associations might eventually have grades or levels of support
+attached to them, we will create two separate tables and models for these
+ideas.
+
+
+
+These other questions can often be used as a fallback scaffold
+if the student misses 
+

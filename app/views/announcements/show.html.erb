@@ -1,0 +1,30 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("Viewing announcement #" + @announcement.id.to_s) %>
+<p>
+  <b>Subject:</b>
+  <%= @announcement.subject %>
+</p>
+
+<p>
+  <b>Body:</b>
+  <%= @announcement.body %>
+</p>
+
+<p>
+  <b>Force?</b>
+  <%= tf_to_yn(@announcement.force) %>
+</p>
+
+<p><%= form_tag(announcement_path(@announcement), 
+             :method => "delete",
+             :id => 'delete_announcement_form') do %>
+          <%= submit_tag 'Delete',
+                :id => "delete_announcement_#{@announcement.id.to_s}",
+                :class => "#{submit_classes}",
+                :onclick => 'return confirm("Are you sure you want to delete Announcement #' +
+                            @announcement.id.to_s + '?")' %>
+        <% end %></p>
+
+
+<%= link_to 'Back', announcements_path %>

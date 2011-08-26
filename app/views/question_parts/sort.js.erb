@@ -1,0 +1,7 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+$("#question_part_rows").html("<%= escape_javascript(
+  render :partial => 'multipart_questions/question_part_rows', 
+         :locals => {:question => @question}) %>");
+
+<%= update_multipart_nav(@question, @question) %>

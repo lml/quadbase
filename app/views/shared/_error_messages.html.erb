@@ -1,0 +1,16 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% human_field_names ||= {} %>
+
+<% if target.errors.any? %>  
+  <div id="errorExplanation">  
+    <h2>There were some problems with your request:</h2>  
+    <ul>  
+    <% target.errors.each do |attr,msg| %>  
+      <li><%= !human_field_names[attr.to_s].nil? ? 
+              human_field_names[attr.to_s] : 
+              attr.to_s.titleize %> <%= msg %></li>  
+    <% end %>  
+    </ul>  
+  </div>  
+<% end %>

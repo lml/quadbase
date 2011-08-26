@@ -1,0 +1,19 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<html>
+<head></head>
+<body>
+
+<h2>Exception Encountered</h2>
+
+<p>User ID: <%= @user.id.to_s %><br/>
+Username: <%= @user.username %></p>
+
+<p>Exception: <%= @exception.inspect %></p>
+
+<p>Backtrace:<br/>
+<br/>
+<%= @backtrace.join("<br/>\n").html_safe %></p>
+
+</body>
+</html>

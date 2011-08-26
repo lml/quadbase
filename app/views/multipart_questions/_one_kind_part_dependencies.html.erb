@@ -1,0 +1,51 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<div style="margin:5px 0">
+
+  <% common_id_class = "#{kind}_#{part.id}" %>
+
+  <div style="float:left">
+    <%= text %> 
+    <span class="<%= common_id_class %>">
+      (<%= link_to_function "Change", 
+                            "$('.#{common_id_class}').toggle();" %>)</span>:
+
+    <% used_question_ids = [] %>
+
+    <% pairs = "support" == kind ?
+               part.child_question.supporting_question_pairs :
+               part.child_question.prerequisite_question_pairs %>
+    
+    <% if pairs.empty? %>
+      <i>[None]</i>
+    <% else %>           
+      <% pairs.each do |pair| %>
+        <%= render :partial => 'multipart_questions/pair_with_x', 
+                   :locals => {:pair => pair,
+                               :part => part,
+                               :form_id_class => common_id_class} %>
+        <% used_question_ids.push(pair.independent_question_id)%>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% available_part_options = part_options.reject{|po| used_question_ids.include?(po[1])} %>
+
+  <% if !available_part_options.empty? %>
+    <div style="float:left; margin-left:15px">&nbsp;</div>
+
+    <div style="float:left; display:none" class="<%= common_id_class %>">        
+      <%= form_for(QuestionDependencyPair.new, :remote => true) do |f| %>
+        <%= f.hidden_field :dependent_question_id, :value => part.child_question_id %>
+        <%= f.hidden_field :kind, :value => kind %>
+        <%= hidden_field_tag :question_part_id, part.id %>
+     
+        <%= f.select(:independent_question_id, 
+                     options_for_select(available_part_options)) %>
+               
+        <%= f.submit("Add" , :class => "#{submit_classes}") %>
+      <% end %>
+    </div>
+  <% end %>
+  
+</div>

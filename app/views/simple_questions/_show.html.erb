@@ -1,0 +1,10 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% if !question.question_setup_id.nil? %>
+   <div class="quad-question_setup">
+      <%= question.question_setup.content_html.html_safe %>
+   </div>
+<% end %>
+
+<%= render :partial => 'simple_questions/content_and_answers', 
+           :locals => {:question => question} %>

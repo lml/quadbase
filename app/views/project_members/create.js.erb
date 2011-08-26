@@ -1,0 +1,11 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= display_flash %>
+
+$("<%= "input[name='username'][type='hidden'][value='" + escape_javascript(params[:username]) + "']" %>").parent().html("<%= escape_javascript(label_tag 'Member added') %>")
+
+<%= hide_none %>
+
+$("#project_member_list_tbody").append("<%= escape_javascript(
+  render :partial => 'member_list_row',
+    :locals => {:project_member => @project_member}) %>")

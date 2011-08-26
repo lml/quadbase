@@ -1,0 +1,34 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("Listing announcements") %>
+
+<table width="100%">
+  <tr>
+    <th>Subject</th>
+    <th>Body</th>
+    <th>Force?</th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @announcements.each do |announcement| %>
+  <tr align="center">
+    <td><%= announcement.subject %></td>
+    <td><%= announcement.body %></td>
+    <td><%= tf_to_yn(announcement.force) %></td>
+    <td><%= link_to 'Show', announcement %></td>
+    <td><%= form_tag(announcement_path(announcement), 
+             :method => "delete",
+             :id => 'delete_announcement_form') do %>
+          <%= image_submit_tag 'trash.gif',
+                :id => "delete_announcement_#{announcement.id.to_s}",
+                :onclick => 'return confirm("Are you sure you want to delete Announcement #' +
+                            announcement.id.to_s + '?")' %>
+        <% end %>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Announcement', new_announcement_path %>

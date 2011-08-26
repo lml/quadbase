@@ -1,0 +1,20 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% # Clients of this partial must supply the following variable:
+   #
+   # attachable_asset
+%>
+
+  <tr id="<%= "attachable_asset_#{attachable_asset.id.to_s}" %>">
+    <td><%= link_to attachable_asset.local_name,
+                      attachable_asset_download_path(attachable_asset) %></td>
+    <% if present_user.can_destroy?(attachable_asset) %>
+    <td><%= form_tag attachable_asset_path(attachable_asset), :method => :delete,
+                                                            :remote => true do %>
+          <%= image_submit_tag 'trash.gif',
+            :id => "delete_attachable_asset_#{attachable_asset.id.to_s}",
+            :onclick => 'return confirm("Are you sure you want to delete this asset?\n' + 
+                        'This process is irreversible!")' %>
+        <% end %></td>
+    <% end %>
+  </tr>

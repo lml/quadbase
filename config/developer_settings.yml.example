@@ -1,0 +1,10 @@
+# Copyright (c) 2011 Rice University.  All rights reserved.
+
+# This file contains overrides that are specific to individual developers.  Rename
+# this file "developer_settings.yml" and change your options accordingly.  Do not
+# commit developer_settings.yml to the repository (as these settings are only for 
+# you).
+
+# This is the path for ImageMagick commands (on linux, use "which convert" to find
+# the path).
+paperclip_command_path: /usr/bin

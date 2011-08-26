@@ -1,0 +1,28 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+         <% if !@errors.nil? && @errors.any? %>
+            <% @human_field_names ||= {} %>
+            
+            <% @errors[:base].each do |msg| %>  
+               <div id="alert" class="alert">
+                  <%= msg %>
+               </div>
+            <% end %>  
+            
+            <% @errors.each do |attr,msg| %>
+               <% if :base != attr %>  
+                  <div id="alert" class="alert">
+                     <%= !@human_field_names[attr].nil? ? 
+                         @human_field_names[attr] : 
+                         attr.to_s.titleize %> <%= msg %>
+                  </div>
+               <% end %>
+            <% end %>  
+         <% end %>
+                  
+         <% if !notice.nil? %>
+            <div id="notice" class="notice"><%= notice %></div>
+         <% end %>
+         <% if !alert.nil? %>
+            <div id="alert" class="alert"><%= alert %></div>
+         <% end %>

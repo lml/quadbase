@@ -1,0 +1,22 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<tr id="question_role_request_<%= role_request.id %>">
+  <td><%= question_id_link(role_request.question) %></td>
+  <td><%= full_name_link(role_request.requestor) %></td>
+  <td><%= full_name_link(role_request.requestee) %></td>
+  <td style="text-align:center"><%= request_type(role_request) %></td>
+  <td style="text-align:center">
+    
+    <%= form_tag(question_role_request_accept_path(role_request),
+        :method => :put,
+        :style => "display:inline",
+        :remote => true) do %>
+      <%= submit_tag "Accept", :class => "button_link" %>
+    <% end %> / <%= form_tag(question_role_request_reject_path(role_request),
+        :method => :put,
+        :style => "display:inline",
+        :remote => true) do %>
+      <%= submit_tag "Reject", :class => "button_link" %>
+    <% end %>
+  </td>       
+</tr>

@@ -1,0 +1,22 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<html>
+<head></head>
+<body>
+<p>Greetings Quadbase users,</p>
+
+<p><%= @requestor.full_name %> has requested the following role change for <%= @requestee.full_name %> on a <%= link_to "draft of question #{@question.number}", question_url(@question) %>:</p>
+
+<p><b><%= request_type(@role_request) %></b></p>
+
+<p>As current role holders on this question, it is your responsibility to <b>approve</b> or <b>veto</b> this request.  Please <%= link_to "visit your Quadbase inbox", inbox_url %> to make your selection.</p>  
+  
+<p>If you get there and don't see the link, it is either because the request was withdrawn or one of your collaborators or deputies already resolved the request</p>.
+
+<p>Thanks!</p>
+
+<%= render 'shared/email_signature' %>
+<%= render 'shared/email_footer' %>
+       
+</body>
+</html>

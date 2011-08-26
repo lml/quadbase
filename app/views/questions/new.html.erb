@@ -1,0 +1,74 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("Write a New Question") %>
+
+<style type="text/css" media="screen">
+  .explanation {
+    padding:20px 25px 0px; 
+    font-size: 12px;
+    vertical-align: top;
+  }
+</style>
+
+<p>Choose a question type from the options below</p>
+
+<br/>
+<table width="100%">
+   <tr>
+      <td style="text-align:center" width="33%">
+        <%= form_tag create_simple_question_path, :method => :post do %>
+          <%= image_submit_tag("question_choice_v1.png", 
+                                { :border => 1, 
+                                  :style => "border-color: #b22222",                                  
+                                  :alt => "Free-form or multiple-choice question", 
+                                  :title => "Free-form or multiple-choice question" }) %>
+        <% end %>
+      </td>
+      <td style="text-align:center" width="34%">
+         <%= link_to image_tag("question_matching_v1.png", 
+                               { :border => 1, 
+                                 :alt => "Matching question", 
+                                 :style => "border-color: #b22222",
+                                 :title => "Matching question" }),
+                     nil, :onclick => "alert('Coming soon!');" %>
+      </td>
+      <td style="text-align:center" width="33%">
+        <%= form_tag create_multipart_question_path, :method => :post do %>
+          <%= image_submit_tag("question_multistep_v2.png", 
+                               { :border => 1, 
+                                 :style => "border-color: #b22222",
+                                 :alt => "Multipart question", 
+                                 :title => "Multipart question" }) %>
+        <% end %>
+      </td>
+   </tr>
+   <tr>
+      <td nowrap style="text-align:center">
+         <font size="+1">Simple Question</font>
+      </td>
+      <td style="text-align:center">
+         <font size="+1">Matching Question</font>
+      </td>
+      <td style="text-align:center">
+         <font size="+1">Multipart Question</font>
+      </td>
+   </tr>
+   
+   <tr>
+      <td class="explanation">
+Use this type for simple free-form questions that may or may not have a multiple-choice answer.
+      </td>
+      <td class="explanation">
+         A question where the student is asked to match items from two lists.
+      </td>
+      <td class="explanation">
+        These questions share a common introduction for which several questions are then asked. The questions can be independent or they can have some dependence.
+      </td>
+
+
+
+
+   </tr>
+
+   
+</table>

@@ -1,0 +1,9 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+Change Requested<br/>
+<%= button_to 'Cancel',
+    question_role_request_path(question_role_request_id),
+      :method => "delete",
+      :class => "button_link small",
+      :remote => true,
+      :onclick => please_wait_js %>

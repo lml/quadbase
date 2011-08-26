@@ -1,0 +1,30 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= form_tag website_configurations_path, :method => :put do %>
+  <table width="400px">
+    <tr align="center">
+      <th>Name</th>
+      <th>Value</th>
+    </tr>
+    <% @website_configurations.each do |configuration| %>
+      <tr align="center">
+        <td>
+          <%= configuration.name %>
+        </td>
+        <td>
+          <%= value_html_tag_for(configuration) %>
+        </td>
+      </tr>
+    <% end %>
+    <tr align="center">
+      <td>
+        <%= submit_tag "Save", :class => "ui-state-default ui-corner-all" %>
+      </td>
+      <td>
+        <%= submit_tag "Reset", :name => "reset",
+                                :type => "reset",
+                                :class => "ui-state-default ui-corner-all" %>
+      </td>
+    </tr>
+  </table>
+<% end %>

@@ -1,0 +1,19 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<h4><%= @creator.full_name %>'s Comment on <%= commentable_name(@comment_thread) %></h4>
+
+<pre style="white-space: pre-wrap;
+            white-space: -moz-pre-wrap !important;
+            white-space: -pre-wrap;
+            white-space: -o-pre-wrap;
+            word-wrap: break-word;"><%= @comment.message %></pre>
+
+<p>Please use the links below to reply to this message:</p>
+
+<p><%= link_to "Visit " + commentable_name(@comment_thread),
+               polymorphic_url(@commentable) %></p>
+<p><%= link_to "View comments on " + commentable_name(@comment_thread),
+               polymorphic_url([@commentable, :comments]) %></p>
+<p><%= link_to "Post a new comment", new_polymorphic_url([@commentable, Comment.new]) %></p>
+<p><%= link_to "Unsubscribe from this thread",
+                 polymorphic_url([:unsubscribe, @commentable, :comments]) %></p>

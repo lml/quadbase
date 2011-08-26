@@ -1,0 +1,32 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<table class="list" width="100%">
+  <tr>
+    <th width="20%">First Name</th>
+    <th width="20%">Last Name</th>
+    <th width="20%">Username</th>
+    <th width="20%">Email</th>
+    <th width="20%"></th>
+  </tr>
+
+<% if @users.nil? || @users.empty? %>
+<tr>
+    <td colspan="5">No results</td>
+</tr>
+<% else %>
+<% @users.each do |user| %>
+  <tr>
+    <td><%= auth_only(user.first_name) %></td>
+    <td><%= auth_only(user.last_name) %></td>
+    <td><%= auth_only(user.username) %></td>
+    <td><%= auth_only(hide_email(user.email)) %></td>
+    <td align="center">
+      <span id="user_action_form_<%= user.id %>">
+        <%= render :partial => @action_partial, 
+                   :locals => { :user => user } %>
+      </span>
+    </td>
+  </tr>
+<% end %>
+<% end %>
+</table>

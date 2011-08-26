@@ -1,0 +1,7 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("Version History for Question #" + @question.number.to_s) %>
+
+<%= render :partial => 'questions/list',
+           :locals => { :entries => @questions,
+                        :show_publishers => true } %>

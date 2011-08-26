@@ -1,0 +1,66 @@
+To run rails console on the production server: bundle exec rails c production
+
+bundle exec rake RAILS_ENV=production [whatever] 
+
+For mysql rake db:drop kills the whole database (not just dropping the tables); less obvious for sqlite
+
+--- Local mail monitoring ---
+mailtrap start
+tail -f /var/tmp/mailtrap.log
+
+
+
+--- production logging ---
+
+ActionController::Base.logger = Logger.new(STDOUT)
+ActionController::Base.logger.level = Logger::DEBUG
+
+ActiveRecord::Base.logger = Logger.new(STDOUT)
+ActiveRecord::Base.logger.level = Logger::DEBUG
+
+
+
+can do same thing with activerecord
+
+in console, do
+
+app.get 'topics/'
+
+---- sendmail ----
+List queue:    /usr/sbin/sendmail -bp
+Flush queue:   sendmail -q -v
+Flush one msg: sendmail -v -qIp4D0G8wK011013
+   where everything after "-qI" is the message ID (left column of sendmail -bp)
+    
+delete files from /var/spool/mqueue to get rid of them
+
+
+-----------
+rake db:test:purge 	Empty the test database.
+rake db:test:load 	Recreate the test database from the current schema.rb
+rake db:test:prepare 	Check for pending migrations and load the test schema
+rake db:test:purge; rake db:test:load; rake db:test:prepare
+
+-------
+git rm --cached <file>       removes that file from version control but leaves it in the working copy
+
+
+----
+http://techblog.floorplanner.com/2008/09/13/remote-branches-in-git/
+To create remote tracking branches:
+
+Update: The same can be accomplished with a single command, which sets up remote tracking as well:
+
+$ git checkout -b local_branch_name remotes/origin/remote_branch_name
+
+This makes it so you can work with that branch (do merging, etc) locally.
+
+git branch --track feature1 origin/master
+Branch feature1 set up to track remote branch refs/remotes/origin/master.
+
+undo a commit: http://stackoverflow.com/questions/927358/git-undo-last-commit
+git reset --soft HEAD^
+
+see changes on a branch vs master: git log -p master..other-branch-name
+
+git diff ...otherbranch—diff from common ancestor (merge base) to the head of what will be merged. Note the three dots.

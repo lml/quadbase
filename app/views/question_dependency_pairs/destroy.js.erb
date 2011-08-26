@@ -1,0 +1,7 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+$("#dependencies_for_<%= @part.child_question_id %>").empty().append("<%= escape_javascript(
+   render :partial => 'multipart_questions/part_dependencies', 
+          :locals => { :part => @part }
+  ) %>");
+  

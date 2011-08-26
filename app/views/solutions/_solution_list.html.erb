@@ -1,0 +1,27 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% # Clients of this partial must provide the following variables:
+   # question
+   # solutions
+%>
+
+
+<div>
+  <div id="solution_list">
+    <% have_displayed_a_solution = false %>
+
+    <% solutions.each do |solution| %>
+    
+      <div style="border-bottom: 1px solid #aaa; margin: 15px 0px 30px 0px">
+      <%#= content_tag("div",nil, {"class"=>"solutionSeparator"} ) if have_displayed_a_solution %>
+      <%# have_displayed_a_solution = true%>
+
+      <%= render :partial => 'solutions/single_solution', :locals => {:solution => solution,
+                                                                      :show_link => true} %>
+      </div>
+    <% end %>
+  </div>
+  <div>
+    <%= link_to 'Write a New Solution', new_question_solution_path(question) %>
+  </div>
+</div>

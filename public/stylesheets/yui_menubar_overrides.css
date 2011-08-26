@@ -1,0 +1,59 @@
+div.yuimenubar li {
+    background-color:#ffffff;
+    font-family: sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #000000;
+	padding-left: 0;
+	margin-left: 0;
+}
+
+div.yuimenubar li.selected {
+    background-color:#fff;
+}
+
+
+div.yuimenu ul {
+    padding:5px 0;  /* the padding the drop-down menu */
+    padding-right:10px;
+    background-color: #fff;
+   
+}
+
+div.yuimenu ul.first-of-type, 
+div.yuimenu ul.hastitle,
+div.yuimenu h6.first-of-type {
+    border: solid 1px #000; /* The interior border of a drop-down menu */
+    border-width:1px;
+}
+
+div.yuimenubar li.yuimenubaritem {
+    border-width:0 0 0 2px;  /* This border is the separator b/w top-level menu items */
+    border-style:solid;
+    border-color:#666;   
+    padding-top:2px;
+    padding-bottom: 0px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin:0;
+    margin-bottom: 2px;
+}
+
+div.yuimenubar li.first-of-type {
+    padding-left: 0px; /* Don't indent the first item in the menu bar */
+    border-left-width: 0px;
+}
+
+div.yuimenubar li.help-right {
+   float: right;
+   border-style: none;
+   padding-right: 0px;
+}
+
+div.yuimenu li.yuimenuitem {
+    padding-left: 10px; /* Set the left padding for all menu items (don't get messed up by first-of-type above) */
+}
+
+div.yuimenu {
+    border: solid 1px #fff; /* The outer border of a drop-down menu */
+}

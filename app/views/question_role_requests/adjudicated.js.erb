@@ -1,0 +1,11 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%# This code is the same for approve, veto, reject, and accept %>
+
+<%= display_flash %>
+
+<%= update_inbox_count %>
+
+$("#question_role_request_<%= @question_role_request.id.to_s %>").remove();
+
+show_none_row_if_needed("role_request_table");

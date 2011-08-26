@@ -1,0 +1,24 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%# The following locals must be supplied: 
+       user_infos       an array of arrays, where each internal array is 
+                        defined in shared/name_only_user_row.
+       confirm_question_end see shared/name_only_user_row
+%>
+
+<table class="list" width="100%">
+  <tr>
+    <th width="95%">Name</th>
+    <th width="5%"></th>
+  </tr>
+  <tr id="none_row" <% if !user_infos.empty? %>style="display:none"<% end %>>
+    <td colspan="2"><center>None</center></td>
+  </tr>
+  <tbody id="user_list_tbody">
+    <% user_infos.each do |user_info| %>
+      <%= render :partial => 'shared/name_only_user_row', 
+                 :locals => { :user_info => user_info,
+                              :confirm_question_end => confirm_question_end } %>
+    <% end %>
+   </tbody>
+</table>

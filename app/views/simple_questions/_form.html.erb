@@ -1,0 +1,89 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% content_for :after_form do %>
+
+  <%= render :partial => 'shared/mark_it_up' %>
+
+  <% @errors = @question.errors %>
+
+  <% @human_field_names = {:"answer_choices.content" => "Answer text", 
+                           :"answer_choices.credit" => "Answer right/wrong", 
+                           :"answer_choices" => "Answers",
+                           :"question_setup.content" => "Content"} %>
+
+  <%# For the question setup ... %>
+  <%= render :partial => "attachable_assets/add_image_dialog",
+             :locals => {:attachable => @question.question_setup,
+                         :dialog_div_id => "image_dialog_intro",
+                         :include_open_insert_close_js => false} %>
+
+  <%# For the question ... %>
+  <%= render :partial => "attachable_assets/add_image_dialog",
+             :locals => {:attachable => @question,
+                         :include_open_insert_close_js => false} %>
+
+  <%# Add the JS glue only once, not twice %>
+  <%= render :partial => 'attachable_assets/image_dialog_open_insert_close' %>
+
+<% end %>
+   
+ <%= f.hidden_field :type, :value => "SimpleQuestion"%>
+
+ <p>See the <%= link_to "help", help_path(:anchor => "question_formatting") %> section for formatting 
+    instructions.</p>
+
+ <% setup_blank = @question.question_setup.content.blank? %>
+
+ <table class="target question_form">
+    <% if @question.is_draft_in_multipart? %>
+    <tr>
+       <td valign="top"><p><i>Intro text:</i></p></td>
+       <td valign="top">
+             <%= @question.question_setup.content_html.html_safe %>
+       </td>
+       <td></td>
+    </tr>
+    <% else %>
+    <tr id="setup_row" <% if setup_blank %>style="display:none"<% end %>>
+       <td valign="top"><i>Intro text:</i></td>
+       <td>
+          <div class="field">
+             <%= f.fields_for :question_setup do |setup_form| %>
+                <%= setup_form.text_area :content, 
+                                         :rows => 8, 
+                                         :class => "mark_it_up", 
+                                         'data-attachable_type'=>'intro' %>
+             <% end %>
+          </div>
+       </td>
+       <td></td>
+    </tr>
+    <% if setup_blank %>
+      <tr id="setup_show_row"><td colspan="3">
+        <%= link_to_function "Add a common introduction to this question.", 
+                             '$("#setup_row").show(); $("#setup_show_row").hide();'%>
+      </td></tr>
+    <% end %>
+    
+    <% end %>
+    <tr>
+       <td valign="top"><i>Question text:</i></td>
+       <td>
+          <div class="field">
+             <%= f.text_area :content, :rows => 8, :class => "mark_it_up" %>
+          </div>
+       </td>
+       <td></td>
+    </tr>
+    <%= f.fields_for :answer_choices do |ac_form| %>
+       <%= render 'simple_questions/answer_choice_fields', :f => ac_form %>
+    <% end %>
+ </table>
+
+ <p>   
+ <%= link_to_add_fields "Add a multiple-choice answer", 
+                        f, 
+                        :answer_choices, 
+                        "table.target",
+                        {}, {:partial_name => 'simple_questions/answer_choice_fields'} %>
+

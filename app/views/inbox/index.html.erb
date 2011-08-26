@@ -1,0 +1,55 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("My Inbox") %>
+
+<style type="text/css">
+  div.section {
+    padding: 10px;
+    margin: 10px;
+  }
+</style>
+
+<% me_role_requests = QuestionRoleRequest.acceptable_by(current_user) %>
+<% others_role_requests = QuestionRoleRequest.approvable_by(current_user) %>
+
+<% if me_role_requests.any? || others_role_requests.any? %>
+  <div class="section">  
+    <div class="sectionHeadingNoUnder" style="margin-top: 5px">
+      Role Requests for Others <%= link_to_help "role_requests" %>
+    </div>
+    
+    <table id="role_request_table" class="list" width="100%">
+      <tr>
+        <th width="15%">Question</th>
+        <th width="20%">Requestor</th>
+        <th width="20%">Recipient</th>
+        <th width="25%" style="text-align:center">Type</th>
+        <th width="20%" style="text-align:center">Options</th>
+      </tr>
+
+      <tr id="role_request_table_none_row" style="display:none">
+        <td colspan="5" style="text-align:center">None</td>
+      </tr>
+
+      <% me_role_requests.each do |role_request| %>
+        <%= render :partial => 'single_me_request', :locals => {:role_request => role_request} %>
+      <% end %>
+      
+      <% others_role_requests.each do |role_request| %>
+        <%= render :partial => 'single_others_request', :locals => {:role_request => role_request} %>
+      <% end %>
+    </table>
+  </div>
+<% end %>
+    
+<div class="section">  
+  <div class="sectionHeadingNoUnder" style="margin-top: 5px">
+    Messages <%= link_to_help "messages" %>
+  </div>
+
+  <%= render :partial => 'messages/message_list' %>
+</div>
+    
+
+    
+

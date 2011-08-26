@@ -1,0 +1,20 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<html>
+<head></head>
+<body>
+<p>Hi <%= @requestee.first_name %>,</p>
+
+<p><%= @requestor.full_name %> has requested the following role change for you on a <%= link_to "draft of question #{@question.number}", question_url(@question) %>:</p>
+
+<p><b><%= request_type(@role_request) %></b></p>
+
+<p>Please <%= link_to "visit your Quadbase inbox", inbox_url %> to accept or reject this request.</p>
+
+<p>Thanks!</p>
+
+<%= render 'shared/email_signature' %>
+<%= render 'shared/email_footer' %>
+       
+</body>
+</html>

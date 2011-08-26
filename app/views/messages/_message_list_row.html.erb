@@ -1,0 +1,14 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% # Clients of this partial must supply the following variable:
+   # message
+%>
+<% unread_count = message.comment_thread.subscription_for(current_user).unread_count %>
+<tr>
+  <td><% if unread_count > 0 %>
+      <b><%= link_to message.subject + " (" + unread_count.to_s + ")", message %></b>
+      <% else %>
+      <%= link_to message.subject, message %>
+      <% end %></td>
+  <td><%= message.recipients.collect { |r| r.full_name }.to_sentence %></td>
+</tr>

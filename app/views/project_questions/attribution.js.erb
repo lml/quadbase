@@ -1,0 +1,7 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+$("#attribution_dialog").html("<%= escape_javascript(
+  render :partial => 'project_questions/attribution',
+         :locals => {:question_ids => @question_ids}) %>");
+
+$("#attribution_dialog").dialog('open');

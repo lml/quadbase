@@ -1,0 +1,8 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= display_flash(false) %>
+
+$("#votes_for_<%= @vote.votable_type %>_<%= @votable.id %>")
+  .replaceWith("<%= escape_javascript(
+    render :partial => 'shared/votes',
+           :locals => {:votable => @votable}) %>")

@@ -1,0 +1,68 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% 
+   # Clients of this partial must supply the following variables:
+   #   add_path - path to follow after user is selected to create new resource
+   #   container_type - type of resource that will "contain" the user
+   #   container_id - id of the containing resource
+   #
+   # Additionally, the client can override any of the following:
+
+   form_label ||= 'Add a user' # form title
+   search_label ||= 'Find users' # text on button that opens search form
+   add_label ||= 'Add user' # the submit button
+   cannot_add_label ||= 'Cannot add user' # message if cannot
+                                          # add user to container
+   add_instructions ||= '[Enter username]' # default text on username textbox
+   no_table ||= false
+%>
+
+<% unless no_table %>
+<table class="list" width="100%">
+  <tr>
+    <td colspan="3">
+    <%= label_tag form_label, nil, 
+        :style => 'font-size: 13px; font-family: sans-serif; font-weight: bold; padding: 8px'%>
+    </td>
+  </tr>
+  <tr>
+    <td>
+<% end %>
+      <%= form_tag(users_search_path, 
+                   :method => "post",
+                   :id => 'user_search_form',
+                   :remote => true) do %>
+        <%= hidden_field_tag 'add_path', add_path %>
+        <%= hidden_field_tag 'container_type', container_type %>
+        <%= hidden_field_tag 'container_id', container_id %>
+        <%= hidden_field_tag 'add_label', add_label %>
+        <%= hidden_field_tag 'cannot_add_label', cannot_add_label %>
+        <%= submit_tag search_label, :class => "#{submit_classes}" %>
+      <% end %>
+<% unless no_table %>
+    </td>
+  </tr>
+</table>
+<% end %>
+
+<div id="dialog" style="display:none" title=<%= form_label %>>
+  <%= render :partial => 'users/search', 
+             :locals => { :add_path => add_path, 
+                          :container_type => container_type, 
+                          :container_id => container_id, 
+                          :add_label => add_label, 
+                          :cannot_add_label => cannot_add_label } %>
+</div>
+
+<% content_for :javascript do %>
+   <%= javascript_tag do %>
+      $("#dialog").dialog({ 
+        autoOpen: false, 
+        modal: true, 
+        height:600, 
+        width:600, 
+        buttons: { "Close": function() { $(this).dialog("close"); }},  
+                   open: function(event, ui) { $("#text_query").val(''); $("#selected_type").val(''); }
+      });
+   <% end %>
+<% end %>

@@ -1,0 +1,208 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= @page_title + ' - ' if !@page_title.nil? %>Quadbase</title>
+  
+  <link rel="icon" href="/favicon.ico" type="image/ico" />
+  <link rel="shortcut icon" href="/favicon.ico" type="image/ico" />
+  
+  <%= stylesheet_link_tag "jquery-ui-1.8.12.custom" %>
+  <%= stylesheet_link_tag "quadbase" %>
+  <%= stylesheet_link_tag "quadbase-embed" %>
+ 
+  <% if content_for?(:stylesheets) %>
+  <style type="text/css"><%= yield :stylesheets %></style>
+  <% end %>
+  
+  <% # Listing the JS explicitly, b/c order is important!! %>
+  <% if @include_jquery %>
+  <%= javascript_include_tag 'jquery-1.5.1.min' %>
+  <%= javascript_include_tag 'jquery-ui-1.8.12.custom.min' %>
+  <%= javascript_include_tag 'jquery_extensions' %>
+  <%= javascript_include_tag 'rails' %>
+  <% end %>
+  <%= javascript_include_tag "application" %>
+
+  <% if @include_jcarousellite %>
+    <%= javascript_include_tag 'jcarousellite_1.0.1.js'%>
+  <% end %>
+
+  <% if @include_easing %>
+    <%= javascript_include_tag 'jquery.easing.1.1.1.js'%>
+  <% end %>
+  
+  <% if @include_mathjax %>  
+     <script type="text/x-mathjax-config">
+       MathJax.Hub.Config({
+         tex2jax: {
+           inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+           processEscapes: true
+         }
+       });
+     </script>
+     
+     <% if WebsiteConfiguration.get_value(:use_mathjax_cdn) %>
+       <% mj_url_base = request.ssl? ? 
+                        "https://d3eoax9i5htok0.cloudfront.net" : 
+                        "http://cdn.mathjax.org" %>
+       <script type="text/javascript"
+         src="<%= mj_url_base %>/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+       </script>
+     <% else %>
+       <%= javascript_include_tag 'MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML' %>
+     <% end %>
+  <% end %>
+  
+  <% if @include_uploadify %>
+    <%= javascript_include_tag 'jquery.uploadify/jquery.uploadify.v2.1.4.min' %>
+    <%= javascript_include_tag 'jquery.uploadify/swfobject.js' %>
+    <%= stylesheet_link_tag '/javascripts/jquery.uploadify/uploadify.css' %>
+  <% end %>
+  
+  <% if @include_markitup %>
+    <%= javascript_include_tag "markitup/jquery.markitup" %>
+    <%= stylesheet_link_tag "/javascripts/markitup/skins/simple/style" %>
+    <%= stylesheet_link_tag "/javascripts/markitup/sets/default/style" %>
+  <% end %>
+  
+  <% if content_for?(:javascript_includes) %>
+    <%= yield :javascript_includes %>
+  <% end %>
+  
+  <%= csrf_meta_tag %>
+</head>
+<body>
+   
+   <div id="container">
+      
+      <div id="header">
+
+        <a href="/" class="<%= @home_page ? 'banner1' : 'logo' %>"></a>
+         <div id="header_right">
+        
+
+           <span id="account_info">
+           
+               <% if user_signed_in? %>
+                  Welcome, <%= current_user.first_name %> &nbsp;&nbsp;&nbsp;
+                  <%= link_to "My Account", edit_user_registration_path %> |
+                  <%= link_to "Sign out", destroy_user_session_path %>
+               <% else %>
+                  <%= link_to "Sign up", new_user_registration_path %> or  
+                  <%= link_to "Sign in", new_user_session_path %>
+               <% end %>
+
+            </span>
+
+            <% if !@hide_tabs || user_signed_in? %>
+            <div id="tabs"> 
+               <ul>
+                  <li <%= "class=selected" if is_tab_selected?(:write) %>>
+               	   <%= link_to "Write a question!", new_question_path %>
+               	</li>
+               	<li <%= "class=selected" if is_tab_selected?(:browse) %>>
+               	   <%= link_to "Find questions", questions_path %>
+               	</li>
+               	
+               	<% if user_signed_in? %>
+               	<li <%= "class=selected" if is_tab_selected?(:projects) %>>
+               	   <%= link_to "Projects", projects_path %>
+               	</li>
+               	<li <%= "class=selected" if is_tab_selected?(:inbox) %>>
+                   <%= render 'shared/inbox_tab' %>
+               	</li>
+               	<% end %>
+
+                  <% if user_is_admin? %>
+               	<li <%= "class=selected" if is_tab_selected?(:admin) %>>
+               	   <%= link_to "Admin", admin_path %>
+               	</li>
+               	<% end %>
+               	
+               	<li <%= "class=selected" if is_tab_selected?(:help) %>>
+               	   <%= link_to (image_tag('help_button_v2_sm.png') + " Help").html_safe, help_path %>
+               	</li>
+
+        
+               </ul>
+            </div>
+            <% end %>
+         </div>
+       
+      </div>
+
+      <div id="attention">
+        <%= render 'shared/attention' %>
+      </div>
+   
+      <div id="main">
+         <%# http://guides.rubyonrails.org/layouts_and_rendering.html#using-nested-layouts 
+             If a sub-layout has specified content for this block, yield it.  Otherwise,
+             check to see if the view wants to use the 2 column layout, or just revert to
+             yielding the view. %>
+         <%= button_to 'BETA!', 
+                       beta_path, 
+                       :id => "beta_button", 
+                       :class => 'rightRoundedCorners20', 
+                       :method => :get %>
+         
+         <% if content_for?(:main) %>
+            <%= yield(:main) %>         
+         <% elsif @use_2_column_layout %>
+            <div id="column_container_2c">
+               <div id="main_column_2c" class="column">
+                  <%= yield %>
+               </div>
+
+               <div id="left_column_2c" class="column">
+                  <% (@links ||= []).each do |link| %>
+                     <p><%= link %></p>
+                  <% end %>
+               </div>
+            </div>
+         <% else %>
+            <%= yield %>
+         <% end %>
+      </div>
+   
+      <div id="footer">
+         <%= link_to "Site User Agreement", sitelicense_path %> | 
+         <%= link_to "About Quadbase", about_path %> | 
+         <%= link_to "Contact Us", contact_path %>
+      </div>
+   
+   </div>
+
+   <% if @include_help_dialog %>
+     <div id="help_dialog" style="display:none" title="Quadbase Help"></div>
+
+     <% content_for :javascript do %>
+        <%= javascript_tag do %>
+           $("#help_dialog").dialog({ 
+             autoOpen: false, 
+             modal: true, 
+             height:300, 
+             width:400
+           });
+        <% end %>
+     <% end %>
+   <% end %>
+   
+   <%= yield :javascript %>	
+</body>
+<script type="text/javascript">
+ 
+   var _gaq = _gaq || [];
+   _gaq.push(['_setAccount', 'UA-23761609-3']);
+   _gaq.push(['_trackPageview']);
+ 
+   (function() {
+     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+   })();
+ 
+</script>
+</html>

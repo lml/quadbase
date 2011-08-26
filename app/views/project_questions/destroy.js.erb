@@ -1,0 +1,15 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= display_flash %>
+
+<% @project_questions.each do |wq| %>
+  $("<%= "#question_" + wq.question.id.to_s %>").remove();
+<% end %>
+
+<% if @project.project_questions.empty? %>
+  <%= show_none %>
+    $("#publish_button").remove();
+    $("#move_menu").remove();
+    $("#copy_menu").remove();
+    $("#remove_button").remove();
+<% end %>

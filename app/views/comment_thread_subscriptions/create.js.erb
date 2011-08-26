@@ -1,0 +1,8 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= display_flash %>
+
+$("#subscription_link_span").html("<%= escape_javascript(
+  render :partial => 'comment_thread_subscriptions/subscription_link',
+         :locals => {:commentable => @commentable,
+                     :subscription => true}) %>");

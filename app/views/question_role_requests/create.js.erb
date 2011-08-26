@@ -1,0 +1,12 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= display_flash %>
+
+<%# @collaborator will be nil the the QRR creation was resolved automatically %>
+<% if @collaborator.nil? %>
+   $("#collaborator_<%= @collaborator_id.to_s %>").remove();
+<% else %>
+   $("#collaborator_<%= @collaborator.id.to_s %>").replaceWith(
+      "<%= ej(render :partial => 'question_collaborators/editable_single_collaborator', 
+                     :locals => {:collaborator => @collaborator}) %>");
+<% end %>

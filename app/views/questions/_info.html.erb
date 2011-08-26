@@ -1,0 +1,16 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% if !question.number.nil? %>
+<div class="quad-quid">
+q. <%= question.number %>, 
+
+<% if question.version.nil? %>
+   unpublished 
+<% else %>
+   v. <%= question.version %>
+   <% if question.is_latest? %>
+      (LATEST)
+   <% end %>
+<% end %>
+</div>
+<% end %>

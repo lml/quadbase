@@ -1,0 +1,40 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= display_flash(false) %>
+
+if ($("#none_row").length) {
+  <% if @solution.question.solutions.empty? %>
+    <%= show_none %>
+  <% else %>
+    $("#solution_<%= @solution.id.to_s %>").nextAll().each(function() {
+      var elt = $(this).find("#single_solution");
+      var eltclass = elt.attr('class');
+      if (eltclass == null) {
+        return;
+      }
+      if (eltclass.indexOf('author_odd') >= 0) {
+        elt.attr('class', 'author_even');
+      }
+      else if (eltclass.indexOf('author_even') >= 0) {
+        elt.attr('class', 'author_odd');
+      }
+      else if (eltclass.indexOf('self_odd') >= 0) {
+        elt.attr('class', 'self_even');
+      }
+      else if (eltclass.indexOf('self_even') >= 0) {
+        elt.attr('class', 'self_odd');
+      }
+      else if (eltclass.indexOf('odd') >= 0) {
+        elt.attr('class', 'even');
+      }
+      else if (eltclass.indexOf('even') >= 0) {
+        elt.attr('class', 'odd');
+      }
+    });
+  <% end %>
+  $("#solution_<%= @solution.id.to_s %>").remove();
+}
+else {
+  window.location.replace("<%= question_solutions_path(
+                                 :question_id => @solution.question.to_param).html_safe %>");
+}

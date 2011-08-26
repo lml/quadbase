@@ -1,0 +1,34 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%# The following info must be supplied to this partial: 
+      user_info         A 2-element array that has the user object as its 1st
+                        element and then for its 2nd element the path that 
+                        should be called to destroy what you want when someone
+                        clicks the delete icon next to the name.  Note that this
+                        can be nil if you don't want delete functionality.
+                        
+      confirm_question_end  text that comes at the end of the question asking if
+                        the user really wants to remove this person.
+%>
+
+<% 
+  user = user_info[0]
+  destroy_path = user_info[1]
+%>
+
+<tr id="user_row_<%= user.id.to_s %>">
+  <td><%= full_name_link(user) %></td>
+  <td>
+    <% if !destroy_path.nil? %>
+      <%= form_tag(destroy_path, 
+                   :method => :delete,
+                   :id => 'delete_user_form',
+                   :remote => true) do %>
+        <%= image_submit_tag 'trash.gif',
+                             :id => "delete_user_#{user.id.to_s}",
+                             :confirm => "Are you sure you want to remove " +
+                                         user.full_name + confirm_question_end %>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

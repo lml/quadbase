@@ -1,0 +1,101 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("Authoring") %>
+
+<p><%= link_to "Simple Questions", "#Simple_Questions" %><br/>
+<%= link_to "Matching Questions", "#Matching_Questions" %><br/>
+<%= link_to "Multipart Questions", "#Multipart_Questions" %><br/>
+<%= link_to "Multi-step Questions", "#Multi-step_Questions" %></p>
+<div class="sectionHeading" id="Simple_Questions">Simple Questions</div>
+<br/>
+<br/>
+<p>Simple Questions are the where the correct answer must be selected from a list of given answer  choices</p>
+<div class="sectionHeadingNoUnder">How to Write a Simple Question</div>
+<br/>
+<ol>
+<li>click on the "Write a question!" tab and select the leftmost of the four question icons labeled Simple Question</li>
+<li>  You can add an introduction to your question by clicking the "Add introductory text that can be shared by multiple questions" link near the top of the page, although this option is not necessary</li>
+<li>Write your simple question in in the "Question text" dialog box <br/>
+	<center>
+	<%=image_tag("question_text.png", {:border => 1, :width => "60%", :height => "60%"})%>
+	</center>
+</li>
+<li>Under the dialog box you will see an "Add a multiple-choice answer" link, click this link in order to add a multiple choice answer, add your answer choice in the dialog box that appears, and select whether that answer choice is right or wrong, repeat for as many answer choices as you need.<br/>
+	<center>
+	<%=image_tag("answer_choice.png", {:border => 1})%>
+	</center>
+</li>
+<li>Once you have added all the answer choices you desire, click on the save draft button on the center bottom of the page, this will save a draft of your simple question</li>
+<li>Next to your draft you will find several links such as "Edit Roles", "Edit Question", "Open Workspace","Delete Question", and others. Consult these links before you publish your question to make sure your simple question has all the attributes you desire<br/>
+	<center>
+	<%=image_tag("draft.png", {:border => 1, :width => "60%"})%>
+	</center>
+</li>
+<li>When you are ready to publish your question click the "publish..." link, check the box that affirms your commitment to the terms of the license, and click the "publish question" button at the bottom of the page</li>
+<li><b>Congratulations!! You have written a simple question</b></li>
+</ol>
+<br/>
+<div class="sectionHeading" id="Matching_Questions">Matching Questions</div>
+<br/>
+<br/>
+<p> Matching questions are questions where items must be "matched" with their corresponding correct answer</p>
+<div class="sectionHeadingNoUnder">How to Write a Matching Question</div>
+<br/>
+<ol>
+<li>click on the "Write a question!" tab and select the second from the left of the four question icons labeled Matching Question</li>
+<li>  You can add an introduction to your question by clicking the "Add introductory text that can be shared by multiple questions" link near the top of the page, although this option is not necessary</li>
+<li>Write your matching question in in the "Question text" dialog box</li>
+<li>Under the dialog box you will see an "Add a multiple-choice answer" link, click this link in order to add a multiple choice answer, add your answer choice in the dialog box that appears, and select whether that answer choice is right or wrong, repeat for as many answer choices as you need.</li>
+<li>Once you have added all the answer choices you desire, click on the save draft button on the center bottom of the page, this will save a draft of your matching question</li>
+<li>Next to your draft you will find several links such as "Edit Roles", "Edit Question", "Open Workspace","Delete Question", and others. Consult these links before you publish your question to make sure your simple question has all the attributes you desire</li>
+<li>When you are ready to publish your question click the "publish..." link, check the box that affirms your commitment to the terms of the license, and click the "publish question" button at the bottom of the page</li>
+<li><b>Congratulations!! You have written a matching question</b></li>
+</ol>
+<div class="sectionHeading" id="Multipart_Questions">Mutipart Questions</div>
+<br/>
+<br/>
+<p>Multi-Part Questions are questions comprised of several different questions that share and are derived from a common introduction</p>
+<div class="sectionHeadingNoUnder">How to Write a Multipart Question</div>
+<br/>
+<ol>
+<li>click on the "Write a question!" tab and select the third from left of the four question icons labeled Multipart Question</li>
+<li>  You can add an introduction to your question by clicking the "Add introductory text that can be shared by multiple questions" link near the top of the page, although this option is not necessary</li>
+<li>Write your simple question in in the "Question text" dialog box<br/>
+	<center>
+		<%=image_tag("multipart_question_text.png", {:border => 1, :width => "60%", :height => "60%"})%>
+	</center>
+</li>
+<li>Under the dialog box you will two links, one that says "Add a Blank Question" which allows you to create a simple question for your multipart question (rules for writing these are the same for simple questions), the other that says "Add an existing question", which allows you to search for questions that have already been written and add them to your question.<br/>
+	<center>
+		<left>
+			<%=image_tag("question_parts.png", {:border => 1,})%>
+		</left>
+		<br/>
+		<br/>
+		<right>
+			<%=image_tag("existing_question.png", {:border => 1, :width =>"75%"})%>
+		</right>
+	</center>
+</li>
+<li>Once you have added all the questions to go with your multipart question choices you desire, click on the save draft button on the center bottom of the page, this will save a draft of your multipart question</li>
+<li>Next to your draft you will find several links such as "Edit Roles", "Edit Question", "Open Workspace","Delete Question", and others. Consult these links before you publish your question to make sure your simple question has all the attributes you desire</li>
+<li>When you are ready to publish your question click the "publish..." link, check the box that affirms your commitment to the terms of the license, and click the "publish question" button at the bottom of the page</li>
+<li><b>Congratulations!! You have written a multipart question</b></li>
+</ol>
+<div class="sectionHeading" id="Multi-step_Questions">Muti-step Questions</div>
+<br/>
+<br/>
+<p>Multi-Step Questions are questions comprised of several different questions that share a common introduction. These questions must be answered in order, because the answer to one question is needed to answer the next question</p>
+<br/>
+<div class="sectionHeadingNoUnder">How to Write a Multi-step Question</div>
+<ol>
+<br/>	
+<li>click on the "Write a question!" tab and select the leftmost of the four question icons labeled Simple Question</li>
+<li>  You can add an introduction to your question by clicking the "Add introductory text that can be shared by multiple questions" link near the top of the page, although this option is not necessary</li>
+<li>Write your simple question in in the "Question text" dialog box</li>
+<li>Under the dialog box you will see an "Add a multiple-choice answer" link, click this link in order to add a multiple choice answer, add your answer choice in the dialog box that appears, and select whether that answer choice is right or wrong, repeat for as many answer choices as you need.</li>
+<li>Once you have added all the answer choices you desire, click on the save draft button on the center bottom of the page, this will save a draft of your simple question</li>
+<li>Next to your draft you will find several links such as "Edit Roles", "Edit Question", "Open Workspace","Delete Question", and others. Consult these links before you publish your question to make sure your simple question has all the attributes you desire</li>
+<li>When you are ready to publish your question click the "publish..." link, check the box that affirms your commitment to the terms of the license, and click the "publish question" button at the bottom of the page</li>
+<li><b>Congratulations!! You have written a simple question</b></li>
+</ol>

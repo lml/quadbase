@@ -1,0 +1,7 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+$("#question_list").html("<%= escape_javascript(
+  render :partial => 'list', :locals => {:entries => @questions, 
+                     :checkbox_options => params[:use_checkboxes] ? {} : nil}) %>")
+
+<%= reload_mathjax("question_list") %>

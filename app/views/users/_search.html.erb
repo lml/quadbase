@@ -1,0 +1,59 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%
+   # Clients of this partial must supply the following variables:
+   #   add_path
+   #   container_type
+   #   container_id
+   #   add_label
+   #   cannot_add_label
+   # Additionally, the client can override any of the following:
+  
+  @selected_type ||= 'Any'
+  @text_query ||= ''
+%>
+
+<%= form_tag(users_search_path, 
+             :method => "post",
+             :id => 'select_user_form',
+             :remote => true) do %>
+
+  <table width="550px" align="center">
+    <tr>
+      <td><%= label_tag 'Search For:' %></td>
+      <td><%= text_field_tag 'text_query', @text_query %></td>
+      <td><%= label_tag 'in:' %></td>
+      <td>
+        <%= select_tag 'selected_type', 
+            options_for_select(['Any', 'Name', 'Username', 'Email'], @selected_type) %>
+      </td>
+      <td>
+        <%= hidden_field_tag 'add_path', add_path %>
+        <%= hidden_field_tag 'container_type', container_type %>
+        <%= hidden_field_tag 'container_id', container_id %>
+        <%= hidden_field_tag 'add_label', add_label %>
+        <%= hidden_field_tag 'cannot_add_label', cannot_add_label %>
+        <%= submit_tag 'Search', :class => "#{submit_classes}" %>
+      </td>
+    </tr>
+  </table>
+<% end %>
+
+<div id="user_list">
+  <%= render('users/list') %>
+</div>
+
+<% content_for :javascript do %>
+   <%= javascript_tag do %>
+        $('#search_text').live("focusin", function() {
+          if ($(this).val() == "<%= @search %>") {
+            $(this).val('');
+          }
+        });
+        $('#search_text').live("focusout", function() {
+          if ($(this).val() == "") {
+            $(this).val('<%= @search %>');
+          }
+        });
+    <% end %>
+<% end %>

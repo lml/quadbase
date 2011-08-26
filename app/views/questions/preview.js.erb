@@ -1,0 +1,12 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= display_flash %>
+
+<% if @question.errors.empty? %>
+   $("#preview_dialog").html("<%= escape_javascript(render :partial => "show", 
+                                                   :locals => {:question => @question}) %>");
+
+   <%= reload_mathjax("preview_dialog") %>
+
+   $("#preview_dialog").dialog('open');
+<% end %>

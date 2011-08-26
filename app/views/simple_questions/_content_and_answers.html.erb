@@ -1,0 +1,23 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<div class="quad-question_content">
+  <%= question.content_html.html_safe %>
+</div>
+
+<% if !question.answer_choices.empty? %>
+   <div class="quad-answer_choices">
+      <% answer_letter_code = ?a-1 %>
+      <table width="100%">
+      <% question.answer_choices.each do |ac| %>
+         <tr>
+            <td class="quad-answer_choice_index" width="10%">
+               <%= (answer_letter_code += 1).chr %>)
+            </td>
+            <td class="quad-answer_choice" width="90%">
+               <%= ac.content_html.html_safe %>
+            </td>
+         </tr>
+      <% end %>
+      </table>  
+   </div>
+<% end %>

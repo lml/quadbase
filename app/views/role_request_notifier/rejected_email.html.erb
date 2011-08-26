@@ -1,0 +1,16 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<html>
+<head></head>
+<body>
+<p>Hi <%= @requestor.first_name %>,</p>
+
+<p><%= @requestee.full_name %> has <b>rejected</b> your request to <%= @role_request.drops_role? ? "drop" : "add" %> him/her as <%= @role_request.toggle_is_author ? "an author" : "a copyright holder"%> on a <%= link_to "draft of question #{@question.number}", question_url(@question) %>.</p>
+
+<p>Regards,</p>
+
+<%= render 'shared/email_signature' %>
+<%= render 'shared/email_footer' %>
+       
+</body>
+</html>

@@ -1,0 +1,30 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("Editing Project") %>
+
+<% @include_jquery = true %>
+
+<%= render 'form' %>
+
+<br/>
+<div class="sectionHeadingNoUnder">Members</div>
+
+   <%= render :partial => 'project_members/member_list' %>
+
+<table>
+   <tr>
+      <td colspan="2">
+        <%= render :partial => 'shared/add_user_form', 
+                   :locals => {:add_path => project_project_members_path(@project), 
+                               :container_type => 'project', 
+                               :container_id => @project.id, 
+                               :form_label => 'Add a member', 
+                               :search_label => 'Find members', 
+                               :add_label => 'Add member', 
+                               :cannot_add_label => 'Already a member'} %>
+      </td>
+   </tr>
+</table>
+
+<% @links = [ link_to('Show Project', @project), 
+              link_to('My Projects', projects_path) ] %>

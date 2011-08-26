@@ -1,0 +1,7 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% if @no_lock || @updated %>
+  window.location.replace("<%= escape_javascript(question_path(@question)) %>");
+<% else %>
+  <%= display_flash %>
+<% end %>

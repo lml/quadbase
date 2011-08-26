@@ -1,0 +1,32 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("User List") %>
+
+<table class="list" width="100%">
+  <tr>
+    <th width="20%">First Name</th>
+    <th width="20%">Last Name</th>
+    <th width="15%">Username</th>
+    <th width="25%">Email</th>
+    <th width="10%">Admin?</th>
+    <th width="10%">Disabled?</th>
+  </tr>
+
+<% @users.each do |user| %>
+  <tr>
+    <td><%= admin_only(user.first_name) %></td>
+    <td><%= admin_only(user.last_name) %></td>
+    <td><%= admin_only(user.username) %></td>
+    <td><%= admin_only(user.email) %></td>
+    <td><%= tf_to_yn(user.is_administrator?) %></td>
+    <td><%= tf_to_yn(user.is_disabled?) %></td>
+    <td><%= link_to show_icon, user %></td>
+    <td><%= link_to edit_icon, edit_user_path(user) %></td>
+  </tr>
+<% end %>
+</table>
+
+
+<br />
+
+

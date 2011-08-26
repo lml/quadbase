@@ -1,0 +1,16 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<tr id="project_member_<%= project_member.id.to_s %>">
+  <td><%= full_name_link(project_member.user) %></td>
+  <td><%= form_tag(project_member_path(project_member), 
+             :method => "delete",
+             :id => 'delete_member_form',
+             :remote => true) do %>
+<%= image_submit_tag 'trash.gif',
+                     :id => "delete_member_#{project_member.id.to_s}",
+                     :onclick => 'return confirm("Are you sure you want to remove ' +
+                     escape_javascript(project_member.user.full_name) +
+                     ' from this project?")' %>
+      <% end %>
+  </td>
+</tr>

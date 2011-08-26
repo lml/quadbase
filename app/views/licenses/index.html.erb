@@ -1,0 +1,57 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("Licenses") %>
+
+<table class="list" width="100%">
+     <tr>
+       <th width="15%">Short Name</th>
+       <th width="30%">Long Name</th>
+       <th width="35%">URL</th>
+       <th width="10%">Partial</th>
+       <th width="10%">Default?</th>
+       <th></th>
+       <th></th>
+       <th></th>
+     </tr>
+
+   <% @licenses.each do |license| %>
+     <tr>
+       <td><%= license.short_name %></td>
+       <td><%= license.long_name %></td>
+       <td><%= link_to license.url, license.url %></td>
+       <td><%= license.agreement_partial_name %></td>
+       <td><%= tf_to_yn(license.is_default) %></td>
+       <td><%= link_to show_icon, license %></td>
+       <td><%= link_to edit_icon, edit_license_path(license) %></td>
+       <td><%= form_tag(license_path(license),
+                        :method => "delete",
+                        :id => 'delete_license_form') do %>
+             <%= image_submit_tag 'trash.gif',
+                 :id => "delete_license_#{license.id.to_s}",
+                 :onclick => 'return confirm("Are you sure you want to delete the ' +
+                             escape_javascript(license.short_name) +
+                                  ' license?")' %>
+           <% end %></td>
+     </tr>
+   <% end %>
+   
+</table>
+<br />
+<br />
+
+<%= link_to 'New License', new_license_path %>
+
+<%= form_tag make_default_licenses_path,
+             :method => :put do %>
+<table width="600px">
+  <tr>
+    <td width="50%"><%= label_tag 'Default license for new questions:' %></td>
+    <td width="25%"><%= select_tag 'selected_license',
+                        options_from_collection_for_select(@licenses,
+                                                           'id',
+                                                           'short_name',
+                                                           License.default) %></td>
+    <td width="25%"><%= submit_tag "Save", :class => "#{submit_classes}" %></td>
+  </tr>
+</table>
+<% end %>

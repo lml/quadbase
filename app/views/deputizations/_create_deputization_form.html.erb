@@ -1,0 +1,9 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%# Callers must supply a 'user' local variable %>
+
+<%= form_for Deputization.new, :method => :post, :remote => true do |f| %>
+  <%= f.hidden_field :deputizer_id, :value => current_user.id %>
+  <%= f.hidden_field :deputy_id, :value => user.id %>
+  <%= f.submit "Add", :class => submit_classes, :onclick => please_wait_js %>
+<% end %>

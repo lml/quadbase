@@ -1,0 +1,16 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= display_flash %>
+
+<% if @destroy %>
+  $("<%= "#collaborator_" + @question_collaborator.id.to_s %>").remove()
+
+  <%= show_none if @question.question_collaborators.empty? %>
+<% else %>
+  $("<%= "#collaborator_" + @question_collaborator.id.to_s %>").replaceWith(
+    "<%= escape_javascript(
+      render :partial => 'question_collaborators/editable_single_collaborator',
+             :locals => {:collaborator => @question_collaborator}) %>")
+<% end %>
+
+

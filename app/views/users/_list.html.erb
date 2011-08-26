@@ -1,0 +1,37 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<table class="list" width="100%">
+  <tr>
+    <th width="20%">First Name</th>
+    <th width="20%">Last Name</th>
+    <th width="20%">Username</th>
+    <th width="20%">Email</th>
+    <th width="20%"></th>
+  </tr>
+
+<% if @users.nil? || @users.empty? %>
+<tr>
+    <td colspan="5">No results</td>
+</tr>
+<% else %>
+<% @users.each do |user| %>
+  <tr>
+    <td><%= auth_only(user.first_name) %></td>
+    <td><%= auth_only(user.last_name) %></td>
+    <td><%= auth_only(user.username) %></td>
+    <td><%= auth_only(hide_email(user.email)) %></td>
+    <td align="center">
+    <% if user.can_join?(@container_type, @container_id) %>
+      <%= form_tag(@add_path, :method => "post", :remote => true) do %>
+        <%= hidden_field_tag 'username', auth_only(user.username) %>
+        <%= submit_tag @add_label, :class => "#{submit_classes}", 
+            :onclick => please_wait_js %>
+      <% end %>
+    <% else %>
+      <%= label_tag @cannot_add_label %>
+    <% end %>
+  </td>
+  </tr>
+<% end %>
+<% end %>
+</table>

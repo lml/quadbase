@@ -1,0 +1,28 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<tr id="part_<%= part.id %>" class="questionPartSummary roundedCorners5">
+  <td width="5%" valign="top"><span class="ui-icon ui-icon-arrow-4 handle"></span></td>
+  <td width="95%"><%= link_to "Part #{part.order}", part_edit_or_show_path(part) %>
+  (<%= question_id_link(part.child_question) %>)
+  
+  <span style="float:right">
+    <% if present_user.can_destroy?(part) %>
+      <%= link_to trash_icon, 
+                  question_part_path(part),
+                  :method => :delete, 
+                  :confirm => "Are you sure you want to remove part #{part.order} " +
+                              "from this question?\n\nNote that the question " + 
+                              "itself will not be deleted.",
+                  :remote => true %>
+    <% end %>
+  </span>
+  
+  
+    <div class="linkedQuestions" id="dependencies_for_<%= part.child_question_id %>">
+      <%= render :partial => 'multipart_questions/part_dependencies', 
+                 :locals => { :part => part } %>
+
+    </div>
+  </td>
+</tr>
+   

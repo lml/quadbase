@@ -1,0 +1,71 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% pageHeading("Editing #{question_id_text(@question)}") %>
+
+<% @show_edit_roles_link = true %>
+<% @show_question_link = true %>
+<% @show_edit_license_link = true %>
+<% @show_project_link = true %>
+
+<%= pageHeading("Question Editing") %>
+
+<%# The following "autocomplete=off" hack lets radio buttons work as they
+    should in Firefox 3 
+<%# We also have to make sure to use the Questions controller no matter what
+    the question_type is, hence the :url directive %>
+     
+<%= form_for @question, 
+             :as => :question, 
+             :url => @question.id.nil? ? questions_path() : question_path(@question), 
+             :remote => true,
+             :html => {:autocomplete => "off"} do |f| %>
+
+  <%= render :partial => "#{view_dir(@question)}/form", 
+             :locals => {:question => @question, :f => f} %>
+  
+  <br/>
+  <br/>
+  <% if !@question.latest_published_same_number.nil? %>
+    <%= f.radio_button :changes_solution, false %>
+    <%= f.label :changes_solution_false,
+          "Solutions for the latest published version still apply. Reuse solutions." %>
+    <br/>
+    <%= f.radio_button :changes_solution, true %>
+    <%= f.label :changes_solution_true,
+          "Solutions changed since the latest published version. Do not reuse solutions." %>
+  <% end %>
+  <br/>
+  <div class="actions">
+    <center>
+      <%= f.submit "Quick Preview", :class => "#{submit_classes}",
+                   :id => "preview_button", :name => "preview" %>
+      <%= f.submit "Save Draft", :class => "#{submit_classes}",
+                   :id => "save_button" %>
+    </center>
+  </div>
+<% end %>
+
+<%= yield :after_form if content_for?(:after_form) %>
+
+<div id="preview_dialog" style="display:none" title="Quick Preview"></div>
+
+<% content_for :javascript do %>
+   <%= javascript_tag do %>
+      $("#preview_dialog").dialog({ 
+        autoOpen: false, 
+        modal: true, 
+        height:600, 
+        width:600, 
+        buttons: { "Close": function() { $(this).dialog("close"); }}});
+      $("#preview_button").bind('click', function() {
+        $("#question_edit").attr("action", "<%= question_preview_path(@question) %>");
+        return true;
+      });
+      $("#save_button").bind('click', function() {
+        $("#question_edit").attr("action", "<%= question_path(@question) %>");
+        return true;
+      });
+   <% end %>
+<% end %>
+
+<%= protect_form %>

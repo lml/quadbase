@@ -1,0 +1,43 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("Viewing message") %>
+
+<table width="100%">
+  <tr>
+    <td>To:</td>
+    <td><%= @message.recipients.collect{ |r| full_name_link(r) }.to_sentence.html_safe %>
+        <% # TODO: Check if the above is really safe %>
+    </td>
+    <td align="right">
+      <%= render :partial => 'shared/add_user_form', 
+                 :locals => {:add_path => message_add_recipient_path(@message), 
+                             :container_type => 'message', 
+                             :container_id => @message.id, 
+                             :form_label => 'Add a recipient', 
+                             :search_label => 'Add recipients', 
+                             :add_label => 'Add recipient', 
+                             :cannot_add_label => 'Already a recipient',
+                             :no_table => true} %>
+    </td>
+  </tr>
+</table>
+
+<% if @message.comment_thread.comments.blank? %>
+<%= render 'form' %>
+<% else %>
+<%= render :partial => 'show', :locals => {:message => @message} %>
+<% end %>
+
+<br/>
+
+<% if !@message.comment_thread.comments.blank? %>
+<%= render :partial => 'comments/index', :locals => {:commentable => @message,
+                                                     :hide_header => true,
+                                                     :hide_link => true,
+                                                     :hide_votes => true,
+                                                     :comment_name => 'Reply'} %>
+<% end %>
+
+<br/><br/>
+
+<%= link_to 'Back to Inbox', inbox_path %>

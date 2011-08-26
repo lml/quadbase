@@ -1,0 +1,9 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% # Clients of this partial must supply the following variable:
+   # commentable
+%>
+<div id="comments">
+  <%= link_to "Show Comments (" + commentable.comment_thread.comments.count.to_s + ")",
+        polymorphic_path([commentable, :comments]), :remote => true %>
+</div>

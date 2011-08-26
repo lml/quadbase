@@ -1,0 +1,97 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% content_for :after_form do %>
+  <% @errors = @question.errors %>
+
+  <% @human_field_names = {:"question_setup.content" => "Introduction content"} %>
+
+  <%= render :partial => "attachable_assets/add_image_dialog",
+             :locals => {:attachable => @question.question_setup} %>
+
+  <%= render :partial => "multipart_questions/add_question_part_dialog",
+             :locals => {:question => @question} %>
+
+  <%= render :partial => 'shared/mark_it_up' %>
+
+  <div style="width:100%">
+    <div style="padding:15px 0"><i>Question Parts:</i></div>
+
+    <table id="question_part_rows">
+      <%= render :partial => 'multipart_questions/question_part_rows', 
+                 :locals => {:question => @question} %>
+    </table>
+  
+    <div style="padding-top:30px; width:100%">
+      <center>
+         <%= link_to 'Add a blank question', 
+                     multipart_question_add_blank_part_path(@question),
+                     :method => :put, 
+                     :remote => true
+                     # TODO put in a "Please Wait" while clicked 
+         %>
+
+         <span style="text-align:center; width: 20%; margin: 5px 25px 0 25px;">
+           <b><i>OR</i></b>
+         </span>
+
+         <%= link_to_function "Add an existing question ...", 
+                              "open_add_question_part_dialog()" %>
+      </center>
+    </div>
+  </div>
+<% end %>
+
+
+  <%= f.hidden_field :type, :value => "MultipartQuestion"%>
+
+  <p>See the <%= link_to "help", help_path(:anchor => "question_formatting") %> 
+  section for formatting instructions.</p>
+
+  <div class="question_form" style="width:100%">
+
+    <div style="padding:15px 0"><i>Common Introduction:</i></div>
+    <div class="field" style="padding-left:30px">
+      <%= f.fields_for :question_setup do |setup_form| %>
+        <%= setup_form.text_area :content, 
+                                 :rows => 8, 
+                                 :class => "mark_it_up", 
+                                 :id => 'intro_field',
+                                 :style => "width: 95%" %>
+      <% end %>
+    </div>
+  </div>
+    
+<%# The following JS manages the sorting of the parts table %>
+<%# See http://www.foliotek.com/devblog/make-table-rows-sortable-using-jquery-ui-sortable/ %>   
+<%# plus adding in normal jquery sorting options %>     
+<% content_for :javascript do %>
+   <%= javascript_tag do %>
+      function makeSortable() {
+         var fixHelper = function(e, ui) {
+             ui.children().each(function() {
+                 $(this).width($(this).width());
+             });
+             return ui;
+         };
+ 
+         $("#question_part_rows").sortable({
+            dropOnEmpty: false,
+            handle: '.handle',
+            items: 'tr',
+            opacity: 0.7,
+            scroll: true,
+            update: function(){
+               $.ajax({
+                  type: 'post',
+                  data: $('#question_part_rows').sortable('serialize'),
+                  dataType: 'script',
+                  url: '<%= sort_question_parts_path %>'
+               });
+            },
+            success: function(result) { eval(result); },
+            helper: fixHelper
+         }).disableSelection();                     
+      }
+      $(document).ready(makeSortable());
+   <% end %>
+<% end %>

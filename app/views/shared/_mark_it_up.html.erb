@@ -1,0 +1,24 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% @include_markitup = true %>
+
+<% content_for :javascript_includes do %>
+  <%= javascript_include_tag "markitup_set" %>
+<% end %>
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>  
+    $(document).ready(function() {
+       refresh_mark_it_up_textareas();
+    });
+    
+    // Only convert textareas to MarkItUp! that haven't already been converted.
+    function refresh_mark_it_up_textareas() {
+      $("textarea.mark_it_up").each(function() {
+        if (!($(this).hasClass("markItUpEditor"))) {
+          $(this).markItUp(mySettings);
+        }
+      });
+    }
+  <% end %>
+<% end %>

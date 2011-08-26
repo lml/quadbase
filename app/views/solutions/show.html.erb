@@ -1,0 +1,21 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("Solution", "Solution for #{question_id_text(@question)}") %>
+
+<%= render :partial => 'questions/show', 
+           :locals => {:question => @question} %>
+
+<br/>
+
+<table>
+  <%= render :partial => 'single_solution', :locals => {:solution => @solution} %>
+</table>
+
+<br/>
+
+<%= render :partial => "shared/comments",
+           :locals => {:commentable => @solution} %>
+
+<br/>
+
+<%= link_to 'Back to List', question_solutions_path(@solution.question) %>

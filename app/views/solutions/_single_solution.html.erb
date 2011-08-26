@@ -1,0 +1,116 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% # This partial must be put inside a <table>
+   # Clients of this partial are expected to supply the following variable:
+   # solution
+
+   # Additionally, they can override the following variables:
+
+   even ||= false
+   show_link ||= false
+   destroy_not_remote ||= false
+%>
+               
+<div class="solution" id="solution_<%= solution.id.to_s %>" style="clear:both;">                 
+
+  <div style="float:right; width: 15%">
+    <span style="float:right">
+    <% if show_link %>
+      <%= link_to show_icon, solution_path(solution), :class => "show_link" %>
+    <% end %>
+
+    <% if present_user.can_update?(solution) %>
+      <%= link_to edit_icon, edit_solution_path(solution), :class => "edit_link" %>
+    <% end %>&nbsp;
+
+    <% if present_user.can_destroy?(solution) %>
+      <%= link_to(trash_icon, 
+                      solution, 
+                      :confirm => 'Are you sure you want to delete this solution?', 
+                      :method => :delete,
+                      :id => "delete_solution_#{solution.id.to_s}",
+                      :class => "delete_link",
+                      :remote => !destroy_not_remote) %>
+    <% end %>
+    </span>
+    <br/>
+
+    <span style="float:right">
+    <%= render :partial => 'shared/votes',
+               :locals => {:votable => solution} %>
+    </span>
+
+ </div>
+ 
+ <% if false %>
+ <span class="comment_actions">
+
+   <% if show_link %>
+     <%= link_to show_icon, solution_path(solution), :class => "show_link" %>
+   <% end %>
+
+   <% if present_user.can_update?(solution) %>
+     <%= link_to edit_icon, edit_solution_path(solution), :class => "edit_link" %>
+   <% end %>&nbsp;
+
+   <% if present_user.can_destroy?(solution) %>
+     <%= link_to(trash_icon, 
+                     solution, 
+                     :confirm => 'Are you sure you want to delete this solution?', 
+                     :method => :delete,
+                     :id => "delete_solution_#{solution.id.to_s}",
+                     :class => "delete_link",
+                     :remote => !destroy_not_remote) %>
+   <% end %>
+
+ </span>
+
+
+ <br/>
+ 
+ <span style="float:right">
+ <%= render :partial => 'shared/votes',
+            :locals => {:votable => solution} %>
+ </span>
+ 
+ <% end %>
+
+ <div class="solution_div" style="float:left; width:85%">
+   <% if !solution.explanation.blank? %>
+     <div class="solutionPartHeading" style="margin-top:0px">High-Level Explanation</div>
+     <div id="solution_explanation_<%= solution.id.to_s %>" style="margin-left:20px">
+       <%= simple_format solution.explanation %>
+     </div>
+   <% end %>
+   
+   <% if !solution.content_html.blank? %>   
+     <div class="solutionPartHeading" style="<%= solution.explanation.blank? ? 'margin-top:0px' : '' %>">Detailed Solution</div>
+     <div id="solution_content_<%= solution.id.to_s %>" style="margin-left:20px">
+       <%= solution.content_html.html_safe %>
+     </div>
+   <% end %>
+   
+   <% if !solution.attachable_assets.blank? %>
+     <div>
+       <%= render :partial => "shared/attachable_assets",
+                  :locals => {:attachable => solution,
+                              :show_images => true} %>
+     </div>
+   <% end %>
+ </div>
+ 
+  <br clear="all"/>
+  
+ <div style="width: 250px; float:right; padding: 8px">
+   <span  style="height:auto; float:left; padding-right:10px">
+     <%= gravatar_image solution.creator, {:size => 35} %>
+   </span>
+   <span class="comment_creator" >
+       <%= full_name_link(solution.creator) %>
+     <br/>
+     <span class="comment_timestamp"><%= modified_string(solution) %></span>
+   </span>
+ </div>
+
+&nbsp;
+</div>

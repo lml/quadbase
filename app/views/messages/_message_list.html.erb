@@ -1,0 +1,20 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% messages = Message.messages_for(current_user) %>
+
+<table class="list" width="100%">
+   <tr>
+      <th width="40%">Subject</th>
+      <th width="60%">Recipients</th>
+   </tr>
+   <tr id="message_none_row" <% if !messages.empty? %>style="display:none"<% end %>>
+      <td colspan="2" style="text-align:center">None</td>
+   </tr>
+   <% messages.each do |message| %>
+     <%= render :partial => 'messages/message_list_row', :locals => {:message => message} %>
+   <% end %>
+</table>
+
+<br/>
+
+<%= link_to "New Message", new_message_path %>

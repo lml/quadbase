@@ -1,0 +1,94 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% @show_back_link = true %>
+
+<%= pageHeading("Question Publishing") %>
+
+<% license = @questions.first.license
+   licenses_differ = @questions.any?{|q| q.license != license}
+   errors_exist = licenses_differ || @questions.any?{|q| !q.errors.empty?} %>
+
+<p>You are preparing to publish the following question(s):</p>
+
+<div style="padding: 0 40px"><%= question_id_links(@questions) %></div>
+
+<% if errors_exist %>
+  <p>There are errors that must be fixed before these questions can be 
+  published.  <br/>Please <a href="#">click here</a> for help on understanding
+  the error messages below.</p>
+  <%# TODO make the 'click here' link pop open a dialog box %>
+
+  <% if licenses_differ %>
+    <p>The questions use more than 1 license. A group of questions can only
+    be published together if they use the same license.</p>
+  <% end %>
+    
+  <div style="padding-left:40px">
+    <table width="100%" class="list">
+      <tr>
+        <th width="20%">Question</th>
+        <th>Error</th>
+      </tr>
+      <% @questions.each do |question| %>
+        <% if !question.errors.empty? %>
+          <tr>
+            <td style="padding: 8px 0 0 0" valign="top"><%= question_id_link(question) %></td>
+            <td style="padding: 8px 0 0 0">
+              <% question.errors[:base].each do |msg| %>  
+                <div style="padding: 0 0 9px 0"><%= msg %></span>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </table>
+  </div>
+    
+  <br/>
+  <p><i>Please fix the errors shown above and then return to this page.</i></p>
+    
+<% else %>
+
+  <p>Quadbase requires that all content submitted to our repository be placed 
+  under an Open Content license that <b>allows others to use, distribute, and 
+  create derivative works</b> based upon that content.</p>
+
+  <%= render :partial => 'licenses/' + license.agreement_partial_name, 
+             :locals => {:license => license} %>
+
+  <%= form_tag(publish_questions_path(:question_ids => @questions.collect{|q| q.id}),
+              :method => "put") do %>
+    
+    <%= check_box_tag(:agreement_checkbox) %> 
+    
+    I have read the above, and I agree to license this new work under its terms.
+    
+    <br/><br/>
+    
+    <center>
+       <%= submit_tag 'Publish!',
+                      :id => 'publish_submit',
+                      :class => "#{submit_classes}",
+                      :onclick => confirm_drop_roles(@questions) %>
+    </center>
+  <% end %>
+
+  <%# JS to enable/disable the submit button dependent on if the agree checkbox is checked %>
+  <% content_for :javascript do %>
+   <%= javascript_tag do %>
+       $('#agreement_checkbox').live('click', function() {
+          if ($('#agreement_checkbox').is(':checked')) {
+             $('#publish_submit').removeAttr('disabled');
+             $('#publish_submit').removeClass('ui-state-disabled');
+          } 
+          else {
+             $('#publish_submit').attr('disabled', 'disabled');
+             $('#publish_submit').addClass('ui-state-disabled');
+          }
+       });
+       $('#publish_submit').attr('disabled', 'disabled');
+       $('#publish_submit').addClass('ui-state-disabled');
+    <% end %>
+  <% end %>
+
+<% end %>

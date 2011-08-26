@@ -1,0 +1,15 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% @errors = @project.errors %>
+
+<%= form_for(@project) do |f| %>
+
+   <table class="left_heading">
+      <tr>
+         <th>Project Name</th>
+         <td><%= f.text_field :name %></td>
+      </tr>
+   </table>
+   <br/>
+   <%= f.submit(nil , :class => "#{submit_classes}") %>
+<% end %>

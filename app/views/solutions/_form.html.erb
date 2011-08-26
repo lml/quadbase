@@ -1,0 +1,37 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% # Clients of this partial must supply the following variable:
+   # solution
+%>
+
+<div id="solution_edit_<%= solution.id.to_s %>" >
+
+<%= render :partial => "attachable_assets/add_image_dialog",
+           :locals => {:attachable => solution} %>
+
+<%= form_for solution do |f| %>
+
+  <%= f.hidden_field :question_id %>
+
+  <p><%= f.label "High-Level Explanation / Approach (words only):" %>
+  <%= f.text_area :explanation, :rows => 3, :id => "solution_explanation" %></p>
+
+  <p><%= f.label "Detailed Solution:" %>
+  <%= f.text_area :content, :rows => 5, :id => "solution_content", :class => "mark_it_up" %></p>
+
+
+  <p><%= f.check_box :is_visible %><%= f.label "This solution is ready to be viewed" %></p>
+
+  <%= f.submit :value => (solution.has_content? ? "Update" : "Create") + " Solution", :class => "ui-state-default ui-corner-all" %>
+
+<% end %>
+
+  <br/>
+
+  <%= render :partial => "shared/attachable_assets",
+                               :locals => {:attachable => solution,
+                                           :show_images => true} %><br/>
+
+  <%= render :partial => "attachable_assets/form", :locals => {:attachable => solution} %>
+
+</div>

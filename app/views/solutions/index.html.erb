@@ -1,0 +1,18 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% @show_source_link = true %>
+<% @show_embed_link = true %>
+<% @show_edit_question_link = true %>
+<% @show_project_link = true %>
+<% @show_edit_license_link = true %>
+<% @show_question_link = true %>
+
+<%= link_to 'Write a New Solution', new_question_solution_path(@question), :style => "float:right" %>
+
+<%= pageHeading("Solutions", "Solutions for #{question_id_text(@question)}") %>
+
+<br/>
+  
+<%= render :partial => 'solution_list',
+           :locals => {:question => @question,
+                       :solutions => @solutions} %>

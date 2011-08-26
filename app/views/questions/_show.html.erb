@@ -1,0 +1,7 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+   <%= render :partial => "#{view_dir(question)}/show", 
+              :locals => {:question => question} %>
+   <p></p>
+   <%= render :partial => 'questions/attribution', 
+              :locals => {:question => question }%>

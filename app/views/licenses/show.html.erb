@@ -1,0 +1,36 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<div id="upperCornerLinks">
+   <%= link_to 'Edit', edit_license_path(@license) %> |
+   <%= link_to 'List', licenses_path %>
+</div>
+
+<%= pageHeading("License Details") %>
+
+<table class="left_heading">
+   <tr>
+      <th>Short Name:</th>
+      <td><%= @license.short_name %></td>
+   </tr>
+   
+   <tr>
+      <th>Long Name:</th>
+      <td><%= @license.long_name %></td>
+   </tr>
+   
+   <tr>
+      <th>URL:</th>
+      <td><%= @license.url %></td>
+   </tr>
+   
+   <tr>
+      <th>Agreement Partial Name:</th>
+      <td><%= @license.agreement_partial_name %></td>
+   </tr>
+
+   <tr>
+      <th>Default License?</th>
+      <td><%= tf_to_yn(@license.is_default) %></td>
+   </tr>
+
+</table>

@@ -1,0 +1,31 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% 
+  part ||= @part
+  all_parts = part.multipart_question.child_question_parts
+  earlier_parts = all_parts.select{|p| p.order < part.order}
+%>
+
+<% if !earlier_parts.empty? %>
+
+  <% 
+    part_options = earlier_parts.map do |p| 
+      [question_id_text_no_version(p.child_question), p.child_question_id] 
+    end 
+  %>
+
+  <%= render :partial => 'multipart_questions/one_kind_part_dependencies',
+             :locals => { :part => part,
+                          :text => "Prerequisites",
+                          :kind => "requirement",
+                          :part_options => part_options } %>
+      
+  <br clear="all"/>
+      
+  <%= render :partial => 'multipart_questions/one_kind_part_dependencies',
+             :locals => { :part => part,
+                          :text => "Supported by",
+                          :kind => "support",
+                          :part_options => part_options } %>
+      
+<% end %>
