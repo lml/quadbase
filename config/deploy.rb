@@ -1,15 +1,14 @@
 # Copyright (c) 2011 Rice University.  All rights reserved.
 
 DEPLOY_SETTINGS = YAML::load_file(File.join(File.dirname(__FILE__), '/deploy_settings.yml'))
-DEPLOY_SETTINGS.symbolize_keys!
 
 require "bundler/capistrano"
 
-set :user, DEPLOY_SETTINGS[:deploy_server_username]   # Your server account's username
-set :domain, DEPLOY_SETTINGS[:domain]                 # Servername where your account is located 
+set :user, DEPLOY_SETTINGS["deploy_server_username"]   # Your server account's username
+set :domain, DEPLOY_SETTINGS["domain"]                 # Servername where your account is located 
 set :ssh_options, { :forward_agent => true }
-set :application, DEPLOY_SETTINGS[:application]
-set :applicationdir, DEPLOY_SETTINGS[:applicationdir] # The deploy directory
+set :application, DEPLOY_SETTINGS["application"]
+set :applicationdir, DEPLOY_SETTINGS["applicationdir"] # The deploy directory
 
 # version control config
 

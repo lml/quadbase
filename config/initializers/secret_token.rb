@@ -6,4 +6,5 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-Quadbase::Application.config.secret_token = SECRET_SETTINGS[:secret_token]
+Quadbase::Application.config.secret_token = 
+  SECRET_SETTINGS[:secret_token] || 'B64EADC638B71552AD54E2E5622ADD9662C5AEF6E3CD60C4569875D46E6352EB'
