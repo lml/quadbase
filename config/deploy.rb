@@ -33,8 +33,10 @@ set :deploy_via, :remote_cache
 default_run_options[:pty] = true  # Avoid errors when deploying from windows
 set :use_sudo, false
 
+
 # Use this so we don't have to put sensitive data in the git repository (for security)
-after 'deploy:finishing_touches'
+
+after "deploy:symlink","custom:finishing_touches"
 
 namespace :deploy do
   task :start do ; end
@@ -42,9 +44,13 @@ namespace :deploy do
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
   end
+end
+
+namespace :custom do
   task :finishing_touches, :roles => :app do
-    run "ln -s #{deploy_to}/to_copy/database.yml #{current_path}/config/database.yml"
+    run "ln -sFf #{deploy_to}/to_copy/database.yml #{current_path}/config/database.yml"
     run "ln -s #{deploy_to}/to_copy/secret_settings.yml #{current_path}/config/secret_settings.yml"
   end
 end
+
 
