@@ -17,7 +17,8 @@ class QuestionRoleRequestsControllerTest < ActionController::TestCase
                          :question => @question)
     qc2 = Factory.create(:question_collaborator,
                          :user => @collaborator_member,
-                         :question => @question)
+                         :question => @question,
+                         :is_author => true) #already an author so can auto accept
     @question_role_request = Factory.build(:question_role_request, :question_collaborator => qc, :requestor => @member, :toggle_is_author => true)
     @question_role_request_auto = Factory.build(:question_role_request, :question_collaborator => qc2, :requestor => @collaborator_member, :toggle_is_copyright_holder => true)
   end
@@ -73,6 +74,7 @@ class QuestionRoleRequestsControllerTest < ActionController::TestCase
   test "should accept question_role_request" do
     sign_in @collaborator
     @question_role_request.save!
+    @question_role_request.approve!
     assert_difference('QuestionRoleRequest.count', -1) do
       put :accept, :question_role_request_id => @question_role_request.to_param
     end
@@ -123,7 +125,7 @@ class QuestionRoleRequestsControllerTest < ActionController::TestCase
   end
 
   test "should destroy question_role_request" do
-    sign_in @collaborator_member
+    sign_in @member
     @question_role_request.save!
     assert_difference('QuestionRoleRequest.count', -1) do
       delete :destroy, :id => @question_role_request.to_param
