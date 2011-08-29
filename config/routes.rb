@@ -188,7 +188,7 @@ Quadbase::Application.routes.draw do
     votable
   end
 
-  resources :messages, :only => [:new, :show] do
+  resources :messages, :only => [:new, :show, :update] do
     post 'add_recipient'
     commentable
   end

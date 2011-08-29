@@ -39,8 +39,8 @@ class HelpControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get dialog" do
-    get :dialog, :partial_name => "multipart"
+  test "should get topic" do
+    get :topic, :topic_name => "messages"
     assert_response :success
   end
 

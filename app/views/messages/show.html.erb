@@ -5,8 +5,10 @@
 <table width="100%">
   <tr>
     <td>To:</td>
-    <td><%= @message.recipients.collect{ |r| full_name_link(r) }.to_sentence.html_safe %>
-        <% # TODO: Check if the above is really safe %>
+    <td id="recipient_list">
+      <% @message.recipients.each do |recipient| %>
+        <%= render :partial => 'recipient', :locals => {:recipient => recipient} %>
+      <% end %>
     </td>
     <td align="right">
       <%= render :partial => 'shared/add_user_form', 
