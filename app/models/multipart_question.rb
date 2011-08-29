@@ -85,7 +85,11 @@ class MultipartQuestion < Question
     # exception is that published questions don't have to have an intro.  Draft
     # questions without an intro have already caused an error.
 
-    setup_ids = questions.collect{|q| q.question_setup_id}
+    setup_ids = questions.collect do |q|
+      setup = q.question_setup
+      q.is_published? && setup.content.blank? ? nil : setup.id     
+    end
+    
     setup_ids.reject!{|id| id.nil?}
     uniq_non_nil_setup_ids = setup_ids.uniq
 

@@ -42,7 +42,7 @@ class CommentThreadTest < ActiveSupport::TestCase
     assert !ct.subscription_for(u)
     assert ct.subscribe!(u)
     assert ct.subscription_for(u)
-    assert !ct.subscribe!(u)
+    assert ct.subscribe!(u)
   end
 
   test 'unsubscribe' do

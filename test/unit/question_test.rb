@@ -50,7 +50,7 @@ class QuestionTest < ActiveSupport::TestCase
     q.set_initial_question_roles(u)
     
     assert_nothing_raised(ActiveRecord::RecordInvalid) {q.publish!(u)}
-    assert_equal 0, q.version
+    assert_equal 1, q.version
     assert q.is_published?
   end
   
