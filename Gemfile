@@ -1,6 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.0.3'
+gem 'rake', '0.8.7'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -30,7 +31,7 @@ gem "recaptcha", :require => "recaptcha/rails"
 
 group :development, :test do
 	gem 'sqlite3-ruby', :require => 'sqlite3'
-	gem 'ruby-debug'
+	gem 'ruby-debug19'
    # gem 'machinist', '< 2.0'
    gem 'faker'
    gem 'factory_girl_rails', '<2.0'
