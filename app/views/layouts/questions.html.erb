@@ -121,4 +121,20 @@
    <% end %>
 <% end %>
 
+<div id="derive_dialog" style="display:none" title="Question Derivation">
+</div>
+
+<% content_for :javascript do %>
+   <%= javascript_tag do %>
+      $("#derive_dialog").dialog({ 
+        autoOpen: false, 
+        modal: true, 
+        height:600, 
+        width:600, 
+        buttons: { "Close": function() { $(this).dialog("close"); }},  
+                   open: function(event, ui) { $("#text_query").val(''); $("#selected_type").val(''); }
+      });
+   <% end %>
+<% end %>
+
 <%= render :file => 'layouts/application' %>
