@@ -9,8 +9,8 @@ class AttachableAssetsController < ApplicationController
     # information, provide an initial local file name)
     
     original_filename = params[:attachable_asset][:asset_attributes][:attachment].original_filename
-    corrected_content_type = MIME::Types.type_for(original_filename.to_s)
-
+    corrected_content_type = MIME::Types.type_for(original_filename.to_s).first
+    
     params[:attachable_asset][:asset_attributes][:attachment].content_type = corrected_content_type
 
     @attachable_asset = AttachableAsset.new(params[:attachable_asset])

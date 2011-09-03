@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 # Copyright (c) 2011 Rice University.  All rights reserved.
 
 require 'test_helper'
@@ -427,6 +429,11 @@ class QuestionTest < ActiveSupport::TestCase
     
     assert sq.question_setup.nil?
     assert_raise(ActiveRecord::RecordNotFound) {QuestionSetup.find(qs_id)}
+  end
+  
+  test "funny characters" do
+    q = make_simple_question(:method => :create)
+    assert_nothing_raised{q.update_attributes({:content => "\n â".encode("UTF-8")})}
   end
   
   # test "derive with errored question doesn't create QuestionDerivation" do

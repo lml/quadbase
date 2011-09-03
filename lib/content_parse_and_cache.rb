@@ -62,7 +62,7 @@ protected
     transformer = QuadbaseHtmlTransformer.new
 
     transformed_tree = transformer.apply(parse_tree)
-    self.content_html = transformed_tree
+    self.content_html = transformed_tree.force_encoding("UTF-8")
     # logger.debug("SimpleQuestion::cache_html: "  + transformed_tree.inspect.to_s)
   end
 
