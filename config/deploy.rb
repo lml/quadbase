@@ -2,6 +2,11 @@
 
 DEPLOY_SETTINGS = YAML::load_file(File.join(File.dirname(__FILE__), '/deploy_settings.yml'))
 
+$:.unshift(File.expand_path('./lib', ENV['rvm_path'])) # Add RVM's lib directory to the load path.
+require "rvm/capistrano"                  # Load RVM's capistrano plugin.
+
+set :rvm_ruby_string, 'ruby-1.9.2-p290@quadbase'        # Or whatever env you want it to run in.
+
 require "bundler/capistrano"
 
 set :user, DEPLOY_SETTINGS["deploy_server_username"]   # Your server account's username
