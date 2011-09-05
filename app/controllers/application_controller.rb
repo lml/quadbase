@@ -19,17 +19,30 @@ class ApplicationController < ActionController::Base
 
   respond_to :html
 
-  rescue_from Exception, :with => :rescue_from_exception
+  unless Quadbase::Application.config.consider_all_requests_local
+    rescue_from Exception, :with => :rescue_from_exception
+  end
                   
   protected
 
   def rescue_from_exception(exception)
-    if exception.instance_of? SecurityTransgression
-      render_error_page(403)
-    else
-      DeveloperErrorNotifier.exception_email(exception, present_user)
-      raise
+    error_page = 500
+    send_email = true
+    
+    case exception
+    when SecurityTransgression
+      error_page = 403
+      send_email = false
+    when ActiveRecord::RecordNotFound, 
+         ActionController::RoutingError,
+         ActionController::UnknownController,
+         ActionController::UnknownAction
+      error_page = 404
+      send_email = false
     end
+    
+    render_error_page(error_page)
+    DeveloperErrorNotifier.exception_email(exception, present_user) if send_email
   end
 
   # A user can be logged in but later be deauthorized for any number of reasons
