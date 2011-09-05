@@ -59,7 +59,7 @@
      
      <tr id="<%= row_id_base + question.id.to_s %>"%>
        <% if show_checkboxes %>
-         <% checkbox_value = entry.method(checkbox_options[:method_for_value]).call() %>
+         <% checkbox_value = entry.call(checkbox_options[:method_for_value]) %>
          <td><%= check_box_tag("#{checkbox_options[:name_base]}[]", checkbox_value) %></td>
        <% end %>
            <td><%= question_id_link(question) %></td>

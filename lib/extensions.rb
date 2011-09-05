@@ -21,6 +21,17 @@ module ActiveRecord
       became.instance_variable_set("@errors", @errors)
       became    
     end  
+    
+    # If you're in the console and say myModel.method('id').call(), you get back
+    # the id attribute of the instance you have.  But for some reason that gives
+    # an 'undefined method' error when run in a view.  So this method just checks
+    # to see if the thing being called is an attribute, and if so calls a method
+    # to read that attribute; otherwise, calls it as a method.
+    def call(method_or_attribute)
+      self.attribute_present?(method_or_attribute) ? 
+        self.read_attribute(method_or_attribute) :
+        self.method(method_or_attribute).call()
+    end
   end
 end
 
