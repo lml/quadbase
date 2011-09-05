@@ -6,7 +6,7 @@
 
 <% if !question.answer_choices.empty? %>
    <div class="quad-answer_choices">
-      <% answer_letter_code = "a".ord %>
+      <% answer_letter_code = "a".ord-1 %>
       <table width="100%">
       <% question.answer_choices.each do |ac| %>
          <tr>
