@@ -38,9 +38,13 @@
   <div class="actions">
     <center>
       <%= f.submit "Quick Preview", :class => "#{submit_classes}",
-                   :id => "preview_button", :name => "preview" %>
+                   :id => "preview_button", :name => "preview" %>&nbsp;&nbsp;&nbsp;&nbsp;
       <%= f.submit "Save Draft", :class => "#{submit_classes}",
-                   :id => "save_button" %>
+                   :id => "save_button" %>&nbsp;&nbsp;&nbsp;&nbsp;
+      <%= link_to "Discard changes", question_path(@question) %>
+      <p>
+      <span style="font-size:12px"><%= link_to_help "where_is_publish", "Where's the publish button?"%></span>
+      </p>
     </center>
   </div>
 <% end %>
