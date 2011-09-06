@@ -28,7 +28,7 @@ function delete_as_post(action, serializedArray) {
 
 function put_as_post(action, serializedArray) {
    serializedArray.push({name: "_method", value: "put"}); 
-   return $.post(action, serializedArray, 'html');  // TODO check that this 'script' is doing something
+   return $.post(action, serializedArray);
 }
 
 // Adds a 'notice' message to the page

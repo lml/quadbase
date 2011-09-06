@@ -17,7 +17,6 @@
 <%= form_for @question, 
              :as => :question, 
              :url => @question.id.nil? ? questions_path() : question_path(@question), 
-             :remote => true,
              :html => {:autocomplete => "off"} do |f| %>
 
   <%= render :partial => "#{view_dir(@question)}/form", 
@@ -37,18 +36,23 @@
   <br/>
   <div class="actions">
     <center>
-      <%= f.submit "Quick Preview", 
-                   :class => "#{submit_classes}",
-                   :id => "preview_button", 
-                   :name => "preview" %>
+      <%= link_to "Quick Preview", nil, :id => "preview_link" %>
+
       &nbsp;&nbsp;&nbsp;&nbsp;
+
       <%= f.submit "Save Draft", 
                    :class => "#{submit_classes}",
-                   :id => "save_button" %>
+                   :id => "save_button",
+                   :disable_with => "Saving..." %>
+
       &nbsp;&nbsp;&nbsp;&nbsp;
+
       <%= link_to "Discard changes", question_path(@question) %>
-      <p>
-      <span style="font-size:12px"><%= link_to_help "where_is_publish", "Where's the publish button?"%></span>
+      
+      <p>      
+        <span style="font-size:12px">
+          <%= link_to_help "where_is_publish", "Where's the publish button?"%>
+        </span>
       </p>
     </center>
   </div>
@@ -60,19 +64,18 @@
 
 <% content_for :javascript do %>
    <%= javascript_tag do %>
+      $("#preview_link").click(function(event) {
+        event.preventDefault();
+        return put_as_post('<%= question_preview_path(@question) %>', 
+                             $('form').serializeArray());
+      });
+   
       $("#preview_dialog").dialog({ 
         autoOpen: false, 
         modal: true, 
         height:600, 
         width:600, 
-        buttons: { "Close": function() { $(this).dialog("close"); }}});
-      $("#preview_button").bind('click', function() {
-        $("#question_edit").attr("action", "<%= question_preview_path(@question) %>");
-        return true;
-      });
-      $("#save_button").bind('click', function() {
-        $("#question_edit").attr("action", "<%= question_path(@question) %>");
-        return true;
+        buttons: { "Close": function() { $(this).dialog("close"); }}
       });
    <% end %>
 <% end %>

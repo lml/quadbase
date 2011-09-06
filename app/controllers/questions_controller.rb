@@ -57,8 +57,6 @@ class QuestionsController < ApplicationController
   # Rails tries to render simple_questions/edit when there are update errors, but
   # we just want it to go to the questions view.
   def update
-    return preview if params[:preview]
-
     @question = Question.from_param(params[:id])
     raise SecurityTransgression unless present_user.can_update?(@question)
     if (@no_lock = !@question.check_and_unlock!(present_user))
@@ -73,15 +71,13 @@ class QuestionsController < ApplicationController
     respond_to do |format|
       if (@updated = @question.update_attributes(params[:question]))
         flash[:notice] = "Your draft has been saved.
-                          Until you Publish this draft, please remember that only members of " +
+                          Until you publish this draft, please remember that only members of " +
                           @question.project_questions.first.project.name +
                           " will be able to see it."
         format.html { redirect_to question_path(@question) }
-        format.js
       else
         flash[:alert] = get_error_messages(@question)
         format.html { render 'questions/edit' }
-        format.js
       end
     end
   end
@@ -95,11 +91,9 @@ class QuestionsController < ApplicationController
     Question.transaction do
       respond_to do |format|
         if @question.save
-          format.html
           format.js
         else
           flash[:alert] = get_error_messages(@question)
-          format.html { render :action => 'edit' }
           format.js
         end
       end
