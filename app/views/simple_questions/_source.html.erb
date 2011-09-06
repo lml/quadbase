@@ -19,7 +19,7 @@
       <% answer_letter_code = ?a-1 %>
       <table width="100%">
       <% question.answer_choices.each do |ac| %>
-         <tr>
+         <tr class="quad-answer_choice">
             <td class="quad-answer_choice_index" width="10%">
                <%= (answer_letter_code += 1).chr %>)
             </td>

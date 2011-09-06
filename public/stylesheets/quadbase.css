@@ -1120,3 +1120,7 @@ nav.no_js:hover ul {
    /*padding: 7px;*/
    width:80%;
 }
+
+div.quad-question {
+   width: 100%;
+}

@@ -26,14 +26,17 @@ div.quad-answer_choices {
 
 }
 
-.quad-answer_choice p {
-	margin-bottom: 5px;
-	margin-top: 5px;
+.quad-answer_choice p {}
+
+.quad-answer_choice {
+   padding: 8px;
 }
 
 .quad-answer_choice_index {
 	font-weight: bold;
 	padding-right: 5px;
+	margin-bottom: 5px;
+	margin-top: 5px;
 }
 
 .quad-quid {

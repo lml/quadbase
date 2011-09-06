@@ -10,10 +10,10 @@
       <table width="100%">
       <% question.answer_choices.each do |ac| %>
          <tr>
-            <td class="quad-answer_choice_index" width="10%">
+            <td class="quad-answer_choice_index" width="5%">
                <%= (answer_letter_code += 1).chr %>)
             </td>
-            <td class="quad-answer_choice" width="90%">
+            <td class="quad-answer_choice" width="95%">
                <%= ac.content_html.html_safe %>
             </td>
          </tr>
