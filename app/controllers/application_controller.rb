@@ -2,11 +2,11 @@
 
 class ApplicationController < ActionController::Base
 
-  prepend_before_filter :protect_beta,
-                        :user_not_disabled!,
+  prepend_before_filter :user_not_disabled!,
                         :site_not_in_maintenance!,
                         :authenticate_user!
   # Prepend ensures we run those filters before authenticate_admin! no matter what
+  # this used to have :protect_beta which provides a basic HTTP auth on the site
 
   protect_from_forgery
   
