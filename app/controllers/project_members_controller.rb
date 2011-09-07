@@ -2,16 +2,45 @@
 
 class ProjectMembersController < ApplicationController
   before_filter {select_tab(:projects)}
+  
+  before_filter :get_project, :only => [:search, :create]
+
+  def new
+    @action_dialog_title = "Add a member"
+    @action_search_path = search_project_project_members_path(params[:project_id])
+    
+    respond_to do |format|
+      format.js { render :template => 'users/action_new' }
+    end
+  end
+  
+  # This is for searching for new members
+  def search
+    raise SecurityTransgression unless present_user.can_update?(@project)
+    
+    @selected_type = params[:selected_type]
+    @text_query = params[:text_query]
+    @users = User.search(@selected_type, @text_query)
+
+    @users.reject! do |user| 
+      @project.is_member?(user)
+    end    
+    
+    @action_partial = 'project_members/create_project_member_form'
+    
+    respond_to do |format|
+      format.js { render :template => 'users/action_search' }
+    end
+  end
 
   def create
-    @project = params[:project_id].nil? ? nil : Project.find(params[:project_id])
-
     raise SecurityTransgression unless present_user.can_update?(@project)
 
-    user = User.find_by_username(params[:username]) # Rails should escape these automatically
+    username = params[:project_member][:username]
+    user = User.find_by_username(username)
 
     if user.nil?
-      flash[:alert] = 'User ' + params[:username] + ' not found!'
+      flash[:alert] = 'User ' + username + ' not found!'
       respond_to do |format|
         format.html { redirect_to project_path(@project) }
         format.js { render :template => 'shared/display_flash' }
@@ -67,6 +96,12 @@ class ProjectMembersController < ApplicationController
       end
     end
     
+  end
+  
+protected
+
+  def get_project
+    @project = params[:project_id].nil? ? nil : Project.find(params[:project_id])
   end
 
 end

@@ -88,13 +88,15 @@ Quadbase::Application.routes.draw do
   get 'help/topic/:topic_name', :to => 'help#topic', :as => 'topic_help'
   
   resources :projects do
-    resources :project_members, :only => :create
-
+    resources :project_members, :only => [:create, :new] do
+      collection do 
+        post 'search'
+      end
+    end
     commentable
-
   end
   
-  resources :project_members, :only => :destroy do
+  resources :project_members, :only => [:destroy] do
     put 'make_default'
   end
 

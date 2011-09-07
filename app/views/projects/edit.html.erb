@@ -9,22 +9,13 @@
 <br/>
 <div class="sectionHeadingNoUnder">Members</div>
 
-   <%= render :partial => 'project_members/member_list' %>
+<div style="padding: 0 15px">
+  <%= render :partial => 'project_members/member_list' %>
+</div>
 
-<table>
-   <tr>
-      <td colspan="2">
-        <%= render :partial => 'shared/add_user_form', 
-                   :locals => {:add_path => project_project_members_path(@project), 
-                               :container_type => 'project', 
-                               :container_id => @project.id, 
-                               :form_label => 'Add a member', 
-                               :search_label => 'Find members', 
-                               :add_label => 'Add member', 
-                               :cannot_add_label => 'Already a member'} %>
-      </td>
-   </tr>
-</table>
+<br/>
+
+<%= link_to "Add members ...", new_project_project_member_path(@project), :remote => true %>      
 
 <% @links = [ link_to('Show Project', @project), 
               link_to('My Projects', projects_path) ] %>

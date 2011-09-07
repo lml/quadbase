@@ -8,6 +8,10 @@ class DeputizationsController < ApplicationController
   def new
     @action_dialog_title = "Add a deputy"
     @action_search_path = search_deputizations_path
+    
+    respond_to do |format|
+      format.js { render :template => 'users/action_new' }
+    end
   end
   
   # This is for searching for new deputies
@@ -22,6 +26,10 @@ class DeputizationsController < ApplicationController
     end    
     
     @action_partial = 'deputizations/create_deputization_form'
+    
+    respond_to do |format|
+      format.js { render :template => 'users/action_search' }
+    end
   end
 
   def create

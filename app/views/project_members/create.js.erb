@@ -2,7 +2,7 @@
 
 <%= display_flash %>
 
-$("<%= "input[name='username'][type='hidden'][value='" + escape_javascript(params[:username]) + "']" %>").parent().html("<%= escape_javascript(label_tag 'Member added') %>")
+$("#user_action_form_<%= @project_member.user.id %>").html("Added");
 
 <%= hide_none %>
 
