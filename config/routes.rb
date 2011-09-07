@@ -194,6 +194,8 @@ Quadbase::Application.routes.draw do
   end
 
   resources :messages, :only => [:new, :show, :update] do
+    get 'new_recipient'
+    post 'search_recipients'
     post 'add_recipient'
     commentable
   end

@@ -1,0 +1,10 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%# Callers must supply a 'user' local variable %>
+
+<%= form_tag(message_add_recipient_path(@message), 
+             :method => :post, 
+             :remote => true) do %>
+  <%= hidden_field_tag :username, user.username %>
+  <%= submit_tag "Add", :class => submit_classes, :onclick => please_wait_js %>
+<% end %>

@@ -3,6 +3,8 @@
 class MessagesController < ApplicationController
 
   before_filter :include_jquery
+  
+  before_filter :get_message, :only => [:add_recipient, :search_recipients]
 
   # GET /messages/1
   def show
@@ -60,10 +62,33 @@ class MessagesController < ApplicationController
     end
   end
 
+  def new_recipient
+    @action_dialog_title = "Add a recipient"
+    @action_search_path = message_search_recipients_path(params[:message_id])
+    
+    respond_to do |format|
+      format.js { render :template => 'users/action_new' }
+    end
+  end
+  
+  def search_recipients
+    @selected_type = params[:selected_type]
+    @text_query = params[:text_query]
+    @users = User.search(@selected_type, @text_query)
+
+    @users.reject! do |user| 
+      @message.has_recipient?(user)
+    end    
+
+    @action_partial = 'messages/create_recipient_form'
+
+    respond_to do |format|
+     format.js { render :template => 'users/action_search' }
+    end
+  end
+
   # POST /messages/1/add_recipient
   def add_recipient
-    @message = Message.find(params[:message_id])
-
     raise SecurityTransgression unless present_user.can_update?(@message)
     
     @recipient = User.find_by_username(params[:username])
@@ -88,6 +113,12 @@ class MessagesController < ApplicationController
         format.js { render :template => 'shared/display_flash' }
       end
     end
+  end
+  
+protected
+
+  def get_message
+    @message = Message.find(params[:message_id])
   end
 
 end

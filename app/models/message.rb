@@ -23,6 +23,10 @@ class Message < ActiveRecord::Base
   def recipients
     comment_thread.comment_thread_subscriptions.collect { |cts| cts.user }
   end
+  
+  def has_recipient?(user)
+    recipients.any?{|r| r == user}
+  end
 
   def unsubscribe_callback
     destroy if comment_thread.reload.comment_thread_subscriptions.blank?
