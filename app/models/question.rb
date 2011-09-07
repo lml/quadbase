@@ -279,6 +279,10 @@ class Question < ActiveRecord::Base
     qc.nil? ? false : qc.has_role?(role)
   end
   
+  def is_collaborator?(user)
+    question_collaborators.any?{|qc| qc.user_id == user.id}
+  end
+  
   def has_role_permission_as_deputy?(user, role)
     # TODO this is probably fairly costly and only applies to a small number
     # of users; so implement a counter_cache of num deputizers and check that

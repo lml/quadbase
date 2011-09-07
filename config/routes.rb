@@ -115,7 +115,10 @@ Quadbase::Application.routes.draw do
     put 'preview'
     get 'history'
 
-    resources :question_collaborators, :only => [:index, :create, :destroy] do
+    resources :question_collaborators, :only => [:index, :create, :destroy, :new] do
+      collection do
+        post 'search'
+      end
       sortable
     end
 

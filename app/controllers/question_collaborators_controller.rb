@@ -12,6 +12,31 @@ class QuestionCollaboratorsController < ApplicationController
   
   helper :questions
 
+  def new
+    @action_dialog_title = "Add a collaborator"
+    @action_search_path = search_question_question_collaborators_path(params[:question_id])
+    
+    respond_to do |format|
+      format.js { render :template => 'users/action_new' }
+    end
+  end
+  
+  def search
+    @selected_type = params[:selected_type]
+    @text_query = params[:text_query]
+    @users = User.search(@selected_type, @text_query)
+
+    @users.reject! do |user| 
+      @question.is_collaborator?(user)
+    end    
+    
+    @action_partial = 'question_collaborators/create_question_collaborator_form'
+    
+    respond_to do |format|
+      format.js { render :template => 'users/action_search' }
+    end
+  end
+
   def index
     @question_collaborators = @question.question_collaborators
     raise SecurityTransgression unless present_user.can_read?(@question)
@@ -27,10 +52,12 @@ class QuestionCollaboratorsController < ApplicationController
 
   def create
     @question_collaborators = @question.question_collaborators
-    user = User.find_by_username(params[:username]) # Theoretically Rails should escape this one automatically
+    
+    username = params[:question_collaborator][:username]
+    user = User.find_by_username(username) 
   
     if user.nil?
-      flash[:alert] = 'User ' + params[:username] + ' not found!'
+      flash[:alert] = 'User ' + username + ' not found!'
       respond_to do |format|
         format.html { redirect_to question_question_collaborators_path(@question) }
         format.js { render :template => 'shared/display_flash' }
