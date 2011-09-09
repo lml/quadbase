@@ -28,7 +28,7 @@
 
 <%# Option initialization %>
 
-<% entries ||= [] %>
+<%# entries ||= [] %>
 <% row_id_base ||= "question_" %>
 <% show_checkboxes = !local_assigns[:checkbox_options].nil? %>
 <% method_for_question ||= nil %>
@@ -39,24 +39,25 @@
 
 <% num_cols = 4 %>
 
-<table class="list" width="100%">
-   <tr>
-      <% if show_checkboxes %>
-        <% num_cols += 1 %>
-        <th style='padding-right:25px'></th>
-      <% end %>
-      <th width="15%"># , Version</th>
-      <th width="10%" style="text-align:center">Type</th>
-      <th width="15%" style="text-align:center">Modified Date</th>
-      <th width="60%">Quick Look</th>
-   </tr>
-   <tr id="none_row" <% if !entries.empty? %>style="display:none"<% end %>>
-      <td colspan="<%= num_cols %>" style="text-align:center">[ No questions ]</td>
-   </tr>
+<% if !entries.nil? %>
+  <table class="list" width="100%">
+     <tr>
+        <% if show_checkboxes %>
+          <% num_cols += 1 %>
+          <th style='padding-right:25px'></th>
+        <% end %>
+        <th width="15%"># , Version</th>
+        <th width="10%" style="text-align:center">Type</th>
+        <th width="15%" style="text-align:center">Modified Date</th>
+        <th width="60%">Quick Look</th>
+     </tr>
+     <tr id="none_row" <% if !entries.empty? %>style="display:none"<% end %>>
+        <td colspan="<%= num_cols %>" style="text-align:center">[ No questions ]</td>
+     </tr>
    
      <% entries.each do |entry| %>
        <% question = method_for_question.nil? ? entry : entry.method(method_for_question).call() %>
-     
+   
      <tr id="<%= row_id_base + question.id.to_s %>"%>
        <% if show_checkboxes %>
          <% checkbox_value = entry.call(checkbox_options[:method_for_value]) %>
@@ -69,3 +70,4 @@
          </tr>
      <% end %>
   </table>
+<% end %>

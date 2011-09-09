@@ -12,8 +12,6 @@ class QuestionsController < ApplicationController
   before_filter :except => [:index, :new, :get_started, :search] do @use_columns = true end
   
   def index
-    respond_with(@questions = Question.all.reject { |q| (q.is_published? && !q.is_latest?) ||
-                                                        !present_user.can_read?(q) })
   end
 
   def show
