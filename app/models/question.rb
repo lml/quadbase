@@ -131,16 +131,19 @@ class Question < ActiveRecord::Base
   
   def self.from_param(param)
     if (param =~ /^d(\d+)/)
-      Question.find($1.to_i) # Rails escapes this
+      q = Question.find($1.to_i) # Rails escapes this
     elsif (param =~ /^q(\d+)(v(\d+))?/)
       if ($3.nil?)
-        latest_published($1.to_i) # Somewhat dangerous but seems to be properly escaped
+        q = latest_published($1.to_i) # Somewhat dangerous but seems to be properly escaped
       else
-        find_by_number_and_version($1.to_i, $3.to_i) # Rails escapes this
+        q = find_by_number_and_version($1.to_i, $3.to_i) # Rails escapes this
       end
     else
       raise SecurityTransgression
     end
+    
+    raise ActiveRecord::RecordNotFound if q.nil?
+    q
   end
     
   def self.find_by_number_and_version(number, version)
