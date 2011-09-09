@@ -11,7 +11,7 @@
     vertical-align: top;
   }
   
-  .placeholder {
+  .exampleQuestion {
     float:right; 
     width:325px; 
     margin-left:30px; 
@@ -23,7 +23,7 @@
   }
     
   
- div.carouselQuestion {
+ div.questionBox {
       margin: 10pt; 
       padding: 0pt; 
       position: relative; 
@@ -99,8 +99,8 @@ matching questions, and multipart questions.</p>
 
   
   
-        <div class="placeholder">            
-            <div class="quad-question carouselQuestion" border="1"> 
+        <div class="exampleQuestion">            
+            <div class="questionBox"> 
   			     <%= render :partial => "questions/show", 
                      :locals => {:question => Question.from_param ("q3v1") } %>
   			</div>
@@ -123,8 +123,8 @@ matching questions, and multipart questions.</p>
   </span>
   		
   			
-  <div class="placeholder">            
-    <div class="quad-question carouselQuestion" border="1"> 
+  <div class="exampleQuestion">            
+    <div class="questionBox"> 
   		<%= render :partial => "questions/show", 
                 :locals => {:question => Question.from_param ("q3v1") } %>
   		</div>
@@ -144,8 +144,8 @@ matching questions, and multipart questions.</p>
                     :height => "100px", :width => "100px" }) %>
   </span>
 
-  <div class="placeholder">            
-            <div class="quad-question carouselQuestion" border="1"> 
+  <div class="exampleQuestion">            
+            <div class="questionBox"> 
   			     <%= render :partial => "questions/show", 
                      :locals => {:question => Question.from_param ("q3v1") } %>
   			</div>
