@@ -87,7 +87,7 @@ class MultipartQuestion < Question
 
     setup_ids = questions.collect do |q|
       setup = q.question_setup
-      q.is_published? && setup.content.blank? ? nil : setup.id     
+      q.is_published? && setup.nil? ? nil : setup.id     
     end
     
     setup_ids.reject!{|id| id.nil?}
