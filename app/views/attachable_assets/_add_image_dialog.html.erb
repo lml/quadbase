@@ -5,12 +5,12 @@
    #
    # Clients may provide the following variables (otherwise they have defaults):
    #    dialog_div_id
-   #    include_open_insert_close_js ||= true
+   #    include_open_insert_close_js defaults to true
 %>
 <% 
   @include_uploadify = true 
   dialog_div_id ||= "image_dialog"
-  include_open_insert_close_js ||= true
+  include_open_insert_close_js = true if local_assigns[:include_open_insert_close_js].nil?
 %>
 
 <%
