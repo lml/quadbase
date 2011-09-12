@@ -105,10 +105,17 @@ def make_simple_question(options = {})
     options[:answer_credits].map!{|c| Factory.build(:answer_choice, :credit => c)}
 
   sq.question_setup = QuestionSetup.create(:content => "") if options[:no_setup] 
-  sq.version = 0 if (options[:publish] || options[:published])
+  sq.version = 1 if (options[:publish] || options[:published])
   sq.license = licenses(:cc_by_3_0) if options[:set_license]
   
   sq.save! if (options[:method] == :create)
+  
+  user = Factory.create(:user)
+
+  if (options[:publish] || options[:published])
+    sq.save!
+    sq.publish!(user)
+  end
     
   sq
 end

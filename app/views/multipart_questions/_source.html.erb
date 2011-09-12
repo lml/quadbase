@@ -1,0 +1,32 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<% if !question.question_setup_id.nil? %>
+  <div class="sectionHeading">Common Introduction</div>
+   <div class="code-box">
+      <%= simple_format question.question_setup.content %>
+   </div>
+<% end %>
+
+<div class="sectionHeading">Parts</div>
+
+<% if question.child_question_parts.empty? %>
+  <center>No parts yet</center>
+<% else %>
+
+  <table width="100%">
+
+  <% question.child_question_parts.each do |cpq| %>
+    <tr>
+      <td width="10%">
+        <%= cpq.order %>)
+      </td>
+      <td>
+        <%= link_to "Show source for part #{cpq.order} (#{question_id_text(cpq.child_question)})",
+                    question_source_path(cpq.child_question) %>
+      </td>
+    </tr> 
+  <% end %>
+   
+  </table>  
+   
+<% end %>
