@@ -2,6 +2,7 @@
 
 class AnswerChoice < ActiveRecord::Base
   include ContentParseAndCache
+  include AssetMethods
 
   belongs_to :question
   
@@ -23,8 +24,8 @@ class AnswerChoice < ActiveRecord::Base
     AnswerChoice.new(:content => content, :credit => credit)
   end
   
-  def get_image_tag_maker
-    AttachableImageTagMaker.new(question.id)
+  def get_attachable
+    question
   end
   
   protected

@@ -8,6 +8,7 @@ require 'uri_validator'
 require 'quadbase_markup'
 require 'content_parse_and_cache'
 require 'image_tag_maker'
+require 'asset_methods'
 
 ActionMailer::Base.delivery_method = :sendmail
 

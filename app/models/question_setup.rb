@@ -2,6 +2,7 @@
 
 class QuestionSetup < ActiveRecord::Base
   include ContentParseAndCache
+  include AssetMethods
   
   has_many :questions
 
@@ -24,11 +25,7 @@ class QuestionSetup < ActiveRecord::Base
     # Force a reload to make sure the association is up to date
     destroy if questions(true).empty?
   end
-  
-  def get_image_tag_maker
-    AttachableImageTagMaker.new(id)
-  end
-  
+    
   #############################################################################
   # Access control methods
   #############################################################################

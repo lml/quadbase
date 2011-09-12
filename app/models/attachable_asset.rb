@@ -22,6 +22,14 @@ class AttachableAsset < ActiveRecord::Base
     end
   end
   
+  def content_copy
+    aa = AttachableAsset.new(:description => self.description, 
+                             :attachable_type => self.attachable_type)
+    aa.asset_id = self.asset_id
+    aa.local_name = self.local_name
+    aa
+  end
+  
   #############################################################################
   # Access control methods
   #############################################################################

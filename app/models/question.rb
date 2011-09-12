@@ -1,7 +1,8 @@
 # Copyright (c) 2011 Rice University.  All rights reserved.
 
 class Question < ActiveRecord::Base
-
+  include AssetMethods
+  
   @@lock_timeout = Quadbase::Application.config.question_lock_timeout
 
   set_inheritance_column "question_type"
@@ -37,6 +38,7 @@ class Question < ActiveRecord::Base
   
   has_many :attachable_assets, :as => :attachable
   has_many :assets, :through => :attachable_assets
+
   
   # Sometimes question A is required to be shown before question B.  In this
   # situation, question A is called a prerequisite of question B.  Question B
@@ -356,6 +358,7 @@ class Question < ActiveRecord::Base
   def init_copy(kopy)
     kopy.question_setup = self.question_setup.content_copy if !self.question_setup_id.nil?
     kopy.license_id = self.license_id
+    self.attachable_assets.each {|aa| kopy.attachable_assets.push(aa.content_copy) }
     kopy
   end
   
@@ -421,10 +424,6 @@ class Question < ActiveRecord::Base
       break if pq.changes_solution
     end
     s
-  end
-  
-  def get_image_tag_maker
-    AttachableImageTagMaker.new(id)
   end
   
   def base_class

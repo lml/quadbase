@@ -2,6 +2,7 @@
 
 class Solution < ActiveRecord::Base
   include ContentParseAndCache
+  include AssetMethods
 
   belongs_to :question
   belongs_to :creator, :class_name => "User"
@@ -32,10 +33,6 @@ class Solution < ActiveRecord::Base
   def set_created_at(time)
     update_attribute(:created_at, time)
     update_attribute(:updated_at, time)
-  end
-
-  def get_image_tag_maker
-    AttachableImageTagMaker.new(id)
   end
 
   #############################################################################
