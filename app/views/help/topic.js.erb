@@ -1,5 +1,20 @@
 <%# Copyright (c) 2011 Rice University.  All rights reserved. %>
 
+<%
+   @height = @options[:height] ? @options[:height] : 300
+   @width = @options[:width] ? @options[:width] : 400
+%>
+
 $("#help_dialog").html("<%= escape_javascript(render :partial => 'help/topics/' + @partial_name) %>");
 
+$("#help_dialog").dialog({ 
+  autoOpen: false, 
+  modal: true, 
+  height:<%= @height %>, 
+  width:<%= @width %>
+});
+
+<%= reload_mathjax("help_dialog") if @options[:include_mathjax] %>
+
 $("#help_dialog").dialog('open');
+$("#help_dialog").scrollTop(0);

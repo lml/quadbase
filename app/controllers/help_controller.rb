@@ -45,6 +45,7 @@ class HelpController < ApplicationController
   def topic
     @partial_name = @@topic_partial_names[params[:topic_name]]
     @partial_name = params[:topic_name] if @partial_name.nil?
+    @options = params[:options] || {}
         
     respond_to do |format|
       format.html

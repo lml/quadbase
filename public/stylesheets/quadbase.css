@@ -548,6 +548,10 @@ table.left_heading th {
 /*	border-right: 1px solid black;*/
 }
 
+.question_form {
+   font-size: 14px;
+}
+
 table.left_heading td {
 	padding-left: 8px;
 	padding-right: 8px;

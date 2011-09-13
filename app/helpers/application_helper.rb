@@ -184,10 +184,14 @@ module ApplicationHelper
     object.respond_to?(:base_class) ? object.base_class : object.class
   end
   
-  def link_to_help(topic, text="")
+  def link_to_help(topic, text="", options={})
     @include_help_dialog = true
+    @include_mathjax = true if options[:include_mathjax]
+    
+    @options = options
+    
     link_to (text.blank? ? image_tag('help_button_v2.png') : text), 
-            topic_help_path(topic), 
+            topic_help_path(topic, :options => options), 
             :remote => true
   end
   

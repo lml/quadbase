@@ -184,17 +184,6 @@
 
    <% if @include_help_dialog %>
      <div id="help_dialog" style="display:none" title="Quadbase Help"></div>
-
-     <% content_for :javascript do %>
-        <%= javascript_tag do %>
-           $("#help_dialog").dialog({ 
-             autoOpen: false, 
-             modal: true, 
-             height:300, 
-             width:400
-           });
-        <% end %>
-     <% end %>
    <% end %>
    
    <%= yield :javascript %>	

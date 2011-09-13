@@ -29,7 +29,14 @@
    
  <%= f.hidden_field :type, :value => "SimpleQuestion"%>
 
- <p>You are editing a <%= link_to_help "simple_questions", "Simple Question" %>. Need help <%= link_to_help "formatting", "formatting" %> your question?</p>
+ <p>You are editing a 
+    <%= link_to_help "simple_questions", "simple question",
+                     {:height => 400, 
+                      :width => 700} %>. 
+    Need help <%= link_to_help "formatting", "formatting", 
+                                {:include_mathjax => true, 
+                                 :height => 400, 
+                                 :width =>900} %> your question?</p>
 
  <% setup_blank = @question.question_setup.content.blank? %>
 
@@ -60,7 +67,8 @@
     <% if setup_blank %>
       <tr id="setup_show_row"><td colspan="3">
         <%= link_to_function "Add a common introduction to this question.", 
-                             '$("#setup_row").show(); $("#setup_show_row").hide();'%>
+                             '$("#setup_row").show(); $("#setup_show_row").hide();'%> (optional)
+        <span style="float:right"><%= link_to_help "question_setup", "What is this?" %></span>
       </td></tr>
     <% end %>
     
