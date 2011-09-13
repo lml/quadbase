@@ -14,6 +14,11 @@ $("#comment_list").append("<%= escape_javascript(
                      :show_link => @show_link,
                      :hide_votes => @hide_votes}) %>");
 
+$("#subscription_link_span").html(
+   "<%= ej(render :partial => 'comment_thread_subscriptions/subscription_link',
+                  :locals => {:commentable => @commentable,
+                              :subscription => @comment_thread.subscription_for(current_user)}) %>");
+
 $("#new_comment_div").hide();
 
 $("#new_comment_link_span").show();

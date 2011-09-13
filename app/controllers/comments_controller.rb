@@ -66,6 +66,7 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
+        @comment_thread.subscribe!(present_user)
         @comment_thread.add_unread_except_for(present_user)
         flash[:notice] = @comment_notice
         SubscriptionNotifier.comment_created_email(@comment)
