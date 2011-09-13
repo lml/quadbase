@@ -4,7 +4,8 @@ class UserProfile < ActiveRecord::Base
 
   belongs_to :user
 
-  attr_accessible :project_member_email, :role_request_email, :announcement_email, :user
+  attr_accessible :project_member_email, :role_request_email, 
+                  :announcement_email, :auto_author_subscribe, :user
 
   #############################################################################
   # Access control methods

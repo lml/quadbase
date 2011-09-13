@@ -215,6 +215,12 @@ class Question < ActiveRecord::Base
 
     roleless_collaborators.each { |rc| rc.destroy }
     comment_thread.clear!
+    comment_thread(true) # because .clear! makes new thread!
+    
+    question_collaborators.each do |qc|
+      comment_thread.subscribe!(qc.user) if (qc.has_role?(:author) && 
+                                             qc.user.user_profile.auto_author_subscribe)
+    end
     
     self.version = next_available_version
     self.publisher = user

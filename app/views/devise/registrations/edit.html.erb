@@ -65,6 +65,10 @@
            <td>Receive notifications of role change requests?</td>
            <td><%= profile.check_box :role_request_email %></td>
          </tr>
+         <tr>
+           <td>Auto subscribe to comments on content you author?</td>
+           <td><%= profile.check_box :auto_author_subscribe %></td>
+         </tr>
        </table>
       <% end %>
     </div>

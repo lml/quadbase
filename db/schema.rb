@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110805191110) do
+ActiveRecord::Schema.define(:version => 20110913022529) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -200,11 +200,12 @@ ActiveRecord::Schema.define(:version => 20110805191110) do
 
   create_table "user_profiles", :force => true do |t|
     t.integer  "user_id"
-    t.boolean  "project_member_email", :default => true
-    t.boolean  "role_request_email",   :default => true
+    t.boolean  "project_member_email",  :default => true
+    t.boolean  "role_request_email",    :default => true
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "announcement_email"
+    t.boolean  "auto_author_subscribe", :default => true
   end
 
   create_table "users", :force => true do |t|
