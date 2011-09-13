@@ -11,23 +11,35 @@
     vertical-align: top;
   }
   
-  .placeholder {
+  .exampleQuestion {
     float:right; 
-    width:300px; 
+    width:325px; 
     margin-left:30px; 
     border:1px solid gray;  
     margin-right:auto; 
     margin-top:0; 
     margin-bottom:50px; 
-    height:200px; 
-    vertical-align:middle; 
-    text-align:center;
+    vertical-align:top;
   }
+    
   
+ div.questionBox {
+      margin: 10pt; 
+      padding: 0pt; 
+      position: relative; 
+      list-style-type: none; 
+      z-index: 3; 
+      width: 300px; 
+      height: 350px; 
+      left:0px; 
+    }
   .sectionPrePadding {
     margin-top: 35px;
   }
-</style>
+  
+   
+  </style>
+
 
 <div id="preloaded-images">
   <img src="../images/red_button_200_60.png" width="1" height="1" alt="" />
@@ -49,18 +61,34 @@ your questions give you a bit of credit for your hard work.</p>
 look at it along with descriptions of the available question types.  When 
 you're ready to get writing, click the big red button to the right to dive in.</p>
 
+<div class="sectionHeading sectionPrePadding">Some Key Terms</div>
+
+<p>Homework and test questions in Quadbase are comprised of one or more of the following elements.
+	<ul>
+		<li><b>Questions:</b> In Quadbase, every exercise begins with a question. A question poses the task that the student should solve. A question can contain text, math, images and it can contain an optional "Common Introduction".<br/><br/></li>
+		<li><b>Answers:</b> Questions can have two or more possible answers, or if you prefer for students to provide free-form answers, the question should not have have any answers. Be aware that you are not permitted to provide just one answer for a question. <br/><br/></li>
+		<li><b>Common Introduction:</b> A common introduction contains information that is relevant to more than one question and can be shared by related questions. Using a common introduction prevents you from having to recreate the introduction for each individual question.<br/><br/></li>
+		<li><b>Solutions:</b> After a question has been published, Quadbase users can submit worked solutions for the question. <br/><br/></li>
+		<li><b>Projects:</b> Projects are workspaces that house your work on Quadbase. A project can be private and only accessible to you, or you can make it a collaborative workspace by inviting your colleagues to join the project. <br/><br/></li>
+		<li><b>Comments:</b> Quadbase supports community involvment by allowing users to make comments about specific quesitons and solutions. Also, members of a Project can communicate with other members of a project using comments.<br/><br/></li>
+	</ul>
+</p>
+
 <div class="sectionHeading sectionPrePadding">Question Writing Overview</div>
 
-<p>[high-level intro that mentions/defines questions, answers, solutions, projects, comments]</p>
-
-<div class="sectionHeading sectionPrePadding">Available Question Types</div>
+<p>Writing questions in Quadbase is easy. The editing interface provides buttons that allow you to quickly mark-up your questions adding bold and italic text, images, lists, and math. Quadbase supports LaTeX math. Anything located between dollar signs, for example "$...$" or "$$...$$", will be treated as math.</p>
+<p>For more information about formatting your questions visit the <a href="/help#exercise_formatting">formatting</a> help page.</p>
+	
+	
+<div class="sectionHeading sectionPrePadding">Types of Questions</div>
 
 <p>Quadbase currently supports three major question types: simple questions, 
-matching questions, and multipart (multistep) questions.</p>
+matching questions, and multipart questions.</p>
 
 <div class="sectionHeadingNoUnder">Simple Questions</div>
 
 <div style="clear:both">
+	<div>
   <span style="float:left; padding-right: 15px; padding-bottom: 15px">
     <%= image_tag("question_choice_v1.png", 
                   { :border => 1, 
@@ -69,12 +97,17 @@ matching questions, and multipart (multistep) questions.</p>
                     :height => "100px", :width => "100px" }) %>
   </span>
 
-  <div class="placeholder">
-    <div style="text-align:center; margin-top:50px; color:gray">Placeholder for simple <br/>
-      question example.</div>
-  </div>
-
-  <p>Write some help text here describing these kinds of questions.  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+  
+  
+        <div class="exampleQuestion">            
+            <div class="questionBox"> 
+  			     <%= render :partial => "questions/show", 
+                     :locals => {:question => Question.from_param ("q3v1") } %>
+  			</div>
+  		</div>
+  
+  
+  <p><a href="/help/authoring#simple">Simple questions</a> are comprised of a question and optional multiple-choice answers. You amy also include a common introduction that can be shared by many questions.</p><p>If you would like students to provide free-form answers to your simple question, do not add any answers. If you choose to have multiple-choice answers, be aware that you must have at least two answer choices, and you must also provide at least one answer that is indicated as being a correct answer.</p>
 </div>
 
 
@@ -88,13 +121,16 @@ matching questions, and multipart (multistep) questions.</p>
                     :title => "Matching question", 
                     :height => "100px", :width => "100px" }) %>
   </span>
-
-  <div class="placeholder">
-    <div style="text-align:center; margin-top:50px; color:gray">Placeholder for matching <br/>
-      question example.</div>
+  		
+  			
+  <div class="exampleQuestion">            
+    <div class="questionBox"> 
+  		<%= render :partial => "questions/show", 
+                :locals => {:question => Question.from_param ("q3v1") } %>
+  		</div>
   </div>
 
-  <p>Write some help text here describing these kinds of questions.  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+  <p><a href="/help/authoring#matching">Matching questions</a> present a question and then require users to "match" answers in one column with their corresponding answer pair.</p><p>This question format is under development and will be available soon. Check-out our <a href="https://github.com/lml">Github page</a> often for updates to the status of this question type.</p>
 </div>                
 
 <div class="sectionHeadingNoUnder" style="clear:both">Multipart Questions</div>
@@ -108,12 +144,15 @@ matching questions, and multipart (multistep) questions.</p>
                     :height => "100px", :width => "100px" }) %>
   </span>
 
-  <div class="placeholder">
-    <div style="text-align:center; margin-top:50px; color:gray">Placeholder for multipar <br/>
-      question example.</div>
-  </div>
+  <div class="exampleQuestion">            
+            <div class="questionBox"> 
+  			     <%= render :partial => "questions/show", 
+                     :locals => {:question => Question.from_param ("q3v1") } %>
+  			</div>
+  		</div>
 
-  <p>Write some help text here describing these kinds of questions.  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+  <p><a href="/help/authoring#multipart">Multipart question</a> are comprised of several different questions that share a common introduction. You can combine different type of questions, free-form and multiple-choice simple questions and matching questions in your multipart question. You may also choose to include questions from the repository that have already been published, or you can author new questions, or you could combine previously published and new questions.</p><p>Within a multipart question you can specificy dependencies between specific parts of the multipart question. Setting dependencies allows your to create a specific path for students follow when answering multipart questions.</p> <p>There are two different types of dependencies, support and prerequisite. Support questions provide enriching information that will help a student understand another questions. Prerequisite questions must be answered before the student can move on to the next question in a sequence.</p>
 </div>
 
 </div>
+  
