@@ -21,6 +21,8 @@ class Solution < ActiveRecord::Base
   scope :visible_for, lambda { |user|
     where(:creator_id.eq % user.id | :is_visible.eq % true)
   }
+  
+  before_save :auto_subscribe
 
   def has_content?
     !content_html.blank? || !explanation.nil?
@@ -34,7 +36,11 @@ class Solution < ActiveRecord::Base
     update_attribute(:created_at, time)
     update_attribute(:updated_at, time)
   end
-
+  
+  def auto_subscribe
+    comment_thread.subscribe!(creator) if creator.user_profile.auto_author_subscribe
+  end
+    
   #############################################################################
   # Access control methods
   #############################################################################
