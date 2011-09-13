@@ -64,7 +64,7 @@
 
 <% content_for :javascript do %>
    <%= javascript_tag do %>
-      $("#preview_link").click(function(event) {
+      $("#preview_link").live('click',function(event) {
         event.preventDefault();
         return put_as_post('<%= question_preview_path(@question) %>', 
                              $('form').serializeArray());

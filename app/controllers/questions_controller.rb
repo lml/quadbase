@@ -5,7 +5,7 @@ class QuestionsController < ApplicationController
 
   skip_before_filter :authenticate_user!, :only => [:index, :get_started, :show, :search]
 
-  before_filter :include_mathjax, :only => [:index, :show, :edit, :search, :show_part]
+  before_filter :include_mathjax, :only => [:index, :show, :edit, :search, :show_part, :update]
   before_filter :include_jquery
 
   before_filter {select_tab(:write)}
@@ -74,7 +74,6 @@ class QuestionsController < ApplicationController
                           " will be able to see it."
         format.html { redirect_to question_path(@question) }
       else
-        flash[:alert] = get_error_messages(@question)
         format.html { render 'questions/edit' }
       end
     end
@@ -91,7 +90,6 @@ class QuestionsController < ApplicationController
         if @question.save
           format.js
         else
-          flash[:alert] = get_error_messages(@question)
           format.js
         end
       end
