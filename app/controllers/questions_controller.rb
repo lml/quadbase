@@ -5,7 +5,7 @@ class QuestionsController < ApplicationController
 
   skip_before_filter :authenticate_user!, :only => [:index, :get_started, :show, :search]
 
-  before_filter :include_mathjax, :only => [:index, :show, :edit, :search, :show_part, :update]
+  before_filter :include_mathjax, :only => [:index, :show, :edit, :search, :show_part, :update, :get_started]
   before_filter :include_jquery
 
   before_filter {select_tab(:write)}
