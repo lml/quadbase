@@ -59,7 +59,7 @@ module QuestionsHelper
   
   def example_problem(param)
     output = '<div class="exampleQuestion">'
-    output << '<div class="questionBox">'
+    output << '<div class="questionBox quad-question" style="font-size:14px">'
            
     if Question.exists?(param)
       output << render(:partial => "questions/show", 
