@@ -37,11 +37,17 @@
                              edit_question_path(@question) %></p>
             <% end %>
             <% if @question.can_be_new_versioned_by?(present_user) %>
-                <p><%= link_to "Edit Question", 
+                <p><%= link_to "Edit New Version", 
                                question_new_version_path(@question),
                                :method => :put %>
             <% end %>
          <% end %>
+         
+          <% if @question.can_be_derived_by?(present_user) %>
+            <p><%= link_to "Edit a Copy ...",
+                           question_derivation_dialog_path(@question), :remote => true %>
+            </p>
+          <% end %>
          
          <% if @show_edit_roles_link && present_user.can_update?(@question) %>
             <p><%= link_to "Edit Roles",
@@ -68,12 +74,6 @@
          <% if @show_publish_link && @question.can_be_published_by?(present_user) %>                        
             <p><%= link_to "Publish...", 
                            publish_questions_path(:question_ids => [@question.id]) %></p>                        
-         <% end %>
-         
-         <% if @question.can_be_derived_by?(present_user) %>
-           <p><%= link_to "Derive a copy and ...",
-                          question_derivation_dialog_path(@question), :remote => true %>
-           </p>
          <% end %>
 
          <% if present_user.can_destroy?(@question) %>
