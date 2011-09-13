@@ -29,8 +29,7 @@
    
  <%= f.hidden_field :type, :value => "SimpleQuestion"%>
 
- <p>See the <%= link_to "help", help_path(:anchor => "question_formatting") %> section for formatting 
-    instructions.</p>
+ <p>You are editing a <%= link_to_help "simple_questions", "Simple Question" %>. Need help <%= link_to_help "formatting", "formatting" %> your question?</p>
 
  <% setup_blank = @question.question_setup.content.blank? %>
 

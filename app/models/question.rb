@@ -131,6 +131,15 @@ class Question < ActiveRecord::Base
     end
   end
   
+  def self.exists?(param)
+    begin
+      from_param(param)
+      return true
+    rescue
+      return false
+    end
+  end
+  
   def self.from_param(param)
     if (param =~ /^d(\d+)/)
       q = Question.find($1.to_i) # Rails escapes this

@@ -57,4 +57,20 @@ module QuestionsHelper
     output
   end
   
+  def example_problem(param)
+    output = '<div class="exampleQuestion">'
+    output << '<div class="questionBox">'
+           
+    if Question.exists?(param)
+      output << render(:partial => "questions/show", 
+                       :locals => {:question => Question.from_param(param) })
+    else
+      output << "Example coming soon!"
+    end
+
+    output << '</div>'
+    output << '</div>'
+    output.html_safe
+  end
+  
 end

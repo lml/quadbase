@@ -1,0 +1,80 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<div class="sectionHeading" id="exercise_formatting">Question Formatting</div>
+<br/>
+<br/>
+<div class="sectionHeadingNoUnder">Text Mark-Up</div>
+<p>Text in Quadbase can be formatted using a simplified version of a wiki markup language. You can use this simple markup to add, bold, italics, and numbered and bulleted list. </p>
+
+<center>
+<table border="1">
+<tr bgcolor="#C0C0C0">
+<th width="20%">Effect</th>
+<th width="20%">Markup</th>
+<th width="20%">Example</th>
+</tr>
+<tr>
+<td>Bold</td>
+<td><div class="inline-code">!!example text!!</td>
+<td><b>example text</b></td>
+</tr>
+<tr>
+<td>Italics</td>
+<td><div class="inline-code">"example text"</td>
+<td><i>example text</i></td>
+</tr>
+<tr>
+<td>Numbered List</td>
+<td><div class="inline-code"># example text<br/>
+# example text<br/>
+# example text</td>
+<td><ol>
+<li>example text</li>
+<li>example text</li>
+<li>example text</li>
+</ol>
+</td>
+</tr>
+<tr>
+<td>Bulleted List</td>
+<td><div class="inline-code">* example text<br/>
+* example text<br/>
+* example text</td>
+<td><ul>
+<li>example text</li>
+<li>example text</li>
+<li>example text</li>
+</ul>
+</td>
+</tr>
+</table>
+</center>
+
+<div class="sectionHeadingNoUnder">Math Mark-Up</div>
+
+<p>To add math to your exercise you can use standard LaTeX math mark-up. As in LaTeX, math between a pair of single dollar signs, "\$. . .\$" creates inline math, but math between double dollar signs, "\$\$. . .\$\$"results in presentation math.</p>
+
+<% expressions = ['\frac{2}{3}',"x^2","x_{2}",'\sqrt{2}', '\sum_{i=1}^{n}', 
+                  '\int_{0}^{1}','\log(x+y)','\lim_{n \rightarrow \infty}' ] %>
+
+<center>
+<table border="0" width="850px">
+  <tr>
+    <th colspan="2"><font size="+2">Inline Math</font></th>
+    <td rowspan="<%= expressions.size + 1 %>" style="padding: 0 10px"></td>
+    <td rowspan="<%= expressions.size + 1 %>" style="border-right: 1px solid black"></td>
+    <td rowspan="<%= expressions.size + 1 %>" style="padding: 0 10px"></td>
+    <th colspan="2"><font size="+2">Presentation Math</font></th>
+  </tr>
+  <%expressions.each do |expression|%>
+  <tr>
+    <td><div class="help-code">\$<%= expression %>\$</div></td>
+	  <td align="center">$<%= expression %>$</td>
+	  <td><div class="help-code">\$\$<%= expression %>\$\$</div></td>
+    <td>$$<%= expression %>$$</td>
+  </tr>
+  <%end%>
+</table>
+</center>
+
+<p>For more help with LaTeX consult the <a href="http://en.wikibooks.org/wiki/LaTeX/Mathematics">tutorial</a>.</p>
