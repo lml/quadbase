@@ -38,7 +38,7 @@ class QuestionTest < ActiveSupport::TestCase
                                :published => true,
                                :method => :create})
 
-    assert_equal "q#{sq.number}v0", sq.to_param
+    assert_equal "q#{sq.number}v1", sq.to_param
   end
   
   test "draft question ID" do
@@ -69,7 +69,7 @@ class QuestionTest < ActiveSupport::TestCase
   end
   
   test "can't publish because missing roles" do 
-    q = make_simple_question(:method => :create, :set_license => true)
+    q = make_simple_question()
     u = Factory.create(:user)
     q.publish!(u)
     assert !q.errors.empty?
@@ -138,11 +138,11 @@ class QuestionTest < ActiveSupport::TestCase
   
   test "next available version" do 
     q = make_simple_question(:method => :create, :published => true)
-    assert_equal 1, q.next_available_version
+    assert_equal 2, q.next_available_version
   end
   
   test "delete destroys appropriate assocs" do
-    q = make_simple_question(:method => :create)
+    q = make_simple_question()
     wq = Factory.create(:project_question, :question => q)
     c = Factory.create(:question_collaborator, :question => q)
 
@@ -154,10 +154,8 @@ class QuestionTest < ActiveSupport::TestCase
   end
   
   test "create" do
-    q = make_simple_question(:method => :build)
+    q = make_simple_question()
     u = Factory.create(:user)
-    
-    assert_raise(ActiveRecord::RecordNotFound) { Question.find(q.id) }
     
     q.create!(u)
     
@@ -165,7 +163,7 @@ class QuestionTest < ActiveSupport::TestCase
     q = Question.find(q.id)
     assert q.has_role?(u, :author)
     assert q.has_role?(u, :copyright_holder)
-    assert Project.default_for_user!(u).questions.include?(q)
+    assert Project.default_for_user!(u).questions(true).include?(q)
   end
   
   test "new_derivation!" do

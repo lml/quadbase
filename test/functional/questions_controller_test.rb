@@ -29,7 +29,6 @@ class QuestionsControllerTest < ActionController::TestCase
   test "should get index" do
     get :index
     assert_response :success
-    assert_not_nil assigns(:questions)
   end
 
   test "should get get_started" do

@@ -45,7 +45,9 @@ class QuestionCollaboratorsControllerTest < ActionController::TestCase
     user_login
     new_collaborator = Factory.build(:question_collaborator, :question => @question)
     assert_difference('QuestionCollaborator.count', 0) do
-      post :create, :question_id => @question.to_param, :question_collaborator => new_collaborator.attributes, :username => new_collaborator.user.username
+      post :create, 
+           :question_id => @question.to_param, 
+           :question_collaborator => {:username => Factory.create(:user).username}
     end
     assert_response(403)
   end
@@ -54,16 +56,19 @@ class QuestionCollaboratorsControllerTest < ActionController::TestCase
     sign_in @user
     new_collaborator = Factory.build(:question_collaborator, :question => @published_question)
     assert_difference('QuestionCollaborator.count', 0) do
-      post :create, :question_id => @published_question.to_param, :question_collaborator => new_collaborator.attributes, :username => new_collaborator.user.username
+      post :create, 
+           :question_id => @published_question.to_param, 
+           :question_collaborator => {:username => @user.username}
     end
     assert_response(403)
   end
 
   test "should create question_collaborator" do
     sign_in @user
-    new_collaborator = Factory.build(:question_collaborator, :question => @question)
     assert_difference('QuestionCollaborator.count') do
-      post :create, :question_id => @question.to_param, :question_collaborator => new_collaborator.attributes, :username => new_collaborator.user.username
+      post :create, 
+           :question_id => @question.to_param, 
+           :question_collaborator => {:username => @user.username}
     end
     assert_redirected_to question_question_collaborators_path(@question)
   end

@@ -58,8 +58,8 @@ class Project < ActiveRecord::Base
     members.include?(user)
   end
 
-  def has_question?(question)
-    questions.include?(question)
+  def has_question?(question, reload=true)
+    questions(reload).include?(question)
   end
 
   def can_be_joined_by?(user)

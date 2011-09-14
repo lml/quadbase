@@ -11,7 +11,7 @@ class ProjectMembersControllerTest < ActionController::TestCase
 
   test "should not create project_member not logged in" do
     assert_difference('ProjectMember.count', 0) do
-      post :create, :username => @user.username, :project_id => @project_member.project_id
+      post :create, :project_member => {:username => @user.username}, :project_id => @project_member.project_id
     end
     assert_redirected_to login_path
   end
@@ -19,7 +19,7 @@ class ProjectMembersControllerTest < ActionController::TestCase
   test "should not create project_member not authorized" do
     sign_in @user
     assert_difference('ProjectMember.count', 0) do
-      post :create, :username => @user.username, :project_id => @project_member.project_id
+      post :create, :project_member => {:username => @user.username}, :project_id => @project_member.project_id
     end
     assert_response(403)
   end
@@ -27,7 +27,7 @@ class ProjectMembersControllerTest < ActionController::TestCase
   test "should create project_member" do
     sign_in @member
     assert_difference('ProjectMember.count') do
-      post :create, :username => @user.username, :project_id => @project_member.project_id
+      post :create, :project_member => {:username => @user.username}, :project_id => @project_member.project_id
     end
     assert_redirected_to project_path(@project_member.project)
   end

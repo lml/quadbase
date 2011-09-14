@@ -43,14 +43,15 @@ class ProjectQuestionsControllerTest < ActionController::TestCase
   test "should move project_question" do
     sign_in @user
     project = Factory.create(:project, :members => [@user])
-    assert @project.has_question?(@question)
-    assert !project.has_question?(@question)
+    assert @project.has_question?(@question), "a"
+    assert !project.has_question?(@question), "b"
     put :move, :project_id => @project.to_param,
                :project_question_ids => [@project_question.to_param],
                :move => [project.to_param]
-    assert_redirected_to project_path(@project)
-    assert !@project.has_question?(@question)
-    assert project.has_question?(@question)
+    assert_redirected_to project_path(@project), "c"
+    @project.questions.reload
+    assert !@project.has_question?(@question), "d"
+    assert project.has_question?(@question), "e"
   end
 
   test "should not copy project_question not logged in" do

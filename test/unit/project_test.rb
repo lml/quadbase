@@ -45,7 +45,7 @@ class ProjectTest < ActiveSupport::TestCase
   
   test "add question" do
     ww = make_project(:num_questions => 3, :num_members => 1, :method => :create)
-    sq = make_simple_question(:method => :create)
+    sq = make_simple_question()
     assert_equal ww.questions.length, 3
     assert_raise(ActiveRecord::RecordNotFound) {ProjectQuestion.find(sq.id)}
     ww.add_question!(sq)

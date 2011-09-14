@@ -19,7 +19,7 @@ end
 Factory.sequence :unique_number do |n| n end
 
 Factory.sequence :email_suffix do |n|
-  "#{n}@example.com"
+  "#{ActiveSupport::SecureRandom.hex(6)}#{n}@example.com"
 end
 
 def next_email(first_name, last_name)
@@ -27,7 +27,7 @@ def next_email(first_name, last_name)
 end
 
 def unique_username(first_name, last_name)
-  "#{first_name[0,3]}#{last_name[0,4]}" + Factory.next(:unique_number).to_s
+  "#{first_name[0,3]}#{last_name[0,4]}" + "#{ActiveSupport::SecureRandom.hex(4)}"
 end
 
 Factory.sequence :password do |n|
@@ -100,20 +100,19 @@ end
 
 def make_simple_question(options = {})
   options[:answer_credits] ||= []
-  sq = Factory.build(:simple_question)
+  sq = options[:question_setup].nil? ? 
+       Factory.create(:simple_question) :
+       Factory.create(:simple_question, :question_setup => options[:question_setup])
   sq.answer_choices = 
     options[:answer_credits].map!{|c| Factory.build(:answer_choice, :credit => c)}
 
   sq.question_setup = QuestionSetup.create(:content => "") if options[:no_setup] 
-  sq.version = 1 if (options[:publish] || options[:published])
-  sq.license = licenses(:cc_by_3_0) if options[:set_license]
-  
-  sq.save! if (options[:method] == :create)
   
   user = Factory.create(:user)
+  
+  sq.create!(user) if (options[:method] == :create || options[:publish] || options[:published])
 
   if (options[:publish] || options[:published])
-    sq.save!
     sq.publish!(user)
   end
     
@@ -131,9 +130,19 @@ Factory.define :multipart_question do |f|
 end
 
 def make_multipart_question(options = {})
-  qq = Factory.build(:multipart_question)
-  qq.version = 0 if (options[:publish] || options[:published])
-  qq.save! if (options[:method => :create])
+  qq = Factory.create(:multipart_question)
+
+  sq = make_simple_question({:question_setup => qq.question_setup, :publish => true})
+  qq.add_parts(sq)
+  
+  
+  user = Factory.create(:user)
+  
+  qq.create!(user) if (options[:method] == :create || options[:publish] || options[:published])
+
+  if (options[:publish] || options[:published])
+    qq.publish!(user)
+  end
   qq
 end
 
