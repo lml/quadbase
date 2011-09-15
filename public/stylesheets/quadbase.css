@@ -1,5 +1,26 @@
 /* Copyright (c) 2011 Rice University.  All rights reserved. */
 
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+}
+
 body {	
 	background: url("../images/gray_background_tall.png") repeat-x scroll 0 0 #FFFFFF;
 }
