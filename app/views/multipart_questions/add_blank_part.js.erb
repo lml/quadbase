@@ -2,7 +2,7 @@
 
 <%= display_flash %>
 
-<%= update_multipart_nav(@multipart_question, @multipart_question) %>
+<%= update_multipart_nav(@multipart_question, @multipart_question, true) %>
 
 $("#question_part_rows").append("<%= escape_javascript(
   render :partial => 'question_part_summary',

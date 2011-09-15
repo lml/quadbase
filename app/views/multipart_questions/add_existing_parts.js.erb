@@ -6,7 +6,7 @@ $('#question_part_dialog').dialog("close");
 
 <% if @multipart_question.errors.blank? %>
 
-<%= update_multipart_nav(@multipart_question, @multipart_question) %>
+<%= update_multipart_nav(@multipart_question, @multipart_question, true) %>
 
 $("#question_part_rows").html(
    "<%= escape_javascript(render(:partial => 'multipart_questions/question_part_rows', 

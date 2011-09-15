@@ -125,10 +125,10 @@ module ApplicationHelper
   # part is a QuestionPart.  This method will preferentially return the
   # edit path for the question if it is unpublished, otherwise, the 
   # question part show path
-  def part_edit_or_show_path(part)
-    part.child_question.is_published? ?
-    question_show_part_path(part.multipart_question, part.order) :
-    edit_question_path(part.child_question)
+  def part_edit_or_show_path(part, try_edit_view)
+    try_edit_view && !part.child_question.is_published? ?
+    edit_question_path(part.child_question) :
+    question_show_part_path(part.multipart_question, part.order)
   end
   
   def commentable_name(comment_thread)

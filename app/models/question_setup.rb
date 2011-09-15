@@ -14,7 +14,9 @@ class QuestionSetup < ActiveRecord::Base
   attr_accessible :content
   
   def content_copy
-    QuestionSetup.new(:content => content)
+    kopy = QuestionSetup.new(:content => content)
+    self.attachable_assets.each {|aa| kopy.attachable_assets.push(aa.content_copy) }
+    kopy
   end
   
   def content_change_allowed?

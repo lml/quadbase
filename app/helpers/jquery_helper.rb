@@ -19,11 +19,12 @@ module JqueryHelper
     #   escape_javascript(render :partial => 'shared/inbox_tab') + '");').html_safe
   end
 
-  def update_multipart_nav(multipart_question, current_question)
+  def update_multipart_nav(multipart_question, current_question, on_edit_view)
     ('$("#multipartNav").replaceWith("' +
       escape_javascript(render :partial => 'layouts/multipart_nav',
                                :locals => { :multipart_question => multipart_question,
-                                            :current_question => current_question }) +
+                                            :current_question => current_question,
+                                            :on_edit_view => on_edit_view }) +
       '");').html_safe
   end
 

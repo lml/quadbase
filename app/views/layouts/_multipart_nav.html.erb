@@ -9,7 +9,9 @@
   <div style="margin-left:10px" 
        class="multipartEntry <%= 'multipartSelected leftRoundedCorners5' \
                                     if current_question == multipart_question %>">
-    <%= link_to_unless_current "Main Question", edit_question_path(multipart_question) %>
+    <%= link_to_unless_current "Main Question", on_edit_view && !multipart_question.is_published? ? 
+                                                edit_question_path(multipart_question) :
+                                                question_path(multipart_question) %>
   </div>
   
   <div style="margin-left:25px">
@@ -19,9 +21,7 @@
        highlight = child_question == current_question %>
     <div class="multipartEntry <%= 'multipartSelected leftRoundedCorners5' if highlight %>">
       <%= link_to_if !highlight, 
-                     "Part #{part.order}", 
-                     part_edit_or_show_path(part)
-                  %>
+                     "Part #{part.order}", part_edit_or_show_path(part, on_edit_view) %>
                      
                   
     </div>

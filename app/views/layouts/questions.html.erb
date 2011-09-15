@@ -102,14 +102,16 @@
            <div class="leftColumnSep"></div>
            <%= render :partial => 'layouts/multipart_nav',
                       :locals => { :multipart_question => @multipart_question,
-                                   :current_question => @question } %>
+                                   :current_question => @question,
+                                   :on_edit_view => @this_is_edit_view } %>
          <% end %>        
          
          <% if @question.is_multipart? %>
            <div class="leftColumnSep"></div>
            <%= render :partial => 'layouts/multipart_nav',
                       :locals => { :multipart_question => @question,
-                                   :current_question => @question } %>
+                                   :current_question => @question,
+                                   :on_edit_view => @this_is_edit_view } %>
          <% end %>
         <% end %>
       </div>
