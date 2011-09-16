@@ -53,7 +53,7 @@ class Message < ActiveRecord::Base
     !user.is_anonymous? &&
       !comment_thread.comment_thread_subscriptions.detect { |cts| cts.user == user }
   end
-
+  
 protected
 
   def subject_not_changed

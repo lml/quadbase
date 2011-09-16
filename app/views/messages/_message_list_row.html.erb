@@ -4,11 +4,12 @@
    # message
 %>
 <% unread_count = message.comment_thread.subscription_for(current_user).unread_count %>
-<tr>
+<tr id="message_<%= message.id %>">
   <td><% if unread_count > 0 %>
       <b><%= link_to message.subject + " (" + unread_count.to_s + ")", message %></b>
       <% else %>
       <%= link_to message.subject, message %>
       <% end %></td>
+  <td><%= link_to "Leave this message", message_leave_path(message), :remote => true %>
   <td><%= message.recipients.collect { |r| r.full_name }.to_sentence %></td>
 </tr>

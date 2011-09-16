@@ -4,7 +4,7 @@ class MessagesController < ApplicationController
 
   before_filter :include_jquery
   
-  before_filter :get_message, :only => [:add_recipient, :search_recipients]
+  before_filter :get_message, :only => [:add_recipient, :search_recipients, :leave]
 
   # GET /messages/1
   def show
@@ -60,6 +60,10 @@ class MessagesController < ApplicationController
         format.html { redirect_to @message }
       end
     end
+  end
+  
+  def leave
+    @message.comment_thread.unsubscribe!(present_user)    
   end
 
   def new_recipient

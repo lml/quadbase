@@ -197,6 +197,7 @@ Quadbase::Application.routes.draw do
     get 'new_recipient'
     post 'search_recipients'
     post 'add_recipient'
+    get 'leave'
     commentable
   end
   

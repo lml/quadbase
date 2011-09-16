@@ -1,0 +1,9 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+$("#message_<%= @message.id %>").remove();
+
+<% flash[:notice] = "You just left the message with subject '#{@message.subject}'" %>
+
+<%= display_flash %>
+
+show_none_row_if_needed("message_table");

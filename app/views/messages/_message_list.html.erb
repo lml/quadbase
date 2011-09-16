@@ -2,13 +2,14 @@
 
 <% messages = Message.messages_for(current_user) %>
 
-<table class="list" width="100%">
+<table id="message_table" class="list" width="100%">
    <tr>
-      <th width="40%">Subject</th>
-      <th width="60%">Recipients</th>
+      <th width="30%">Subject</th>
+      <th width="20%"></th>
+      <th width="50%">Recipients</th>
    </tr>
-   <tr id="message_none_row" <% if !messages.empty? %>style="display:none"<% end %>>
-      <td colspan="2" style="text-align:center">None</td>
+   <tr id="message_table_none_row" <% if !messages.empty? %>style="display:none"<% end %>>
+      <td colspan="3" style="text-align:center">None</td>
    </tr>
    <% messages.each do |message| %>
      <%= render :partial => 'messages/message_list_row', :locals => {:message => message} %>
