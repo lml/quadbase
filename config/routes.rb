@@ -203,5 +203,6 @@ Quadbase::Application.routes.draw do
   get 'subscriptions', :to => 'comment_thread_subscriptions#index', :as => 'subscriptions'
 
   match '/', :to => 'home#index', :as => ''
+  match "/:id", :to => "home#shortcut", :constraints => {:id => /q(\d+)(v(\d+))?.*/}
   root :to => 'home#index'
 end
