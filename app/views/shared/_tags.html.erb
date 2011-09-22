@@ -9,8 +9,8 @@
 </div>
 
 <div id="add_tag_form" style="display:none">
-<%= form_tag(add_tag_path, :remote => true) do %>
-  <%= text_field_tag "tags", '', {:id => "tag_entry_field"} %>
+<%= form_tag(add_tag_path, :remote => true, :autocomplete => "off") do %>
+  <%= autocomplete_field_tag "tags", '', autocomplete_tag_name_questions_path, :"data-delimiter" => ', ', :id => "tag_entry_field" %>
   <%= submit_tag "Add", :class => submit_classes %>
 <% end %>
 </div>

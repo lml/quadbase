@@ -30,6 +30,9 @@
   <%= javascript_include_tag 'jquery_extensions' %>
   <%= javascript_include_tag 'rails' %>
   <% end %>
+  <% if @include_autocomplete %>
+  <%= javascript_include_tag "autocomplete-rails" %>
+  <% end %>
   <%= javascript_include_tag "application" %>
 
   <% if @include_jcarousellite %>

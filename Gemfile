@@ -28,6 +28,8 @@ gem "meta_where"
 
 gem 'acts-as-taggable-on', '~>2.1.0'
 
+gem 'rails3-jquery-autocomplete'
+
 # reCAPTCHA
 gem "recaptcha", :require => "recaptcha/rails"
 

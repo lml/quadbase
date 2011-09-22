@@ -145,6 +145,8 @@ Quadbase::Application.routes.draw do
     
     post 'add_tags'
     get 'tagged/:tags', :to => "questions#tagged", :as => 'tagged', :on => :collection
+    
+    get :autocomplete_tag_name, :on => :collection
 
     commentable
   end

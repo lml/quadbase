@@ -10,6 +10,10 @@ class QuestionsController < ApplicationController
 
   before_filter {select_tab(:write)}
   before_filter :except => [:index, :new, :get_started, :search] do @use_columns = true end
+
+  before_filter {@include_autocomplete=true}
+    
+  autocomplete :tag, :name, :class_name => 'ActsAsTaggableOn::Tag'
   
   def index
   end
@@ -116,9 +120,10 @@ class QuestionsController < ApplicationController
     @question = Question.from_param(params[:question_id])
     raise SecurityTransgression unless present_user.can_tag?(@question)
     
-    incoming_tags = params[:tags].split(",").collect{|t| t.strip}
+    incoming_tags = params[:tags].split(",").collect{|t| t.strip}.delete_if{|t| t.blank?}
     
-    if tags_fail_regex?(incoming_tags)
+    if incoming_tags.empty?
+    elsif tags_fail_regex?(incoming_tags)
       flash[:alert] = "Tags can only contain letters, numbers, and spaces.  Multiple tags should be separated by commas."
     else
       tags = @question.tag_list.concat(incoming_tags).join(", ")
