@@ -1,0 +1,8 @@
+<%= display_flash %>
+
+<%= @in_remove_state ||= false %>
+
+$("#tags").html("<%= ej(render :partial => 'shared/tags',
+                               :locals => {:taggable => @question,
+                                           :add_tags_path => question_tags_path(@question),
+                                           :show_remove_form => @in_remove_state}) %>");

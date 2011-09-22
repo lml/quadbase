@@ -124,15 +124,37 @@ class QuestionsController < ApplicationController
     
     if incoming_tags.empty?
     elsif tags_fail_regex?(incoming_tags)
-      flash[:alert] = "Tags can only contain letters, numbers, and spaces.  Multiple tags should be separated by commas."
+      flash[:alert] = "Tags can only contain letters, numbers, spaces, hyphens, and apostrophes.  Multiple tags should be separated by commas."
     else
       tags = @question.tag_list.concat(incoming_tags).join(", ")
       @question.update_attribute(:tag_list, tags)      
-    end    
+    end   
+    
+    respond_to do |format|
+      format.js { render :template => 'questions/tags_action' }
+    end 
+  end
+  
+  def remove_tag
+    @question = Question.from_param(params[:question_id])
+    raise SecurityTransgression unless present_user.can_tag?(@question)
+
+    target_tag = params[:tag].gsub("_"," ")
+
+    if !target_tag.blank? && !tags_fail_regex?(target_tag)
+      updated_tag_list = @question.tag_list.reject{|t| target_tag == t}
+      @question.update_attribute(:tag_list, updated_tag_list)
+    end
+    
+    respond_to do |format|
+      @in_remove_state = true
+      format.js { render :template => 'questions/tags_action' }
+    end
   end
   
   def tagged
-    @tags = params[:tags].split("+")
+    @tags = params[:tags].gsub("_"," ").split("+")
+    
     if tags_fail_regex?(@tags)
       @questions = []
       flash[:alert] = "The provided tags contain invalid characters."
@@ -335,7 +357,8 @@ protected
   end
   
   def tags_fail_regex?(tags)
-    tags.any?{|tag| (tag =~ /^[A-Za-z\d ]+$/).nil?}
+    tags = [tags].flatten
+    tags.any?{|tag| (tag =~ /^[A-Za-z\d\-' ]+$/).nil?}
   end
 
 end

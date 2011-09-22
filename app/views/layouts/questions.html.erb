@@ -122,7 +122,7 @@
           <div id="tags">
             <%= render :partial => 'shared/tags',
                        :locals => {:taggable => @question,
-                                   :add_tag_path => question_add_tags_path(@question)} %>
+                                   :add_tags_path => question_tags_path(@question)} %>
           </div>
         <% end %>
       </div>

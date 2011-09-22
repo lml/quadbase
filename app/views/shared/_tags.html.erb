@@ -1,16 +1,52 @@
-<% if !taggable.tags.empty? %>
-  <% taggable.tags.each do |tag| %>
-    <%= link_to tag.name, tagged_questions_path(tag.name), :class => "tag" %>
+<% show_remove_form ||= false %>
+
+
+
+<div id="tag_links" style="<%= 'display:none' if show_remove_form %>">
+  <% if !taggable.tags.empty? %>
+    <% taggable.tags.each do |tag| %>
+      <%= link_to tag.name, tagged_questions_path(tag.name.gsub(" ","_")), :class => "tag" %>
+    <% end %>
   <% end %>
-<% end %>
-
-<div style="margin-top:10px">
-  <%= link_to_function "Add Tag", "$('#tag_entry_field').val(''); $('#add_tag_form').show(); $(this).hide();", :style => "font-size:11px; white-space: nowrap;" %>
 </div>
 
-<div id="add_tag_form" style="display:none">
-<%= form_tag(add_tag_path, :remote => true, :autocomplete => "off") do %>
-  <%= autocomplete_field_tag "tags", '', autocomplete_tag_name_questions_path, :"data-delimiter" => ', ', :id => "tag_entry_field" %>
-  <%= submit_tag "Add", :class => submit_classes %>
+<% if present_user.can_tag?(taggable) %>
+
+  <div id="tag_actions" style="margin-top:10px; font-size: 11px; <%= 'display:none' if show_remove_form %>">
+    <%= link_to_function "Add Tag", 
+                         "$('#tag_entry_field').val(''); $('#add_tag_form').show(); $('#tag_actions').hide();", 
+                         :style => "white-space: nowrap;" %> |
+    <%= link_to_function "Remove Tags...", 
+                         "$('#tag_entry_field').val(''); $('#remove_tags_form').show(); $('#tag_actions').hide(); $('#tag_links').hide();", 
+                         :style => "white-space: nowrap;" %>
+  </div>
+
+  <div id="add_tag_form" style="display:none">
+  <%= form_tag(add_tags_path, :remote => true, :autocomplete => "off") do %>
+    <%= autocomplete_field_tag "tags", '', autocomplete_tag_name_questions_path, :"data-delimiter" => ', ', :id => "tag_entry_field" %>
+    <%= submit_tag "Add", :class => submit_classes %>
+  <% end %>
+  </div>
+  
+  <div id="remove_tags_form" style="<%= 'display:none' if !show_remove_form %>">
+    <% if !taggable.tags.empty? %>
+      <% taggable.tags.each do |tag| %>
+        <%= link_to question_tag_path(taggable, tag.name.gsub(" ","_")), 
+                    :method => :delete, 
+                    :remote => true, 
+                    :class => "tag" do %><%= tag.name %><span class="ui-icon ui-icon-close" style="display:inline-block; height:12px; width:12px"></span><% end %>
+      <% end %>
+    <% end %>
+    <div style="margin-top:10px; font-size: 11px;">
+    <%= link_to_function "I'm finished removing tags.", 
+                         "$('#tag_links').show(); $('#tag_actions').show(); $('#remove_tags_form').hide();", 
+                         :style => "white-space: nowrap;" %>
+    </div>
+  </div>
+  
+  <div id="edit_tag_form" style="display:none">
+    
+  </div>
+
 <% end %>
-</div>
+

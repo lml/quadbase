@@ -316,7 +316,7 @@ class Question < ActiveRecord::Base
   end
   
   def has_role_permission?(user, role)
-    has_role?(user, role) || has_role_permission_as_deputy?(user, role)
+    !user.is_anonymous? && (has_role?(user, role) || has_role_permission_as_deputy?(user, role))
   end
 
   def question_role_requests
@@ -520,8 +520,7 @@ class Question < ActiveRecord::Base
   end
   
   def can_be_tagged_by?(user)
-    (is_published? && !user.is_anonymous?) ||
-    (!is_published? && can_be_updated_by?(user))
+    can_be_updated_by?(user) || has_role_permission?(user, :any)
   end
   
   # Special access method for role requests on this collaborator
