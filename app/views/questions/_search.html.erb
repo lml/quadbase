@@ -35,7 +35,7 @@
       </td>
       <td><%= label_tag 'containing:' %></td>
       <td><%= text_field_tag 'text_query', @text_query %></td>
-      <td><%= submit_tag 'Search', :class => "#{submit_classes}" %></td>
+      <td><%= submit_tag 'Search', :class => "#{submit_classes}", :disable_with => "Searching..." %></td>
     </tr>
   </table>
 <% end %>
