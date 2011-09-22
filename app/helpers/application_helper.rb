@@ -195,4 +195,12 @@ module ApplicationHelper
             :remote => true
   end
   
+  def none_row(table_id, items_array, num_columns)
+    output = "<tr id=\"#{table_id}_none_row\""
+    output << " style=\"display:none\"" if !items_array.empty?
+    output << "><td colspan=\"#{num_columns}\"><center>None</center></td></tr>"
+    output.html_safe
+  end
+  
+  
 end

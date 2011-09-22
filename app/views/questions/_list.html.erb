@@ -40,6 +40,7 @@
 <% num_cols = 4 %>
 
 <% if !entries.nil? %>
+  <% entries = entries.to_a %>
   <table class="list" width="100%">
      <tr>
         <% if show_checkboxes %>
@@ -51,7 +52,7 @@
         <th width="15%" style="text-align:center">Modified Date</th>
         <th width="60%">Quick Look</th>
      </tr>
-     <tr id="none_row" <% if !entries.empty? %>style="display:none"<% end %>>
+     <tr id="none_row" style="<%= !entries.empty? ? 'display:none' : '' %>">
         <td colspan="<%= num_cols %>" style="text-align:center">[ No questions ]</td>
      </tr>
    

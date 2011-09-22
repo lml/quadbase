@@ -3,6 +3,8 @@
 class Question < ActiveRecord::Base
   include AssetMethods
   
+  acts_as_taggable
+  
   @@lock_timeout = Quadbase::Application.config.question_lock_timeout
 
   set_inheritance_column "question_type"
@@ -374,6 +376,7 @@ class Question < ActiveRecord::Base
     kopy.question_setup = self.question_setup.content_copy if !self.question_setup_id.nil?
     kopy.license_id = self.license_id
     self.attachable_assets.each {|aa| kopy.attachable_assets.push(aa.content_copy) }
+    kopy.tag_list = self.tag_list
     kopy
   end
   
@@ -514,6 +517,11 @@ class Question < ActiveRecord::Base
   
   def can_be_derived_by?(user)
     is_published? && !user.is_anonymous?
+  end
+  
+  def can_be_tagged_by?(user)
+    (is_published? && !user.is_anonymous?) ||
+    (!is_published? && can_be_updated_by?(user))
   end
   
   # Special access method for role requests on this collaborator

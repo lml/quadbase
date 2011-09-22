@@ -117,7 +117,14 @@
       </div>
 
       <div id="right_column" class="column">
-
+        <% if !@question.nil? %>
+          <br/>
+          <div id="tags">
+            <%= render :partial => 'shared/tags',
+                       :locals => {:taggable => @question,
+                                   :add_tag_path => question_add_tags_path(@question)} %>
+          </div>
+        <% end %>
       </div>
    </div>
    <% end %>

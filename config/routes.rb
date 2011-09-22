@@ -142,6 +142,9 @@ Quadbase::Application.routes.draw do
     put 'edit_later'
     
     get 'part/:part_id', :to => "questions#show_part", :as => 'show_part'
+    
+    post 'add_tags'
+    get 'tagged/:tags', :to => "questions#tagged", :as => 'tagged', :on => :collection
 
     commentable
   end

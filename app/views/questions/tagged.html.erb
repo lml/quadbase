@@ -1,0 +1,8 @@
+<%# Copyright (c) 2011 Rice University.  All rights reserved. %>
+
+<%= pageHeading("Questions tagged with: #{@tags.join(", ")}")%>
+
+<% @use_columns = false %>
+
+<%= render :partial => 'questions/list', 
+           :locals => {:entries => @questions } %>

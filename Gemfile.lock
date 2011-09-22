@@ -28,6 +28,8 @@ GEM
       activemodel (= 3.0.3)
       activesupport (= 3.0.3)
     activesupport (3.0.3)
+    acts-as-taggable-on (2.1.1)
+      rails
     archive-tar-minitar (0.5.2)
     arel (2.0.9)
     bcrypt-ruby (2.1.4)
@@ -133,6 +135,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
+  acts-as-taggable-on (~> 2.1.0)
   capistrano
   devise
   factory_girl_rails (< 2.0)

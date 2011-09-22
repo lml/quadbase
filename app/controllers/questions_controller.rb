@@ -111,6 +111,32 @@ class QuestionsController < ApplicationController
       format.html { render 'questions/show' }
     end
   end
+  
+  def add_tags
+    @question = Question.from_param(params[:question_id])
+    raise SecurityTransgression unless present_user.can_tag?(@question)
+    
+    incoming_tags = params[:tags].split(",").collect{|t| t.strip}
+    
+    if tags_fail_regex?(incoming_tags)
+      flash[:alert] = "Tags can only contain letters, numbers, and spaces.  Multiple tags should be separated by commas."
+    else
+      tags = @question.tag_list.concat(incoming_tags).join(", ")
+      @question.update_attribute(:tag_list, tags)      
+    end    
+  end
+  
+  def tagged
+    @tags = params[:tags].split("+")
+    if tags_fail_regex?(@tags)
+      @questions = []
+      flash[:alert] = "The provided tags contain invalid characters."
+    else
+      @questions = Question.tagged_with(@tags)
+                           .reject{|q| (q.is_published? && !q.is_latest?) || 
+                                        !present_user.can_read?(q)}
+    end
+  end
 
   def destroy
     @question = Question.from_param(params[:id])
@@ -301,6 +327,10 @@ protected
         }
       end      
     end
+  end
+  
+  def tags_fail_regex?(tags)
+    tags.any?{|tag| (tag =~ /^[A-Za-z\d ]+$/).nil?}
   end
 
 end

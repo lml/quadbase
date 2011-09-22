@@ -1,0 +1,5 @@
+<%= display_flash %>
+
+$("#tags").html("<%= ej(render :partial => 'shared/tags',
+                               :locals => {:taggable => @question,
+                                           :add_tag_path => question_add_tags_path(@question)}) %>");

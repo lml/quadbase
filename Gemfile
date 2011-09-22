@@ -26,6 +26,8 @@ gem 'mime-types', :require => 'mime/types'
 # Search
 gem "meta_where"
 
+gem 'acts-as-taggable-on', '~>2.1.0'
+
 # reCAPTCHA
 gem "recaptcha", :require => "recaptcha/rails"
 

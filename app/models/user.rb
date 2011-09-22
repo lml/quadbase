@@ -128,6 +128,10 @@ class User < ActiveRecord::Base
       return Message.find(container_id).can_be_joined_by?(self)
     end
   end
+  
+  def can_tag?(resource)
+    resource.can_be_tagged_by?(self)
+  end
 
   # Can't destroy users
   def destroy

@@ -1,0 +1,16 @@
+<% if !taggable.tags.empty? %>
+  <% taggable.tags.each do |tag| %>
+    <%= link_to tag.name, tagged_questions_path(tag.name), :class => "tag" %>
+  <% end %>
+<% end %>
+
+<div style="margin-top:10px">
+  <%= link_to_function "Add Tag", "$('#tag_entry_field').val(''); $('#add_tag_form').show(); $(this).hide();", :style => "font-size:11px; white-space: nowrap;" %>
+</div>
+
+<div id="add_tag_form" style="display:none">
+<%= form_tag(add_tag_path, :remote => true) do %>
+  <%= text_field_tag "tags", '', {:id => "tag_entry_field"} %>
+  <%= submit_tag "Add", :class => submit_classes %>
+<% end %>
+</div>

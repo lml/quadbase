@@ -40,6 +40,11 @@ class AnonymousUser
     false
   end
   
+  def can_tag?(resource)
+    #resource.can_be_tagged_by?(self)
+    false
+  end
+  
   def is_anonymous?
     true
   end
