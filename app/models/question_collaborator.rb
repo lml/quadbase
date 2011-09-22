@@ -12,6 +12,7 @@ class QuestionCollaborator < ActiveRecord::Base
   before_create :assign_position
 
   before_destroy :no_roles
+  after_destroy :grant_other_requests_if_this_is_last_roleholder
   
   attr_accessible :user, :question
   
@@ -110,6 +111,10 @@ protected
     return if (!has_role?(:any))
     errors.add(:base, "Cannot remove a collaborator that has been assigned roles.")
     false
+  end
+  
+  def grant_other_requests_if_this_is_last_roleholder
+    question.grant_all_requests_if_no_role_holders_left!
   end
 
 end

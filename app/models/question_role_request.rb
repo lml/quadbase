@@ -54,8 +54,13 @@ class QuestionRoleRequest < ActiveRecord::Base
   # If the requestor has approval or acceptance permission for this request, go ahead
   # and set those fields to true.
   def autoset_approved_and_accepted
-    self.is_approved ||= can_be_approved_by?(requestor)
-    self.is_accepted ||= can_be_accepted_by?(requestor)
+    # In the case where there are currently no other collaborators besides the 1 on this
+    # request, we want to grant this request right away (because there is no one available)
+    # to approve it otherwise.
+    no_existing_collaborators = question.question_collaborators.size == 1
+    
+    self.is_approved ||= no_existing_collaborators || can_be_approved_by?(requestor)
+    self.is_accepted ||= no_existing_collaborators || can_be_accepted_by?(requestor)
     
     # If "before_*" callbacks return false, the save in progress is canceled.
     # It may just happen that the "self.is_accepted ||=" line returns false, 
@@ -83,6 +88,10 @@ class QuestionRoleRequest < ActiveRecord::Base
   
   def reject!
     destroy_and_notify(:after_reject)
+  end
+  
+  def grant!
+    execute!
   end
   
   def destroy_and_notify(callback = nil)

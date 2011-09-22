@@ -448,6 +448,18 @@ class Question < ActiveRecord::Base
     Question
   end
   
+  # In some cases, there could be some outstanding role requests on this question
+  # but no role holders left to approve/reject them.  This method is a utility for
+  # automatically granting all of those roles.
+  def grant_all_requests_if_no_role_holders_left!
+    if question_collaborators.none?{|qc| qc.has_role?(:any)}
+      question_collaborators.each do |qc|
+        qc.question_role_requests.each{|qrr| qrr.grant!}
+      end
+    end
+  end
+  
+  
   #############################################################################
   # Access control methods
   #############################################################################
