@@ -17,7 +17,7 @@
                          "$('#tag_entry_field').val(''); $('#add_tag_form').show(); $('#tag_actions').hide();", 
                          :style => "white-space: nowrap;" %> |
     <%= link_to_function "Remove Tags...", 
-                         "$('#tag_entry_field').val(''); $('#remove_tags_form').show(); $('#tag_actions').hide(); $('#tag_links').hide();", 
+                         "$('#remove_tags_form').show(); $('#tag_actions').hide(); $('#tag_links').hide();", 
                          :style => "white-space: nowrap;" %>
   </div>
 
@@ -45,7 +45,10 @@
   </div>
   
   <div id="edit_tag_form" style="display:none">
-    
+    <%#= form_tag(edit_tags_path, :remote => true, :autocomplete => "off") do %>
+      <%#= autocomplete_field_tag "tags", '', autocomplete_tag_name_questions_path, :"data-delimiter" => ', ', :id => "tag_edit_field" %>
+      <%#= submit_tag "Save", :class => submit_classes %>
+    <%# end %>
   </div>
 
 <% end %>
