@@ -7,6 +7,13 @@ class QuestionCollaboratorTest < ActiveSupport::TestCase
   fixtures
   self.use_transactional_fixtures = true
   
+  setup do
+    @question = Factory.create(:simple_question)
+    @first_question_collaborator = Factory.create(:question_collaborator, :question => @question)
+    # Since there are no other role holders yet, creating this request will grant the role
+    Factory.create(:question_role_request, :question_collaborator => @first_question_collaborator, :toggle_is_author => true)
+  end
+  
   test "delete doesn't propagate" do
     c = Factory.create(:question_collaborator)
     c.destroy
@@ -62,16 +69,13 @@ class QuestionCollaboratorTest < ActiveSupport::TestCase
     assert_raise(ActiveRecord::RecordInvalid) {Factory.create(:question_collaborator, :question => sq, :user => user)}
   end
   
-#  test "a question must always have at least one collaborator" do
-#    flunk "Not yet implemented."
-#  end
-  
   test "delete destroys dependent assocs" do
-    qrr = Factory.create(:question_role_request, :toggle_is_author => true)
-    qc = qrr.question_collaborator
-    assert QuestionRoleRequest.find_by_question_collaborator_id(qc.id)
+    qc = Factory.create(:question_collaborator, :question => @question)
+    qrr = Factory.create(:question_role_request, :question_collaborator => qc, :toggle_is_author => true)
+
+    assert QuestionRoleRequest.find_by_question_collaborator_id(qc.id), "a"
     assert qc.destroy
-    assert !QuestionRoleRequest.find_by_question_collaborator_id(qc.id)
+    assert !QuestionRoleRequest.find_by_question_collaborator_id(qc.id), "b"
   end
   
   test "can't mass-assign roles" do
@@ -113,18 +117,18 @@ class QuestionCollaboratorTest < ActiveSupport::TestCase
   end
 
   test "has request" do
-    qr = Factory.create(:question_collaborator)
-    assert !qr.has_request?(:author)
-    assert !qr.has_request?(:copyright)
-    qrr0 = Factory.create(:question_role_request, :question_collaborator => qr, :toggle_is_author => true)
-    assert qr.has_request?(:author)
-    assert !qr.has_request?(:copyright)
-    qrr1 = Factory.create(:question_role_request, :question_collaborator => qr, :toggle_is_copyright_holder => true)
-    assert qr.has_request?(:author)
-    assert qr.has_request?(:copyright)
+    qc = Factory.create(:question_collaborator, :question => @question)
+    assert !qc.has_request?(:author)
+    assert !qc.has_request?(:copyright)
+    qrr0 = Factory.create(:question_role_request, :question_collaborator => qc, :toggle_is_author => true)
+    assert qc.has_request?(:author)
+    assert !qc.has_request?(:copyright)
+    qrr1 = Factory.create(:question_role_request, :question_collaborator => qc, :toggle_is_copyright_holder => true)
+    assert qc.has_request?(:author)
+    assert qc.has_request?(:copyright)
     qrr0.destroy
-    assert !qr.has_request?(:author)
-    assert qr.has_request?(:copyright)
+    assert !qc.has_request?(:author)
+    assert qc.has_request?(:copyright)
   end
 
   test "has role" do
