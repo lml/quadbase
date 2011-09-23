@@ -96,7 +96,7 @@
            <span id="account_info">
            
                <% if user_signed_in? %>
-                  Welcome, <%= current_user.first_name %> &nbsp;&nbsp;&nbsp;
+                  Welcome, <%= current_user.username %> &nbsp;&nbsp;&nbsp;
                   <%= link_to "My Account", edit_user_registration_path %> |
                   <%= link_to "Sign out", destroy_user_session_path %>
                <% else %>

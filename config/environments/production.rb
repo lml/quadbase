@@ -53,6 +53,6 @@ Quadbase::Application.configure do
   
   # Took ":string => true" out b/c session cookies weren't making it across the break
   # from https to http
-  config.middleware.use Rack::SslEnforcer, :only => /^\/users\// #, :strict => true
+  config.middleware.use Rack::SslEnforcer, :only => /^\/users/ #, :strict => true
   #config.middleware.insert_before ActionDispatch::Cookies, Rack::SslEnforcer
 end
