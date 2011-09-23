@@ -116,6 +116,10 @@ class QuestionsController < ApplicationController
     end
   end
   
+  def tags
+    @tags = Question.tag_counts_on(:tags)
+  end
+  
   def add_tags
     @question = Question.from_param(params[:question_id])
     raise SecurityTransgression unless present_user.can_tag?(@question)

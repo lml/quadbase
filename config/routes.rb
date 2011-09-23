@@ -143,6 +143,7 @@ Quadbase::Application.routes.draw do
     
     get 'part/:part_id', :to => "questions#show_part", :as => 'show_part'
     
+    get 'tags', :on => :collection
     post 'tags', :to => "questions#add_tags", :as => 'tags'
     delete 'tags/:tag', :to => "questions#remove_tag", :as => 'tag'
     get 'tagged/:tags', :to => "questions#tagged", :as => 'tagged', :on => :collection

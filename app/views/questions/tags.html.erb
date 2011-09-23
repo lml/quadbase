@@ -1,0 +1,7 @@
+<% @use_columns = false %>
+
+<center>
+<% tag_cloud(@tags, %w(tag_cloud_1 tag_cloud_2 tag_cloud_3 tag_cloud_4)) do |tag, css_class| %>
+<%= link_to tag.name, { :action => :tagged, :tags => tag.name }, :class => "tag " + css_class, :style => "padding:7px 9px; white-space:nowrap; padding:7px 7px;" %>
+<% end %>
+</center>
