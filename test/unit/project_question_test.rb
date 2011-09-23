@@ -41,6 +41,28 @@ class ProjectQuestionTest < ActiveSupport::TestCase
     assert_equal new_project, wq.project
   end
   
+  test "move multipart" do
+    mpq = Factory.create(:multipart_question)
+    sq1 = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+
+    mpq.add_parts([sq1])
+    
+    old_project = Factory.create(:project)
+    new_project = Factory.create(:project)
+    
+    mpq_pq = Factory.create(:project_question, 
+                            :question => mpq,
+                            :project => old_project)
+    sq1_pq = Factory.create(:project_question, 
+                            :question => sq1,
+                            :project => old_project)
+
+    mpq_pq.move!(new_project)
+    
+    assert_equal new_project, mpq_pq.project, "a"
+    assert_equal new_project, sq1_pq.reload.project, "b"
+  end
+  
   test "copy!" do
     u = Factory.create(:user)
     q = make_simple_question

@@ -8,6 +8,8 @@ class NotYetImplemented < StandardError; end
 
 class IllegalArgument < StandardError; end
 
+class IllegalState < StandardError; end
+
 def to_bool(string)
   return true if string== true || string =~ (/(true|t|yes|y|1)$/i)
   return false if string== false || string.nil? || string =~ (/(false|f|no|n|0)$/i)

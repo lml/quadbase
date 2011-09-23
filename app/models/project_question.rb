@@ -11,9 +11,34 @@ class ProjectQuestion < ActiveRecord::Base
 
   attr_accessible :project, :question
   
-  def move!(new_project)
-    self.project = new_project
-    self.save!
+  def move!(target_project)
+    source_project = self.project
+    
+    ProjectQuestion.transaction do 
+      self.project = target_project
+      self.save!
+      
+      # When the question is a multipart, and when its children are in the same
+      # project as the multipart, move them too.
+      if question.is_multipart?
+        question.child_questions.each do |child|
+          # everyone can see published questions (published questions in a project
+          # doesn't really mean anything), so don't move published children.
+          next if child.is_published? 
+
+          raise IllegalState if child.project_questions.size != 1            
+          child_pq = child.project_questions.first
+
+          # If the child draft is alredy in a different project than the multipart
+          # draft, skip it (only move children that are in the same project as the
+          # multipart)
+          next if child_pq.project != source_project
+
+          child_pq.project = target_project 
+          child_pq.save!
+        end
+      end
+    end
   end
 
   def copy!(new_project, user)
