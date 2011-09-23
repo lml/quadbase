@@ -185,18 +185,19 @@ class MultipartQuestionTest < ActiveSupport::TestCase
     
     kopy = mpq.content_copy
     
-    assert_equal kopy.question_setup.content, mpq.question_setup.content
-    assert_equal kopy.child_question_parts.size, mpq.child_question_parts.size
+    assert_equal kopy.question_setup.content, mpq.question_setup.content, "a"
+    assert_equal kopy.child_question_parts.size, mpq.child_question_parts.size, "b"
     
     (0..kopy.child_question_parts.size-1).each do |ii|
-      assert_equal kopy.child_question_parts[ii].order, mpq.child_question_parts[ii].order
-      assert_equal kopy.child_question_parts[ii].child_question, mpq.child_question_parts[ii].child_question
+      assert_equal kopy.child_question_parts[ii].order, mpq.child_question_parts[ii].order, "c#{ii}"
+      assert_equal kopy.child_question_parts[ii].child_question.content, 
+                   mpq.child_question_parts[ii].child_question.content, "d#{ii}"
     end
     
     kopy.save!
     
     # Make sure original didnt' change
-    assert mpq.child_question_parts[0].updated_at < pre_copy_time
+    assert mpq.child_question_parts[0].updated_at < pre_copy_time, "e"
   end
   
   # TODO

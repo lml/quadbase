@@ -12,8 +12,12 @@ class QuestionPart < ActiveRecord::Base
   before_create :assign_order
   
   def content_copy
+    child_question_copy = child_question.is_published? ? 
+                          child_question : 
+                          child_question.content_copy
+                          
     kopy = QuestionPart.new(:multipart_question => multipart_question, 
-                            :child_question => child_question,
+                            :child_question => child_question_copy,
                             :order => order)
   end
 

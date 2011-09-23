@@ -158,6 +158,15 @@ class MultipartQuestion < Question
     end
   end
   
+  def create!(user, options ={})
+    child_questions.each do |child|
+      child.create!(user, options) if !child.is_published?
+    end
+    
+    super(user, options)
+  end
+  
+  
   def last_part
     child_question_parts.last
   end

@@ -61,17 +61,18 @@ class ProjectQuestionsController < ApplicationController
       if params[:copy].blank? ||
          !(target_project = Project.find_by_id(params[:copy].first))
 
+    raise SecurityTransgression unless \
+      present_user.can_update?(target_project) && 
+      @project_questions.all?{|pq| pq.can_be_copied_by?(present_user)}
+
     ProjectQuestion.transaction do 
-      @project_questions.each do |wq|
-        raise SecurityTransgression unless 
-          (wq.can_be_copied_by?(present_user) && present_user.can_update?(target_project))
-        
-        wq.copy!(target_project, present_user)
+      @project_questions.each do |pq|
+        pq.copy!(target_project, present_user)
       end
     end
 
     respond_to do |format|
-      flash[:notice] = "Derived " + ((@project_questions.size == 1) ? "copy" : "copies")  +
+      flash[:notice] = ((@project_questions.size == 1) ? "Copy" : "copies")  +
                        " added to " + target_project.name.to_s + "."
       format.html { redirect_to project_path(@project) }
       format.js
@@ -82,12 +83,13 @@ class ProjectQuestionsController < ApplicationController
     (render :nothing => true && return) \
       if params[:move].blank? ||
          !(target_project = Project.find_by_id(params[:move].first))
+         
+    raise SecurityTransgression unless \
+      present_user.can_update?(target_project) && 
+      @project_questions.all?{|pq| pq.can_be_moved_by?(present_user)}
 
     ProjectQuestion.transaction do 
       @project_questions.each do |wq|
-        raise SecurityTransgression unless 
-          (wq.can_be_moved_by?(present_user) && present_user.can_update?(target_project))
-        
         wq.move!(target_project)
       end
     end

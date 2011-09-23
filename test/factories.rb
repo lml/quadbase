@@ -56,7 +56,7 @@ Factory.define :license do |f|
 end
 
 Factory.define :simple_question do |f|
-  f.content "What is $2+2$?"
+  f.content { Factory.next(:couple_of_words) }
   f.association :question_setup
   f.number { Factory.next(:unique_number) }
   f.license_id { common_license.id }

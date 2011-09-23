@@ -27,7 +27,7 @@ class SimpleQuestion < Question
   end
   
   def content_copy
-    kopy = SimpleQuestion.new(:content => content)
+    kopy = SimpleQuestion.create(:content => content)
     self.answer_choices.each {|ac| kopy.answer_choices.push(ac.content_copy) }
     init_copy(kopy)
   end
