@@ -89,12 +89,13 @@ class QuestionCollaboratorsController < ApplicationController
 
     @destroy = @question_collaborator.ready_to_destroy? ||
                present_user.id == @question_collaborator.user_id
+
     QuestionRoleRequest.request_drop_all_roles(@question_collaborator, present_user)
 
     if @destroy
       @question_collaborator.destroy
     end
-    
+
     respond_with(@question_collaborator) do |format|
       format.html { redirect_to question_question_collaborators_path(@question) }
       format.js

@@ -7,12 +7,19 @@ class QuestionCollaboratorsControllerTest < ActionController::TestCase
     @user = Factory.create(:user)
     @question = Factory.create(:project_question,
                                :project => Project.default_for_user!(@user)).question
+    @other_user_in_project = Factory.create(:user)
+    Factory.create(:project_member, :user => @other_user_in_project, 
+                                    :project => Project.default_for_user!(@user))
     @published_question = Factory.create(:project_question,
                                          :project => Project.default_for_user!(@user)).question
     @question_collaborator = Factory.create(:question_collaborator, :question => @question, :is_author => true)
+    Factory.create(:project_member, :user => @question_collaborator.user, 
+                                    :project => Project.default_for_user!(@user))
     @published_question_collaborator = Factory.create(:question_collaborator, :question => @published_question, :is_copyright_holder => true)
     @published_question.version = @published_question.next_available_version
     @published_question.save!
+    @published_question.reload
+    @question_collaborator.reload
   end
 
   test "should not get index not logged in" do
@@ -98,13 +105,22 @@ class QuestionCollaboratorsControllerTest < ActionController::TestCase
     sign_in @user
     assert_difference('QuestionCollaborator.count', 0) do
       delete :destroy, :question_id => @published_question.to_param,
+                       :id => @published_question_collaborator.id
+    end
+    assert_response(403)
+  end
+
+  test "should destroy question_collaborator with roles if destroyed by the collaborator" do
+    sign_in @question_collaborator.user #@user
+    assert_difference('QuestionCollaborator.count', -1) do
+      delete :destroy, :question_id => @question.to_param,
                        :id => @question_collaborator.id
     end
-    assert_redirected_to question_question_collaborators_path(@published_question)
+    assert_redirected_to question_question_collaborators_path(@question)
   end
 
   test "should not destroy question_collaborator with roles" do
-    sign_in @user
+    sign_in @other_user_in_project
     assert_difference('QuestionCollaborator.count', 0) do
       delete :destroy, :question_id => @question.to_param,
                        :id => @question_collaborator.id

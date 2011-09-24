@@ -54,13 +54,15 @@ class QuestionRoleRequest < ActiveRecord::Base
   # If the requestor has approval or acceptance permission for this request, go ahead
   # and set those fields to true.
   def autoset_approved_and_accepted
-    # In the case where there are currently no other collaborators besides the 1 on this
-    # request, we want to grant this request right away (because there is no one available)
-    # to approve it otherwise.
-    no_existing_collaborators = question.question_collaborators.size == 1
+    # This request should be automatically approved if (1) it drops a role (in which
+    # case no approval is needed), (2) the request can be approved by the requestor, or
+    # (3) there are no collaborators available who can approve the request.
+    self.is_approved ||= drops_role? || 
+                         can_be_approved_by?(requestor) ||
+                         question.question_collaborators.none?{|qc| can_be_approved_by?(qc.user)}
     
-    self.is_approved ||= no_existing_collaborators || can_be_approved_by?(requestor)
-    self.is_accepted ||= no_existing_collaborators || can_be_accepted_by?(requestor)
+    # The request should be automatically accepted iff the requestor can accept it
+    self.is_accepted ||= can_be_accepted_by?(requestor)
     
     # If "before_*" callbacks return false, the save in progress is canceled.
     # It may just happen that the "self.is_accepted ||=" line returns false, 
@@ -71,7 +73,7 @@ class QuestionRoleRequest < ActiveRecord::Base
   # If the autosetting from above has resulted in a request that is ready to run,
   # go ahead and execute it.
   def execute_if_ready!
-    execute! if (is_accepted && (is_approved || drops_role?))
+    execute! if (is_accepted && is_approved)
   end
   
   def approve!
@@ -83,7 +85,7 @@ class QuestionRoleRequest < ActiveRecord::Base
   end
   
   def accept!
-    (drops_role? || is_approved) ? execute! : update_attributes({:is_accepted => true})
+    is_approved ? execute! : update_attributes({:is_accepted => true})
   end
   
   def reject!
@@ -142,7 +144,6 @@ class QuestionRoleRequest < ActiveRecord::Base
                   toggles[i] => true)
         qrr.requestor = requestor
         qrr.save!
-        qrr.accept! if qrr.is_a_self_request?
       elsif !collaborator.has_role?(role) && collaborator.has_request?(role)
         collaborator.get_request(role).destroy
       end
