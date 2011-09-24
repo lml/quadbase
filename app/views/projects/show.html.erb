@@ -25,20 +25,20 @@
 
 <br/>
   <% if !@project.project_questions.empty? %>
-    <table width="100%">
+    <table>
       <tr>
-        <td width="10%">
+        <td>
           <%= submit_tag "Publish...", :class => "ui-state-default ui-corner-all", :id => "publish_button", :name => "publish" %>
         </td>
     <% if !@target_projects.blank? %>
-        <td width="35%">
+        <td>
           <%= render :partial => "projects_menu",
                      :locals => {:projects => @target_projects,
                                  :menu_action_name => "move",
                                  :preposition => "to:",
                                  :base_action_path => "/project_questions/"} %>
         </td>
-        <td width="35%">
+        <td>
           <%= render :partial => "projects_menu",
                      :locals => {:projects => @target_projects,
                                  :menu_action_name => "copy",
@@ -46,11 +46,11 @@
                                  :base_action_path => "/project_questions/"} %>
         </td>
     <% end %>
-        <td width="10%">
+        <td>
           <%= submit_tag "Show Attribution", :class => "ui-state-default ui-corner-all",
                                         :id => "attribution_button", :name => "attribution" %>
         </td>
-        <td width="10%">
+        <td>
           <%= submit_tag "Remove", :class => "ui-state-default ui-corner-all",
                                    :id => "remove_button", :name => "remove",
                                    :onclick => "return confirm('Are you sure you want to remove" +
@@ -58,6 +58,7 @@
         </td>
       </tr>
     </table>
+    
   <% end %>
 <% end %>
 

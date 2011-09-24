@@ -192,6 +192,10 @@
    <%= yield :javascript %>	
 </body>
 <script type="text/javascript">
+  $('input:submit').button().css('font-size','12px');
+  $('a.submitButton').button().css('font-size','12px');
+</script>
+<script type="text/javascript">
  
    var _gaq = _gaq || [];
    _gaq.push(['_setAccount', 'UA-23761609-3']);
