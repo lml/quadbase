@@ -11,13 +11,13 @@
    preposition ||= false
 %>
 <nav class="no_js">
-  <ul style="margin:0px">
+  <ul style="margin:0px;">
     <li>
-      <a class="<%= "#{submit_classes}" %>" href="#" cursor="default">
+      <a id="<%= menu_action_name.tableize %>" class="<%= "#{submit_classes}" %>" href="#" cursor="default">
         <%= menu_action_name.humanize %><%= preposition ? " " + preposition :
             "" %>&nbsp;<%= down_icon %>
       </a>
-      <ul style="border: 1px solid black;">
+      <ul style="border: 1px solid black; width:280px">
         <% projects.each do |w| %>
         <li>
           <%= submit_tag w.name, :name => menu_action_name.tableize.singularize +
@@ -40,7 +40,8 @@
 
 <% content_for :javascript do %>
   <%= javascript_tag do %>
-    $(document).bind('click', function(event) {
+    $("#<%= menu_action_name.tableize %>").bind('click', function(event) {
+      event.preventDefault();
       var parentNav = $(event.target).parents("nav");
       $("nav").find("ul").find("ul").hide();
       parentNav.find("ul").find("ul").show();
