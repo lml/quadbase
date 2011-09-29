@@ -16,7 +16,7 @@
   <% question.child_question_parts.each do |part| %>
     <% child_question = part.child_question %>
       <tr>
-        <td valign="top"><%= part.order %>)</td>
+        <td valign="top" class="quad-part_index"><%= part.order %>)</td>
         <td><%= render :partial => 'simple_questions/content_and_answers', 
                        :locals => { :question => child_question } %></td>
       </tr>    

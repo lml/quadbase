@@ -47,6 +47,10 @@ div.quad-answer_choices {
    margin:0px 0px 6px 0px;
 }
 
+.quad-part_index {
+   padding-right:8px;
+}
+
 .quad-quid {
 	font-size: 14px;
 	color: #666;
