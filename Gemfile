@@ -33,6 +33,11 @@ gem 'rails3-jquery-autocomplete'
 # reCAPTCHA
 gem "recaptcha", :require => "recaptcha/rails"
 
+gem 'yajl-ruby'
+
+gem 'jsonify'
+gem 'jsonify-rails'
+
 group :development, :test do
 	gem 'sqlite3-ruby', :require => 'sqlite3'
 	gem 'ruby-debug19'

@@ -60,6 +60,10 @@ GEM
     jquery-rails (0.2.7)
       rails (~> 3.0)
       thor (~> 0.14.4)
+    jsonify (0.2.0)
+    jsonify-rails (0.2.0)
+      actionpack
+      jsonify (>= 0.2.0)
     linecache19 (0.5.12)
       ruby_core_source (>= 0.1.4)
     mail (2.2.15)
@@ -131,6 +135,8 @@ GEM
     warden (1.0.3)
       rack (>= 1.0.0)
     will_paginate (3.0.pre2)
+    yajl-ruby (1.0.0)
+    yajl-ruby (1.0.0-x86-mingw32)
 
 PLATFORMS
   ruby
@@ -143,6 +149,8 @@ DEPENDENCIES
   factory_girl_rails (< 2.0)
   faker
   jquery-rails
+  jsonify
+  jsonify-rails
   meta_where
   mime-types
   mysql2
@@ -156,3 +164,4 @@ DEPENDENCIES
   ruby-debug19
   sqlite3-ruby
   will_paginate (= 3.0.pre2)
+  yajl-ruby

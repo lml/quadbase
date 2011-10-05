@@ -17,10 +17,6 @@ module QuestionsHelper
     end
   end
   
-  def view_dir(question)
-    question.question_type.underscore.pluralize
-  end
-  
   def question_type_abbreviation(question)
     case question.question_type
     when "SimpleQuestion"

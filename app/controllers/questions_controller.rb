@@ -21,7 +21,11 @@ class QuestionsController < ApplicationController
   def show
     @question = Question.from_param(params[:id])
     raise SecurityTransgression unless present_user.can_read?(@question)
-    respond_with(@question)
+    
+    respond_to do |format|
+      format.json { render :template => "#{view_dir(@question)}/show"}
+      format.html
+    end
   end
 
   def history

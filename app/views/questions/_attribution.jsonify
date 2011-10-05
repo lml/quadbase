@@ -1,0 +1,23 @@
+# Copyright (c) 2011 Rice University.  All rights reserved.
+
+collaborators = @question.question_collaborators
+
+authors = collaborators.select{|c| c.is_author}
+copyright_holders = collaborators.select{|c| c.is_copyright_holder}
+
+json.attribution do
+  json.authors(authors) do |author|
+    json.id author.user.id
+    json.name author.user.full_name
+  end
+
+  json.copyright_holders(copyright_holders) do |copyright_holder|
+    json.id copyright_holder.user.id
+    json.name copyright_holder.user.full_name
+  end
+
+  json.license do
+    json.name @question.license.long_name
+    json.url @question.license.url  
+  end
+end

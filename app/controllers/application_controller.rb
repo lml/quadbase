@@ -15,7 +15,8 @@ class ApplicationController < ActionController::Base
                 :user_is_admin?,
                 :present_user,
                 :get_error_messages,
-                :protect_form
+                :protect_form,
+                :view_dir
 
   respond_to :html
 
@@ -255,6 +256,10 @@ class ApplicationController < ActionController::Base
     commentable = find_commentable
     @comment_thread = commentable.comment_thread
     @commentable = commentable.becomes(Kernel.const_get(@comment_thread.commentable_type))
+  end
+  
+  def view_dir(question)
+    question.question_type.underscore.pluralize
   end
 
 end

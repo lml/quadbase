@@ -12,8 +12,8 @@ namespace :db do
   task :populate_license => :environment do
     License.create(
            :short_name => "CC BY 3.0",
-           :long_name => "Creative Commons -- Attribution 3.0 United States",
-           :url => "http://creativecommons.org/licenses/by/3.0/us/",
+           :long_name => "Creative Commons Attribution 3.0 Unported",
+           :url => "http://creativecommons.org/licenses/by/3.0/",
            :agreement_partial_name => "cc_by_3_0",
            :is_default => true)
   end
