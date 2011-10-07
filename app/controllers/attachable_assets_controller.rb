@@ -66,7 +66,9 @@ class AttachableAssetsController < ApplicationController
 
     raise SecurityTransgression unless present_user.can_read?(@attachable_asset)
 
-    send_file @attachable_asset.asset.attachment.path
+    send_file @attachable_asset.asset.attachment.path, 
+              :filename => @attachable_asset.local_name,
+              :type => @attachable_asset.asset.attachment_content_type
   end
 
 end
