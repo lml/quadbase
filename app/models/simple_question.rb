@@ -27,9 +27,11 @@ class SimpleQuestion < Question
   end
   
   def content_copy
-    kopy = SimpleQuestion.create(:content => content)
-    self.answer_choices.each {|ac| kopy.answer_choices.push(ac.content_copy) }
+    kopy = SimpleQuestion.create
     init_copy(kopy)
+    self.answer_choices.each {|ac| kopy.answer_choices.push(ac.content_copy) }
+    kopy.content = self.content
+    kopy
   end
 
   def add_other_prepublish_errors

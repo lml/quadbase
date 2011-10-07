@@ -40,7 +40,7 @@
 <% num_cols = 4 %>
 
 <%= content_for :javascript do %>
-  <% javascript_tag do %>
+  <%= javascript_tag do %>
     var tog = false;
     
     $('#toggle_checkbox').live('click', function() {

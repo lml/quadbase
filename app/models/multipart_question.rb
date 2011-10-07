@@ -39,13 +39,14 @@ class MultipartQuestion < Question
   end
   
   def content_copy
-    kopy = MultipartQuestion.create(:content => content)
+    kopy = MultipartQuestion.create
+    init_copy(kopy)
     self.child_question_parts.each do |part| 
       new_part = part.content_copy
       new_part.multipart_question = kopy
       kopy.child_question_parts.push(new_part)
     end
-    init_copy(kopy)
+    kopy
   end
   
   def add_parts(questions)
