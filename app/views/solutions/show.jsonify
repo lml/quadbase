@@ -1,0 +1,5 @@
+# Copyright (c) 2011 Rice University.  All rights reserved.
+
+json.solution do
+  json.ingest! render(:partial => 'show', :locals => {:solution => @solution})
+end

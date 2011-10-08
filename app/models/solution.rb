@@ -3,6 +3,7 @@
 class Solution < ActiveRecord::Base
   include ContentParseAndCache
   include AssetMethods
+  include VoteMethods
 
   belongs_to :question
   belongs_to :creator, :class_name => "User"

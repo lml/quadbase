@@ -17,11 +17,9 @@ json.simple_question do
 
   if !@question.answer_choices.empty?
     json.answer_choices(@question.answer_choices) do |answer_choice|
-      json.answer_choice do
-        json.markup answer_choice.content
-        json.html answer_choice.content_html
-        json.credit answer_choice.credit
-      end
+      json.markup answer_choice.content
+      json.html answer_choice.content_html
+      json.credit answer_choice.credit
     end
   end
 

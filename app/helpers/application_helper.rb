@@ -163,18 +163,22 @@ module ApplicationHelper
     escape_javascript(text)
   end
   
-  def gravatar_url_for(email, options = {})
+  def gravatar_hash(user)
+    Digest::MD5.hexdigest(user.email)
+  end
+  
+  def gravatar_url_for(user, options = {})
     options[:secure] ||= request.ssl?
     options[:size] ||= 50
     
-    hash = Digest::MD5.hexdigest(email)
+    hash = gravatar_hash(user)
     base = options[:secure] ? "https://secure" : "http://www"
       
     "#{base}.gravatar.com/avatar/#{hash}?s=#{options[:size]}"
   end
   
   def gravatar_image(user, options = {}) 
-    image_tag(gravatar_url_for(user.email, options), 
+    image_tag(gravatar_url_for(user, options), 
               { :alt => "User Avatar", 
                 :title => "User Avatar",
                 :border => 1 })

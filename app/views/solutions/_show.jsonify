@@ -1,0 +1,29 @@
+# Copyright (c) 2011 Rice University.  All rights reserved.
+
+json.id solution.id
+json.url solution_url(solution)
+json.question_id solution.question.to_param
+
+json.explanation solution.explanation
+
+json.details do
+  json.markup solution.content
+  json.html solution.content_html    
+end
+
+json.attachments(solution.attachable_assets) do |aa|
+  json.name aa.local_name
+  json.mime_type aa.asset.attachment_content_type
+  json.url attachable_asset_download_url(aa)
+end
+
+json.creator do
+  json.name solution.creator.full_name
+  json.gravatar_hash gravatar_hash(solution.creator)
+end
+
+json.votes do
+  json.up solution.up_votes.count
+  json.down solution.down_votes.count
+  json.total solution.combined_vote_count
+end

@@ -18,7 +18,8 @@ class SolutionsController < ApplicationController
     @solutions = Vote.order_by_votes(@question.valid_solutions_visible_for(present_user))
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.json
+      format.html
     end
   end
 
@@ -49,7 +50,8 @@ class SolutionsController < ApplicationController
     raise SecurityTransgression unless present_user.can_read?(@solution)
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.json
+      format.html
     end
   end
 
