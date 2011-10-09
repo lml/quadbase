@@ -2,6 +2,8 @@
 
 class SolutionsController < ApplicationController
 
+  skip_before_filter :authenticate_user!, :only => [:index, :show]
+
   before_filter do @use_columns = true end
   
   layout 'questions'
