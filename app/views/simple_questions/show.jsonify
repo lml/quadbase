@@ -1,27 +1,4 @@
 # Copyright (c) 2011 Rice University.  All rights reserved.
 
-json.simple_question do
-  json.ingest! (render :partial => 'questions/common')
-  
-  if !@question.question_setup.blank?
-    json.introduction do
-      json.markup @question.question_setup.content
-      json.html @question.question_setup.content_html
-    end
-  end
-
-  json.content do 
-    json.markup @question.content
-    json.html @question.content_html
-  end
-
-  if !@question.answer_choices.empty?
-    json.answer_choices(@question.answer_choices) do |answer_choice|
-      json.markup answer_choice.content
-      json.html answer_choice.content_html
-      json.credit answer_choice.credit
-    end
-  end
-
-  json.ingest! (render :partial => 'questions/attribution')
-end
+(render :partial => 'simple_questions/show',
+        :locals => {:question => @question})

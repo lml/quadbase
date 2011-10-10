@@ -1,0 +1,24 @@
+# Copyright (c) 2011 Rice University.  All rights reserved.
+
+skip_question_setup ||= false
+skip_attribution ||= false
+
+json.simple_question do
+  json.ingest! (render :partial => 'questions/common', 
+                       :locals => {:question => question})
+  
+  if !question.question_setup.blank? && !skip_question_setup
+    json.introduction do
+      json.markup question.question_setup.content
+      json.html question.question_setup.content_html
+    end
+  end
+
+  json.ingest! (render :partial => 'simple_questions/content_and_answers',
+                       :locals => {:question => question})
+
+  if !skip_attribution
+    json.ingest! (render :partial => 'questions/attribution',
+                         :locals => {:question => question})
+  end
+end
