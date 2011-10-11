@@ -51,6 +51,8 @@ Quadbase::Application.configure do
   
   config.action_mailer.default_url_options = { :host => 'quadbase.org' }
   
+  config.default_url_options = { :host => 'quadbase.org' }
+  
   # Took ":string => true" out b/c session cookies weren't making it across the break
   # from https to http
   config.middleware.use Rack::SslEnforcer, :only => /^\/users/ #, :strict => true

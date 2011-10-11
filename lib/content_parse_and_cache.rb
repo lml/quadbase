@@ -14,10 +14,16 @@ module ContentParseAndCache
   # Set to true on tests where the content of a question or solution should be parsed.
   # Then set to false afterwards.
   mattr_accessor :enable_test_parser
+  
+  def refresh_cached_html!
+    self.refresh_cache = true
+    self.save!
+  end
 
 protected
 
   attr_accessor :parse_tree
+  attr_accessor :refresh_cache
 
   def content_unchanged?
     # content_changed only works when the record is already in the DB
@@ -40,8 +46,9 @@ protected
       self.content_html = ''
       return
     end
-    return if content_unchanged? ||
-              (Rails.env.test? && !ContentParseAndCache.enable_test_parser)
+    return if !refresh_cache &&
+              (content_unchanged? ||
+               (Rails.env.test? && !ContentParseAndCache.enable_test_parser))
     
     parser = QuadbaseParser.new
     begin

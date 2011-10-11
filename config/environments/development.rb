@@ -38,6 +38,8 @@ Quadbase::Application.configure do
   
   # Some web post said this would speed up tests, but I didn't really see it.
   # config.eager_load_paths.clear
+  
+  config.default_url_options = { :host => 'localhost:3000' }
 
   # This disables the recaptcha for the development environment
   config.enable_recaptcha = false

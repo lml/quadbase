@@ -6,6 +6,9 @@ class AttachableImageTagMaker
   end
   
   def make_tag(image_name) 
-    "<img src=\"/#{@attachable.get_asset(image_name).path(:medium)}\">"
+    url = Rails.env.production? ? "https" : "http"
+    url += "://#{Rails.application.config.default_url_options[:host]}/"
+    url += "#{@attachable.get_asset(image_name).path(:medium)}"
+    "<img src=\"#{url}\">"
   end
 end
