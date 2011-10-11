@@ -16,14 +16,14 @@ module ContentParseAndCache
   mattr_accessor :enable_test_parser
   
   def refresh_cached_html!
-    self.refresh_cache = true
-    self.save!
+    parse_succeeds(true)
+    cache_html
+    self.update_attribute(:content_html, content_html)
   end
 
 protected
 
   attr_accessor :parse_tree
-  attr_accessor :refresh_cache
 
   def content_unchanged?
     # content_changed only works when the record is already in the DB
@@ -41,12 +41,12 @@ protected
     end
   end
 
-  def parse_succeeds
+  def parse_succeeds(force=false)
     if content.blank?
       self.content_html = ''
       return
     end
-    return if !refresh_cache &&
+    return if !force &&
               (content_unchanged? ||
                (Rails.env.test? && !ContentParseAndCache.enable_test_parser))
     
