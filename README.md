@@ -42,7 +42,7 @@ No electronically generated 'signatures' will be accepted.
 Here's how to contribute to Quadbase:  
 
 1. Send us a completed Rice Contributor Agreement
-   * Download it from http://quadbase.org/rice_contributor_agreement_v1.pdf
+   * Download it from http://quadbase.org/rice_university_contributor_agreement_v1.pdf
    * Complete it (where "Project Name" is "Quadbase" and "Username" is your GitHub username)
    * Sign it, scan it, and email it to info@[the quadbase domain]
 1. Fork the code from github (https://github.com/lml/quadbase)
