@@ -21,7 +21,6 @@ To run Quadbase, you must have the following dependencies installed:
 License
 -------
 
-
 Contributing
 ------------
 
@@ -39,7 +38,10 @@ No electronically generated 'signatures' will be accepted.
 
 Here's how to contribute to Quadbase:  
 
-1. Fill out and sign the RCA (http://blah), scan, and email to rca@[the quadbase domain]
+1. Send us a completed Rice Contributor Agreement
+   * Download it from http://quadbase.org/rice\_contributor\_agreement\_v1.pdf
+   * Complete it (where "Project Name" is "Quadbase" and "Username" is your GitHub username)
+   * Sign it, scan it, and email it to rca@[the quadbase domain]
 1. Fork the code from github (https://github.com/lml/quadbase)
 2. Create a thoughtfully named topic branch to contain your change
 3. Make your changes
