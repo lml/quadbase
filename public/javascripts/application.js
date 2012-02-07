@@ -1,4 +1,5 @@
-// Copyright (c) 2011 Rice University.  All rights reserved.
+// Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+// License version 3 or later.  See the COPYRIGHT file for details.
 
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults

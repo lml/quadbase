@@ -1,4 +1,5 @@
-# Copyright (c) 2011 Rice University.  All rights reserved.
+# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+# License version 3 or later.  See the COPYRIGHT file for details.
 
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).

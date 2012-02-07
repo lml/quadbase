@@ -1,4 +1,5 @@
-# Copyright (c) 2011 Rice University.  All rights reserved.
+# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+# License version 3 or later.  See the COPYRIGHT file for details.
 
 class AdminController < ApplicationController
   before_filter :authenticate_admin! # This will always run after authenticate_user!
