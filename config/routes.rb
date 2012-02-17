@@ -209,6 +209,11 @@ Quadbase::Application.routes.draw do
     commentable
   end
   
+  get "dev/toolbox"
+  put 'dev/reset_time'
+  post 'dev/freeze_time'
+  post 'dev/time_travel'
+  
   get 'subscriptions', :to => 'comment_thread_subscriptions#index', :as => 'subscriptions'
 
   match '/', :to => 'home#index', :as => ''

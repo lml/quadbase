@@ -1168,8 +1168,42 @@ a.tag_cloud_2 { font-size: 12px; line-height:4;}
 a.tag_cloud_3 { font-size: 17px; line-height:4;}
 a.tag_cloud_4 { font-size: 20px; line-height:4;}
 
+.section {
+   margin: 28px 0px 18px 0px;
+}
+
+.section_heading {
+   font-size: 16px;
+   margin:3px 0px;
+   color: black;
+}
+
+.section_heading a {
+   font-size: 16px;
+}
+
+.section_body {
+   margin:0px 0px 0px 15px;
+}
+
+.sub_section {
+   margin: 0px 0px 12px 0px;  
+}
+
+.sub_section_heading {
+   font-size: 14px;
+   font-style: italic;
+   margin:3px 0px 6px 0px;
+}
+
+.sub_section_body {
+   margin:0px 0px 0px 15px;
+}
+
 /***************** MathJax ********************/
 
 .MathJax_MathML {
    white-space: nowrap;
 }
+
+

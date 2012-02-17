@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
                 :protect_form,
                 :view_dir
 
-  respond_to :html
+  respond_to :html, :js
 
   unless Quadbase::Application.config.consider_all_requests_local
     rescue_from Exception, :with => :rescue_from_exception

@@ -11,6 +11,7 @@ require 'content_parse_and_cache'
 require 'image_tag_maker'
 require 'asset_methods'
 require 'vote_methods'
+require 'form_builder_extensions'
 
 ActionMailer::Base.delivery_method = :sendmail
 

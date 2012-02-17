@@ -207,5 +207,18 @@ module ApplicationHelper
     output.html_safe
   end
   
+  def block_to_partial(partial_name, options={}, &block)
+    options[:classes] ||= []
+    options.merge!(:body => capture(&block))
+    render(:partial => partial_name, :locals => options)
+  end
+
+  def section(title, options={}, &block)
+    block_to_partial('shared/section', options.merge(:title => title), &block)
+  end
+  
+  def sub_section(title, options={}, &block)
+    block_to_partial('shared/sub_section', options.merge(:title => title), &block)
+  end
   
 end

@@ -44,6 +44,7 @@ group :development, :test do
    # gem 'machinist', '< 2.0'
    gem 'faker'
    gem 'factory_girl_rails', '<2.0'
+   gem 'timecop'
 end
 
 group :production do
