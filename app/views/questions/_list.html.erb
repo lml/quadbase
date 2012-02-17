@@ -79,8 +79,22 @@
            <td><%= question_id_link(question) %></td>
            <td style="text-align:center"><%= question_type_abbreviation(question) %></td>
            <td style="text-align:center"><%= question.modified_at.strftime('%b %d %Y') %></td>
-           <td><%= trim(question.content_summary_string || "",80) %></td>
+           <td class="tex2jax_ignore"><%= question_preview_link(question) %></td>
          </tr>
      <% end %>
   </table>
+<% end %>
+
+<div id="quickview_dialog" style="display:none" title="Quick Preview"></div>
+
+<% content_for :javascript do %>
+   <%= javascript_tag do %>
+      $("#quickview_dialog").dialog({ 
+        autoOpen: false, 
+        modal: true, 
+        height:600, 
+        width:600, 
+        buttons: { "Close": function() { $(this).dialog("close"); }}
+      });
+   <% end %>
 <% end %>

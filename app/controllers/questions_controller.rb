@@ -88,6 +88,16 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def quickview
+    @question = Question.from_param(params[:question_id])
+    raise SecurityTransgression unless present_user.can_read?(@question)
+
+    respond_to do |format|
+      format.html { redirect_to question_path(@question) }
+      format.js
+    end
+  end
+
   def preview
     @question = Question.from_param(params[:question_id])
     raise SecurityTransgression unless present_user.can_read?(@question)

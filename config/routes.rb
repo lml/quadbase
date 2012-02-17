@@ -115,6 +115,7 @@ Quadbase::Application.routes.draw do
   resources :questions do
     put 'preview'
     get 'history'
+    get 'quickview'
 
     resources :question_collaborators, :only => [:index, :create, :destroy, :new] do
       collection do
