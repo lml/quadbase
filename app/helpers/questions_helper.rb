@@ -45,6 +45,10 @@ module QuestionsHelper
     questions.collect { |q| question_id_link(q) }.join(", ").html_safe
   end
 
+  def question_preview_link(question)
+    link_to(trim(question.content_summary_string || "",80), question_quickview_path(question), :remote => true)
+  end
+
   def confirm_drop_roles(questions)
     output = ''
     if questions.detect {|q| !q.roleless_collaborators.blank?}
