@@ -766,6 +766,12 @@ th .desc {
 	height: 16px;
 }
 
+.xIcon {
+	background-image: url(../images/black_x_v1.png);
+	width: 16px;
+	height: 16px;
+}
+
 .editIcon {
 	background-image: url(../images/edit.gif);
 	width: 16px;

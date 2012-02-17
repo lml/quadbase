@@ -8,6 +8,11 @@ module ApplicationHelper
     image_tag("trash.gif", {:border => 0, :alt => "Delete", :title => "Delete"})
     #{}"<span class=\"trashIcon\"></span>".html_safe
   end
+
+  def x_icon
+    image_tag("black_x_v1.png", {:border => 0, :alt => "Remove", :title => "Remove"})
+    #{}"<span class=\"xIcon\"></span>".html_safe
+  end
   
   def edit_icon(dom_id="edit_img")
     image_tag("edit.gif", {:id => dom_id, :border => 0, :alt => "Edit", :title => "Edit"})
@@ -29,10 +34,6 @@ module ApplicationHelper
   
   def check_icon
     image_tag("check_icon_v1.png", {:border => 0, :alt => "Yes / Check", :title => "Yes / Check"})
-  end
-  
-  def x_icon
-    image_tag("x_icon_v1.png", {:border => 0, :alt => "No / X", :title => "No / X"})
   end
   
   def link_to_remove_fields(name, f)
