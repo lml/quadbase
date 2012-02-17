@@ -55,6 +55,7 @@ Here's how to contribute to Quadbase:
 
 Quick Development How-To
 -------------------------
+
 The best way to go is to install RVM on your machine.  Install Ruby 1.9.2 (e.g. rvm install 1.9.2-p290)
 and install the bundler gem.  You may run into some issues where you need to install some supplemental
 libraries first.  
