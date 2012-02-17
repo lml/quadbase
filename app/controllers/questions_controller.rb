@@ -325,16 +325,17 @@ class QuestionsController < ApplicationController
   end
 
   def search
-    @selected_type = params[:selected_type]
-    @selected_where = params[:selected_where]
-    @text_query = params[:text_query]
-    @questions = Question.search(@selected_type, @selected_where,
-                                 @text_query, present_user) \
+    @type = params[:type]
+    @where = params[:where]
+    @query = params[:query]
+    @per_page = params[:per_page]
+    @questions = Question.search(@type, @where,
+                                 @query, present_user) \
                          .reject { |q| (q.is_published? && !q.is_latest?) ||
                                        !present_user.can_read?(q) }
+                         .paginate(:page => params[:page], :per_page => @per_page)
     respond_to do |format|
       format.html
-      format.js
     end
   end
   

@@ -111,7 +111,7 @@ Quadbase::Application.routes.draw do
       delete 'destroy'
     end
   end
-
+  get 'questions/search'
   resources :questions do
     put 'preview'
     get 'history'
@@ -153,7 +153,6 @@ Quadbase::Application.routes.draw do
 
     commentable
   end
-  post 'questions/search'
   post 'questions/simple', :to => 'questions#create_simple', :as => 'create_simple_question'
   post 'questions/multipart', :to => 'questions#create_multipart', :as => 'create_multipart_question'
 
