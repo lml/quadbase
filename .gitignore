@@ -7,3 +7,4 @@ config/developer_settings.yml
 config/secret_settings.yml
 config/deploy_settings.yml
 public/system/**
+*~
