@@ -7,10 +7,11 @@
   <tr>
     <th width="20%">First Name</th>
     <th width="20%">Last Name</th>
-    <th width="15%">Username</th>
+    <th width="20%">Username</th>
     <th width="25%">Email</th>
-    <th width="10%">Admin?</th>
-    <th width="10%">Disabled?</th>
+    <th width="5%">Admin?</th>
+    <th width="5%" colspan="2">Confirmed?</th>
+    <th width="5%">Disabled?</th>
   </tr>
 
 <% @users.each do |user| %>
@@ -20,6 +21,8 @@
     <td><%= admin_only(user.username) %></td>
     <td><%= admin_only(user.email) %></td>
     <td><%= tf_to_yn(user.is_administrator?) %></td>
+    <td><%= tf_to_yn(user.is_confirmed?) %></td>
+    <td><% if !user.is_confirmed? %><%= button_to 'Confirm', user_confirm_path(user), :class => "button_link" %><% end %></td>
     <td><%= tf_to_yn(user.is_disabled?) %></td>
     <td><%= link_to show_icon, user %></td>
     <td><%= link_to edit_icon, edit_user_path(user) %></td>
@@ -27,6 +30,9 @@
 <% end %>
 </table>
 
+<% if !@users.nil? %>
+  <%= will_paginate @users %>
+<% end %>
 
 <br />
 

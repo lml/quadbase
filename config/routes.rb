@@ -63,6 +63,7 @@ Quadbase::Application.routes.draw do
 
   resources :users, :only => [:index, :show, :edit, :update] do
     post 'become'
+    post 'confirm'
   end
 
   resources :deputizations, :only => [:create, :destroy, :new] do
