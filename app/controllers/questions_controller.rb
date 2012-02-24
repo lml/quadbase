@@ -25,7 +25,15 @@ class QuestionsController < ApplicationController
     
     respond_to do |format|
       format.json { render :template => "#{view_dir(@question)}/show"}
-      format.html
+      format.html 
+      format.qti { 
+        render :template => case params[:version] 
+                            when "1.2", nil
+                              "#{view_dir(@question)}/show.1p2"
+                            else
+                              raise ActionController::UnknownAction
+                            end
+      }
     end
   end
 
