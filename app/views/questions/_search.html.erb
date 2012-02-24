@@ -9,10 +9,10 @@
   question_form_action ||= nil
   form_button_text ||= ""
 %>
-
 <%= form_tag(questions_search_path, 
              :method => :get,
-             :id => 'find_question_form') do %>
+             :id => 'find_question_form',
+             :remote => !question_form_action.nil?) do %>
 
   <%= hidden_field_tag :per_page, @per_page %>
   
@@ -44,7 +44,8 @@
 <%= form_tag question_form_action, :remote => true do %>
 <div id="question_list">
   <%= render :partial => 'questions/list', 
-             :locals => { :entries => @questions } %>
+             :locals => { :entries => @questions,
+                          :checkbox_options => !question_form_action.nil? ? {} : nil } %>
 </div>
 <%= submit_tag form_button_text, :class => "#{submit_classes}" %>
 <% end %>
@@ -53,7 +54,7 @@
   <%= render :partial => 'questions/list', 
              :locals => { :entries => @questions } %>
 </div>
-<% if !@questions.nil? %>
+<% if !@questions.nil? && question_form_action.nil? %>
   <%= will_paginate @questions %>
 <% end %>
 <% end %>

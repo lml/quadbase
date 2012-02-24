@@ -173,6 +173,7 @@ class QuestionsController < ApplicationController
   
   def tagged
     @tags = params[:tags].gsub("_"," ").split("+")
+    @per_page = params[:per_page] || 20
     
     if tags_fail_regex?(@tags)
       @questions = []
@@ -181,6 +182,7 @@ class QuestionsController < ApplicationController
       @questions = Question.tagged_with(@tags)
                            .reject{|q| (q.is_published? && !q.is_latest?) || 
                                         !present_user.can_read?(q)}
+                           .paginate(:page => params[:page], :per_page => @per_page)
     end
   end
 
@@ -343,9 +345,11 @@ class QuestionsController < ApplicationController
                                  @query, present_user) \
                          .reject { |q| (q.is_published? && !q.is_latest?) ||
                                        !present_user.can_read?(q) }
-                         .paginate(:page => params[:page], :per_page => @per_page)
     respond_to do |format|
-      format.html
+      format.html do
+        @questions = @questions.paginate(:page => params[:page], :per_page => @per_page)
+      end
+      format.js
     end
   end
   

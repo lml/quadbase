@@ -3,6 +3,6 @@
 
 $("#question_list").html("<%= escape_javascript(
   render :partial => 'list', :locals => {:entries => @questions, 
-                     :checkbox_options => params[:use_checkboxes] ? {} : nil}) %>")
+                     :checkbox_options => @question_form_action.nil? ? {} : nil}) %>")
 
 <%= reload_mathjax("question_list") %>
