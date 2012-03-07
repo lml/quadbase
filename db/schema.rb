@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110921172614) do
+ActiveRecord::Schema.define(:version => 20120307193444) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -185,6 +185,8 @@ ActiveRecord::Schema.define(:version => 20110921172614) do
     t.datetime "locked_at"
     t.integer  "publisher_id"
     t.boolean  "changes_solution",                 :default => false
+    t.text     "code"
+    t.string   "variables"
   end
 
   create_table "solutions", :force => true do |t|

@@ -77,18 +77,40 @@
     <div class="question_edit_subblock" style="margin-top:0px">
       <div id="question_code" class="code_related" style="display:none; clear:both; padding: 8px 0;">
       
-      <div class="question_edit_block_subtitle">Logic for Computer-Generated Variations</div>      
-        <%= text_area_tag :code, 
-                          "// write your logic here", 
-                          :class => 'code_editor', 
-                          :id => 'the_code_editor', 
-                          :style => 'width:100%' %>
+      <div class="question_edit_block_subtitle" style="margin-top:-10px">Logic for Computer-Generated Variations<%= link_to_function "Test!", "test();", :style => "float:right; font-style:normal; padding-right:8px" %></div>    
+        <% @question.code ||= "// write your logic here " %>
+        <%= f.text_area :code, 
+                        :class => 'code_editor', 
+                        :id => 'the_code_editor', 
+                        :style => 'width:100%' %>
                         
         <div style="padding-top:8px"></div>
+
+        <div style="color:#555555; margin: 8px 0">
+          In the text field below, <b>list the variables</b> from the logic above that you want to use 
+          in this question.  Separate variable names with commas (e.g. "x, speed, y").
+        </div>
+
+        <div class="field">
+          <%= f.text_field :variables, 
+                           :style => "width:100%;   border: #777 1px solid; font-family: courier, monospace; font-size: 14px; height: 24px; padding: 4px;" %> 
+        </div>
+
+      <% if false %>
+         &nbsp;&nbsp;&nbsp; Logic variables available below:
+        [NONE] 
+        
+        <span id="variable_add_remove_links"> 
+        <%= link_to_function "Add", "$('#variable_add_form').show();" %> | <%= link_to_function "Remove" %>
+        </span>
+        
+        <%= f.hidden_field :variables %>
+        
+        <div id="variable_add_form" style="display:none">
+          <%= text_field_tag :new_variables %> <%= link_to_function "Add", "$('#variable_add_remove_links').show();" %>
+        </div>
+      <% end %>
       
-        Logic variables available below:
-        [NONE]  
-        <%= link_to_function "Add", "" %> | <%= link_to_function "Remove" %>
       </div>
     </div>
     
@@ -147,5 +169,41 @@
         codeMirrorEditors[ii].refresh();
       }      
     }
+    
+    function getVariables(variablesString) {
+      variablesString = variablesString.replace(/[ \t\r\n]+/g,"");
+      return variablesString.split(",");
+    }
+    
+    function runCode(code, variables) {
+      var anObject = {
+        codeFunction: function() {
+          
+        }
+      }
+      
+      var innerFunc = function() {
+        eval(code);
+
+        results = {};
+
+        for (ii = 0; ii < variables.length; ii++) {
+          results[variables[ii]] = eval(variables[ii] + ".toString();");
+        }
+        console.log(this);
+        console.log(Document);
+        return results;        
+      }
+      
+      results2 = innerFunc();
+      console.log(results2);
+      return results2;
+    }
+    
+    function test() {
+      alert(codeMirrorEditors[0].getValue());
+      runCode(codeMirrorEditors[0].getValue(), getVariables($('#question_variables').val()));
+    }
+    
   <% end %>
 <% end %>
