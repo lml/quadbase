@@ -47,6 +47,11 @@
     <%= javascript_include_tag 'jquery.easing.1.1.1.js'%>
   <% end %>
   
+  <% if @include_codemirror %>
+    <%= javascript_include_tag 'codemirror-compressed.js' %>
+    <%= stylesheet_link_tag 'codemirror.css' %>
+  <% end %>
+  
   <% if @include_mathjax %>  
      <script type="text/x-mathjax-config">
        MathJax.Hub.Config({
@@ -218,6 +223,8 @@
   $('input:submit').button().css('font-size','12px');
   $('a.submitButton').button().css('font-size','12px');
 </script>
+
+<% if Rails.env.production? %>
 <script type="text/javascript">
  
    var _gaq = _gaq || [];
@@ -231,4 +238,6 @@
    })();
  
 </script>
+<% end %>
+
 </html>

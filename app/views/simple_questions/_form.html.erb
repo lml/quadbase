@@ -39,59 +39,113 @@
                                  :height => 400, 
                                  :width =>900} %> your question?</p>
 
- <% setup_blank = @question.question_setup.content.blank? %>
+  <% setup_blank = @question.question_setup.content.blank? %>
 
- <table class="target question_form">
+  <% intro_options = {:style => "#{setup_blank ? 'display:none' : ''}", :id => 'intro_text_block'} %>
+
+  <%= question_edit_block "Introductory Text", intro_options do %>
+
     <% if @question.is_draft_in_multipart? %>
-    <tr>
-       <td valign="top"><p><i>Intro text:</i></p></td>
-       <td valign="top">
-             <%= @question.question_setup.content_html.html_safe %>
-       </td>
-       <td></td>
-    </tr>
+      <%= @question.question_setup.content_html.html_safe %>
     <% else %>
-    <tr id="setup_row" <% if setup_blank %>style="display:none"<% end %>>
-       <td valign="top"><i>Intro text:</i></td>
-       <td>
-          <div class="field">
-             <%= f.fields_for :question_setup do |setup_form| %>
-                <%= setup_form.text_area :content, 
-                                         :rows => 8, 
-                                         :class => "mark_it_up", 
-                                         'data-attachable_type'=>'intro' %>
-             <% end %>
-          </div>
-       </td>
-       <td></td>
-    </tr>
-    <% if setup_blank %>
-      <tr id="setup_show_row"><td colspan="3">
-        <%= link_to_function "Add a common introduction to this question.", 
-                             '$("#setup_row").show(); $("#setup_show_row").hide();'%> (optional)
-        <span style="float:right"><%= link_to_help "question_setup", "What is this?" %></span>
-      </td></tr>
+      <div class="field">
+        <%= f.fields_for :question_setup do |setup_form| %>
+           <%= setup_form.text_area :content, 
+                                    :rows => 8, 
+                                    :class => "mark_it_up", 
+                                    :style => 'width:100%',
+                                    'data-attachable_type'=>'intro' %>
+        <% end %>
+      </div>
     <% end %>
     
-    <% end %>
-    <tr>
-       <td valign="top"><i>Question text:</i></td>
-       <td>
-          <div class="field">
-             <%= f.text_area :content, :rows => 8, :class => "mark_it_up" %>
-          </div>
-       </td>
-       <td></td>
-    </tr>
+  <% end %> 
+
+  <div>
+    <%= link_to_function "Add a common introduction to this question.", 
+                         '$("#intro_text_block").show(); $(this).parent().hide();'%> 
+    (optional)
+    <span style="float:right"><%= link_to_help "question_setup", "What is this?" %></span>
+  </div>
+
+  <%= question_edit_block "The Question" do %>
+    <span style="float:right">
+      <%= link_to_function "Add computer-generated variations", 
+                           "$('.code_related').show(); refreshCodeMirrors(); $(this).parent().hide();" %>
+    </span>
+
+    <div class="question_edit_subblock" style="margin-top:0px">
+      <div id="question_code" class="code_related" style="display:none; clear:both; padding: 8px 0;">
+      
+      <div class="question_edit_block_subtitle">Logic for Computer-Generated Variations</div>      
+        <%= text_area_tag :code, 
+                          "// write your logic here", 
+                          :class => 'code_editor', 
+                          :id => 'the_code_editor', 
+                          :style => 'width:100%' %>
+                        
+        <div style="padding-top:8px"></div>
+      
+        Logic variables available below:
+        [NONE]  
+        <%= link_to_function "Add", "" %> | <%= link_to_function "Remove" %>
+      </div>
+    </div>
+    
+    <div class="question_edit_subblock">
+      <div class="question_edit_block_subtitle code_related" style="display:none">Question Text</div>
+    
+      <div class="field">
+        <%= f.text_area :content, :rows => 8, :class => "mark_it_up", :style => 'width:100%', %>
+      </div>
+    </div>
+    
+  <% end %>
+
+  <div class="answer_choices">
     <%= f.fields_for :answer_choices do |ac_form| %>
-       <%= render 'simple_questions/answer_choice_fields', :f => ac_form %>
+      <%= render 'simple_questions/answer_choice_fields', :f => ac_form %>
     <% end %>
- </table>
+  </div>
+  
+  <p>   
+   <%= link_to_add_fields "Add a multiple-choice answer", 
+                          f, 
+                          :answer_choices, 
+                          "div.answer_choices",
+                          {}, {:partial_name => 'simple_questions/answer_choice_fields'} %>
+  </p>
+ 
 
- <p>   
- <%= link_to_add_fields "Add a multiple-choice answer", 
-                        f, 
-                        :answer_choices, 
-                        "table.target",
-                        {}, {:partial_name => 'simple_questions/answer_choice_fields'} %>
 
+<style type="text/css">
+.CodeMirror-scroll {
+   height: auto;
+   overflow-y: hidden;
+   overflow-x: auto;
+   width: 100%;
+ }
+</style>
+
+<% @include_codemirror = true %>
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>
+    var codeMirrorEditors = [];
+
+    $(document).ready(function() {
+      initCodeMirror('the_code_editor');
+    });
+  
+    function initCodeMirror(elementId) {
+      codeMirrorEditors.push(CodeMirror.fromTextArea(document.getElementById(elementId), 
+                              { lineNumbers: true }) );
+    }
+    
+    function refreshCodeMirrors() {
+      for (ii = 0; ii < codeMirrorEditors.length; ii++) {
+        codeMirrorEditors[ii].refresh();
+      }      
+    }
+  <% end %>
+<% end %>

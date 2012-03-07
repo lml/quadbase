@@ -1,0 +1,7 @@
+
+<%  style ||= '' %>
+
+<div class="question_edit_block roundedCorners10" style="<%= style %>" <%= "id=#{id}" unless local_assigns[:id].nil? %>>
+  <div class="question_edit_block_title"><%= title %></div>
+  <div class="question_edit_block_body"><%= body %></div>
+</div>

@@ -222,4 +222,9 @@ module ApplicationHelper
     block_to_partial('shared/sub_section', options.merge(:title => title), &block)
   end
   
+  def question_edit_block(title, options={}, &block) 
+    # Rails.logger options.inspect
+    block_to_partial('questions/question_edit_block', options.merge(:title => title), &block)
+  end
+  
 end

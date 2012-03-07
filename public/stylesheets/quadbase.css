@@ -287,6 +287,13 @@ a:active {
     border-radius: 5px;
 }
 
+.roundedCorners10 {
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border-radius: 10px;
+}
+
 .roundedCorners20 {
     -moz-border-radius: 20px;
     -webkit-border-radius: 20px;
@@ -1213,3 +1220,46 @@ a.tag_cloud_4 { font-size: 20px; line-height:4;}
 }
 
 
+/******* Question Edit Blocks ********/
+
+.question_edit_block {
+   background: #f0f0f0;
+   margin: 10px 0 10px;
+   border-bottom: 1px solid #AAAAAA;
+}
+
+.question_edit_block_title {
+   color: #333;
+   font-style: italic;
+   border-bottom: #ddd 1px solid;
+   padding: 10px 8px 6px;
+   font-weight: bold;
+}
+
+.question_edit_block_body {
+   padding: 15px;
+}
+
+.question_edit_subblock {
+   margin: 4px 0 10px;
+}
+
+.question_edit_block_subtitle {
+   font-style: italic;
+   -moz-border-radius: 5px;
+   -webkit-border-radius: 5px;
+   -khtml-border-radius: 5px;
+   border-radius: 5px;
+   
+   background-color: #E0E0E0;
+   border-bottom: 1px solid #AAAAAA;
+   color: #333;
+   font-style: italic;
+   margin-bottom: 8px;
+   padding: 8px 5px 5px;
+}
+
+/*.code_editor {
+   background-color: white;
+   width: 100%;
+}*/
