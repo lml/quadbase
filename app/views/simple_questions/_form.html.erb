@@ -176,28 +176,22 @@
     }
     
     function runCode(code, variables) {
-      var anObject = {
-        codeFunction: function() {
-          
+      var wrapper = {
+        runCode: function() {
+          eval(code);
+
+          results = {};
+
+          for (ii = 0; ii < variables.length; ii++) {
+            results[variables[ii]] = eval(variables[ii] + ".toString();");
+          }
+          return results;                  
         }
       }
       
-      var innerFunc = function() {
-        eval(code);
-
-        results = {};
-
-        for (ii = 0; ii < variables.length; ii++) {
-          results[variables[ii]] = eval(variables[ii] + ".toString();");
-        }
-        console.log(this);
-        console.log(Document);
-        return results;        
-      }
-      
-      results2 = innerFunc();
-      console.log(results2);
-      return results2;
+      results = wrapper.runCode();
+      console.log(results);
+      return results;
     }
     
     function test() {
