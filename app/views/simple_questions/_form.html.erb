@@ -199,7 +199,8 @@
     }
     
     function test() {
-      results = runCode(codeMirrorEditors[0].getValue(), getVariables($('#question_variables').val()));
+      code = "Math.seedrandom(" + $('#seed').val() + ");" + codeMirrorEditors[0].getValue();
+      results = runCode(code, getVariables($('#question_variables').val()));
       $('#results').html('');
       $('#results').show();
       for (result in results) {
