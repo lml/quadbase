@@ -88,6 +88,8 @@ class Question < ActiveRecord::Base
            
 
   has_many :solutions, :dependent => :destroy
+  
+  has_one :logic, :as => :logicable
 
   has_one :comment_thread, :as => :commentable, :dependent => :destroy
   before_validation :build_comment_thread, :on => :create

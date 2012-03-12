@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120307193444) do
+ActiveRecord::Schema.define(:version => 20120308194612) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -89,6 +89,15 @@ ActiveRecord::Schema.define(:version => 20120307193444) do
     t.datetime "updated_at"
     t.string   "agreement_partial_name"
     t.boolean  "is_default"
+  end
+
+  create_table "logics", :force => true do |t|
+    t.text     "code"
+    t.string   "variables"
+    t.string   "logicable_type"
+    t.integer  "logicable_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "messages", :force => true do |t|

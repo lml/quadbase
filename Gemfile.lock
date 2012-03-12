@@ -1,3 +1,9 @@
+PATH
+  remote: ~jps/dev/saferjs
+  specs:
+    saferjs (0.0.1)
+      execjs
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -170,6 +176,7 @@ DEPENDENCIES
   rake (= 0.8.7)
   recaptcha
   ruby-debug19
+  saferjs!
   sqlite3-ruby
   therubyracer
   timecop
