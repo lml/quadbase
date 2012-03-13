@@ -1,3 +1,5 @@
+require 'erb'
+
 class Logic < ActiveRecord::Base
   belongs_to :logicable, :polymorphic => true
   
@@ -5,44 +7,43 @@ class Logic < ActiveRecord::Base
   
   def run
 
-    # Force the ExecJS runtime to be Node (so that we can use the Sandbox module)
-    debugger
-    # ExecJS.runtime = ExecJS::Runtimes::Node
-    #  c = ExecJS.compile(nodejs_code(nil))
-    #     c.call('wrapper','')
 
-    c = SaferJS.compile(nodejs_code(nil))
-    c.call('wrapper','')
-       
-    # SaferJS.eval(nodejs_code(nil))
-       
-    # c = ExecJS.eval(nodejs_code(nil))
-    # c = ExecJS.compile("function hi() {return 2;}")
+    # TODO on save variables, split into array (serialized in class)
+    # TODO cache this code
+
+
+    wrapped_code = ERB.new <<-CODE
+      var wrapper = {
+        runCode: function() {
+          <%= code %>
+          test = "hi";
+          results = {};
+          <% variables.each do |variable| %>
+            results['<%= variable %>'] = <%= variable %>
+          <% end %>
+          return results;                  
+        }
+      }
+    CODE
+
+
+
+    ready_code = wrapped_code.result(binding)
+    logger.debug(ready_code)
     
-    # c.eval("window.b = 3")
-    # c.eval("window") #=> {"a"=>5, "b"=>2}
-
-
-    # results = {};
-    # 
-    # for (ii = 0; ii < variables.length; ii++) {
-    #   results[variables[ii]] = eval(variables[ii] + ".toString();");
-    # }
-    # return results;
+    debugger
+    
+    c = SaferJS.compile(ready_code)
+    ruby_results = c.call('wrapper.runCode')      # TODO is here the place to pass in values from prior logic?
+    
+    
+    
     
   end
   
   def nodejs_code(input)
 
-    if false
-      # //        var Sandbox = require('sandbox');
-      # //        var sb = new Sandbox();
-      # //
-      # //        result = sb.run( "(function(name) { function temp() {return 'bob';} return 'Hi there, ' + temp() + name + '!' + Math.cos(0); })('Fabio')", function( output ) {
-      # //        console.log( "Example 2: " + output.result + "\n" )
-      # //          return result;
-      
-    end
+  
     
     <<-CODE
       function wrapper() {
