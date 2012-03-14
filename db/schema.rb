@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120313182705) do
+ActiveRecord::Schema.define(:version => 20120313200004) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -100,6 +100,7 @@ ActiveRecord::Schema.define(:version => 20120313182705) do
     t.datetime "updated_at"
     t.integer  "predecessor_logic_id"
     t.text     "cached_code"
+    t.string   "variables_array"
   end
 
   create_table "messages", :force => true do |t|

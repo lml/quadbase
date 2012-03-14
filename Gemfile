@@ -51,6 +51,7 @@ group :development, :test do
    gem 'faker'
    gem 'factory_girl_rails', '<2.0'
    gem 'timecop'
+   gem 'single_test'
 end
 
 group :production do

@@ -266,3 +266,8 @@ Factory.define :deputization do |f|
   f.association :deputizer, :factory => :user
   f.association :deputy, :factory => :user
 end
+
+Factory.define :logic do |f|
+  f.code "x = 2"
+  f.variables "x"
+end
