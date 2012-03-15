@@ -7,7 +7,8 @@
   
   <%= render :partial => 'questions/search',
              :locals => { :question_form_action => multipart_question_add_existing_parts_path(question),
-                          :form_button_text => "Add Selected Questions"} %>
+                          :form_button_text => "Add Selected Questions",
+                          :make_search_remote => true} %>
   
   <br/>
 

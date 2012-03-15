@@ -10,20 +10,27 @@
 <table class="left_heading" style="margin-left:40px; margin-right:150px;">
    <tr>
       <th width="40%">Name</th>
-      <td width="60%"><%= auth_only(@user.full_name) %></td>
+      <td width="60%" colspan="2"><%= auth_only(@user.full_name) %></td>
    </tr>
    <tr>
       <th>Email</th>
-      <td><%= auth_only(hide_email(@user.email)) %></td>
+      <td colspan="2"><%= auth_only(hide_email(@user.email)) %></td>
    </tr>
    <% if user_is_admin? %>
    <tr>
       <th>Administrator?</th>
-      <td><%= tf_to_yn(@user.is_administrator) %></td>
+      <td colspan="2"><%= tf_to_yn(@user.is_administrator) %></td>
+   </tr>
+   <tr>
+      <th>Confirmed?</th>
+      <td><%= tf_to_yn(@user.is_confirmed?) %></td>
+      <td><% if !@user.is_confirmed? %>
+      <%= button_to 'Confirm', user_confirm_path(@user), :class => "button_link" %>
+      <% end %></td>
    </tr>
    <tr>
       <th>Account Disabled?</th>
-      <td><%= tf_to_yn(@user.is_disabled?) %></td>
+      <td colspan="2"><%= tf_to_yn(@user.is_disabled?) %></td>
    </tr>
    <% end %>
 </table>
