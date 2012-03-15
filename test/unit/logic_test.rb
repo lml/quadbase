@@ -28,4 +28,19 @@ class LogicTest < ActiveSupport::TestCase
     assert_equal result_s2_1["result"]["x"], result_s2_2["result"]["x"]
     assert_not_equal result_s3_1["result"]["x"], result_s2_2["result"]["x"]
   end
+  
+  test 'predecessor code' do
+    l1 = Factory.create(:logic, :code => 'x = 3', :variables => 'x')
+    
+    result_l1 = l1.run
+    assert_equal 3, result_l1["result"]["x"]
+    
+    l2 = Factory.create(:logic, :code => 'y = x', :variables => 'y', :predecessor_logic => l1)
+    
+    result_l2_1 = l2.run
+    result_l2_2 = l2.run
+    
+    assert_equal 3, result_l2_1["result"]["y"]
+    assert_equal 3, result_l2_2["result"]["y"]
+  end
 end

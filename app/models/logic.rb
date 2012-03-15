@@ -2,6 +2,9 @@ require 'erb'
 
 class Logic < ActiveRecord::Base
   belongs_to :logicable, :polymorphic => true
+  belongs_to :predecessor_logic, 
+             :class_name => "Logic",
+             :foreign_key => 'predecessor_logic_id'
   
   validate :variable_parse_succeeds
   validate :code_runs_safely
@@ -11,6 +14,7 @@ class Logic < ActiveRecord::Base
   serialize :variables_array
   
   attr_reader :results
+  attr_reader :last_seed
   
   JS_RESERVED_WORDS_REGEX = /^(do|if|in|for|let|new|try|var|case|else|enum|eval|
                                false|null|this|true|void|with|break|catch|class|
@@ -41,10 +45,17 @@ class Logic < ActiveRecord::Base
   CODE
 
   def run(seed = rand(2e9))
+    if !predecessor_logic.nil?
+      seed = predecessor_logic.last_seed
+      args = predecessor_logic.results["result"]
+    end
+    
     variable_parse_succeeds if variables_array.nil? 
     
     context = SaferJS.compile(get_cached_code)
-    @results = context.call('wrapper.runCode',seed) # TODO is here the place to pass in values from prior logic?
+    @results = context.call('wrapper.runCode',seed,args || [])
+    
+    @last_seed = seed
     
     return @results
   end
@@ -62,7 +73,11 @@ protected
     erb_code = ERB.new <<-CODE
       
       var wrapper = {
-        runCode: function(seed) {
+        runCode: function(seed,args) {
+          for (arg in args) {
+            eval(arg + ' = ' + args[arg]);  
+          }
+          
           Math.seedrandom(seed);
           <%= code %>
           results = {};
