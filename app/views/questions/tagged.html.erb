@@ -7,3 +7,5 @@
 
 <%= render :partial => 'questions/list', 
            :locals => {:entries => @questions } %>
+
+<%= will_paginate @questions %>

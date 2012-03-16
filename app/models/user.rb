@@ -65,6 +65,10 @@ class User < ActiveRecord::Base
     is_administrator
   end
 
+  def is_confirmed?
+    !confirmed_at.nil?
+  end
+
   def is_disabled?
     !disabled_at.nil?
   end

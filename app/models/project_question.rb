@@ -4,6 +4,8 @@
 class ProjectQuestion < ActiveRecord::Base
   belongs_to :project
   belongs_to :question
+
+  after_destroy :destroy_projectless_draft_question
   
   # A published question (which is immutable) can be in any number of workgroups.
   # However, a draft question can be in only one.    
@@ -51,6 +53,10 @@ class ProjectQuestion < ActiveRecord::Base
       qc = question.content_copy
       qc.create!(user, :project => new_project, :source_question => question.source_question, :deriver_id => user.id)
     end
+  end
+
+  def destroy_projectless_draft_question
+    question.destroy if (!question.is_published? && question.project_questions.empty?)
   end
   
   #############################################################################

@@ -424,7 +424,8 @@ class Question < ActiveRecord::Base
       wscope = Question
     end
 
-    wscope.where(:content.matches % query & :question_type.matches % tquery)
+    wtscope = wscope.where(:question_type.matches % tquery)
+    wtscope.where(:content.matches % query) | wscope.tagged_with(query, :any => true, :wild => true)
   end
 
   def roleless_collaborators
