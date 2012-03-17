@@ -10,6 +10,10 @@ class QuestionSetup < ActiveRecord::Base
   has_many :attachable_assets, :as => :attachable
   has_many :assets, :through => :attachable_assets
   
+  has_one :logic, :as => :logicable
+  
+  attr_accessor :variated_content_html
+  
   validate :validate_content_change_allowed
 
   attr_accessible :content
@@ -27,6 +31,11 @@ class QuestionSetup < ActiveRecord::Base
   def destroy_if_unattached
     # Force a reload to make sure the association is up to date
     destroy if questions(true).empty?
+  end
+  
+  def variate!(variator)
+    variator.run(logic)
+    variated_content_html = variator.fill_in_variables(content_html)
   end
     
   #############################################################################

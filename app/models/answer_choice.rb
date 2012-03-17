@@ -19,6 +19,8 @@ class AnswerChoice < ActiveRecord::Base
   before_destroy :question_not_published
   validate :question_not_published, :on => :update
 
+  attr_reader :variated_content_html
+
   attr_accessible :content, :credit
   
   def content_copy
@@ -27,6 +29,10 @@ class AnswerChoice < ActiveRecord::Base
   
   def get_attachable
     question
+  end
+  
+  def variate!(variator)
+    variated_content_html = variator.fill_in_variables(content_html)
   end
   
   protected

@@ -91,6 +91,8 @@ class Question < ActiveRecord::Base
   
   has_one :logic, :as => :logicable
 
+  attr_accessor :variated_content_html
+  
   has_one :comment_thread, :as => :commentable, :dependent => :destroy
   before_validation :build_comment_thread, :on => :create
   validates_presence_of :comment_thread
@@ -462,6 +464,13 @@ class Question < ActiveRecord::Base
     end
   end
   
+  # Visitor pattern.  The variator visits parts of the question (setup, 
+  # subparts, etc) and helps build up the info for this specific variation.
+  def variate!(variator)
+    question_setup.variate!(variator) if question_setup
+    variator.run(logic)
+    @variated_content_html = variator.fill_in_variables(content_html)
+  end
   
   #############################################################################
   # Access control methods
