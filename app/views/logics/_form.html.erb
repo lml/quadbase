@@ -1,0 +1,93 @@
+<%# Clients of this partial must specify the 'logicable' this form is for %>
+
+<% logic = logicable.logic
+   @logic_counter = (@logic_counter || -1) + 1
+   class_to_reveal_on_logic_show ||= "reveal_on_logic_show_#{@logic_counter}" %>
+
+<% if !logic %>
+<span style="float:right">
+  <%= link_to_function "Add computer-generated variations", 
+                       "$('.#{class_to_reveal_on_logic_show}').show(); refreshCodeMirrors(); $(this).parent().hide();" %>
+</span>
+<% end %>
+
+<div class="<%= class_to_reveal_on_logic_show %>" style="<%= !logic ? 'display:none;' : '' %> padding: 8px 0;">
+
+  <%= f.fields_for :logic, logic || logicable.build_logic do |logic_form| %>
+    <div class="question_edit_block_subtitle" style="margin-top:-10px">Logic for Computer-Generated Variations</div>    
+    
+    <%= logic_form.text_area :code, 
+                             :class => 'code_editor', 
+                             :id => "code_editor_#{@logic_counter}", 
+                             :style => 'width:100%' %>
+                
+    <div style="padding-top:8px"></div>
+
+    <div style="color:#555555; margin: 8px 0">
+      In the text field below, <b>list the variables</b> from the logic above that you want to use 
+      in this question.  Separate variable names with commas (e.g. "x, speed, y").
+    </div>
+
+    <style type="text/css">
+      .question_code_text_field {
+        border: #777 1px solid; 
+        font-family: courier, monospace; 
+        font-size: 14px; 
+        height: 24px; 
+        padding: 4px;
+      }
+    </style>
+
+    <div class="field">
+      <%= logic_form.text_field :variables, 
+                                :id => "variables_#{@logic_counter}",
+                                :class => 'question_code_text_field', 
+                                :style => "border: #777 1px solid; width:100%;" %> 
+    </div>
+
+    <div style="color:#555555; margin: 8px 0">
+      <%= link_to_function "Show results", "test_#{@logic_counter}();" %> for random seed 
+      <%= text_field_tag "seed_#{@logic_counter}", Random.rand(100000), 
+                         :class => 'question_code_text_field', 
+                         :style => 'width:80px; border: #777 1px solid;' %> 
+    </div>
+
+    <div id="results_<%= @logic_counter %>" style="display:none; border: #777 1px solid;font-family: courier, monospace; 
+    font-size: 14px; padding: 4px 6px "></div>
+
+  <% end %>
+</div>
+
+<style type="text/css">
+.CodeMirror-scroll {
+   height: auto;
+   overflow-y: hidden;
+   overflow-x: auto;
+   width: 100%;
+ }
+</style>
+
+<% @include_codemirror = true %>
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>
+
+    $(document).ready(function() {
+      initCodeMirror('code_editor_<%= @logic_counter %>');
+    });
+    
+    function test_<%= @logic_counter %>() {
+      code = "Math.seedrandom(" + $('#seed_<%= @logic_counter %>').val() + ");" + codeMirrorEditors[0].getValue();
+      results = runCode(code, getVariables($('#variables_<%= @logic_counter %>').val()));
+      results_elem = $('#results_<%= @logic_counter %>');
+      results_elem.html('');
+      results_elem.show();
+      for (result in results) {
+        results_elem.append(result + ' = ' + results[result] + "<br/>");  
+      }
+      
+    }
+    
+  <% end %>
+<% end %>
+

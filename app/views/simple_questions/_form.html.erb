@@ -69,71 +69,18 @@
   </div>
 
   <%= question_edit_block "The Question" do %>
-    <span style="float:right">
-      <%= link_to_function "Add computer-generated variations", 
-                           "$('.code_related').show(); refreshCodeMirrors(); $(this).parent().hide();" %>
-    </span>
+
 
     <div class="question_edit_subblock" style="margin-top:0px">
-      <div id="question_code" class="code_related" style="display:none; clear:both; padding: 8px 0;">
-      
-      <%= f.fields_for :logic, @question.logic || @question.build_logic do |logic_form| %>
-        <div class="question_edit_block_subtitle" style="margin-top:-10px">Logic for Computer-Generated Variations</div>    
-    
-          <%= logic_form.text_area :code, 
-                                   :class => 'code_editor', 
-                                   :id => 'the_code_editor', 
-                                   :style => 'width:100%' %>
-
-        
-          <%# @question.code ||= "// write your logic here " %>
-          <%#= f.text_area :code, 
-                          :class => 'code_editor', 
-                          :id => 'the_code_editor', 
-                          :style => 'width:100%' %>
-                        
-          <div style="padding-top:8px"></div>
-
-          <div style="color:#555555; margin: 8px 0">
-            In the text field below, <b>list the variables</b> from the logic above that you want to use 
-            in this question.  Separate variable names with commas (e.g. "x, speed, y").
-          </div>
-        
-          <style type="text/css">
-            .question_code_text_field {
-              border: #777 1px solid; 
-              font-family: courier, monospace; 
-              font-size: 14px; 
-              height: 24px; 
-              padding: 4px;
-            }
-          </style>
-
-          <div class="field">
-            <%= logic_form.text_field :variables, 
-                                      :class => 'question_code_text_field', 
-                                      :style => "border: #777 1px solid; width:100%;" %> 
-          </div>
-
-          <div style="color:#555555; margin: 8px 0">
-            <%= link_to_function "Show results", "test();" %> for random seed 
-            <%= text_field_tag :seed, Random.rand(100000), 
-                               :class => 'question_code_text_field', 
-                               :style => 'width:80px; border: #777 1px solid;' %> 
-          </div>
-        
-          <div id="results" style="display:none; border: #777 1px solid;font-family: courier, monospace; 
-          font-size: 14px; padding: 4px 6px "></div>
-        
-
-      
-        </div>
-      
-      <% end %>
+      <% class_to_reveal_on_logic_show = "reveal_on_logic_show_#{@logic_counter ||= (@logic_counter || -1) + 1}"%>
+      <%= render :partial => 'logics/form', 
+                 :locals => {:f => f, 
+                             :logicable => @question,
+                             :class_to_reveal_on_logic_show => class_to_reveal_on_logic_show} %>
     </div>
     
     <div class="question_edit_subblock">
-      <div class="question_edit_block_subtitle code_related" style="display:none">Question Text</div>
+      <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" style="display:none">Question Text</div>
     
       <div class="field">
         <%= f.text_area :content, :rows => 8, :class => "mark_it_up", :style => 'width:100%', %>
@@ -158,70 +105,3 @@
  
 
 
-<style type="text/css">
-.CodeMirror-scroll {
-   height: auto;
-   overflow-y: hidden;
-   overflow-x: auto;
-   width: 100%;
- }
-</style>
-
-<% @include_codemirror = true %>
-
-<% content_for :javascript do %>
-  <%= javascript_tag do %>
-    var codeMirrorEditors = [];
-
-    $(document).ready(function() {
-      initCodeMirror('the_code_editor');
-    });
-  
-    function initCodeMirror(elementId) {
-      codeMirrorEditors.push(CodeMirror.fromTextArea(document.getElementById(elementId), 
-                              { lineNumbers: true }) );
-    }
-    
-    function refreshCodeMirrors() {
-      for (ii = 0; ii < codeMirrorEditors.length; ii++) {
-        codeMirrorEditors[ii].refresh();
-      }      
-    }
-    
-    function getVariables(variablesString) {
-      variablesString = variablesString.replace(/[ \t\r\n]+/g,"");
-      return variablesString.split(",");
-    }
-    
-    function runCode(code, variables) {
-      var wrapper = {
-        runCode: function() {
-          eval(code);
-
-          results = {};
-
-          for (ii = 0; ii < variables.length; ii++) {
-            results[variables[ii]] = eval(variables[ii] + ".toString();");
-          }
-          return results;                  
-        }
-      }
-      
-      results = wrapper.runCode();
-      console.log(results);
-      return results;
-    }
-    
-    function test() {
-      code = "Math.seedrandom(" + $('#seed').val() + ");" + codeMirrorEditors[0].getValue();
-      results = runCode(code, getVariables($('#question_variables').val()));
-      $('#results').html('');
-      $('#results').show();
-      for (result in results) {
-        $('#results').append(result + ' = ' + results[result] + "<br/>");  
-      }
-      
-    }
-    
-  <% end %>
-<% end %>
