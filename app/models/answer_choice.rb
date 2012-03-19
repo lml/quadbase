@@ -32,7 +32,7 @@ class AnswerChoice < ActiveRecord::Base
   end
   
   def variate!(variator)
-    variated_content_html = variator.fill_in_variables(content_html)
+    @variated_content_html = variator.fill_in_variables(content_html)
   end
   
   protected

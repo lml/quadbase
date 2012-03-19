@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120313200004) do
+ActiveRecord::Schema.define(:version => 20120319021438) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -98,7 +98,6 @@ ActiveRecord::Schema.define(:version => 20120313200004) do
     t.integer  "logicable_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "predecessor_logic_id"
     t.text     "cached_code"
     t.string   "variables_array"
   end

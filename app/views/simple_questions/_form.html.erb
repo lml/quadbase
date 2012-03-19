@@ -77,45 +77,59 @@
     <div class="question_edit_subblock" style="margin-top:0px">
       <div id="question_code" class="code_related" style="display:none; clear:both; padding: 8px 0;">
       
-      <div class="question_edit_block_subtitle" style="margin-top:-10px">Logic for Computer-Generated Variations</div>    
-        <% @question.code ||= "// write your logic here " %>
-        <%= f.text_area :code, 
-                        :class => 'code_editor', 
-                        :id => 'the_code_editor', 
-                        :style => 'width:100%' %>
+      <%= f.fields_for :logic, @question.logic || @question.build_logic do |logic_form| %>
+        <div class="question_edit_block_subtitle" style="margin-top:-10px">Logic for Computer-Generated Variations</div>    
+    
+          <%= logic_form.text_area :code, 
+                                   :class => 'code_editor', 
+                                   :id => 'the_code_editor', 
+                                   :style => 'width:100%' %>
+
+        
+          <%# @question.code ||= "// write your logic here " %>
+          <%#= f.text_area :code, 
+                          :class => 'code_editor', 
+                          :id => 'the_code_editor', 
+                          :style => 'width:100%' %>
                         
-        <div style="padding-top:8px"></div>
+          <div style="padding-top:8px"></div>
 
-        <div style="color:#555555; margin: 8px 0">
-          In the text field below, <b>list the variables</b> from the logic above that you want to use 
-          in this question.  Separate variable names with commas (e.g. "x, speed, y").
-        </div>
+          <div style="color:#555555; margin: 8px 0">
+            In the text field below, <b>list the variables</b> from the logic above that you want to use 
+            in this question.  Separate variable names with commas (e.g. "x, speed, y").
+          </div>
         
-        <style type="text/css">
-          .question_code_text_field {
-            border: #777 1px solid; 
-            font-family: courier, monospace; 
-            font-size: 14px; 
-            height: 24px; 
-            padding: 4px;
-          }
-        </style>
+          <style type="text/css">
+            .question_code_text_field {
+              border: #777 1px solid; 
+              font-family: courier, monospace; 
+              font-size: 14px; 
+              height: 24px; 
+              padding: 4px;
+            }
+          </style>
 
-        <div class="field">
-          <%= f.text_field :variables, :class => 'question_code_text_field', :style => "border: #777 1px solid; width:100%;" %> 
-        </div>
+          <div class="field">
+            <%= logic_form.text_field :variables, 
+                                      :class => 'question_code_text_field', 
+                                      :style => "border: #777 1px solid; width:100%;" %> 
+          </div>
 
-        <div style="color:#555555; margin: 8px 0">
-          <%= link_to_function "Show results", "test();" %> for random seed 
-          <%= text_field_tag :seed, Random.rand(100000), :class => 'question_code_text_field', :style => 'width:80px; border: #777 1px solid;' %> 
-        </div>
+          <div style="color:#555555; margin: 8px 0">
+            <%= link_to_function "Show results", "test();" %> for random seed 
+            <%= text_field_tag :seed, Random.rand(100000), 
+                               :class => 'question_code_text_field', 
+                               :style => 'width:80px; border: #777 1px solid;' %> 
+          </div>
         
-        <div id="results" style="display:none; border: #777 1px solid;font-family: courier, monospace; 
-        font-size: 14px; padding: 4px 6px "></div>
+          <div id="results" style="display:none; border: #777 1px solid;font-family: courier, monospace; 
+          font-size: 14px; padding: 4px 6px "></div>
         
 
       
-      </div>
+        </div>
+      
+      <% end %>
     </div>
     
     <div class="question_edit_subblock">

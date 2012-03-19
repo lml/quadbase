@@ -4,20 +4,20 @@
 class QuestionVariator
   attr_reader :seed
   
-  def initialize(seed = random(2e9))
+  def initialize(seed = rand(2e9))
     @seed = seed
+    @output ||= Logic::Output.new 
   end
   
   def run(logic)
     return if logic.nil?
     
-    @output ||= Logic::Output.new 
     @output = logic.run({:seed => @seed, :prior_output => @output})
   end
   
   def fill_in_variables(text)
     return nil if text.nil?
-    text.gsub(/\=([_a-zA-Z]{1}\w*)\=/u) {|match| @output.variables[match[1]] }
+    text.gsub(/\=([_a-zA-Z]{1}\w*)\=/u) {|match| @output.variables[match[1]] || "[UNDEFINED VARIABLE (#{match[1]})]"}
   end
   
 end

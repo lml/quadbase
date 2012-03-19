@@ -37,7 +37,7 @@ class QuestionSetup < ActiveRecord::Base
   
   def variate!(variator)
     variator.run(logic)
-    variated_content_html = variator.fill_in_variables(content_html)
+    @variated_content_html = variator.fill_in_variables(content_html)
   end
     
   #############################################################################

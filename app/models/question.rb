@@ -21,8 +21,12 @@ class Question < ActiveRecord::Base
   belongs_to :license
   belongs_to :question_setup
   belongs_to :publisher, :class_name => "User"
+  
+  has_one :logic, :as => :logicable
 
   accepts_nested_attributes_for :question_setup, :logic
+  
+  before_save :clear_empty_logic
   
   has_one :question_source, 
           :class_name => "QuestionDerivation",
@@ -88,8 +92,6 @@ class Question < ActiveRecord::Base
            
 
   has_many :solutions, :dependent => :destroy
-  
-  has_one :logic, :as => :logicable
 
   attr_accessor :variated_content_html
   
@@ -128,7 +130,8 @@ class Question < ActiveRecord::Base
   # modifiable by the system (note that users can modify question_setup data
   # but we don't want them deciding which questions share setups, etc)
   # Using whitelisting instead of blacklisting here.
-  attr_accessible :content, :changes_solution, :question_setup_attributes
+  attr_accessible :content, :changes_solution, :question_setup_attributes, 
+                  :logic_attributes
 
   def to_param
     if is_published?
@@ -596,6 +599,10 @@ protected
     if !question_setup.blank?
       question_setup.destroy_if_unattached
     end
+  end
+  
+  def clear_empty_logic
+    logic.destroy if !logic.nil? && logic.empty?
   end
 
   def lock!(user)

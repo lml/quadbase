@@ -64,6 +64,10 @@ class Logic < ActiveRecord::Base
     end
   end
   
+  def empty?
+    code.blank?
+  end
+  
 protected
 
   def code_runs_safely
