@@ -22,7 +22,7 @@ class Question < ActiveRecord::Base
   belongs_to :question_setup
   belongs_to :publisher, :class_name => "User"
 
-  accepts_nested_attributes_for :question_setup
+  accepts_nested_attributes_for :question_setup, :logic
   
   has_one :question_source, 
           :class_name => "QuestionDerivation",

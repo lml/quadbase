@@ -18,6 +18,8 @@ class QuestionSetup < ActiveRecord::Base
 
   attr_accessible :content
   
+  accepts_nested_attributes_for :logic
+  
   def content_copy
     kopy = QuestionSetup.new(:content => content)
     self.attachable_assets.each {|aa| kopy.attachable_assets.push(aa.content_copy) }

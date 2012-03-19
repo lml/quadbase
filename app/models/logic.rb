@@ -2,9 +2,6 @@ require 'erb'
 
 class Logic < ActiveRecord::Base
   belongs_to :logicable, :polymorphic => true
-  belongs_to :predecessor_logic, 
-             :class_name => "Logic",
-             :foreign_key => 'predecessor_logic_id'
   
   validate :variable_parse_succeeds
   validate :code_runs_safely
@@ -41,12 +38,15 @@ class Logic < ActiveRecord::Base
       k=i.pow(2,k);n=k*2;l(i.random(),j)})([],Math,256,6,52);  
   CODE
     
-  def run(seed = rand(2e9), prior_output = Output.new)
+  def run(options = {})
+    options[:seed] ||= rand(2e9)
+    options[:prior_output] ||= Output.new
+    
     variable_parse_succeeds if variables_array.nil? 
     
     context = SaferJS.compile(get_cached_code)
-    results = context.call('wrapper.runCode',seed,prior_output.variables)
-    prior_output.store!(results)
+    results = context.call('wrapper.runCode',options[:seed],options[:prior_output].variables)
+    options[:prior_output].store!(results)
   end
     
   class Output

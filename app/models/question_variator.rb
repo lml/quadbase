@@ -12,7 +12,7 @@ class QuestionVariator
     return if logic.nil?
     
     @output ||= Logic::Output.new 
-    @output = logic.run(@seed, @output)
+    @output = logic.run({:seed => @seed, :prior_output => @output})
   end
   
   def fill_in_variables(text)
