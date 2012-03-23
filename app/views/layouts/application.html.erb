@@ -26,6 +26,8 @@
   
   <% # Listing the JS explicitly, b/c order is important!! %>
   
+  <%= javascript_include_tag 'quadbase.js' %>
+  
   <% if @include_mathjax %>  
      <script type="text/x-mathjax-config">
        MathJax.Hub.Config({
