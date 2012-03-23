@@ -1,5 +1,6 @@
 Quadbase.CodeMirrorUtils = function() {
 
+  var fixedLogic = [];
   var codeMirrorEditors = {};
 
   var getVariables = function(variablesString) {
@@ -37,6 +38,10 @@ Quadbase.CodeMirrorUtils = function() {
   }
 
   return {
+    loadFixedLogic: function(code, variables) {
+      fixedLogic.push({code: code, variables: variables});
+    },
+    
     initCodeMirror: function(elementId) {
       codeMirrorEditors[elementId] = CodeMirror.fromTextArea(document.getElementById(elementId), 
                                                              { lineNumbers: true });
@@ -50,14 +55,20 @@ Quadbase.CodeMirrorUtils = function() {
       }
     },
     
-    test_logic: function(counter) {
-
+    testLogic: function(counter) {
       var existingVariables = {};
       var seed = $('#seed_' + counter).val();
+      
+      // Run through the fixed code (that code which is part of 
+      // this question but not in a codeMirror on this page)
+      for (kk = 0; kk < fixedLogic.length; kk++) {
+        existingVariables = runCode(seed++, fixedLogic[kk].code, fixedLogic[kk].variables, existingVariables);
+      }
+      
       for (jj = 1; jj <= counter; jj++) {
         code = codeMirrorEditors['code_editor_'+jj].getValue();
         variables = getVariables($('#variables_'+jj).val());
-        existingVariables = runCode(seed, code, variables, existingVariables);
+        existingVariables = runCode(seed++, code, variables, existingVariables);
       }
 
       results_elem = $('#results_'+counter);

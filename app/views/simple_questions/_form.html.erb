@@ -61,7 +61,8 @@
       
       
         <div class="question_edit_subblock">
-          <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" style="display:none">Introductory Text</div>
+          <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
+               style="<%= !@question.question_setup.logic ? 'display:none;' : '' %>">Introductory Text</div>
       
           <div class="field">
              <%= setup_form.text_area :content, 
@@ -77,7 +78,7 @@
     
   <% end %> 
 
-  <div>
+  <div style="<%= setup_blank ? '' : 'display:none' %>">
     <%= link_to_function "Add a common introduction to this question.", 
                          '$("#intro_text_block").show(); $(this).parent().hide();'%> 
     (optional)
@@ -96,7 +97,8 @@
     </div>
     
     <div class="question_edit_subblock">
-      <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" style="display:none">Question Text</div>
+      <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
+           style="<%= !@question.logic ? 'display:none;' : '' %>">Question Text</div>
     
       <div class="field">
         <%= f.text_area :content, :rows => 8, :class => "mark_it_up", :style => 'width:100%', %>

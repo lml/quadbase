@@ -52,7 +52,7 @@
     </div>
 
     <div style="color:#555555; margin: 8px 0">
-      <%= link_to_function "Show results", "Quadbase.CodeMirrorUtils.test_logic(#{@logic_counter})" %> for random seed 
+      <%= link_to_function "Show results", "Quadbase.CodeMirrorUtils.testLogic(#{@logic_counter})" %> for random seed 
       <%= text_field_tag "seed_#{@logic_counter}", Random.rand(100000), 
                          :class => 'question_code_text_field', 
                          :style => 'width:80px; border: #777 1px solid;' %> 
