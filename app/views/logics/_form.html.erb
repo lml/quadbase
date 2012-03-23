@@ -1,4 +1,10 @@
-<%# Clients of this partial must specify the 'logicable' this form is for %>
+<%# 
+  Clients of this partial will specify 
+       the 'logicable' this form is for 
+       the parent form 'f' in which these form elements are embedded
+       a class of elements to reveal 'class_to_reveal_on_logic_show' when someone
+          clicks the "Add variations" link (optional)
+%>
 
 <% logic = logicable.logic
    @logic_counter = (@logic_counter || -1) + 1
@@ -46,7 +52,7 @@
     </div>
 
     <div style="color:#555555; margin: 8px 0">
-      <%= link_to_function "Show results", "test_#{@logic_counter}();" %> for random seed 
+      <%= link_to_function "Show results", "test_logic(#{@logic_counter})" %> for random seed 
       <%= text_field_tag "seed_#{@logic_counter}", Random.rand(100000), 
                          :class => 'question_code_text_field', 
                          :style => 'width:80px; border: #777 1px solid;' %> 

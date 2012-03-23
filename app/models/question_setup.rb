@@ -16,7 +16,7 @@ class QuestionSetup < ActiveRecord::Base
   
   validate :validate_content_change_allowed
 
-  attr_accessible :content
+  attr_accessible :content, :logic_attributes
   
   accepts_nested_attributes_for :logic
   

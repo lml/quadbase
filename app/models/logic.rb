@@ -18,6 +18,8 @@ class Logic < ActiveRecord::Base
                                debugger|function|arguments|interface|protected|
                                implements|instanceof)$/
                                
+  OTHER_RESERVED_WORDS_REGEX = /^(seedrandom)$/
+                               
   VARIABLE_REGEX = /^[_a-zA-Z]{1}\w*$/
   
   
@@ -132,7 +134,7 @@ protected
     end
 
     reserved_vars = self.variables_array.collect do |v| 
-      match = JS_RESERVED_WORDS_REGEX.match(v)
+      match = JS_RESERVED_WORDS_REGEX.match(v) || OTHER_RESERVED_WORDS_REGEX.match(v)
       match.nil? ? nil : match[0]
     end
     
@@ -140,10 +142,6 @@ protected
     
     reserved_vars.each do |v|
       errors.add(:variables, "cannot contain the reserved word '#{v}'.")
-    end
-
-    if !self.variables_array.all?{|v| JS_RESERVED_WORDS_REGEX =~ v}
-      errors.add(:variables, "")
     end
 
     self.variables = self.variables_array.join(", ")

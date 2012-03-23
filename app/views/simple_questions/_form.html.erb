@@ -43,20 +43,36 @@
 
   <% intro_options = {:style => "#{setup_blank ? 'display:none' : ''}", :id => 'intro_text_block'} %>
 
-  <%= question_edit_block "Introductory Text", intro_options do %>
+  <%= question_edit_block "The Introduction", intro_options do %>
 
     <% if @question.is_draft_in_multipart? %>
       <%= @question.question_setup.content_html.html_safe %>
     <% else %>
-      <div class="field">
-        <%= f.fields_for :question_setup do |setup_form| %>
-           <%= setup_form.text_area :content, 
-                                    :rows => 8, 
-                                    :class => "mark_it_up", 
-                                    :style => 'width:100%',
-                                    'data-attachable_type'=>'intro' %>
-        <% end %>
-      </div>
+
+      <%= f.fields_for :question_setup do |setup_form| %>
+      
+        <div class="question_edit_subblock" style="margin-top:0px">
+          <% class_to_reveal_on_logic_show = "reveal_on_logic_show_#{@logic_counter ||= (@logic_counter || -1) + 1}"%>
+          <%= render :partial => 'logics/form', 
+                     :locals => {:f => setup_form, 
+                                 :logicable => @question.question_setup,
+                                 :class_to_reveal_on_logic_show => class_to_reveal_on_logic_show} %>
+        </div>
+      
+      
+        <div class="question_edit_subblock">
+          <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" style="display:none">Introductory Text</div>
+      
+          <div class="field">
+             <%= setup_form.text_area :content, 
+                              :rows => 8, 
+                              :class => "mark_it_up", 
+                              :style => 'width:100%',
+                              'data-attachable_type'=>'intro' %>
+          </div>
+        </div>
+      <% end %>
+
     <% end %>
     
   <% end %> 

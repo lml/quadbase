@@ -17,7 +17,7 @@ class QuestionVariator
   
   def fill_in_variables(text)
     return nil if text.nil?
-    text.gsub(/\=([_a-zA-Z]{1}\w*)\=/u) {|match| @output.variables[match[1]] || "[UNDEFINED VARIABLE (#{match[1]})]"}
+    text.gsub(/\=([_a-zA-Z]{1}\w*)=/u) {|match| @output.variables[$1] || "[UNDEFINED VARIABLE (#{$1})]"}
   end
   
 end
