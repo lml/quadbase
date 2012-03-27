@@ -470,8 +470,10 @@ class Question < ActiveRecord::Base
   # Visitor pattern.  The variator visits parts of the question (setup, 
   # subparts, etc) and helps build up the info for this specific variation.
   def variate!(variator)
+    logger.info("Starting variation of question #{self.to_param} at #{start_time = Time.now}")
     question_setup.variate!(variator) if question_setup
     variator.run(logic)
+    logger.info("Ended variation of question #{self.to_param} at #{end_time = Time.now} (duration = #{end_time-start_time})")
     @variated_content_html = variator.fill_in_variables(content_html)
   end
   
@@ -574,7 +576,7 @@ protected
   end
   
   def remove_blank_question_setup!
-    if question_setup.content.blank?
+    if question_setup.empty?
       setup = self.question_setup
       self.question_setup = nil
       self.save!

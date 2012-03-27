@@ -14,7 +14,9 @@ Quadbase.CodeMirrorUtils = function() {
         Math.seedrandom(seed);
     
         for (existingVariable in existingVariables) {
-          eval(existingVariable + ' = ' + existingVariables[existingVariable]);  
+          if (existingVariables.hasOwnProperty(existingVariable)) {
+            eval(existingVariable + ' = ' + existingVariables[existingVariable]);              
+          }
         }
     
         eval(code);
@@ -64,9 +66,10 @@ Quadbase.CodeMirrorUtils = function() {
       for (kk = 0; kk < fixedLogic.length; kk++) {
         existingVariables = runCode(seed++, fixedLogic[kk].code, fixedLogic[kk].variables, existingVariables);
       }
-      
+
       for (jj = 1; jj <= counter; jj++) {
         code = codeMirrorEditors['code_editor_'+jj].getValue();
+        if (!code) continue;
         variables = getVariables($('#variables_'+jj).val());
         existingVariables = runCode(seed++, code, variables, existingVariables);
       }
@@ -75,6 +78,7 @@ Quadbase.CodeMirrorUtils = function() {
       results_elem.html('');
       results_elem.show();
       for (variable in existingVariables) {
+        
         results_elem.append(variable + ' = ' + existingVariables[variable] + "<br/>");  
       }
     }

@@ -1259,7 +1259,8 @@ a.tag_cloud_4 { font-size: 20px; line-height:4;}
    padding: 8px 5px 5px;
 }
 
-/*.code_editor {
-   background-color: white;
-   width: 100%;
-}*/
+.undefined_variable {
+   border: 2px solid #b22222;
+   padding: 2px;
+   color: #666666;
+}

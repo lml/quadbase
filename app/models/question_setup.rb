@@ -18,6 +18,8 @@ class QuestionSetup < ActiveRecord::Base
 
   attr_accessible :content, :logic_attributes
   
+  before_save :clear_empty_logic
+  
   accepts_nested_attributes_for :logic
   
   def content_copy
@@ -39,6 +41,10 @@ class QuestionSetup < ActiveRecord::Base
     variator.run(logic)
     @variated_content_html = variator.fill_in_variables(content_html)
   end
+  
+  def empty?
+    content.blank? && (logic.nil? || logic.empty?)
+  end
     
   #############################################################################
   # Access control methods
@@ -53,6 +59,10 @@ protected
   def validate_content_change_allowed
     return if content_unchanged? || content_change_allowed?
     self.errors.add(:content, "cannot be changed because it is linked to published questions.")
+  end
+  
+  def clear_empty_logic
+    logic.destroy if !logic.nil? && logic.empty?
   end
 
 end
