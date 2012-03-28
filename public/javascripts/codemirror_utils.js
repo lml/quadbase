@@ -12,13 +12,20 @@ Quadbase.CodeMirrorUtils = function() {
     var wrapper = {
       runCode: function() {
         Math.seedrandom(seed);
+
+        // Clear out the existing variables from the global space
+        for (ii = 0; ii < variables.length; ii++) {
+          eval(variables[ii] + ' = undefined');
+        }
     
+        // Make sure existing variables can be accessed by the new code
         for (existingVariable in existingVariables) {
           if (existingVariables.hasOwnProperty(existingVariable)) {
             eval(existingVariable + ' = ' + existingVariables[existingVariable]);              
           }
         }
     
+        // Evaluate the code
         try {
           eval(code); 
         } 
@@ -26,10 +33,14 @@ Quadbase.CodeMirrorUtils = function() {
           alert("An error occurred when trying to run this code: '" + e.message + "'");
         }
     
+        // Copy the exported variables to the results object; then put the existing
+        // variables in the results object (they should never change so write them 
+        // second so that they undo any changes from this code).
+        
         results = {};
 
         for (ii = 0; ii < variables.length; ii++) {
-          results[variables[ii]] = eval(variables[ii] + ".toString();");
+          results[variables[ii]] = eval(variables[ii]); // + ".toString();");
         }
         for (existingVariable in existingVariables) {
           if (existingVariables.hasOwnProperty(existingVariable)) {

@@ -3,39 +3,21 @@
 
 <%= question_edit_block "Answer Choice Text" do %>
   <div class="fields">
-    <%= f.text_area :content, :rows => 5, :class => "mark_it_up", :style => 'width:100%' %>
+    <%= f.text_area :content, :rows => 3, :class => "mark_it_up", :style => 'width:100%' %>
+    
+    <span style="float:right">  
+      <%= link_to_remove_fields "Delete this answer", f %>
+    </span>
     
     <% # Couldn't get the buttons to be checked on load without manually %>
     <% # checking the status %>
  
-    <%= f.radio_button :credit, 1, {:checked => f.object.credit == 1}%>
-    Right<br/>
+    <%= f.radio_button :credit, 1, {:checked => f.object.credit == 1} %>
+    Right
     <%= f.radio_button :credit, 0, {:checked => f.object.credit != 1} %>
     Wrong
-    <center>  
-    <p><%= link_to_remove_fields "Delete this answer", f %>
-    </center>
+
   </div>
-<% end %>
-
-<% if false %>
-<tr class="fields">
-   <td valign="top"><i>Answer choice<br/>text:</i></td>
-   <td><%= f.text_area :content, :rows => 5, :class => "mark_it_up" %></td>
-   <td valign="middle" >
-
-      <% # Couldn't get the buttons to be checked on load without manually %>
-      <% # checking the status %>
-   
-      <%= f.radio_button :credit, 1, {:checked => f.object.credit == 1}%>
-      Right<br/>
-      <%= f.radio_button :credit, 0, {:checked => f.object.credit != 1} %>
-      Wrong
-      <center>  
-      <p><%= link_to_remove_fields "Delete this answer", f %>
-      </center>
-   </td>
-</tr>
 <% end %>
 
 <script type="text/javascript">

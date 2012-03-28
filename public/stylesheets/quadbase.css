@@ -1260,9 +1260,9 @@ a.tag_cloud_4 { font-size: 20px; line-height:4;}
 }
 
 .undefined_variable {
-   border: 2px solid #b22222;
-   padding: 2px;
-   color: #666666;
+   padding: 0px 4px;
+   background-color: #b22222;
+   color: white;
 }
 
 .logic_error_separator {
