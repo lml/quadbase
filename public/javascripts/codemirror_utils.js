@@ -19,12 +19,11 @@ Quadbase.CodeMirrorUtils = function() {
           }
         }
     
-    
         try {
           eval(code); 
         } 
         catch (e) {
-          alert("An error occurred when trying to run this code: '" + e.message "'");
+          alert("An error occurred when trying to run this code: '" + e.message + "'");
         }
     
         results = {};
@@ -47,25 +46,55 @@ Quadbase.CodeMirrorUtils = function() {
     return results;
   }
   
-  var jslintOptions = {devel: false, bitwise: true, undef: true, continue: true, unparam: true, debug: true, sloppy: true, eqeq: true, sub: true, es5: true, vars: true, evil: true, white: true, forin: true, passfail: false, newcap: true, nomen: true, plusplus: true, regexp: true, maxerr: 50, indent: 4};
+  var JSLINT_OPTIONS = {devel: false, 
+                        bitwise: true, 
+                        undef: true, 
+                        continue: true, 
+                        unparam: true, 
+                        debug: true, 
+                        sloppy: true, 
+                        eqeq: true, 
+                        sub: true, 
+                        es5: true, 
+                        vars: true, 
+                        evil: true, 
+                        white: true, 
+                        forin: true, 
+                        passfail: false, 
+                        newcap: true, 
+                        nomen: true, 
+                        plusplus: true, 
+                        regexp: true, 
+                        maxerr: 50, 
+                        indent: 4};
   
   var checkCode = function(code, resultsElement, checkingPriorLogic) {
-    if (JSLINT(code, jslintOptions)) {
+    if (JSLINT(code, JSLINT_OPTIONS)) {
       return true;
     }
     else {
       for (ee = 0; ee < JSLINT.errors.length; ee++) {
         error = JSLINT.errors[ee];
-        if (null != error && !(/Stopping/).test(error.reason)) {
-          if (ee > 0) {
-            resultsElement.append("<div class='logic_error_separator'></div>");
-          }
-          if (checkingPriorLogic) {
-            resultsElement.append("(Prior Logic) ");
-          }
-          resultsElement.append("Line " + error.line + ", character " + error.character + ": " + error.reason + "(" + error.evidence + ")" + "<br/>");          
-        }
+        
+        if (null == error || (/Stopping/).test(error.reason)) break;
+          
+        message = "";
+        
+        if (ee > 0) 
+          message += "<div class='logic_error_separator'></div>";
+          
+        if (checkingPriorLogic) 
+          message += "(Prior Logic) ";
+
+        message += "Line " + error.line;
+        message += ", character " + error.character;
+        message += ": " + error.reason;
+        message += " (" + error.evidence;
+        message += ")<br/>";
+     
+        resultsElement.append(message);
       }
+      
       resultsElement.show();
       return false;      
     }
@@ -95,8 +124,6 @@ Quadbase.CodeMirrorUtils = function() {
 
       results_elem = $('#results_'+counter);
       results_elem.html('');
-      
-      var jslintPassed;
       
       // Run through the fixed code (that code which is part of 
       // this question but not in a codeMirror on this page)
