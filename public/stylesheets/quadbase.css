@@ -1264,3 +1264,11 @@ a.tag_cloud_4 { font-size: 20px; line-height:4;}
    padding: 2px;
    color: #666666;
 }
+
+.logic_error_separator {
+   border-top: 1px solid #BBBBBB;
+   height: 0;
+   margin-top: 4px;
+   padding-top: 4px;
+   width: 100%;
+}

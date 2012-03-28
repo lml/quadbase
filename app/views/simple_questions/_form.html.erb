@@ -62,7 +62,7 @@
       
         <div class="question_edit_subblock">
           <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
-               style="<%= @question.question_setup.logic.code.blank? ? 'display:none;' : '' %>">Introductory Text</div>
+               style="<%= @question.question_setup.logic.empty? ? 'display:none;' : '' %>">Introductory Text</div>
       
           <div class="field">
              <%= setup_form.text_area :content, 
@@ -98,7 +98,7 @@
     
     <div class="question_edit_subblock">
       <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
-           style="<%= @question.logic.code.blank? ? 'display:none;' : '' %>">Question Text</div>
+           style="<%= @question.logic.empty? ? 'display:none;' : '' %>">Question Text</div>
     
       <div class="field">
         <%= f.text_area :content, :rows => 8, :class => "mark_it_up", :style => 'width:100%', %>
