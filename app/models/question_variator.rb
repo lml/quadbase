@@ -1,3 +1,5 @@
+# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+# License version 3 or later.  See the COPYRIGHT file for details.
 
 # Responsible for managing the different variations that you can get from one 
 # question given things like random seeds, logic, part re-ordering, etc.
