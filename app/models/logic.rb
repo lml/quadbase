@@ -48,9 +48,9 @@ class Logic < ActiveRecord::Base
     options[:prior_output] ||= Output.new
     
     variable_parse_succeeds if variables_array.nil? 
-    
-    context = SaferJS.compile(get_cached_code)
-    results = context.call('wrapper.runCode',options[:seed],options[:prior_output].variables)
+    raise NotYetImplemented
+    # context = SaferJS.compile(get_cached_code)
+    # results = context.call('wrapper.runCode',options[:seed],options[:prior_output].variables)
     options[:prior_output].store!(results)
   end
     

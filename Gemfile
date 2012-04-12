@@ -41,7 +41,7 @@ gem 'jsonify-rails'
 gem 'execjs'
 gem 'therubyracer'
 
-gem 'saferjs', :path => '~jps/dev/saferjs'
+gem 'bullring', :path => '~jps/dev/bullring'
 
 
 group :development, :test do
