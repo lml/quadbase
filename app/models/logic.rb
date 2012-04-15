@@ -116,7 +116,7 @@ protected
             results[arg] =args[arg];  
           }
           
-          return results;                  
+          return {result: results};                  
         }
       }
     CODE
