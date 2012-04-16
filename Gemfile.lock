@@ -1,7 +1,7 @@
 PATH
   remote: ~jps/dev/bullring
   specs:
-    bullring (0.1)
+    bullring (0.5)
       therubyrhino
       uglifier
 

@@ -2,11 +2,13 @@
 # License version 3 or later.  See the COPYRIGHT file for details.
 
 require 'erb'
+require 'json'
 
 class Logic < ActiveRecord::Base
   belongs_to :logicable, :polymorphic => true
   
   validate :variable_parse_succeeds
+  validate :code_compiles
   validate :code_runs_safely
 
   before_save :cache_code
@@ -48,7 +50,7 @@ class Logic < ActiveRecord::Base
     options[:prior_output] ||= Output.new
     
     variable_parse_succeeds if variables_array.nil? 
-    results = Bullring.run(get_cached_code + ";" + "wrapper.runCode(#{options[:seed]},#{options[:prior_output].variables})")
+    results = Bullring.run(readied_script(options[:seed],options[:prior_output]))
     options[:prior_output].store!(results)
   end
     
@@ -73,7 +75,21 @@ class Logic < ActiveRecord::Base
   
 protected
 
+  def code_compiles
+    code_errors = Bullring.check(code)
+    code_errors.each do |code_error|
+      errors.add(:base, "#{code_error['reason']}, line #{code_error['line']}, character #{code_error['character']}")      
+    end
+    errors.empty?
+  end
+
   def code_runs_safely
+    # TODO this might go into question so can get the appropriate prior output values
+    # TODO make sure that the question content is the same from run to run with the same seed
+  end
+  
+  def readied_script(seed, prior_output)
+    get_cached_code + ";" + "wrapper.runCode(#{seed},#{prior_output.variables.to_json})"
   end
   
   def get_cached_code

@@ -227,4 +227,9 @@ module ApplicationHelper
     block_to_partial('questions/question_edit_block', options.merge(:title => title), &block)
   end
   
+  def add_human_field_names(mappings)
+    @human_field_names ||= {}
+    @human_field_names.merge!(mappings)
+  end
+  
 end

@@ -6,8 +6,8 @@
 class QuestionVariator
   attr_reader :seed
   
-  def initialize(seed = rand(2e9))
-    @seed = seed
+  def initialize(seed)
+    @seed = seed || rand(2e9)
     @output ||= Logic::Output.new 
   end
   

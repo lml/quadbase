@@ -7,10 +7,10 @@
 
   <% @errors = @question.errors %>
 
-  <% @human_field_names = {:"answer_choices.content" => "Answer text", 
-                           :"answer_choices.credit" => "Answer right/wrong", 
-                           :"answer_choices" => "Answers",
-                           :"question_setup.content" => "Content"} %>
+  <% add_human_field_names({ :"answer_choices.content" => "Answer text", 
+                             :"answer_choices.credit" => "Answer right/wrong", 
+                             :"answer_choices" => "Answers",
+                             :"question_setup.content" => "Content"} ) %>
 
   <%# For the question setup ... %>
   <%= render :partial => "attachable_assets/add_image_dialog",
