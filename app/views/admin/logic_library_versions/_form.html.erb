@@ -1,0 +1,29 @@
+<%= form_for([:admin, @logic_library, @logic_library_version]) do |f| %>
+
+  <div class="field">
+    <%= f.label :code %><br />
+    <%= f.text_area :code, :id => 'code' %>
+  </div>
+  <div class="field">
+    <%= f.label :deprecated %><br />
+    <%= f.check_box :deprecated %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<% @include_jquery = true %>
+<% @include_codemirror = true %>
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>
+
+    $(document).ready(function() {
+      Quadbase.CodeMirrorUtils.initCodeMirror('code');
+    });
+    
+  <% end %>
+<% end %>
+
+

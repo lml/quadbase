@@ -1,0 +1,25 @@
+<%= pageHeading @logic_library_version.logic_library.name + " v#{@logic_library_version.version}" %>
+
+<p>Deprecated? &nbsp;&nbsp;&nbsp; <%= tf_to_yn(@logic_library_version.deprecated) %></p>
+
+<%= text_area_tag nil, @logic_library_version.code, {:id => 'code'} %>
+
+
+<% @include_jquery = true %>
+<% @include_codemirror = true %>
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>
+
+    $(document).ready(function() {
+      Quadbase.CodeMirrorUtils.initCodeMirror('code', {lineNumbers: true, readOnly: true});
+    });
+    
+  <% end %>
+<% end %>
+
+<br/>
+
+<%= link_to 'Edit', edit_admin_logic_library_version_path(@logic_library_version) %> |
+<%= link_to 'List', admin_logic_library_path(@logic_library) %>
+

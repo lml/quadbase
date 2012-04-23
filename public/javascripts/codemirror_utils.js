@@ -119,9 +119,10 @@ Quadbase.CodeMirrorUtils = function() {
       fixedLogic.push({code: code, variables: variables});
     },
     
-    initCodeMirror: function(elementId) {
+    initCodeMirror: function(elementId, options) {
+      options = typeof options !== 'undefined' ? options : { lineNumbers: true };
       codeMirrorEditors[elementId] = CodeMirror.fromTextArea(document.getElementById(elementId), 
-                                                             { lineNumbers: true });
+                                                             options);
     },
     
     refreshCodeMirrors: function() {

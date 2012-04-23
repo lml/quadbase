@@ -3,6 +3,13 @@
 
 Quadbase::Application.routes.draw do
 
+  namespace :admin do 
+    resources :logic_libraries do
+      resources :logic_library_versions, :shallow => true
+      post 'sort', :on => :collection
+    end
+  end
+
   def commentable
     resources :comments, :only => [:index, :new, :create] do
       collection do

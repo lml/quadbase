@@ -13,6 +13,13 @@
   position: relative;
 }
 
+.CodeMirror-scroll {
+   height: auto;
+   overflow-y: hidden;
+   overflow-x: auto;
+   width: 100%;
+ }
+
 .CodeMirror-gutter {
   position: absolute; left: 0; top: 0;
   z-index: 10;

@@ -232,4 +232,101 @@ module ApplicationHelper
     @human_field_names.merge!(mappings)
   end
   
+  def sortable_list(entries, entry_text_method, sort_path, options={})
+    
+    content_for :javascript do
+      javascript_tag do
+        "$('#sortable_list').sortable({
+           dropOnEmpty: false,
+           handle: '.handle',
+           items: 'div.sortable_item_entry',
+           opacity: 0.7,
+           scroll: true,
+           update: function(){
+              $.ajax({
+                 type: 'post',
+                 data: $('#sortable_list').sortable('serialize'),
+                 dataType: 'script',
+                 url: '#{sort_path}'
+              });
+           }
+        }).disableSelection();"
+      end
+    end
+    
+    content_for :javascript do
+      javascript_tag do
+          "$('.sortable_item_entry').live('mouseenter mouseleave', function(event) {
+            $('#'+ $(this).attr('id') + '_buttons').css('display', 
+                                                        event.type == 'mouseenter' ? 'inline-block' : 'none');
+          });"      
+      end
+    end
+
+    content_tag :div, :id => 'sortable_list', :style => options[:style] do
+      content_tag(:div, "None", :style => "#{!entries.empty? ? 'display:none' : ''}") +
+      
+      entries.collect { |entry|
+        content_tag :div, :id => "sortable_item_#{entry.id}", 
+                          :class => 'sortable_item_entry', 
+                          :style => "height:24px;" do
+
+          a = content_tag(:span, "", :class => 'ui-icon ui-icon-arrow-4 handle',
+                                 :style => 'display:inline-block; height: 14px')
+          
+          b = content_tag(:div, {:style => 'display:inline-block'}, :escape => false) do
+            link_text = entry.send(entry_text_method)
+            link_target = options[:link_target_method].nil? ?
+                          entry : 
+                          entry.send(options[:link_target_method])
+            link_target = options[:namespace].nil? ? 
+                          link_target : 
+                          [options[:namespace], link_target]
+                          
+            link_to(link_text.blank? ? 'unnamed' : link_text, link_target)
+          end
+          
+          c = content_tag(:div, {:id => "sortable_item_#{entry.id}_buttons", 
+                             :style => 'padding-left: 8px; display:none; vertical-align:top'},
+                            :escape => false) do
+            button_target = options[:namespace].nil? ? 
+                            entry : 
+                            [options[:namespace], entry]
+            edit_button(button_target, {:small => true}) +
+            trash_button(button_target, {:small => true})
+          end
+
+          a+b+c
+        end
+      }.join("").html_safe   
+    end  
+  end
+  
+  def show_button(target)
+    link_to("", target, :class => "icon_only_button show_button")
+  end
+  
+  def edit_button(target, options={})
+    options[:remote] ||= false
+    options[:small] ||= false
+    
+    klass = "edit_button icon_only_button" + (options[:small] ? "_small" : "")
+    
+    link_to "", edit_polymorphic_path(target), :class => klass, :remote => options[:remote]
+  end
+  
+  def trash_button(target, options={})
+    options[:confirm] ||= "Are you sure?"
+    options[:remote] ||= false
+    options[:small] ||= false
+    
+    klass = "trash_button icon_only_button" + (options[:small] ? "_small" : "")
+    link_to '', target, 
+                :class => klass,
+                :confirm => options[:confirm], 
+                :method => :delete, 
+                :remote => options[:remote]
+  end
+  
+  
 end
