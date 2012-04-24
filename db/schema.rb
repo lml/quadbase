@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120420211309) do
+ActiveRecord::Schema.define(:version => 20120424015013) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -97,6 +98,7 @@ ActiveRecord::Schema.define(:version => 20120420211309) do
     t.text     "summary"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "always_required"
   end
 
   create_table "logic_library_versions", :force => true do |t|
@@ -118,6 +120,7 @@ ActiveRecord::Schema.define(:version => 20120420211309) do
     t.datetime "updated_at"
     t.text     "cached_code"
     t.string   "variables_array"
+    t.string   "required_logic_library_version_ids"
   end
 
   create_table "messages", :force => true do |t|

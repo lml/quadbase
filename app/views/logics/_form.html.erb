@@ -23,7 +23,30 @@
 <div class="<%= class_to_reveal_on_logic_show %>" style="<%= !logic ? 'display:none;' : '' %> padding: 8px 0;">
 
   <%= f.fields_for :logic, logic || logicable.build_logic do |logic_form| %>
-    <div class="question_edit_block_subtitle" style="margin-top:-10px">Logic for Computer-Generated Variations</div>    
+    <div class="question_edit_block_subtitle" style="margin-top:-10px">
+      Logic for Computer-Generated Variations
+      <div style="float:right; font-size:9px; font-style:normal; margin-top:-2px">
+        <%= link_to_function "<center><span class='lib_link_#{@logic_counter}'>Show</span><span class='lib_link_#{@logic_counter}' style='display:none'>Hide</span><br/>Libraries</center>".html_safe, 
+                             "$('#libraries_#{@logic_counter}').toggle(); $('.lib_link_#{@logic_counter}').toggle()" %>
+      </div>
+    </div>    
+    
+    <div id="libraries_<%= @logic_counter %>" style="display:none">
+
+      <% LogicLibrary.latest_versions.each do |version| %>
+
+        <% always_required = version.logic_library.always_required %>
+        <% selected = always_required || 
+                      (logic_form.object.required_logic_library_version_ids || []).include?(version.id) %>
+        
+        <%= check_box_tag "#{logic_form.object_name}[required_logic_library_version_ids][]", 
+                          version.id, 
+                          selected, 
+                          {:disabled => false} %> 
+        <%= version.name %>
+        
+      <% end %>
+    </div>
     
     <%= logic_form.text_area :code, 
                              :class => 'code_editor', 

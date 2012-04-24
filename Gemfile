@@ -40,6 +40,7 @@ gem 'jsonify-rails'
 
 gem 'execjs'
 gem 'therubyracer'
+gem 'uglifier'
 
 gem 'bullring', :path => '~jps/dev/bullring'
 # gem "bullring", "~> 0.6"

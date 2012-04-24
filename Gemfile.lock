@@ -192,5 +192,6 @@ DEPENDENCIES
   sqlite3-ruby
   therubyracer
   timecop
+  uglifier
   will_paginate (= 3.0.pre2)
   yajl-ruby

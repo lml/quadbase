@@ -10,10 +10,12 @@ class Logic < ActiveRecord::Base
   validate :variable_parse_succeeds
   validate :code_compiles
   validate :code_runs_safely
+  validate :logic_library_versions_valid
 
   before_save :cache_code
   
   serialize :variables_array
+  serialize :required_logic_library_version_ids
   
   JS_RESERVED_WORDS_REGEX = /^(do|if|in|for|let|new|try|var|case|else|enum|eval|
                                false|null|this|true|void|with|break|catch|class|
@@ -50,7 +52,10 @@ class Logic < ActiveRecord::Base
     options[:prior_output] ||= Output.new
     
     variable_parse_succeeds if variables_array.nil? 
-    results = Bullring.run(readied_script(options[:seed],options[:prior_output]))
+
+    results = Bullring.run(readied_script(options[:seed],options[:prior_output]),
+                           {'library_names' => required_logic_library_version_ids})
+
     options[:prior_output].store!(results)
   end
     
@@ -164,6 +169,18 @@ protected
     self.variables = self.variables_array.join(", ")
 
     errors.any?
+  end
+  
+  def logic_library_versions_valid
+    always_required_version_ids = LogicLibrary.latest_required_versions(false).collect{|v| v.id}
+    
+    if LogicLibraryVersion.where(:id => required_logic_library_version_ids).count != required_logic_library_version_ids.size
+      errors.add(:base, "You have specified libraries that do not exist")
+    end
+
+    if always_required_version_ids.any?{|always| !required_logic_library_version_ids.include?(always.to_s)}        
+      errors.add(:base, "The specified libraries do not include all required libraries")
+    end
   end
   
 end
