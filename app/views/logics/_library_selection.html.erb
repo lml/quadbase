@@ -1,0 +1,140 @@
+<% dialog_id = "library_chooser_#{logic_counter}" %>
+<% logic = logic_form.object %>
+
+<div id="library_list_<%= logic_counter %>" style="color:#333; font-size:12px">
+  <% LogicLibrary.ordered.each do |library| %>
+    <% library.logic_library_versions.each do |version| %>
+      <span id="listed_version_<%= logic_counter %>_<%= version.id %>" style="display:none">
+        <%= version.name %>
+      </span>
+    <% end %>
+  <% end %>
+  
+  <% content_for :javascript do %>
+    <%= javascript_tag do %>
+      $(document).ready(function() {
+        <% (logic.required_logic_library_version_ids || []).each do |id| %>
+          $('#listed_version_<%= logic_counter %>_<%= id %>').show();
+        <% end %>
+      });
+    <% end %>
+  <% end %>
+  
+  <% if false %>
+  Libraries: 
+  <% selected_versions = 
+        (logic.required_logic_library_version_ids || []).collect{|id| LogicLibraryVersion.find(id).name} %>
+
+  <%= selected_versions.join(", ") %>
+  <% end %>
+  
+  <%= link_to_function "Change...", "$('##{dialog_id}').dialog('open');" %>
+</div>
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>
+    // function refresh_library_list() {
+    //   
+    // }
+    // 
+    // 
+    // 
+    //   var libraryScripts = new Array();
+    //   $.each($(".library_checkbox_" + jj + ":checked"), function() {
+    //     version_id = $(this).val();
+    //     alert(version_id);
+    //     script = $('#library_' + version_id).html();
+    //     libraryScripts.push(script);
+    //     alert(script);
+    //   });
+  <% end %>
+<% end %>
+
+<div id="<%= dialog_id %>" style="" title="Library Chooser">
+  
+  <p style="font-size:12px">Check the box and select the version of the libraries you want to use.
+     Normally, you'll want to use the latest (highest) version number.  Changes are made instantly.</p>
+     
+  <table class="list">
+    <tr>
+      <th width="60px">Use?</th>
+      <th width="200px">Library Name</th>
+      <th width="40px">Version</th>
+    </tr>
+    
+    <% LogicLibrary.ordered.each do |library| %>
+      <% next if library.logic_library_versions.none? %>
+
+      <% available_versions = library.logic_library_versions %>
+      <% available_version_ids = available_versions.collect{|v| v.id.to_s} %>
+    
+      <% required_version_ids = (logic.required_logic_library_version_ids || [])%>
+    
+      <% selected_version_id = (required_version_ids & available_version_ids).first %>
+    
+      <% is_checked = library.always_required || !selected_version_id.nil? %>
+    
+      <tr>
+        <td>
+          <%= check_box_tag "#{logic_form.object_name}[required_logic_library_version_ids][]", 
+                            selected_version_id || library.latest_version.id, 
+                            is_checked, 
+                            {:disabled => false,
+                             :class => "library_checkbox_#{logic_counter}",
+                             :id => "cb_#{(cbcounter = (cbcounter||0)+1)}" } %>    
+        </td>
+        <td>
+          <%= library.name %>
+        </td>
+        <td>
+          <%= select_tag nil, 
+                         options_from_collection_for_select(
+                           library.logic_library_versions, 
+                           "id", 
+                           "version", 
+                           selected_version_id || library.latest_version.id),
+                         :class => "library_select_#{logic_counter}",
+                         :'data-checkbox' => "cb_#{cbcounter}" %>
+        </td>
+      </tr>
+    
+    <% end %>
+  </table>
+  
+</div>
+
+
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>
+   // $("#<%= dialog_id %>").dialog({ 
+   //     autoOpen: false, 
+   //     modal: false, 
+   //     height:300, 
+   //     width:300
+   // });
+    
+    // Change the checkbox value when the version drop-down changes
+    $('.library_select_<%= logic_counter %>').change(function() {
+      var checkbox = $('#'+$(this).attr('data-checkbox'));
+      checkbox.attr('data-previous', checkbox.val());
+      checkbox.val($(this).val());
+      checkbox.trigger('change');
+    });
+    
+    (function () {
+        $('.library_checkbox_<%= logic_counter %>').focus(function() {
+          $(this).attr('data-previous', $(this).val());
+        }).change(function() {
+          $('#listed_version_<%= logic_counter %>_' + $(this).attr('data-previous')).hide();
+          $('#listed_version_<%= logic_counter %>_' + $(this).val()).toggle($(this).is(':checked'));
+        });
+    })();
+    
+    
+   // $('.library_checkbox_<%= logic_counter %>').change(function() {
+   //   $('#listed_version_<%= logic_counter %>_' + $(this).val()).toggle($(this).is(':checked'));
+   // });
+  <% end %>
+<% end %>
+

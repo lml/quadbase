@@ -1,10 +1,11 @@
 class LogicLibrary < ActiveRecord::Base
   acts_as_numberable
-  has_many :logic_library_versions, :dependent => :destroy
+  has_many :logic_library_versions, :order => :version, :dependent => :destroy
   
   before_destroy :no_versions
 
   scope :always_required, where(:always_required => true)
+  scope :ordered, order(:number.asc)
   
   def latest_version(include_deprecated = true)
     (include_deprecated ? 
@@ -23,7 +24,9 @@ class LogicLibrary < ActiveRecord::Base
   protected
   
   def no_versions
-    logic_library_versions.empty?
+    errors.add(:base, "This library cannot be destroyed because it has versions") if 
+      !logic_library_versions.empty?
+    errors.none?
   end
   
 end

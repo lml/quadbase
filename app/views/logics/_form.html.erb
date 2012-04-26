@@ -13,6 +13,39 @@
    @logic_counter = (@logic_counter || -1) + 1
    class_to_reveal_on_logic_show ||= "reveal_on_logic_show_#{@logic_counter}" %>
 
+<% if false %>
+<% content_for :javascript do %>
+  <%= javascript_tag nil, {:id => 'test_code'} do %>
+    (function() {
+      return function() {
+        alert('in test function');
+      };
+    })();
+  <% end %>
+<% end %>
+
+<% content_for :javascript do %>
+  <% LogicLibraryVersion.all.each do |version| %>
+    <%= javascript_tag nil, {:id => "library_#{version.id}"} do %>
+      <%= "//<![CDATA[" %>
+      <%= version.minified_code %>
+      <%= "//]]>" %>
+    <% end %>
+  <% end %>
+<% end %>
+<% end %>
+
+<% LogicLibraryVersion.all.each do |version| %>
+  <%= content_tag :div, :id => "library_#{version.id}", :style => 'display:none' do %>
+    //<![CDATA[
+    <%= version.minified_code %>
+    //]]>
+  <% end %>
+<% end %>
+
+
+<%= link_to_function 'test', "source = $('#test_code').html(); alert(source); eval(source)()" %>
+
 <% if !logic %>
 <span style="float:right">
   <%= link_to_function "Add computer-generated variations", 
@@ -31,8 +64,12 @@
       </div>
     </div>    
     
+               
     <div id="libraries_<%= @logic_counter %>" style="display:none">
+      <%= render :partial => 'logics/library_selection',
+                 :locals => {:logic_form => logic_form, :logic_counter => @logic_counter} %>
 
+<% if false %>
       <% LogicLibrary.latest_versions.each do |version| %>
 
         <% always_required = version.logic_library.always_required %>
@@ -42,10 +79,12 @@
         <%= check_box_tag "#{logic_form.object_name}[required_logic_library_version_ids][]", 
                           version.id, 
                           selected, 
-                          {:disabled => false} %> 
+                          {:disabled => false,
+                           :class => "library_checkbox_#{@logic_counter}"} %> 
         <%= version.name %>
         
       <% end %>
+<% end %>
     </div>
     
     <%= logic_form.text_area :code, 

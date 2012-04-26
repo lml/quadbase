@@ -11,9 +11,9 @@ Quadbase.CodeMirrorUtils = function() {
     return variablesString.split(",");
   }
   
-  var runCode = function(seed, code, variables, existingVariables) {
+  var runCode = function(seed, code, variables, existingVariables, libraryScripts) {
     var wrapper = {
-      runCode: function() {
+      runCode: function() {        
         Math.seedrandom(seed);
 
         // Clear out the existing variables from the global space
@@ -151,10 +151,20 @@ Quadbase.CodeMirrorUtils = function() {
         if (!code) continue;
 
         variables = getVariables($('#variables_'+jj).val());
+        
+        // See which scripts are needed, and pull them from their dom elements.
+        var libraryScripts = new Array();
+        $.each($(".library_checkbox_" + jj + ":checked"), function() {
+          version_id = $(this).val();
+          alert(version_id);
+          script = $('#library_' + version_id).html();
+          libraryScripts.push(script);
+          alert(script);
+        });
 
         if (!checkCode(code, results_elem, jj != counter)) return;
 
-        existingVariables = runCode(seed++, code, variables, existingVariables);
+        existingVariables = runCode(seed++, code, variables, existingVariables, libraryScripts);
       }
 
       for (variable in existingVariables) {

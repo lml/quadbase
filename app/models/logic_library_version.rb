@@ -3,6 +3,7 @@ class LogicLibraryVersion < ActiveRecord::Base
   before_validation :assign_version, :on => :create
 
   before_update :not_used
+  before_update :verify_latest
   before_save :uglify_code
   before_destroy :not_used
   before_destroy :verify_latest
@@ -19,11 +20,15 @@ class LogicLibraryVersion < ActiveRecord::Base
   
   def not_used
     # check that there are no logics using this version
-    raise NotYetImplemented
+    errors.add(:base, "This version cannot be changed or deleted because it is used by a question") if
+      Logic.where(:required_logic_library_version_ids.matches => "%'#{id}'%").any?
+    errors.none?
   end
   
   def verify_latest
-    logic_library.latest_version == self
+    errors.add(:base, "Non-latest versions cannot be changed or destroyed") if
+      logic_library.latest_version != self
+    errors.none?
   end
   
   def uglify_code
