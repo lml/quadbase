@@ -54,14 +54,22 @@
   
   <p style="font-size:12px">Check the box and select the version of the libraries you want to use.
      Normally, you'll want to use the latest (highest) version number.  Changes are made instantly.</p>
-     
+
+  <%# We use a checkbox array below to send which libraries the nearby logic 
+      needs.  If none of the boxes are needed, Rails doesn't send a parameter,
+      though we'd prefer it to send an empty array (signifying nothing checked).
+      As a workaround, always make sure there is at least one blank entry in the
+      array of checkbox values; note this must be stripped out in the logic model %>
+
+  <%= hidden_field_tag "#{logic_form.object_name}[required_logic_library_version_ids][]", "" %>
+   
   <table class="list">
     <tr>
       <th width="60px">Use?</th>
       <th width="200px">Library Name</th>
       <th width="40px">Version</th>
     </tr>
-    
+
     <% LogicLibrary.ordered.each do |library| %>
       <% next if library.logic_library_versions.none? %>
 
@@ -76,12 +84,20 @@
     
       <tr>
         <td>
-          <%= check_box_tag "#{logic_form.object_name}[required_logic_library_version_ids][]", 
-                            selected_version_id || library.latest_version.id, 
-                            is_checked, 
-                            {:disabled => false,
-                             :class => "library_checkbox_#{logic_counter}",
-                             :id => "cb_#{(cbcounter = (cbcounter||0)+1)}" } %>    
+          <% if library.always_required %>
+            <%= hidden_field_tag "#{logic_form.object_name}[required_logic_library_version_ids][]", 
+                                 selected_version_id || library.latest_version.id,
+                                 {:class => "library_checkbox_#{logic_counter}",
+                                  :id => "cb_#{(@cbcounter = (@cbcounter||0)+1)}" } %>
+            <%= check_box_tag "", nil, true, {:disabled => true} %>
+          <% else %>
+            <%= check_box_tag "#{logic_form.object_name}[required_logic_library_version_ids][]", 
+                              selected_version_id || library.latest_version.id, 
+                              is_checked, 
+                              {:disabled => library.always_required,
+                               :class => "library_checkbox_#{logic_counter}",
+                               :id => "cb_#{(@cbcounter = (@cbcounter||0)+1)}" } %>    
+          <% end %>
         </td>
         <td>
           <%= library.name %>
@@ -94,7 +110,7 @@
                            "version", 
                            selected_version_id || library.latest_version.id),
                          :class => "library_select_#{logic_counter}",
-                         :'data-checkbox' => "cb_#{cbcounter}" %>
+                         :'data-checkbox' => "cb_#{@cbcounter}" %>
         </td>
       </tr>
     
@@ -127,7 +143,7 @@
           $(this).attr('data-previous', $(this).val());
         }).change(function() {
           $('#listed_version_<%= logic_counter %>_' + $(this).attr('data-previous')).hide();
-          $('#listed_version_<%= logic_counter %>_' + $(this).val()).toggle($(this).is(':checked'));
+          $('#listed_version_<%= logic_counter %>_' + $(this).val()).toggle($(this).is(':hidden') || $(this).is(':checked'));
         });
     })();
     

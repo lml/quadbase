@@ -7,6 +7,8 @@ require 'json'
 class Logic < ActiveRecord::Base
   belongs_to :logicable, :polymorphic => true
   
+  before_validation :cleanup_required_version_ids
+  
   validate :variable_parse_succeeds
   validate :code_compiles
   validate :code_runs_safely
@@ -52,7 +54,7 @@ class Logic < ActiveRecord::Base
     options[:prior_output] ||= Output.new
     
     variable_parse_succeeds if variables_array.nil? 
-
+debugger
     results = Bullring.run(readied_script(options[:seed],options[:prior_output]),
                            {'library_names' => required_logic_library_version_ids})
 
@@ -168,19 +170,45 @@ protected
 
     self.variables = self.variables_array.join(", ")
 
-    errors.any?
+    errors.none?
   end
   
   def logic_library_versions_valid
-    always_required_version_ids = LogicLibrary.latest_required_versions(false).collect{|v| v.id}
+    included_library_versions = LogicLibraryVersion.where(:id => required_logic_library_version_ids)
     
-    if LogicLibraryVersion.where(:id => required_logic_library_version_ids).count != required_logic_library_version_ids.size
+    if included_library_versions.count != required_logic_library_version_ids.size
       errors.add(:base, "You have specified libraries that do not exist")
     end
 
-    if always_required_version_ids.any?{|always| !required_logic_library_version_ids.include?(always.to_s)}        
+    # Make sure that the included library versions cover the required libraries
+    
+    always_required_libraries = LogicLibrary.where(:always_required => true)
+    included_libraries = included_library_versions.collect{|version| version.logic_library}
+
+    if (included_libraries & always_required_libraries).length < always_required_libraries.length
       errors.add(:base, "The specified libraries do not include all required libraries")
     end
+    
+    errors.none?
+
+    # 
+    # always_required_version_ids = LogicLibrary.latest_required_versions(false).collect{|v| v.id}
+    
+    
+    
+    # if LogicLibraryVersion.where(:id => required_logic_library_version_ids).count != required_logic_library_version_ids.size
+    #   errors.add(:base, "You have specified libraries that do not exist")
+    # end
+
+    # if always_required_version_ids.any?{|always| !required_logic_library_version_ids.include?(always.to_s)}        
+    #   errors.add(:base, "The specified libraries do not include all required libraries")
+    # end
+  end
+  
+  # The required version ids array might have an empty string in it (because of the
+  # way that HTML handles unchecked checkboxes in forms).  Strip those out.
+  def cleanup_required_version_ids
+    self.required_logic_library_version_ids.reject!{|id| id.blank?}
   end
   
 end
