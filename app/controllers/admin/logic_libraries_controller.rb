@@ -47,7 +47,12 @@ class Admin::LogicLibrariesController < ApplicationController
     @logic_library.destroy
 
     respond_to do |format|
-      format.html { redirect_to(admin_logic_libraries_url) }
+      if @logic_library.destroy
+        format.html { redirect_to(admin_logic_libraries_url) }
+      else
+        @errors = @logic_library.errors
+        format.html { render :action => 'show' }
+      end
     end
   end
   

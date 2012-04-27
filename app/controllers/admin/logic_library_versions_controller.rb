@@ -41,12 +41,15 @@ class Admin::LogicLibraryVersionsController < ApplicationController
   end
 
   def destroy
-    @logic_library_version = LogicLibrary.find(params[:id])
-    raise SecurityTransgression unless present_user.can_destroy?(@logic_library_version)
-    @logic_library_version.destroy
+    @logic_library_version = LogicLibraryVersion.find(params[:id])
 
     respond_to do |format|
-      format.html { redirect_to([:admin, @logic_library_version.logic_library]) }
+      if @logic_library_version.destroy
+        format.html { redirect_to([:admin, @logic_library_version.logic_library]) }
+      else
+        @errors = @logic_library_version.errors
+        format.html { render :action => 'show' }
+      end
     end
   end
   

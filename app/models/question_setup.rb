@@ -7,10 +7,10 @@ class QuestionSetup < ActiveRecord::Base
   
   has_many :questions
 
-  has_many :attachable_assets, :as => :attachable
+  has_many :attachable_assets, :as => :attachable, :dependent => :destroy
   has_many :assets, :through => :attachable_assets
   
-  has_one :logic, :as => :logicable
+  has_one :logic, :as => :logicable, :dependent => :destroy
   
   attr_accessor :variated_content_html
   

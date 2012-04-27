@@ -9,9 +9,9 @@ class Solution < ActiveRecord::Base
   belongs_to :question
   belongs_to :creator, :class_name => "User"
 
-  has_many :votes, :as => :votable
+  has_many :votes, :as => :votable, :dependent => :destroy
 
-  has_many :attachable_assets, :as => :attachable
+  has_many :attachable_assets, :as => :attachable, :dependent => :destroy
   has_many :assets, :through => :attachable_assets
 
   has_one :comment_thread, :as => :commentable, :dependent => :destroy

@@ -22,7 +22,7 @@ class Question < ActiveRecord::Base
   belongs_to :question_setup
   belongs_to :publisher, :class_name => "User"
   
-  has_one :logic, :as => :logicable
+  has_one :logic, :as => :logicable, :dependent => :destroy
 
   accepts_nested_attributes_for :question_setup, :logic
   
@@ -43,7 +43,7 @@ class Question < ActiveRecord::Base
            :dependent => :destroy
   has_many :multipart_questions, :through => :parent_question_parts
   
-  has_many :attachable_assets, :as => :attachable
+  has_many :attachable_assets, :as => :attachable, :dependent => :destroy
   has_many :assets, :through => :attachable_assets
 
   

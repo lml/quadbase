@@ -21,5 +21,6 @@
 <br/>
 
 <%= link_to 'Edit', edit_admin_logic_library_version_path(@logic_library_version) %> |
-<%= link_to 'List', admin_logic_library_path(@logic_library_version.logic_library) %>
+<%= link_to 'List', admin_logic_library_path(@logic_library_version.logic_library) %> |
+<%= link_to 'Destroy', [:admin, @logic_library_version], :method => :delete, :confirm => 'Are you sure?' %>
 

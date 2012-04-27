@@ -144,7 +144,8 @@ protected
       }
     CODE
 
-    self.cached_code = RANDOM_CODE + "\n\n" + erb_code.result(binding)
+    # self.cached_code = RANDOM_CODE + "\n\n" + erb_code.result(binding)
+    self.cached_code = erb_code.result(binding)
   end
   
   def variable_parse_succeeds

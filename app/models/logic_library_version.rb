@@ -11,6 +11,10 @@ class LogicLibraryVersion < ActiveRecord::Base
   def name
     logic_library.name + " v" + version.to_s
   end
+  
+  def logics_using
+    Logic.where(:required_logic_library_version_ids.matches => "%'#{id}'%")
+  end
 
   protected
   
@@ -21,7 +25,7 @@ class LogicLibraryVersion < ActiveRecord::Base
   def not_used
     # check that there are no logics using this version
     errors.add(:base, "This version cannot be changed or deleted because it is used by a question") if
-      Logic.where(:required_logic_library_version_ids.matches => "%'#{id}'%").any?
+      logics_using.any?
     errors.none?
   end
   
