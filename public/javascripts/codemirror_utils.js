@@ -14,6 +14,10 @@ Quadbase.CodeMirrorUtils = function() {
   var runCode = function(seed, code, variables, existingVariables, libraryScripts) {
     var wrapper = {
       runCode: function() {        
+        for (ii = 0; ii < libraryScripts.length; ii++) {
+          eval(libraryScripts[ii]);
+        }
+        
         Math.seedrandom(seed);
 
         // Clear out the existing variables from the global space
@@ -156,14 +160,14 @@ Quadbase.CodeMirrorUtils = function() {
         var libraryScripts = new Array();
         $.each($(".library_checkbox_" + jj + ":checked"), function() {
           version_id = $(this).val();
-          alert(version_id);
+//          alert(version_id);
           script = $('#library_' + version_id).html();
           libraryScripts.push(script);
-          alert(script);
+  //        alert(script);
         });
 
         if (!checkCode(code, results_elem, jj != counter)) return;
-
+      //  alert('past check code');
         existingVariables = runCode(seed++, code, variables, existingVariables, libraryScripts);
       }
 

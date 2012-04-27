@@ -9,11 +9,15 @@ class LogicLibraryVersion < ActiveRecord::Base
   before_destroy :verify_latest
 
   def name
-    logic_library.name + " v" + version.to_s
+    logic_library.name + " v." + version.to_s
   end
   
   def logics_using
     Logic.where(:required_logic_library_version_ids.matches => "%'#{id}'%")
+  end
+  
+  def v_dot
+    "v.#{version}"
   end
 
   protected

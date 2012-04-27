@@ -4,11 +4,15 @@
 <div id="library_list_<%= logic_counter %>" style="color:#333; font-size:12px">
   <% LogicLibrary.ordered.each do |library| %>
     <% library.logic_library_versions.each do |version| %>
-      <span id="listed_version_<%= logic_counter %>_<%= version.id %>" style="display:none">
+      <div id="listed_version_<%= logic_counter %>_<%= version.id %>" class="library_block roundedCorners5" style="float:left; display:none; padding-top: 6px">
         <%= version.name %>
-      </span>
+      </div>
     <% end %>
   <% end %>
+  
+  <div class="library_block roundedCorners5" style="float:left; padding-top: 6px; border: none">
+    <%= link_to_function "Change...", "$('#library_list_#{logic_counter}').hide(); $('##{dialog_id}').show();" %>
+  </div>
   
   <% content_for :javascript do %>
     <%= javascript_tag do %>
@@ -20,10 +24,73 @@
     <% end %>
   <% end %>
   
-  <%= link_to_function "Change...", "$('##{dialog_id}').dialog('open');" %>
+  <%#= link_to_function "Change...", "$('#library_list_#{logic_counter}').hide(); $('##{dialog_id}').show();" %>
 </div>
 
+<div id="<%= dialog_id %>" style="display:none">
+  
+  <p style="font-size:12px">Check the box and select the version of the libraries you want to use.
+     Normally, you'll want to use the latest (highest) version number.</p>
 
+  <%# We use a checkbox array below to send which libraries the nearby logic 
+      needs.  If none of the boxes are needed, Rails doesn't send a parameter,
+      though we'd prefer it to send an empty array (signifying nothing checked).
+      As a workaround, always make sure there is at least one blank entry in the
+      array of checkbox values; note this must be stripped out in the logic model %>
+
+  <%= hidden_field_tag "#{logic_form.object_name}[required_logic_library_version_ids][]", "" %>
+   
+ 
+
+    <% LogicLibrary.ordered.each do |library| %>
+    
+      <% next if library.logic_library_versions.none? %>
+
+      <% available_versions = library.logic_library_versions %>
+      <% available_version_ids = available_versions.collect{|v| v.id.to_s} %>
+    
+      <% required_version_ids = (logic.required_logic_library_version_ids || [])%>
+    
+      <% selected_version_id = (required_version_ids & available_version_ids).first %>
+    
+      <% is_checked = library.always_required || !selected_version_id.nil? %>
+    
+      <div class="library_block roundedCorners5" style="float:left">
+          <% if library.always_required %>
+            <%= hidden_field_tag "#{logic_form.object_name}[required_logic_library_version_ids][]", 
+                                 selected_version_id || library.latest_version.id,
+                                 {:class => "library_checkbox_#{logic_counter}",
+                                  :id => "cb_#{(@cbcounter = (@cbcounter||0)+1)}" } %>
+            <%= check_box_tag "", nil, true, {:disabled => true} %>
+          <% else %>
+            <%= check_box_tag "#{logic_form.object_name}[required_logic_library_version_ids][]", 
+                              selected_version_id || library.latest_version.id, 
+                              is_checked, 
+                              {:disabled => library.always_required,
+                               :class => "library_checkbox_#{logic_counter}",
+                               :id => "cb_#{(@cbcounter = (@cbcounter||0)+1)}" } %>    
+          <% end %>
+      
+          <span style="padding: 0px 5px"><%= library.name %></span>
+      
+          <%= select_tag nil, 
+                         options_from_collection_for_select(
+                           library.logic_library_versions, 
+                           "id", 
+                           "v_dot", 
+                           selected_version_id || library.latest_version.id),
+                         :class => "library_select_#{logic_counter}",
+                         :'data-checkbox' => "cb_#{@cbcounter}" %>
+    </div>
+      
+    <% end %>
+    
+  
+</div>
+
+  <div style="clear:both; margin-bottom: 8px"></div>
+
+                                      <% if false %>
 <div id="<%= dialog_id %>">
   
   <p style="font-size:12px">Check the box and select the version of the libraries you want to use.
@@ -93,7 +160,7 @@
   </table>
   
 </div>
-
+                                        <% end %>
 
 
 <% content_for :javascript do %>
