@@ -339,6 +339,92 @@ class QuestionTest < ActiveSupport::TestCase
     assert !search5.include?(sq3)
     assert search5.include?(sq4)
   end
+
+  test 'tag search' do
+    sq0 = Factory.create(:simple_question, :content => '')
+    sq1 = Factory.create(:simple_question, :content => 'This is in your project')
+    sq2 = Factory.create(:simple_question, :content => 'This is also in your project')
+    sq3 = Factory.create(:simple_question, :content => 'This is published and in your project', :version => '1.0')
+    sq4 = Factory.create(:simple_question, :content => 'This is also published and in your project', :version => '1.0')
+
+    user = Factory.create(:user)
+    Factory.create(:project_question, :question => sq0,
+                   :project => Project.default_for_user!(user))
+    Factory.create(:project_question, :question => sq1,
+                   :project => Project.default_for_user!(user))
+    Factory.create(:project_question, :question => sq2,
+                   :project => Project.default_for_user!(user))
+    Factory.create(:project_question, :question => sq3,
+                   :project => Project.default_for_user!(user))
+    Factory.create(:project_question, :question => sq4,
+                   :project => Project.default_for_user!(user))
+
+    tags = sq0.tag_list.concat(["Some Tag", "Another Tag"]).join(", ")
+    sq0.update_attribute(:tag_list, tags)
+
+    tags = sq1.tag_list.concat(["Some Tag"]).join(", ")
+    sq1.update_attribute(:tag_list, tags)
+
+    tags = sq2.tag_list.concat(["Another Tag"]).join(", ")
+    sq2.update_attribute(:tag_list, tags)
+
+    tags = sq3.tag_list.concat(["Some Tag"]).join(", ")
+    sq3.update_attribute(:tag_list, tags)
+
+    tags = sq4.tag_list.concat(["Another Tag"]).join(", ")
+    sq4.update_attribute(:tag_list, tags)
+
+
+    search0 = Question.search('Simple Questions', 'All Places', 'Tag', user)
+    search1 = Question.search('Simple Questions', 'Published Questions', 'Some Tag', user)
+    search2 = Question.search('Simple Questions', 'Published Questions', 'Another Tag', user)
+    search3 = Question.search('Simple Questions', 'My Drafts', 'Some Tag', user)
+    search4 = Question.search('Simple Questions', 'My Drafts', 'Another Tag', user)
+    search5 = Question.search('Simple Questions', 'My Projects', 'Some Tag', user)
+    search6 = Question.search('Simple Questions', 'My Projects', 'Another Tag', user)
+
+    assert search0.include?(sq0)
+    assert search0.include?(sq1)
+    assert search0.include?(sq2)
+    assert search0.include?(sq3)
+    assert search0.include?(sq4)
+
+    assert !search1.include?(sq0)
+    assert !search1.include?(sq1)
+    assert !search1.include?(sq2)
+    assert search1.include?(sq3)
+    assert !search1.include?(sq4)
+
+    assert !search2.include?(sq0)
+    assert !search2.include?(sq1)
+    assert !search2.include?(sq2)
+    assert !search2.include?(sq3)
+    assert search2.include?(sq4)
+
+    assert search3.include?(sq0)
+    assert search3.include?(sq1)
+    assert !search3.include?(sq2)
+    assert !search3.include?(sq3)
+    assert !search3.include?(sq4)
+
+    assert search4.include?(sq0)
+    assert !search4.include?(sq1)
+    assert search4.include?(sq2)
+    assert !search4.include?(sq3)
+    assert !search4.include?(sq4)
+
+    assert search5.include?(sq0)
+    assert search5.include?(sq1)
+    assert !search5.include?(sq2)
+    assert search5.include?(sq3)
+    assert !search5.include?(sq4)
+
+    assert search6.include?(sq0)
+    assert !search6.include?(sq1)
+    assert search6.include?(sq2)
+    assert !search6.include?(sq3)
+    assert search6.include?(sq4)
+  end
   
   test "dependency_pair" do
     prereq = make_simple_question(:publish => true, :method => :create)
