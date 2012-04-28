@@ -26,7 +26,7 @@ class QuestionsController < ApplicationController
     @question.variate!(QuestionVariator.new(params[:seed]))
     
     respond_to do |format|
-      format.json { render :template => "#{view_dir(@question)}/show"}
+      format.json
       format.html 
       format.qti { 
         render :template => case params[:version] 
