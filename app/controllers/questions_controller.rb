@@ -80,7 +80,7 @@ class QuestionsController < ApplicationController
   # we just want it to go to the questions view.
   def update
     @question = Question.from_param(params[:id])
-    debugger
+
     raise SecurityTransgression unless present_user.can_update?(@question)
     if (@no_lock = !@question.check_and_unlock!(present_user))
       flash[:alert] = @question.errors[:base]
@@ -117,12 +117,13 @@ class QuestionsController < ApplicationController
   def preview
     @question = Question.from_param(params[:question_id])
     raise SecurityTransgression unless present_user.can_read?(@question)
-    
+
     @question.attributes = params[:question]
 
     Question.transaction do
       respond_to do |format|
         if @question.save
+          @question.variate!(QuestionVariator.new)
           format.js
         else
           format.js

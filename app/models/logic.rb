@@ -13,7 +13,7 @@ class Logic < ActiveRecord::Base
   validate :code_compiles
   validate :logic_library_versions_valid
 
-  before_save :cache_code
+  after_validation :cache_code
   
   serialize :variables_array
   serialize :required_logic_library_version_ids
@@ -33,12 +33,16 @@ class Logic < ActiveRecord::Base
   def run(options = {})
     options[:seed] ||= rand(2e9)
     options[:prior_output] ||= Output.new
-  
-    variable_parse_succeeds if variables_array.nil? 
-    results = Bullring.run(readied_script(options[:seed],options[:prior_output]),
-                           {'library_names' => required_logic_library_version_ids})
 
-    options[:prior_output].store!(results)
+    if !code.blank?
+      variable_parse_succeeds if variables_array.nil? 
+      results = Bullring.run(readied_script(options[:seed],options[:prior_output]),
+                             {'library_names' => required_logic_library_version_ids})
+
+      options[:prior_output].store!(results)
+    else
+      options[:prior_output]
+    end
   end
     
   class Output
@@ -75,7 +79,7 @@ protected
   end
   
   def get_cached_code
-    cached_code ||= cache_code
+    self.cached_code || cache_code
   end
   
   def cache_code

@@ -24,7 +24,12 @@ class QuestionVariator
   
   def fill_in_variables(text)
     return nil if text.nil?
-    text.gsub(/\=([_a-zA-Z]{1}\w*)=/u) {|match| @output.variables[$1] || "<span class='undefined_variable' title='This variable is undefined!'>#{$1}</span>"}
+    text.gsub(/\=([_a-zA-Z]{1}\w*)(%.*)?=/u) { |match| 
+      var = @output.variables[$1]
+      
+      ($2.blank? ? var : $2 % var) || 
+      "<span class='undefined_variable' title='This variable is undefined!'>#{$1}</span>"
+    }
   end
   
 end
