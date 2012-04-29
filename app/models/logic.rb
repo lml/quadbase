@@ -11,7 +11,6 @@ class Logic < ActiveRecord::Base
   
   validate :variable_parse_succeeds
   validate :code_compiles
-  validate :code_runs_safely
   validate :logic_library_versions_valid
 
   before_save :cache_code
@@ -71,11 +70,6 @@ protected
     errors.empty?
   end
 
-  def code_runs_safely
-    # TODO this might go into question so can get the appropriate prior output values
-    # TODO make sure that the question content is the same from run to run with the same seed
-  end
-  
   def readied_script(seed, prior_output)
     get_cached_code + ";" + "wrapper.runCode(#{seed},#{prior_output.variables.to_json})"
   end

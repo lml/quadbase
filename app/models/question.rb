@@ -209,6 +209,22 @@ class Question < ActiveRecord::Base
                           'Please start modifications again from the latest version.') \
       if superseded?
         
+    # Test that the logic in this question runs successfully.  variate! already 
+    # adds errors to self if there are any logic problems.
+    variator = QuestionVariator.new(rand(2e8), true)
+    variate!(variator)
+    
+    # If we don't have errors, run the variation again to make sure that the same content 
+    # is generated for the same seed
+    if self.errors.none?
+      first_run_hash = variator.output_hash
+      variate!(variator)
+      second_run_hash = variator.output_hash
+      
+      self.errors.add(:base, 'This question produced different content for the same seed; this is not allowed.') \
+        if first_run_hash != second_run_hash
+    end
+        
     add_other_prepublish_errors
   end
   
@@ -470,12 +486,9 @@ class Question < ActiveRecord::Base
   # Visitor pattern.  The variator visits parts of the question (setup, 
   # subparts, etc) and helps build up the info for this specific variation.
   def variate!(variator)
-    logger.info {"Starting variation of question #{self.to_param} at #{start_time = Time.now}"}
-    
     begin
       question_setup.variate!(variator) if question_setup
       variator.run(logic)
-      logger.info {"Ended variation of question #{self.to_param} at #{end_time = Time.now} (duration = #{end_time-start_time})"}
       @variated_content_html = variator.fill_in_variables(content_html)
     rescue Bullring::JSError => e
       logger.debug {"When variating question #{self.to_param} with seed #{variator.seed}, encountered a javascript error: " + e.inspect}

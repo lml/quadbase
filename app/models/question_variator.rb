@@ -5,16 +5,21 @@
 # question given things like random seeds, logic, part re-ordering, etc.
 class QuestionVariator
   attr_reader :seed
+  attr_reader :output_hash
   
-  def initialize(seed=nil)
+  def initialize(seed=nil, watch_output=false)
     @seed = seed || rand(2e9)
     @output ||= Logic::Output.new 
+    @watch_output = watch_output
   end
   
   def run(logic)
     return if logic.nil?
     
-    @output = logic.run({:seed => @seed, :prior_output => @output})
+    # Run the logic, optionally, computing and storing a hash of the output
+    @output = logic.run({:seed => @seed, :prior_output => @output}).tap do |output|
+      @output_hash = (@output_hash || 0) + output.inspect.hash if @watch_output
+    end
   end
   
   def fill_in_variables(text)

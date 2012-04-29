@@ -1,4 +1,6 @@
 class LogicLibraryVersion < ActiveRecord::Base
+  # default_scope order(:version.asc)
+  
   belongs_to :logic_library  
   before_validation :assign_version, :on => :create
 
@@ -7,6 +9,10 @@ class LogicLibraryVersion < ActiveRecord::Base
   before_save :uglify_code
   before_destroy :not_used
   before_destroy :verify_latest
+  
+  after_save :send_to_bullring
+  
+  scope :ordered, order(:version.asc)
 
   def name
     logic_library.name + " v." + version.to_s
@@ -18,6 +24,10 @@ class LogicLibraryVersion < ActiveRecord::Base
   
   def v_dot
     "v.#{version}"
+  end
+  
+  def send_to_bullring
+    Bullring.add_library(id.to_s, code)
   end
 
   protected

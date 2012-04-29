@@ -1,6 +1,6 @@
 class LogicLibrary < ActiveRecord::Base
   acts_as_numberable
-  has_many :logic_library_versions, :order => :version, :dependent => :destroy
+  has_many :logic_library_versions, :dependent => :destroy
   
   before_destroy :no_versions
 
@@ -8,9 +8,10 @@ class LogicLibrary < ActiveRecord::Base
   scope :ordered, order(:number.asc)
   
   def latest_version(include_deprecated = true)
-    (include_deprecated ? 
+    (include_deprecated ?
       logic_library_versions :
-      logic_library_versions.where(:deprecated => false)).order(:version.desc).first
+      logic_library_versions.where(:deprecated => false))
+    .order(:version.desc).first
   end
   
   def self.latest_versions(include_deprecated = true)

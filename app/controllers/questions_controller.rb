@@ -23,8 +23,13 @@ class QuestionsController < ApplicationController
     @question = Question.from_param(params[:id])
     raise SecurityTransgression unless present_user.can_read?(@question)
     
+    start_time = Time.now if logger.info?
+    
     @question.variate!(QuestionVariator.new(params[:seed]))
     
+    logger.info {"Variated question #{@question.to_param} with seed " +
+                 "#{params[:seed] || '[unset]'}, duration = #{Time.now-start_time}"}
+          
     respond_to do |format|
       format.json
       format.html 
