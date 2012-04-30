@@ -37,15 +37,15 @@ class Logic < ActiveRecord::Base
     options[:prior_output] ||= Output.new
     options[:library_version_ids] ||= required_logic_library_version_ids
 
-    if !code.blank?
-      variable_parse_succeeds if variables_array.nil? 
-      results = Bullring.run(readied_script(options[:seed],options[:prior_output]),
-                             {'library_names' => options[:library_version_ids]})
-
-      options[:prior_output].store!(results)
-    else
+    # if !code.blank?
+    #     variable_parse_succeeds if variables_array.nil? 
+    #     results = Bullring.run(readied_script(options[:seed],options[:prior_output]),
+    #                            {'library_names' => options[:library_version_ids]})
+    # 
+    #     options[:prior_output].store!(results)
+    #   else
       options[:prior_output]
-    end
+    # end
   end
     
   class Output
@@ -76,11 +76,12 @@ class Logic < ActiveRecord::Base
 protected
 
   def code_compiles
-    code_errors = Bullring.check(code)
-    code_errors.each do |code_error|
-      errors.add(:base, "#{code_error['reason']}, line #{code_error['line']}, character #{code_error['character']}")      
-    end
-    errors.empty?
+    true
+    # code_errors = Bullring.check(code)
+    # code_errors.each do |code_error|
+    #   errors.add(:base, "#{code_error['reason']}, line #{code_error['line']}, character #{code_error['character']}")      
+    # end
+    # errors.empty?
   end
 
   def readied_script(seed, prior_output)
