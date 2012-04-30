@@ -30,7 +30,9 @@
 
 <div class="<%= class_to_reveal_on_logic_show %>" style="<%= !logic ? 'display:none;' : '' %> padding: 8px 0;">
 
-  <%= f.fields_for :logic, logic || logicable.build_logic do |logic_form| %>
+  <% logic ||= logicable.build_logic(:required_logic_library_version_ids => LogicLibrary.latest_required_versions(false).collect{|v| v.id.to_s}) %>
+  
+  <%= f.fields_for :logic, logic do |logic_form| %>
     <div class="question_edit_block_subtitle" style="margin-top:-10px">
       Logic for Computer-Generated Variations
       <div style="float:right; font-size:9px; font-style:normal; margin-top:-2px">
