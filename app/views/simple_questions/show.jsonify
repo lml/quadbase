@@ -2,4 +2,4 @@
 # License version 3 or later.  See the COPYRIGHT file for details.
 
 json.ingest! (render :partial => 'simple_questions/show',
-        :locals => {:question => @question})
+                     :locals => {:question => question})

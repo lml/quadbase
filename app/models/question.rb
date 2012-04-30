@@ -21,8 +21,10 @@ class Question < ActiveRecord::Base
   belongs_to :license
   belongs_to :question_setup
   belongs_to :publisher, :class_name => "User"
+  
+  has_one :logic, :as => :logicable, :dependent => :destroy
 
-  accepts_nested_attributes_for :question_setup
+  accepts_nested_attributes_for :question_setup, :logic
   
   has_one :question_source, 
           :class_name => "QuestionDerivation",
@@ -39,7 +41,7 @@ class Question < ActiveRecord::Base
            :dependent => :destroy
   has_many :multipart_questions, :through => :parent_question_parts
   
-  has_many :attachable_assets, :as => :attachable
+  has_many :attachable_assets, :as => :attachable, :dependent => :destroy
   has_many :assets, :through => :attachable_assets
 
   
@@ -89,6 +91,8 @@ class Question < ActiveRecord::Base
 
   has_many :solutions, :dependent => :destroy
 
+  attr_accessor :variated_content_html
+  
   has_one :comment_thread, :as => :commentable, :dependent => :destroy
   before_validation :build_comment_thread, :on => :create
   validates_presence_of :comment_thread
@@ -98,6 +102,8 @@ class Question < ActiveRecord::Base
   after_destroy :destroy_childless_question_setup
   
   before_create :create_question_setup, :unless => :question_setup
+
+  before_save :clear_empty_logic
 
   validate :not_published, :on => :update
   validates_presence_of :license
@@ -124,7 +130,8 @@ class Question < ActiveRecord::Base
   # modifiable by the system (note that users can modify question_setup data
   # but we don't want them deciding which questions share setups, etc)
   # Using whitelisting instead of blacklisting here.
-  attr_accessible :content, :changes_solution, :question_setup_attributes
+  attr_accessible :content, :changes_solution, :question_setup_attributes, 
+                  :logic_attributes
 
   def to_param
     if is_published?
@@ -202,6 +209,24 @@ class Question < ActiveRecord::Base
                           'Please start modifications again from the latest version.') \
       if superseded?
         
+    # Test that the logic in this question runs successfully.  variate! already 
+    # adds errors to self if there are any logic problems.
+    variator = QuestionVariator.new(rand(2e8), true)
+    variate!(variator)
+    
+    # If we don't have errors, run the variation again to make sure that the same content 
+    # is generated for the same seed
+    if self.errors.none?
+      first_run_hash = variator.output_hash
+      
+      variator = QuestionVariator.new(variator.seed, true)
+      variate!(variator)
+      second_run_hash = variator.output_hash
+      
+      self.errors.add(:base, 'This question produced different content for the same seed; this is not allowed.') \
+        if first_run_hash != second_run_hash
+    end
+        
     add_other_prepublish_errors
   end
   
@@ -242,6 +267,10 @@ class Question < ActiveRecord::Base
   def is_published?
     nil != version
   end
+  
+  def content_change_allowed?
+    !is_published?
+  end  
   
   def setup_is_changeable?
     !is_published? && question_setup.content_change_allowed?
@@ -378,6 +407,7 @@ class Question < ActiveRecord::Base
     kopy.license_id = self.license_id
     self.attachable_assets.each {|aa| kopy.attachable_assets.push(aa.content_copy) }
     kopy.tag_list = self.tag_list
+    kopy.logic = self.logic.content_copy if !self.logic.nil?
     kopy
   end
   
@@ -461,6 +491,20 @@ class Question < ActiveRecord::Base
     end
   end
   
+  # Visitor pattern.  The variator visits parts of the question (setup, 
+  # subparts, etc) and helps build up the info for this specific variation.
+  def variate!(variator)
+    begin
+      question_setup.variate!(variator) if question_setup
+      variator.run(logic)
+      @variated_content_html = variator.fill_in_variables(content_html)
+    rescue Bullring::JSError => e
+      logger.debug {"When variating question #{self.to_param} with seed #{variator.seed}, encountered a javascript error: " + e.inspect}
+      self.errors.add(:base, "A logic error was encountered: #{e.message}")
+    rescue BadFormatStringError => e
+      self.errors.add(:base, "There is a malformed formatting string in this question: #{e.message}")
+    end
+  end
   
   #############################################################################
   # Access control methods
@@ -561,11 +605,18 @@ protected
   end
   
   def remove_blank_question_setup!
-    if question_setup.content.blank?
+    if question_setup.empty?
       setup = self.question_setup
       self.question_setup = nil
       self.save!
       setup.destroy_if_unattached
+    end
+  end
+  
+  def clear_empty_logic
+    if !logic.nil? && logic.empty?
+      logic.destroy 
+      self.logic = nil
     end
   end
 
@@ -587,7 +638,7 @@ protected
       question_setup.destroy_if_unattached
     end
   end
-
+  
   def lock!(user)
     self.locked_by = user.id
     self.locked_at = Time.now

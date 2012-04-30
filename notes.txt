@@ -40,6 +40,7 @@ rake db:test:purge 	Empty the test database.
 rake db:test:load 	Recreate the test database from the current schema.rb
 rake db:test:prepare 	Check for pending migrations and load the test schema
 rake db:test:purge; rake db:test:load; rake db:test:prepare
+be rake db:test:purge db:test:load db:test:prepare
 
 -------
 git rm --cached <file>       removes that file from version control but leaves it in the working copy

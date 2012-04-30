@@ -7,16 +7,25 @@ class QuestionSetup < ActiveRecord::Base
   
   has_many :questions
 
-  has_many :attachable_assets, :as => :attachable
+  has_many :attachable_assets, :as => :attachable, :dependent => :destroy
   has_many :assets, :through => :attachable_assets
+  
+  has_one :logic, :as => :logicable, :dependent => :destroy
+  
+  attr_accessor :variated_content_html
   
   validate :validate_content_change_allowed
 
-  attr_accessible :content
+  attr_accessible :content, :logic_attributes
+  
+  before_save :clear_empty_logic
+  
+  accepts_nested_attributes_for :logic
   
   def content_copy
     kopy = QuestionSetup.new(:content => content)
     self.attachable_assets.each {|aa| kopy.attachable_assets.push(aa.content_copy) }
+    kopy.logic = self.logic.content_copy if !self.logic.nil?
     kopy
   end
   
@@ -27,6 +36,15 @@ class QuestionSetup < ActiveRecord::Base
   def destroy_if_unattached
     # Force a reload to make sure the association is up to date
     destroy if questions(true).empty?
+  end
+  
+  def variate!(variator)
+    variator.run(logic)
+    @variated_content_html = variator.fill_in_variables(content_html)
+  end
+  
+  def empty?
+    content.blank? && (logic.nil? || logic.empty?)
   end
     
   #############################################################################
@@ -42,6 +60,13 @@ protected
   def validate_content_change_allowed
     return if content_unchanged? || content_change_allowed?
     self.errors.add(:content, "cannot be changed because it is linked to published questions.")
+  end
+  
+  def clear_empty_logic
+    if !logic.nil? && logic.empty?
+      logic.destroy 
+      self.logic = nil
+    end
   end
 
 end
