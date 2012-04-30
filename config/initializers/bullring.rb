@@ -8,7 +8,10 @@ Bullring.configure do |config|
   config.server_port = 3033
 end
 
-# Give Bullring all the library scripts
-LogicLibraryVersion.all.each do |version|
-  version.send_to_bullring
+# Give Bullring all the library scripts, don't do this until the migration
+# actually sets up the table!
+if ActiveRecord::Base.connection.tables.include?("logic_library_versions")
+  LogicLibraryVersion.all.each do |version|
+    version.send_to_bullring
+  end
 end
