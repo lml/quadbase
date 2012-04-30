@@ -70,6 +70,11 @@
    <%= javascript_tag do %>
       $("#preview_link").live('click',function(event) {
         event.preventDefault();
+        
+        if (typeof Quadbase.CodeMirrorUtils != 'undefined') {
+           Quadbase.CodeMirrorUtils.saveCodeMirrors();
+        }
+        
         return put_as_post('<%= question_preview_path(@question) %>', 
                              $('form').serializeArray());
       });

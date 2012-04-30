@@ -84,7 +84,7 @@ class SimpleQuestionTest < ActiveSupport::TestCase
   
   test "basic logic" do
     ContentParseAndCache.enable_test_parser = true
-    ll = Factory.create(:logic, :code => 'x = 4', :variables => 'x')
+    ll = Factory.create(:logic, :code => 'x = 4;', :variables => 'x')
     sq = Factory.build(:simple_question, :content => 'The magic variable is =x=')
     sq.logic = ll
     sq.save

@@ -128,6 +128,12 @@ Quadbase.CodeMirrorUtils = function() {
       codeMirrorEditors[elementId] = CodeMirror.fromTextArea(document.getElementById(elementId), 
                                                              options);
     },
+
+    saveCodeMirrors: function() {
+      for (elementId in codeMirrorEditors) {
+        codeMirrorEditors[elementId].save();
+      }
+    },
     
     refreshCodeMirrors: function() {
       for (elementId in codeMirrorEditors) {

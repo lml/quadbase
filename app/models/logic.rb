@@ -7,6 +7,7 @@ require 'json'
 class Logic < ActiveRecord::Base
   belongs_to :logicable, :polymorphic => true
   
+  after_initialize :initialize_required_version_ids
   before_validation :cleanup_required_version_ids
   
   validate :variable_parse_succeeds
@@ -34,11 +35,12 @@ class Logic < ActiveRecord::Base
   def run(options = {})
     options[:seed] ||= rand(2e9)
     options[:prior_output] ||= Output.new
+    options[:library_version_ids] ||= required_logic_library_version_ids
 
     if !code.blank?
       variable_parse_succeeds if variables_array.nil? 
       results = Bullring.run(readied_script(options[:seed],options[:prior_output]),
-                             {'library_names' => required_logic_library_version_ids})
+                             {'library_names' => options[:library_version_ids]})
 
       options[:prior_output].store!(results)
     else
@@ -178,14 +180,19 @@ protected
     errors.none?
   end
   
+  def initialize_required_version_ids
+    self.required_logic_library_version_ids ||= LogicLibrary.latest_required_versions(false).collect{|v| v.id.to_s}
+  end
+  
   # The required version ids array might have an empty string in it (because of the
   # way that HTML handles unchecked checkboxes in forms).  Strip those out.
   def cleanup_required_version_ids
+    # self.required_logic_library_version_ids ||= []
     self.required_logic_library_version_ids.reject!{|id| id.blank?}
   end
   
   def change_allowed?
-    logicable.content_change_allowed?
+    logicable.nil? || logicable.content_change_allowed?
   end
   
   def validate_change_allowed
