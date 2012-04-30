@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
          ActionController::UnknownAction
       error_page = 404
       send_email = false
-    when ActionController::MissingTemplate,
+    when ::ActionController::MissingTemplate,
       error_page = 404
       send_email = false
     end
