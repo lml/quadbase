@@ -269,6 +269,10 @@ class Question < ActiveRecord::Base
     nil != version
   end
   
+  def content_change_allowed?
+    !is_published?
+  end  
+  
   def setup_is_changeable?
     !is_published? && question_setup.content_change_allowed?
   end

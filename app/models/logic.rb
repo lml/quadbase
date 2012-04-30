@@ -12,6 +12,7 @@ class Logic < ActiveRecord::Base
   validate :variable_parse_succeeds
   validate :code_compiles
   validate :logic_library_versions_valid
+  validate :validate_change_allowed
 
   after_validation :cache_code
   
@@ -181,6 +182,16 @@ protected
   # way that HTML handles unchecked checkboxes in forms).  Strip those out.
   def cleanup_required_version_ids
     self.required_logic_library_version_ids.reject!{|id| id.blank?}
+  end
+  
+  def change_allowed?
+    logicable.content_change_allowed?
+  end
+  
+  def validate_change_allowed
+    return if change_allowed?
+    errors.add(:base, "This logic cannot be changed.")
+    errors.any?
   end
   
 end

@@ -1,10 +1,3 @@
-PATH
-  remote: ~jps/dev/bullring
-  specs:
-    bullring (0.6.1.alpha)
-      therubyrhino
-      uglifier
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -43,6 +36,9 @@ GEM
     bcrypt-ruby (2.1.4-x86-mingw32)
     blankslate (2.1.2.4)
     builder (2.1.2)
+    bullring (0.7)
+      therubyrhino
+      uglifier
     capistrano (2.5.21)
       highline
       net-scp (>= 1.0.0)
@@ -146,7 +142,7 @@ GEM
       sqlite3 (>= 1.3.3)
     therubyracer (0.10.1)
       libv8 (~> 3.3.10)
-    therubyrhino (1.73.2)
+    therubyrhino (1.73.3)
     thor (0.14.6)
     timecop (0.3.5)
     treetop (1.4.10)
@@ -168,7 +164,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-taggable-on (~> 2.1.0)
-  bullring!
+  bullring (~> 0.7)
   capistrano
   devise
   execjs

@@ -42,8 +42,8 @@ gem 'execjs'
 gem 'therubyracer'
 gem 'uglifier'
 
-gem 'bullring', :path => '~jps/dev/bullring'
-# gem "bullring", "~> 0.6"
+# gem 'bullring', :path => '~jps/dev/bullring'
+gem "bullring", "~> 0.7"
 
 
 group :development, :test do
