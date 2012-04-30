@@ -25,6 +25,7 @@ class QuestionSetup < ActiveRecord::Base
   def content_copy
     kopy = QuestionSetup.new(:content => content)
     self.attachable_assets.each {|aa| kopy.attachable_assets.push(aa.content_copy) }
+    kopy.logic = self.logic.content_copy if !self.logic.nil?
     kopy
   end
   
@@ -62,7 +63,10 @@ protected
   end
   
   def clear_empty_logic
-    logic.destroy if !logic.nil? && logic.empty?
+    if !logic.nil? && logic.empty?
+      logic.destroy 
+      self.logic = nil
+    end
   end
 
 end

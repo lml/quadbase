@@ -18,7 +18,7 @@ class QuestionVariator
     
     # Run the logic, optionally, computing and storing a hash of the output
     @output = logic.run({:seed => @seed, :prior_output => @output}).tap do |output|
-      @output_hash = (@output_hash || 0) + output.inspect.hash if @watch_output
+      @output_hash = (@output_hash || 0) + output.variables.inspect.hash if @watch_output
     end
   end
   
@@ -27,9 +27,15 @@ class QuestionVariator
     text.gsub(/\=([_a-zA-Z]{1}\w*)(%.*)?=/u) { |match| 
       var = @output.variables[$1]
       
-      ($2.blank? ? var : $2 % var) || 
-      "<span class='undefined_variable' title='This variable is undefined!'>#{$1}</span>"
+      begin
+        ($2.blank? ? var : $2 % var) || 
+        "<span class='undefined_variable' title='This variable is undefined!'>#{$1}</span>"
+      rescue ArgumentError => e
+        raise BadFormatStringError, e.message, caller
+      end
     }
   end
   
 end
+
+class BadFormatStringError < StandardError; end

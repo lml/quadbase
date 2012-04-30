@@ -26,8 +26,6 @@ class Question < ActiveRecord::Base
 
   accepts_nested_attributes_for :question_setup, :logic
   
-  before_save :clear_empty_logic
-  
   has_one :question_source, 
           :class_name => "QuestionDerivation",
           :foreign_key => "derived_question_id"
@@ -104,6 +102,8 @@ class Question < ActiveRecord::Base
   after_destroy :destroy_childless_question_setup
   
   before_create :create_question_setup, :unless => :question_setup
+
+  before_save :clear_empty_logic
 
   validate :not_published, :on => :update
   validates_presence_of :license
@@ -211,6 +211,7 @@ class Question < ActiveRecord::Base
         
     # Test that the logic in this question runs successfully.  variate! already 
     # adds errors to self if there are any logic problems.
+    debugger
     variator = QuestionVariator.new(rand(2e8), true)
     variate!(variator)
     
@@ -218,6 +219,8 @@ class Question < ActiveRecord::Base
     # is generated for the same seed
     if self.errors.none?
       first_run_hash = variator.output_hash
+      
+      variator = QuestionVariator.new(variator.seed, true)
       variate!(variator)
       second_run_hash = variator.output_hash
       
@@ -401,6 +404,7 @@ class Question < ActiveRecord::Base
     kopy.license_id = self.license_id
     self.attachable_assets.each {|aa| kopy.attachable_assets.push(aa.content_copy) }
     kopy.tag_list = self.tag_list
+    kopy.logic = self.logic.content_copy if !self.logic.nil?
     kopy
   end
   
@@ -493,6 +497,8 @@ class Question < ActiveRecord::Base
     rescue Bullring::JSError => e
       logger.debug {"When variating question #{self.to_param} with seed #{variator.seed}, encountered a javascript error: " + e.inspect}
       self.errors.add(:base, "A logic error was encountered: #{e.message}")
+    rescue BadFormatStringError => e
+      self.errors.add(:base, "There is a malformed formatting string in this question: #{e.message}")
     end
   end
   
@@ -602,6 +608,13 @@ protected
       setup.destroy_if_unattached
     end
   end
+  
+  def clear_empty_logic
+    if !logic.nil? && logic.empty?
+      logic.destroy 
+      self.logic = nil
+    end
+  end
 
   def is_project_member?(user)
     project_questions.each { |wp| return true if wp.project.is_member?(user) }
@@ -622,10 +635,6 @@ protected
     end
   end
   
-  def clear_empty_logic
-    logic.destroy if !logic.nil? && logic.empty?
-  end
-
   def lock!(user)
     self.locked_by = user.id
     self.locked_at = Time.now

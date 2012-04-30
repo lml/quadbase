@@ -64,6 +64,12 @@ class Logic < ActiveRecord::Base
     code.blank?
   end
   
+  def content_copy
+    Logic.new(:code => code, :variables => variables, :cached_code => cached_code, 
+              :variables_array => variables_array, 
+              :required_logic_library_version_ids => required_logic_library_version_ids)
+  end
+  
 protected
 
   def code_compiles
@@ -169,19 +175,6 @@ protected
     end
     
     errors.none?
-
-    # 
-    # always_required_version_ids = LogicLibrary.latest_required_versions(false).collect{|v| v.id}
-    
-    
-    
-    # if LogicLibraryVersion.where(:id => required_logic_library_version_ids).count != required_logic_library_version_ids.size
-    #   errors.add(:base, "You have specified libraries that do not exist")
-    # end
-
-    # if always_required_version_ids.any?{|always| !required_logic_library_version_ids.include?(always.to_s)}        
-    #   errors.add(:base, "The specified libraries do not include all required libraries")
-    # end
   end
   
   # The required version ids array might have an empty string in it (because of the
