@@ -140,6 +140,7 @@ class QuestionsController < ApplicationController
     raise SecurityTransgression unless parts.length >= params[:part_id].to_i
     
     @question = parts[params[:part_id].to_i-1].child_question
+    
     raise SecurityTransgression unless present_user.can_read?(@question)
     
     
