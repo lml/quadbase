@@ -36,7 +36,9 @@ GEM
     bcrypt-ruby (2.1.4-x86-mingw32)
     blankslate (2.1.2.4)
     builder (2.1.2)
-    bullring (0.7)
+    bullring (0.7.2)
+      execjs
+      therubyracer
       therubyrhino
       uglifier
     capistrano (2.5.21)
@@ -164,7 +166,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-taggable-on (~> 2.1.0)
-  bullring (~> 0.7)
+  bullring (~> 0.7.2)
   capistrano
   devise
   execjs
