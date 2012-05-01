@@ -24,7 +24,7 @@ class QuestionVariator
   
   def fill_in_variables(text)
     return nil if text.nil?
-    text.gsub(/\=([_a-zA-Z]{1}\w*)(%.*)?=/u) { |match| 
+    text.gsub(/\=([_a-zA-Z]{1}\w*)(%[^=]*)?=/u) { |match| 
       var = @output.variables[$1]
       
       begin
