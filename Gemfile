@@ -60,6 +60,7 @@ group :production do
 	gem 'rack-ssl-enforcer'
 end
 
+gem 'ruby-debug19'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
