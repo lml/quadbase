@@ -6,6 +6,9 @@ Bullring.logger = Rails.logger
 Bullring.configure do |config|
   config.execution_timeout_secs = 0.3
   config.server_port = 3033
+  config.jvm_init_heap_size = '80m'
+  config.jvm_max_heap_size = '80m'
+  config.jvm_young_heap_size = '40m'
 end
 
 # Give Bullring all the library scripts, don't do this until the migration
