@@ -402,7 +402,7 @@ class Question < ActiveRecord::Base
     query = text.blank? ? '%' : '%' + text + '%'
     # Note: % is the wildcard. This allows the user to search for stuff that "begins with" and "ends with".
 
-    case type # The tquery values here might have to change once we actually implement these. Also, make sure the "when" values match the template.
+    case type
     when 'Simple Questions'
       tquery = 'SimpleQuestion'
     when 'Matching Questions'
@@ -425,7 +425,7 @@ class Question < ActiveRecord::Base
     end
 
     wtscope = wscope.where(:question_type.matches % tquery)
-    wtscope.where(:content.matches % query) + wtscope.tagged_with(query, :any => true, :wild => true)
+    wtscope.where(:content.matches % query) + wtscope.tagged_with(text, :any => true)
   end
 
   def roleless_collaborators

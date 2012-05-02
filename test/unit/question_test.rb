@@ -375,7 +375,7 @@ class QuestionTest < ActiveSupport::TestCase
     sq4.update_attribute(:tag_list, tags)
 
 
-    search0 = Question.search('Simple Questions', 'All Places', 'Tag', user)
+    search0 = Question.search('Simple Questions', 'All Places', '%Tag', user)
     search1 = Question.search('Simple Questions', 'Published Questions', 'Some Tag', user)
     search2 = Question.search('Simple Questions', 'Published Questions', 'Another Tag', user)
     search3 = Question.search('Simple Questions', 'My Drafts', 'Some Tag', user)
