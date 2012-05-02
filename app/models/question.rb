@@ -601,8 +601,6 @@ protected
   end
 
   def self.tipify(text)
-    puts "TEXT:"
-    puts text
     (text.blank? || text == 'All Questions') ? '%' : text.gsub(' ', '').classify
   end
   
