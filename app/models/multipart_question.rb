@@ -7,7 +7,8 @@ class MultipartQuestion < Question
   has_many :child_question_parts,
            :class_name => "QuestionPart",
            :foreign_key => "multipart_question_id",
-           :order => :order
+           :order => :order,
+           :dependent => :destroy
   has_many :child_questions,
            :through => :child_question_parts
   
