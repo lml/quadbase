@@ -9,6 +9,14 @@
   question_form_action ||= nil
   make_search_remote ||= nil
   form_button_text ||= ""
+  exclude_type ||= ''
+  type_options = ['All Questions', 
+                  'Simple Questions', 
+                  'Matching Questions', 
+                  'Multipart Questions']
+  type_options.delete(exclude_type)
+  locations = ['All Places', 'Published Questions']
+  locations.push('My Drafts', 'My Projects') if user_signed_in?
 %>
 <%= form_tag(questions_search_path, 
              :method => :get,
@@ -16,22 +24,17 @@
              :remote => make_search_remote) do %>
 
   <%= hidden_field_tag :per_page, @per_page %>
+  <%= hidden_field_tag :exclude_type, exclude_type %>
   
   <table width="100%" align="center">
     <tr>
       <td><%= label_tag 'Search For:' %></td>
       <td>
         <%= select_tag 'type', 
-                       options_for_select(['All Questions', 
-                                           'Simple Questions', 
-                                           'Matching Questions', 
-                                           'Multipart Questions'], 
-                                           @type) %>
+                       options_for_select(type_options, @type) %>
       </td>
       <td><%= label_tag 'in:' %></td>
       <td>
-        <% locations = ['All Places', 'Published Questions'] 
-           locations.push('My Drafts', 'My Projects') if user_signed_in? %>
         <%= select_tag 'where', options_for_select(locations, @where) %>
       </td>
       <td><%= label_tag 'containing:' %></td>

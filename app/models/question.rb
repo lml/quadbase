@@ -397,21 +397,10 @@ class Question < ActiveRecord::Base
     !has_role?(user, :is_listed)
   end
   
-  def self.search(type, where, text, user)
+  def self.search(type, where, text, user, exclude_type = '')
 
     query = text.blank? ? '%' : '%' + text + '%'
     # Note: % is the wildcard. This allows the user to search for stuff that "begins with" and "ends with".
-
-    case type
-    when 'Simple Questions'
-      tquery = 'SimpleQuestion'
-    when 'Matching Questions'
-      tquery = 'MatchingQuestion'
-    when 'Multipart Questions'
-      tquery = 'MultipartQuestion'
-    else
-      tquery = '%'
-    end
 
     case where
     when 'Published Questions'
@@ -424,8 +413,10 @@ class Question < ActiveRecord::Base
       wscope = Question
     end
 
-    wtscope = wscope.where(:question_type.matches % tquery)
-    wtscope.where(:content.matches % query) + wtscope.tagged_with(text, :any => true)
+    wtscope = wscope.where(:question_type.matches % tipify(type))
+    wtscope = wtscope.where(:question_type.not_matches % tipify(exclude_type)) if !exclude_type.blank?
+
+    wtscope.where(:content.matches % query) + wtscope.joins(:question_setup).where(:question_setup => [:content.matches % query]) + wtscope.tagged_with(text, :any => true)
   end
 
   def roleless_collaborators
@@ -607,6 +598,12 @@ protected
                       lock_minutes.to_s +
                       " more " + (lock_minutes == 1 ? "minute" : "minutes") + ".")
     false
+  end
+
+  def self.tipify(text)
+    puts "TEXT:"
+    puts text
+    (text.blank? || text == 'All Questions') ? '%' : text.gsub(' ', '').classify
   end
   
   # Template method overridable by a child class for child-specific behavior

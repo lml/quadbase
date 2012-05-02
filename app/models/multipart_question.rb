@@ -82,6 +82,10 @@ class MultipartQuestion < Question
         self.errors.add(:base, "Draft question #{question.to_param} needs an introduction " +
                                "to be added to the multipart question.")
       end
+      if question.question_type == "MultipartQuestion"
+        self.errors.add(:base, "Question #{question.to_param} is a multipart question " +
+                               "and cannot be part of another multipart question.")
+      end
     end
     
     # All of the incoming questions must have the same introduction.  The one
