@@ -413,8 +413,8 @@ class Question < ActiveRecord::Base
       wscope = Question
     end
 
-    wtscope = wscope.where(:question_type.matches % tipify(type))
-    wtscope = wtscope.where(:question_type.not_matches % tipify(exclude_type)) if !exclude_type.blank?
+    wtscope = wscope.where(:question_type.matches % typify(type))
+    wtscope = wtscope.where(:question_type.not_matches % typify(exclude_type)) if !exclude_type.blank?
 
     wtscope.where(:content.matches % query) + wtscope.joins(:question_setup).where(:question_setup => [:content.matches % query]) + wtscope.tagged_with(text, :any => true)
   end
@@ -600,7 +600,7 @@ protected
     false
   end
 
-  def self.tipify(text)
+  def self.typify(text)
     (text.blank? || text == 'All Questions') ? '%' : text.gsub(' ', '').classify
   end
   
