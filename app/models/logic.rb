@@ -78,7 +78,10 @@ protected
   def code_compiles
     code_errors = Bullring.check(code)
     code_errors.each do |code_error|
-      errors.add(:base, "#{code_error['reason']}, line #{code_error['line']}, character #{code_error['character']}")      
+      next if code_error.nil?
+      if !(code_error['reason'].to_s =~ /^Stopping/)
+        errors.add(:base, "#{code_error['reason']}, line #{code_error['line']}, character #{code_error['character']}")      
+      end
     end
     errors.empty?
   end
