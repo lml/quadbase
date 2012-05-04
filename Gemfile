@@ -42,7 +42,7 @@ gem 'execjs'
 gem 'therubyracer'
 gem 'uglifier'
 
-gem "bullring", "~> 0.7.3"
+gem "bullring", "~> 0.7.4"
 
 group :development, :test do
 	gem 'sqlite3-ruby', :require => 'sqlite3'
