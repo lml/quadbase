@@ -72,58 +72,51 @@ class MultipartQuestion < Question
       self.errors.add(:base, "Question(s) #{id_string} are already a part " + 
                              "of the multipart question.")
     end
-    
-    # If a draft question is added to the multipart, we require that it have 
-    # an introduction (and later this introduction must match that of the 
-    # multipart question)
+
+    # Do not allow multiparts to be added to other multiparts
 
     questions.each do |question|
-      if !question.is_published? && question.question_setup.blank?
-        self.errors.add(:base, "Draft question #{question.to_param} needs an introduction " +
-                               "to be added to the multipart question.")
-      end
       if question.question_type == "MultipartQuestion"
-        self.errors.add(:base, "Question #{question.to_param} is a multipart question " +
-                               "and cannot be part of another multipart question.")
+        self.errors.add(:base, "Question #{question.to_param} is a multipart question" +
+                               " and cannot be part of another multipart question.")
       end
     end
     
     # All of the incoming questions must have the same introduction.  The one
-    # exception is that published questions don't have to have an intro.  Draft
-    # questions without an intro have already caused an error.
+    # exception is questions that don't have to have an intro, in which case
+    # it will be changed (draft) or left unmodified (published)
 
     setup_ids = questions.collect do |q|
       setup = q.question_setup
-      q.is_published? && setup.nil? ? nil : setup.id     
+      setup.nil? ? nil : setup.content.blank? ? nil : setup.id
     end
-    
+
     setup_ids.reject!{|id| id.nil?}
     uniq_non_nil_setup_ids = setup_ids.uniq
 
     if uniq_non_nil_setup_ids.size > 1
       self.errors.add(:base, "The selected questions have different introductions.")
+    else
+
+      # If this question's intro is blank and it is legal for it to be changed,
+      # the intro will change to match that of the incoming questions (assuming
+      # they have intros).  If this question's intro doesn't meet these conditions
+      # (i.e. it cannot be changed), then the intro from the incoming questions 
+      # must be identical to this question's existing intro.
+    
+      single_setup_id = uniq_non_nil_setup_ids.size == 1 ? 
+                        uniq_non_nil_setup_ids.first : self.question_setup_id
+
+      setup_can_change_to_incoming_setup = \
+        self.question_setup.content.blank? && setup_is_changeable?
+      
+      single_different_incoming_setup = self.question_setup_id != single_setup_id
+    
+      if single_different_incoming_setup && !setup_can_change_to_incoming_setup
+        self.errors.add(:base, "The selected questions have a different introduction than " +
+                               "that of the multipart question.")
+      end
     end
-    
-    # If this question's intro is blank and it is legal for it to be changed,
-    # the intro will change to match that of the incoming questions (assuming
-    # they have intros).  If this question's intro doesn't meet these conditions
-    # (i.e. it cannot be changed), then the intro from the incoming questions 
-    # must be identical to this question's existing intro.
-    
-    setup_can_change_to_incoming_setup = \
-      self.question_setup.content.blank? && setup_is_changeable?
-      
-    single_incoming_setup_id = uniq_non_nil_setup_ids.size == 1 ? 
-                               uniq_non_nil_setup_ids.first : 
-                               nil
-      
-    single_different_incoming_setup = \
-      !single_incoming_setup_id.nil? && self.question_setup_id != single_incoming_setup_id
-    
-    if single_different_incoming_setup && !setup_can_change_to_incoming_setup
-      self.errors.add(:base, "The selected questions have a different introduction than " +
-                             "that of the multipart question.")
-    end    
     
     # Bail out before changing the question if there are errors
     
@@ -141,22 +134,36 @@ class MultipartQuestion < Question
       # As discussed above, if this question's intro can be changed and there is
       # a single incoming setup that differs from the existing multipart intro, go
       # ahead and change it in the multipart and in any children.
+
+      single_setup = QuestionSetup.find(single_setup_id)
       
-      if single_different_incoming_setup && setup_can_change_to_incoming_setup
+      if single_different_incoming_setup
           old_question_setup = self.question_setup
           
           # Assigning objects instead of IDs keeps the multipart object up to date
-          single_incoming_setup = QuestionSetup.find(single_incoming_setup_id)
-          self.question_setup = single_incoming_setup
+          self.question_setup = single_setup
           self.save!
         
           self.child_questions.each do |child_question|
-            child_question.question_setup = single_incoming_setup
-            child_question.save!
-          end          
+            if !child_question.is_published?
+              child_question.question_setup = single_setup
+              child_question.save!
+            end
+          end
           
           # Clean up orphaned intros
           old_question_setup.destroy_if_unattached
+      end
+
+      # Set all question setups to the single setup, unless published
+
+      questions.each do |question|
+        if !question.is_published?
+          old_question_setup = question.question_setup
+          question.question_setup = single_setup
+          question.save!
+          old_question_setup.destroy_if_unattached
+        end
       end
 
       # Finally, add the incoming questions
