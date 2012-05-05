@@ -56,9 +56,10 @@ Here's how to contribute to Quadbase:
 Quick Development How-To
 ------------------------
 
-The best way to go is to install RVM on your machine.  Install Ruby 1.9.2 (e.g. rvm install 1.9.2-p290)
+The best way to go is to install RVM on your machine.  Install Ruby 1.9.2 (e.g. `rvm install 1.9.2-p290`)
 and install the bundler gem.  You may run into some issues where you need to install some supplemental
-libraries first.  
+libraries first.  The question logic capability uses jruby under the covers, so you should also install
+jruby through rvm (`rvm install jruby`).
 
 When you have RVM and bundler, fork the code and change into the quadbase directory.  We have a 
 .rvmrc file in the top-level directory so RVM should setup things to use Ruby 1.9.2 and the 
@@ -67,6 +68,9 @@ quadbase gemset.
     bundle --without production
     bundle rake db:migrate
     bundle exec rails server
+    
+To upload images to questions, you'll need to have ImageMagick installed and set the parameters appropriately
+in config/developer_settings.yml.  Check out the developer_settings.yml.example file for help.
 
 That's it.  You should then be able to point a web browser to http://localhost:3000.
 
