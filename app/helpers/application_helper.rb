@@ -208,8 +208,6 @@ module ApplicationHelper
     output.html_safe
   end
   
-<<<<<<< HEAD
-=======
   def block_to_partial(partial_name, options={}, &block)
     options[:classes] ||= []
     options.merge!(:body => capture(&block))
@@ -330,6 +328,4 @@ module ApplicationHelper
                 :remote => options[:remote]
   end
   
-  
->>>>>>> upstream/master
 end
