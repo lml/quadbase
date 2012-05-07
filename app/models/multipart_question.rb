@@ -138,21 +138,7 @@ class MultipartQuestion < Question
       single_setup = QuestionSetup.find(single_setup_id)
       
       if single_different_incoming_setup
-          old_question_setup = self.question_setup
-          
-          # Assigning objects instead of IDs keeps the multipart object up to date
-          self.question_setup = single_setup
-          self.save!
-        
-          self.child_questions.each do |child_question|
-            if !child_question.is_published?
-              child_question.question_setup = single_setup
-              child_question.save!
-            end
-          end
-          
-          # Clean up orphaned intros
-          old_question_setup.destroy_if_unattached
+        set_question_setup!(single_setup)
       end
 
       # Set all question setups to the single setup, unless published
@@ -186,18 +172,44 @@ class MultipartQuestion < Question
   end
   
   def remove_part(question)
-    # TODO if a published question was added, this q's setup will be set to that
+    # If a published question was added, this q's setup will be set to that
     # published part's setup.  If that published part is removed, we should make it
     # so that the multipart setup is editable again.  This would mean copying the 
     # content to a new setup and changing the setup_ids in the relevant questions.
-    # Alternatively, we could just not allow this (i.e. keep the intro unchangeable)
-    # TODO later, if the multipart is published and the setup is the same as an
-    # existing one, link to it (?)
-    raise NotYetImplemented
+    child_questions.delete(question)
+    published_uniq_setup_ids = child_questions.select{|q| q.is_published? && !q.question_setup.nil? &&
+                                                          !q.question_setup.content.blank?}
+                                              .collect{|q| q.question_setup_id}.uniq
+
+    if published_uniq_setup_ids.size == 0
+      new_setup = question_setup.content_copy
+      new_setup.save!
+      set_question_setup!(new_setup)
+    end
   end
   
   def is_multipart?
     true
+  end
+
+protected
+
+  def set_question_setup!(qs)
+    old_question_setup = self.question_setup
+          
+    # Assigning objects instead of IDs keeps the multipart object up to date
+    self.question_setup = qs
+    self.save!
+        
+    self.child_questions.each do |child_question|
+      if !child_question.is_published?
+        child_question.question_setup = qs
+        child_question.save!
+      end
+    end
+          
+    # Clean up orphaned intros
+    old_question_setup.destroy_if_unattached
   end
   
 end
