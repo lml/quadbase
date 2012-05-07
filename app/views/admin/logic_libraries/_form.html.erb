@@ -1,0 +1,20 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%= form_for([:admin, @logic_library]) do |f| %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    Always Required? <%= f.check_box :always_required %>
+  </div>
+  <div class="field">
+    <%= f.label :summary %><br />
+    <%= f.text_area :summary %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

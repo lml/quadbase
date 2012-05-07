@@ -2,7 +2,7 @@
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
 <div class="quad-question_content">
-  <%= question.content_html.html_safe %>
+  <%= question.variated_content_html.html_safe %>
 </div>
 
 <% if !question.answer_choices.empty? %>
@@ -15,7 +15,7 @@
                <p><%= (answer_letter_code += 1).chr %>)</p>
             </td>
             <td class="quad-answer_choice" width="95%">
-               <%= ac.content_html.html_safe %>
+               <%= ac.variated_content_html.html_safe %>
             </td>
          </tr>
       <% end %>

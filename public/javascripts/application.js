@@ -87,3 +87,20 @@ function show_none_row_if_needed(table_id) {
     $('#' + table_id + '_none_row').show();
   }
 }
+
+function refresh_buttons() {
+   $('input:submit').button();
+   $('.button').button();
+   $(".show_button").button({icons: {primary: "ui-icon-search"}, text: false });
+   $(".edit_button").button({icons: {primary: "ui-icon-pencil"}, text: false });
+   $(".trash_button").button({icons: {primary: "ui-icon-trash"}, text: false });   
+}
+
+function refresh_datetime_pickers() {
+   $(".date_time_picker").datetimepicker({
+     timeFormat: 'h:mm TT',
+     stepMinute: 5, 
+     ampm:true, 
+     hour:9, 
+     minute:0});
+}

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110921172614) do
+ActiveRecord::Schema.define(:version => 20120424015013) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -89,6 +90,37 @@ ActiveRecord::Schema.define(:version => 20110921172614) do
     t.datetime "updated_at"
     t.string   "agreement_partial_name"
     t.boolean  "is_default"
+  end
+
+  create_table "logic_libraries", :force => true do |t|
+    t.string   "name"
+    t.integer  "number"
+    t.text     "summary"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "always_required"
+  end
+
+  create_table "logic_library_versions", :force => true do |t|
+    t.integer  "logic_library_id"
+    t.integer  "version"
+    t.text     "code"
+    t.text     "minified_code"
+    t.boolean  "deprecated"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "logics", :force => true do |t|
+    t.text     "code"
+    t.string   "variables"
+    t.string   "logicable_type"
+    t.integer  "logicable_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "cached_code"
+    t.string   "variables_array"
+    t.string   "required_logic_library_version_ids"
   end
 
   create_table "messages", :force => true do |t|
@@ -185,6 +217,8 @@ ActiveRecord::Schema.define(:version => 20110921172614) do
     t.datetime "locked_at"
     t.integer  "publisher_id"
     t.boolean  "changes_solution",                 :default => false
+    t.text     "code"
+    t.string   "variables"
   end
 
   create_table "solutions", :force => true do |t|

@@ -11,7 +11,7 @@ json.simple_question do
   if !question.question_setup.blank? && !skip_question_setup
     json.introduction do
       json.markup question.question_setup.content
-      json.html question.question_setup.content_html
+      json.html question.question_setup.variated_content_html
     end
   end
 

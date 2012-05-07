@@ -6,7 +6,7 @@ class Comment < ActiveRecord::Base
   belongs_to :comment_thread
   belongs_to :creator, :class_name => "User"
 
-  has_many :votes, :as => :votable
+  has_many :votes, :as => :votable, :dependent => :destroy
 
   validates_presence_of :comment_thread, :creator
 

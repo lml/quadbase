@@ -8,3 +8,4 @@ config/secret_settings.yml
 config/deploy_settings.yml
 public/system/**
 *~
+.vagrant

@@ -1,0 +1,43 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%= section "Login as:" do %>
+  <ul>
+    <% User.all.each do |user| %>
+      <li><%= link_to user.full_name, user_become_path(user), :method => :post %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<%= section "Reset Time" do %>
+  <%= button_to 'Reset', 
+                dev_reset_time_path,
+                :method => :put,
+                :remote => true %>
+<% end %>
+
+<%= section "Freeze Time" do %>
+  <%= form_tag(dev_freeze_time_path, 
+               :method => :post,
+               :remote => true) do %>
+    <div class="field">
+      <div class="field_label">Offset Days</div>
+      <%= text_field_tag :offset_days %>
+    </div>
+    <%= submit_tag %>
+  <% end %>
+<% end %>
+
+<%= section "Time Travel" do %>
+
+  <%= form_tag(dev_time_travel_path, 
+               :method => :post,
+               :remote => true)  do %>
+    <div class="field">
+      <div class="field_label">New Time</div>
+      <%= datetime_text_field_tag :new_time, nil %>
+    </div>
+    <%= submit_tag %>
+
+  <% end %>
+<% end %>

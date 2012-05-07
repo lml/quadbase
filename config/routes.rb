@@ -3,6 +3,13 @@
 
 Quadbase::Application.routes.draw do
 
+  namespace :admin do 
+    resources :logic_libraries do
+      resources :logic_library_versions, :shallow => true
+      post 'sort', :on => :collection
+    end
+  end
+
   def commentable
     resources :comments, :only => [:index, :new, :create] do
       collection do
@@ -209,6 +216,11 @@ Quadbase::Application.routes.draw do
     get 'leave'
     commentable
   end
+  
+  get "dev/toolbox"
+  put 'dev/reset_time'
+  post 'dev/freeze_time'
+  post 'dev/time_travel'
   
   get 'subscriptions', :to => 'comment_thread_subscriptions#index', :as => 'subscriptions'
 
