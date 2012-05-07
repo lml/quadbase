@@ -182,10 +182,13 @@ class MultipartQuestion < Question
                                               .collect{|q| q.question_setup_id}.uniq
 
     if published_uniq_setup_ids.size == 0
+      # No more published questions with setup, so copy it and make editable
       new_setup = question_setup.content_copy
       new_setup.save!
       set_question_setup!(new_setup)
     end
+
+    QuestionPart.sort(child_question_parts) # Recompute part order
   end
   
   def is_multipart?

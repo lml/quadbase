@@ -1,6 +1,16 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-$("#intro_field").attr("disabled", <%= !@part.multipart_question.setup_is_changeable? %>);
+<%= display_flash %>
 
-$("#part_<%= @part.id %>").remove();
+<%= update_multipart_nav(@multipart_question, @multipart_question, true) %>
+
+$("#question_part_rows").html(
+   "<%= escape_javascript(render(:partial => 'multipart_questions/question_part_rows', 
+                                 :locals => {:question => @multipart_question})) %>");
+                                 
+// Change the intro field and its form ID
+
+$("#intro_field").attr("disabled", <%= !@multipart_question.setup_is_changeable? %>);
+
+$("#question_question_setup_attributes_id").val("<%= @multipart_question.question_setup.id %>");

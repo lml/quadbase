@@ -97,7 +97,9 @@ class Question < ActiveRecord::Base
 
   after_destroy :destroy_childless_question_setup
   
-  before_create :create_question_setup, :unless => :question_setup
+  # Should hopefully prevent question setup from ever being nil
+  before_validation :build_question_setup, :unless => :question_setup
+  validates_presence_of :question_setup
 
   validate :not_published, :on => :update
   validates_presence_of :license
