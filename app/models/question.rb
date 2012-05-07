@@ -416,7 +416,18 @@ class Question < ActiveRecord::Base
     wtscope = wscope.where(:question_type.matches % typify(type))
     wtscope = wtscope.where(:question_type.not_matches % typify(exclude_type)) if !exclude_type.blank?
 
-    wtscope.where(:content.matches % query) + wtscope.joins(:question_setup).where(:question_setup => [:content.matches % query]) + wtscope.tagged_with(text, :any => true)
+    wtscope.joins(:question_setup.outer).joins(:tags.outer).where((:content.matches % query)\
+            | {:question_setup => [:content.matches % query]} | {:tags => [:name.matches % query]})\
+            .order(:id).select("DISTINCT questions.*")
+
+    # This should the most efficient way to do the search
+    # (Inner joins with UNION could maybe be faster,
+    # but it seems Rails has very limited support for unions)
+    # It does not use tagged_with and instead searches the database directly
+    # I'm allowing partial tag searches for now (e.g. 'PEN' will match 2011 SPEN Sprint)
+    # If this is not desirable, replace :name.matches % query with :name => text
+    # An ordering other than by id could also be used without any other modifications
+    # Note: There seems to be no MetaWhere alternative for using the distinct keyword
   end
 
   def roleless_collaborators
