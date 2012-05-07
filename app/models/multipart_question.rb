@@ -7,7 +7,8 @@ class MultipartQuestion < Question
   has_many :child_question_parts,
            :class_name => "QuestionPart",
            :foreign_key => "multipart_question_id",
-           :order => :order
+           :order => :order,
+           :dependent => :destroy
   has_many :child_questions,
            :through => :child_question_parts
   
@@ -80,6 +81,10 @@ class MultipartQuestion < Question
       if !question.is_published? && question.question_setup.blank?
         self.errors.add(:base, "Draft question #{question.to_param} needs an introduction " +
                                "to be added to the multipart question.")
+      end
+      if question.question_type == "MultipartQuestion"
+        self.errors.add(:base, "Question #{question.to_param} is a multipart question " +
+                               "and cannot be part of another multipart question.")
       end
     end
     

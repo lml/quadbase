@@ -431,21 +431,10 @@ class Question < ActiveRecord::Base
     !has_role?(user, :is_listed)
   end
   
-  def self.search(type, where, text, user)
+  def self.search(type, where, text, user, exclude_type = '')
 
     query = text.blank? ? '%' : '%' + text + '%'
     # Note: % is the wildcard. This allows the user to search for stuff that "begins with" and "ends with".
-
-    case type # The tquery values here might have to change once we actually implement these. Also, make sure the "when" values match the template.
-    when 'Simple Questions'
-      tquery = 'SimpleQuestion'
-    when 'Matching Questions'
-      tquery = 'MatchingQuestion'
-    when 'Multipart Questions'
-      tquery = 'MultipartQuestion'
-    else
-      tquery = '%'
-    end
 
     case where
     when 'Published Questions'
@@ -458,8 +447,21 @@ class Question < ActiveRecord::Base
       wscope = Question
     end
 
-    wtscope = wscope.where(:question_type.matches % tquery)
-    wtscope.where(:content.matches % query) + wtscope.tagged_with(query, :any => true, :wild => true)
+    wtscope = wscope.where(:question_type.matches % typify(type))
+    wtscope = wtscope.where(:question_type.not_matches % typify(exclude_type)) if !exclude_type.blank?
+
+    wtscope.joins(:question_setup.outer).joins(:tags.outer).where((:content.matches % query)\
+            | {:question_setup => [:content.matches % query]} | {:tags => [:name.matches % query]})\
+            .order(:id).select("DISTINCT questions.*")
+
+    # This should the most efficient way to do the search
+    # (Inner joins with UNION could maybe be faster,
+    # but it seems Rails has very limited support for unions)
+    # It does not use tagged_with and instead searches the database directly
+    # I'm allowing partial tag searches for now (e.g. 'PEN' will match 2011 SPEN Sprint)
+    # If this is not desirable, replace :name.matches % query with :name => text
+    # An ordering other than by id could also be used without any other modifications
+    # Note: There seems to be no MetaWhere alternative for using the distinct keyword
   end
 
   def roleless_collaborators
@@ -662,6 +664,10 @@ protected
                       lock_minutes.to_s +
                       " more " + (lock_minutes == 1 ? "minute" : "minutes") + ".")
     false
+  end
+
+  def self.typify(text)
+    (text.blank? || text == 'All Questions') ? '%' : text.gsub(' ', '').classify
   end
   
   # Template method overridable by a child class for child-specific behavior
