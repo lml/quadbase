@@ -45,7 +45,7 @@ gem 'uglifier'
 gem "bullring", "~> 0.7.4"
 
 group :development, :test do
-	gem 'sqlite3-ruby', :require => 'sqlite3'
+	gem 'sqlite3'
 	gem 'ruby-debug19'
    # gem 'machinist', '< 2.0'
    gem 'faker'
