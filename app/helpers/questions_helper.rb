@@ -4,7 +4,7 @@
 module QuestionsHelper
   
   include ActsAsTaggableOn::TagsHelper
-  
+
   def variant_for_question(question)
     case question.question_type
     when "SimpleQuestion"

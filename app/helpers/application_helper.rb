@@ -328,5 +328,4 @@ module ApplicationHelper
                 :remote => options[:remote]
   end
   
-  
 end
