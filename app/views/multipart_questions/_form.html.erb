@@ -51,16 +51,22 @@
   <div class="question_form" style="width:100%">
 
     <div style="padding:15px 0"><i>Common Introduction:</i></div>
-    <div class="field" style="padding-left:30px">
-      <%= f.fields_for :question_setup do |setup_form| %>
-        <%= setup_form.text_area :content, 
-                                 :rows => 8, 
-                                 :class => "mark_it_up", 
-                                 :id => 'intro_field',
-                                 :style => "width: 95%" %>
+      <div class="field" style="padding-left:30px">
+        <%= f.fields_for :question_setup do |setup_form| %>
+          <%= setup_form.text_area :content, 
+                                   :rows => 8, 
+                                   :class => "mark_it_up", 
+                                   :id => 'intro_field',
+                                   :style => "width: 95%",
+                                   :disabled => !question.setup_is_changeable? %>
+        <% end %>
+      </div>
+      <% if !question.setup_is_changeable? %>
+      <br/>
+        To change the common introduction, remove any<br/>
+        published questions that have their own introduction.
       <% end %>
     </div>
-  </div>
     
 <%# The following JS manages the sorting of the parts table %>
 <%# See http://www.foliotek.com/devblog/make-table-rows-sortable-using-jquery-ui-sortable/ %>   
