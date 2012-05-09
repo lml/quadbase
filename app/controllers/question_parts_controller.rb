@@ -8,10 +8,12 @@ class QuestionPartsController < ApplicationController
   def destroy
     @part = QuestionPart.find(params[:id])
     raise SecurityTransgression unless present_user.can_destroy?(@part)
-    @part.destroy # TODO unlink question setup so can be changed independently
-    respond_with(@part) do |format|
+    @multipart_question = @part.multipart_question
+    @multipart_question.remove_part(@part.child_question)
+    @multipart_question.reload
+    respond_to do |format|
       format.js
-      format.html { redirect_to edit_question_path(@part.multipart_question) }
+      format.html { redirect_to edit_question_path(@multipart_question) }
     end
   end
 
