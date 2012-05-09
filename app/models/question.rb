@@ -450,7 +450,7 @@ class Question < ActiveRecord::Base
     wtscope = wscope.where(:question_type.matches % typify(type))
     wtscope = wtscope.where(:question_type.not_matches % typify(exclude_type)) if !exclude_type.blank?
 
-    wtscope.joins(:question_setup.outer).joins(:tags.outer).where((:content.matches % query)\
+    wtscope.joins(:question_setup.outer).joins({:taggings.outer => :tag.outer}).where((:content.matches % query)\
             | {:question_setup => [:content.matches % query]} | {:tags => [:name.matches % query]})\
             .order(:id).select("DISTINCT questions.*")
 
