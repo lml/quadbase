@@ -76,7 +76,7 @@ class MultipartQuestion < Question
     # Do not allow multiparts to be added to other multiparts
 
     questions.each do |question|
-      if question.question_type == "MultipartQuestion"
+      if question.is_multipart?
         self.errors.add(:base, "Question #{question.to_param} is a multipart question" +
                                " and cannot be part of another multipart question.")
       end
