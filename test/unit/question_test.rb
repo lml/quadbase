@@ -501,10 +501,8 @@ class QuestionTest < ActiveSupport::TestCase
   end
   
   test "blank setups removed on publish" do
-    sq = Factory.create(:simple_question, :question_setup => Factory.create(:question_setup, :content => ""))
+    sq = make_simple_question(:method => :create, :no_setup => true)
     u = Factory.create(:user)
-    
-    sq.create!(u)
     
     assert !sq.question_setup.nil?
     qs_id = sq.question_setup.id

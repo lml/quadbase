@@ -106,8 +106,8 @@ class Question < ActiveRecord::Base
   after_destroy :destroy_childless_question_setup
   
   # Should hopefully prevent question setup from ever being nil
-  before_validation :build_question_setup, :unless => :question_setup
-  validates_presence_of :question_setup
+  before_validation :build_question_setup, :unless => Proc.new { |q| q.question_setup || q.is_published? }
+  validates_presence_of :question_setup, :unless => :is_published?
 
   before_save :clear_empty_logic
 
@@ -249,9 +249,6 @@ class Question < ActiveRecord::Base
   def publish!(user)
     return if !ready_to_be_published?
     
-    # Do some cleanup
-    remove_blank_question_setup!
-    
     # This hook allows child classes to implement class-specific code that
     # should run before publishing
     run_prepublish_hooks(user)
@@ -267,7 +264,15 @@ class Question < ActiveRecord::Base
     
     self.version = next_available_version
     self.publisher = user
+
+    # Do some cleanup
+    # Can only really be exactly in this position so no longer a function
+    if question_setup.is_empty?
+      setup = self.question_setup
+      self.question_setup = nil
+    end
     self.save!
+    setup.destroy_if_unattached if self.question_setup.nil?
   end
   
   def is_published?
@@ -610,15 +615,6 @@ protected
     return if (version_was.nil?)
     errors.add(:base, "Changes cannot be made to a published question.#{self.changes}")
     false
-  end
-  
-  def remove_blank_question_setup!
-    if question_setup.empty?
-      setup = self.question_setup
-      self.question_setup = nil
-      self.save!
-      setup.destroy_if_unattached
-    end
   end
   
   def clear_empty_logic

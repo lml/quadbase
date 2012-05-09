@@ -58,7 +58,7 @@ end
 
 Factory.define :simple_question do |f|
   f.content { Factory.next(:couple_of_words) }
-  f.association :question_setup
+  f.question_setup {|q| q.association :question_setup}
   f.number { Factory.next(:unique_number) }
   f.license_id { common_license.id }
   f.version nil
@@ -107,7 +107,7 @@ def make_simple_question(options = {})
   sq.answer_choices = 
     options[:answer_credits].map!{|c| Factory.build(:answer_choice, :credit => c)}
 
-  sq.question_setup = QuestionSetup.create(:content => "") if options[:no_setup] 
+  sq.question_setup.content = "" if options[:no_setup] 
   
   user = Factory.create(:user)
   
