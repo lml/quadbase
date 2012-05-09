@@ -1,0 +1,29 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%= pageHeading @logic_library_version.logic_library.name + " v#{@logic_library_version.version}" %>
+
+<p>Deprecated? &nbsp;&nbsp;&nbsp; <%= tf_to_yn(@logic_library_version.deprecated) %></p>
+
+<%= text_area_tag nil, @logic_library_version.code, {:id => 'code'} %>
+
+
+<% @include_jquery = true %>
+<% @include_codemirror = true %>
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>
+
+    $(document).ready(function() {
+      Quadbase.CodeMirrorUtils.initCodeMirror('code', {lineNumbers: true, readOnly: true});
+    });
+    
+  <% end %>
+<% end %>
+
+<br/>
+
+<%= link_to 'Edit', edit_admin_logic_library_version_path(@logic_library_version) %> |
+<%= link_to 'List', admin_logic_library_path(@logic_library_version.logic_library) %> |
+<%= link_to 'Destroy', [:admin, @logic_library_version], :method => :delete, :confirm => 'Are you sure?' %>
+

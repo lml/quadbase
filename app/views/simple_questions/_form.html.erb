@@ -7,10 +7,10 @@
 
   <% @errors = @question.errors %>
 
-  <% @human_field_names = {:"answer_choices.content" => "Answer text", 
-                           :"answer_choices.credit" => "Answer right/wrong", 
-                           :"answer_choices" => "Answers",
-                           :"question_setup.content" => "Content"} %>
+  <% add_human_field_names({ :"answer_choices.content" => "Answer text", 
+                             :"answer_choices.credit" => "Answer right/wrong", 
+                             :"answer_choices" => "Answers",
+                             :"question_setup.content" => "Content"} ) %>
 
   <%# For the question setup ... %>
   <%= render :partial => "attachable_assets/add_image_dialog",
@@ -39,59 +39,87 @@
                                  :height => 400, 
                                  :width =>900} %> your question?</p>
 
- <% setup_blank = @question.question_setup.content.blank? %>
+  <% setup_blank = @question.question_setup.empty? %>
 
- <table class="target question_form">
+  <% intro_options = {:style => "#{setup_blank ? 'display:none' : ''}", :id => 'intro_text_block'} %>
+
+  <%= question_edit_block "The Introduction", intro_options do %>
+
     <% if @question.is_draft_in_multipart? %>
-    <tr>
-       <td valign="top"><p><i>Intro text:</i></p></td>
-       <td valign="top">
-             <%= @question.question_setup.content_html.html_safe %>
-       </td>
-       <td></td>
-    </tr>
+      <%= @question.question_setup.content_html.html_safe %>
     <% else %>
-    <tr id="setup_row" <% if setup_blank %>style="display:none"<% end %>>
-       <td valign="top"><i>Intro text:</i></td>
-       <td>
+
+      <%= f.fields_for :question_setup do |setup_form| %>
+      
+        <div class="question_edit_subblock" style="margin-top:0px">
+          <% class_to_reveal_on_logic_show = "reveal_on_logic_show_#{@logic_counter ||= (@logic_counter || -1) + 1}"%>
+          <%= render :partial => 'logics/form', 
+                     :locals => {:f => setup_form, 
+                                 :logicable => @question.question_setup,
+                                 :class_to_reveal_on_logic_show => class_to_reveal_on_logic_show} %>
+        </div>
+      
+      
+        <div class="question_edit_subblock">
+          <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
+               style="<%= @question.question_setup.logic.empty? ? 'display:none;' : '' %>">Introductory Text</div>
+      
           <div class="field">
-             <%= f.fields_for :question_setup do |setup_form| %>
-                <%= setup_form.text_area :content, 
-                                         :rows => 8, 
-                                         :class => "mark_it_up", 
-                                         'data-attachable_type'=>'intro' %>
-             <% end %>
+             <%= setup_form.text_area :content, 
+                              :rows => 8, 
+                              :class => "mark_it_up", 
+                              :style => 'width:100%',
+                              'data-attachable_type'=>'intro' %>
           </div>
-       </td>
-       <td></td>
-    </tr>
-    <% if setup_blank %>
-      <tr id="setup_show_row"><td colspan="3">
-        <%= link_to_function "Add a common introduction to this question.", 
-                             '$("#setup_row").show(); $("#setup_show_row").hide();'%> (optional)
-        <span style="float:right"><%= link_to_help "question_setup", "What is this?" %></span>
-      </td></tr>
+        </div>
+      <% end %>
+
     <% end %>
     
-    <% end %>
-    <tr>
-       <td valign="top"><i>Question text:</i></td>
-       <td>
-          <div class="field">
-             <%= f.text_area :content, :rows => 8, :class => "mark_it_up" %>
-          </div>
-       </td>
-       <td></td>
-    </tr>
-    <%= f.fields_for :answer_choices do |ac_form| %>
-       <%= render 'simple_questions/answer_choice_fields', :f => ac_form %>
-    <% end %>
- </table>
+  <% end %> 
 
- <p>   
- <%= link_to_add_fields "Add a multiple-choice answer", 
-                        f, 
-                        :answer_choices, 
-                        "table.target",
-                        {}, {:partial_name => 'simple_questions/answer_choice_fields'} %>
+  <div style="<%= setup_blank ? '' : 'display:none' %>">
+    <%= link_to_function "Add a common introduction to this question.", 
+                         '$("#intro_text_block").show(); Quadbase.CodeMirrorUtils.refreshCodeMirrors(); $(this).parent().hide();'%> 
+    (optional)
+    <span style="float:right"><%= link_to_help "question_setup", "What is this?" %></span>
+  </div>
+
+  <%= question_edit_block "The Question" do %>
+
+
+    <div class="question_edit_subblock" style="margin-top:0px">
+      <% class_to_reveal_on_logic_show = "reveal_on_logic_show_#{@logic_counter ||= (@logic_counter || -1) + 1}"%>
+      <%= render :partial => 'logics/form', 
+                 :locals => {:f => f, 
+                             :logicable => @question,
+                             :class_to_reveal_on_logic_show => class_to_reveal_on_logic_show} %>
+    </div>
+    
+    <div class="question_edit_subblock">
+      <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
+           style="<%= @question.logic.empty? ? 'display:none;' : '' %>">Question Text</div>
+    
+      <div class="field">
+        <%= f.text_area :content, :rows => 8, :class => "mark_it_up", :style => 'width:100%', %>
+      </div>
+    </div>
+    
+  <% end %>
+
+  <div class="answer_choices">
+    <%= f.fields_for :answer_choices do |ac_form| %>
+      <%= render 'simple_questions/answer_choice_fields', :f => ac_form %>
+    <% end %>
+  </div>
+  
+  <p>   
+   <%= link_to_add_fields "Add a multiple-choice answer", 
+                          f, 
+                          :answer_choices, 
+                          "div.answer_choices",
+                          {}, {:partial_name => 'simple_questions/answer_choice_fields'} %>
+  </p>
+ 
+
 

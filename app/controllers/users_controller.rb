@@ -2,8 +2,8 @@
 # License version 3 or later.  See the COPYRIGHT file for details.
 
 class UsersController < AdminController
-  skip_before_filter :authenticate_admin!, :only => [:show, :help, :search]
-  skip_before_filter :authenticate_user!, :only => [:help]
+  skip_before_filter :authenticate_admin!, :only => [:show, :help, :search, :become]
+  skip_before_filter :authenticate_user!, :only => [:help, :become]
   before_filter {select_tab(:account)}
   
   def index
@@ -53,6 +53,13 @@ class UsersController < AdminController
     @user = User.find(params[:user_id])
     @user.confirm!
     redirect_to(user_path(@user))
+  end
+  
+  def become
+    raise SecurityTransgression unless Rails.env.development? || current_user.is_administrator?
+    
+    sign_in(:user, User.find(params[:user_id]))
+    redirect_to request.referer # root_path
   end
   
 end

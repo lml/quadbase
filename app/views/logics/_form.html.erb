@@ -1,0 +1,106 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%# 
+  Clients of this partial will specify 
+       the 'logicable' this form is for 
+       the parent form 'f' in which these form elements are embedded
+       a class of elements to reveal 'class_to_reveal_on_logic_show' when someone
+          clicks the "Add variations" link (optional)
+%>
+
+<% logic = logicable.logic
+   @logic_counter = (@logic_counter || -1) + 1
+   class_to_reveal_on_logic_show ||= "reveal_on_logic_show_#{@logic_counter}" %>
+
+<% LogicLibraryVersion.all.each do |version| %>
+  <%= content_tag :div, :id => "library_#{version.id}", :style => 'display:none' do %>
+    //<![CDATA[
+    <%= version.minified_code %>
+    //]]>
+  <% end %>
+<% end %>
+
+<% if !logic %>
+  <span style="float:right">
+    <%= link_to_function "Add computer-generated variations", 
+                         "$('.#{class_to_reveal_on_logic_show}').show(); Quadbase.CodeMirrorUtils.refreshCodeMirrors(); $(this).parent().hide();" %>
+  </span>
+<% end %>
+
+<div class="<%= class_to_reveal_on_logic_show %>" style="<%= !logic ? 'display:none;' : '' %> padding: 8px 0;">
+
+  <% logic ||= logicable.build_logic %>
+  
+  <%= f.fields_for :logic, logic do |logic_form| %>
+    <div class="question_edit_block_subtitle" style="margin-top:-10px">
+      Logic for Computer-Generated Variations
+      <div style="float:right; font-size:9px; font-style:normal; margin-top:-2px">
+        <%= link_to_function "<center><span class='lib_link_#{@logic_counter}'>Show</span><span class='lib_link_#{@logic_counter}' style='display:none'>Hide</span><br/>Libraries</center>".html_safe, 
+                             "$('#libraries_#{@logic_counter}').toggle(); $('.lib_link_#{@logic_counter}').toggle()" %>
+      </div>
+    </div>    
+    
+               
+    <div id="libraries_<%= @logic_counter %>" style="display:none">
+      <%= render :partial => 'logics/library_selection',
+                 :locals => {:logic_form => logic_form, :logic_counter => @logic_counter} %>
+    </div>
+    
+    <%= logic_form.text_area :code, 
+                             :class => 'code_editor', 
+                             :id => "code_editor_#{@logic_counter}", 
+                             :style => 'width:100%' %>
+                
+    <div style="padding-top:8px"></div>
+
+    <div style="color:#555555; margin: 8px 0">
+      In the text field below, <b>list the variables</b> from the logic above that you want to use 
+      in this question.  Separate variable names with commas (e.g. "x, speed, y").
+    </div>
+
+    <style type="text/css">
+      .question_code_text_field {
+        border: #777 1px solid; 
+        font-family: courier, monospace; 
+        font-size: 14px; 
+        height: 24px; 
+        padding: 4px;
+      }
+    </style>
+
+    <div class="field">
+      <%= logic_form.text_field :variables, 
+                                :id => "variables_#{@logic_counter}",
+                                :class => 'question_code_text_field', 
+                                :style => "border: #777 1px solid; width:100%;" %> 
+    </div>
+
+    <div style="color:#555555; margin: 8px 0 0">
+      Show results for <%= link_to_function "this seed ", "Quadbase.CodeMirrorUtils.testLogic(#{@logic_counter})" %> 
+      <%= text_field_tag "seed_#{@logic_counter}", Random.rand(100000), 
+                         :class => 'question_code_text_field', 
+                         :style => 'width:80px; border: #777 1px solid;' %>
+      or for a 
+      <%= link_to_function 'new seed', 
+                           "$('#seed_#{@logic_counter}').val(Math.round(Math.random()*100000)); Quadbase.CodeMirrorUtils.testLogic(#{@logic_counter})" %>
+    </div>
+
+    <div id="results_<%= @logic_counter %>" style="display:none; border: #777 1px solid;font-family: courier, monospace; 
+    font-size: 14px; padding: 4px 6px; margin-top: 8px "></div>
+
+  <% end %>
+</div>
+
+<% @include_codemirror = true %>
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>
+
+    $(document).ready(function() {
+      Quadbase.CodeMirrorUtils.initCodeMirror('code_editor_<%= @logic_counter %>');
+    });
+    
+  <% end %>
+<% end %>
+

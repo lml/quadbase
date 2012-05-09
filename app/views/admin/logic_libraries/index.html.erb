@@ -1,0 +1,41 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%= pageHeading "Logic Libraries" %>
+
+<% @include_jquery = true %>
+
+<%= sortable_list(@logic_libraries, 
+                  'name', 
+                  sort_admin_logic_libraries_path, 
+                  {:style => 'margin: 10px 0', 
+                   :namespace => :admin})%>
+
+<% if false %>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Number</th>
+    <th>Summary</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @logic_libraries.each do |logic_library| %>
+  <tr>
+    <td><%= logic_library.name %></td>
+    <td><%= logic_library.number %></td>
+    <td><%= logic_library.summary %></td>
+    <td><%= link_to 'Show', [:admin, logic_library] %></td>
+    <td><%= link_to 'Edit', edit_admin_logic_library_path(logic_library) %></td>
+    <td><%= link_to 'Destroy', [:admin, logic_library], :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<% end %>
+
+<br />
+
+<%= link_to 'New Logic library', new_admin_logic_library_path %>

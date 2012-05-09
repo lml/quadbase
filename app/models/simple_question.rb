@@ -39,6 +39,11 @@ class SimpleQuestion < Question
     self.errors.add(:base,'Content must not be empty.') if content.blank?
   end
   
+  def variate!(variator)
+    super(variator)
+    answer_choices.each {|ac| ac.variate!(variator)}
+  end
+  
 protected
   
   def at_least_one_right_answer

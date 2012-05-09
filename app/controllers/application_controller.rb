@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
                 :protect_form,
                 :view_dir
 
-  respond_to :html
+  respond_to :html, :js
 
   unless Quadbase::Application.config.consider_all_requests_local
     rescue_from Exception, :with => :rescue_from_exception
@@ -41,6 +41,9 @@ class ApplicationController < ActionController::Base
          ActionController::UnknownAction
       error_page = 404
       send_email = false
+    # when ::ActionController::MissingTemplate,
+    #   error_page = 404
+    #   send_email = false
     end
     
     render_error_page(error_page)

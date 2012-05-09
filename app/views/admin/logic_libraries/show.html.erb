@@ -1,0 +1,37 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<p>
+  <b>Name:</b>
+  <%= @logic_library.name %>
+</p>
+
+<p>
+  <b>Always Required:</b>
+  <%= tf_to_yn(@logic_library.always_required) %>
+</p>
+
+<p>
+  <b>Summary:</b>
+  <%= @logic_library.summary %>
+</p>
+
+<p><b>Versions:</b></p>
+
+<% versions = @logic_library.logic_library_versions %>
+<% if versions.empty? %>
+  <p style="margin-left:20px">None</p>
+<% else %>
+  <ul>
+    <% versions.each do |version| %>
+      <li><%= link_to version.version, [:admin, version] %>
+    <% end %>
+  </ul>
+<% end %>
+
+<% @include_jquery = true %>
+
+<%= link_to 'Edit', edit_admin_logic_library_path(@logic_library) %> |
+<%= link_to 'New Version', new_admin_logic_library_logic_library_version_path(@logic_library) %> |
+<%= link_to 'Destroy', [:admin, @logic_library], :method => :delete, :confirm => "Are you sure?" %> |
+<%= link_to 'List', admin_logic_libraries_path %>

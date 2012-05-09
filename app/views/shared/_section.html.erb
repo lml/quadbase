@@ -1,0 +1,29 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% collapsible ||= false %>
+<% collapsed ||= false %>
+<% anchor_name ||= nil %>
+
+<div class="section">
+  <div class="section_heading">
+    <% if !anchor_name.blank? %>
+      <%= link_to "", {}, :name => anchor_name %>
+    <% end %>
+    <%= title.html_safe %>
+    <% if collapsible %>
+    <span style="font-size:11px; display:inline">&nbsp;&nbsp;[
+    <%= link_to_function "Collapse",
+                         "$(this).parent().parent().parent().children('.section_body').hide(); $(this).hide(); $(this).next().show();",
+                         :style => (collapsed ? "display:none" : "display:inline") %>
+    <%= link_to_function "Expand",
+                         "$(this).parent().parent().parent().children('.section_body').show(); $(this).hide(); $(this).prev().show();", 
+                         :style => (collapsed ? "display:inline" : "display:none") %>
+    ]</span>
+    <% end %>
+  </div>
+  
+  <div class="section_body" style="<%= collapsed ? 'display:none' : '' %>">
+    <%= body %>  
+  </div>
+</div>

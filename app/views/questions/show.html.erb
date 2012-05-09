@@ -15,8 +15,12 @@
 
 <div class="quad-question">
    
-   <%= render :partial => "show", 
-              :locals => {:question => @question} %>
+  <% if @question.errors.none? %>
+    <%= render :partial => "show", 
+               :locals => {:question => @question} %>
+  <% else %>
+    This question cannot be shown because one or more errors occurred when retrieving it.
+  <% end %>
 
 <br/>
 

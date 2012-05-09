@@ -23,9 +23,24 @@ class QuestionsController < ApplicationController
     @question = Question.from_param(params[:id])
     raise SecurityTransgression unless present_user.can_read?(@question)
     
+    start_time = Time.now if logger.info?
+    
+    @question.variate!(QuestionVariator.new(params[:seed]))
+    
+    logger.info {"Variated question #{@question.to_param} with seed " +
+                 "#{params[:seed] || '[unset]'}, duration = #{Time.now-start_time}"}
+          
     respond_to do |format|
-      format.json { render :template => "#{view_dir(@question)}/show"}
-      format.html
+      format.json
+      format.html 
+      format.qti { 
+        render :template => case params[:version] 
+                            when "1.2", nil
+                              "#{view_dir(@question)}/show.1p2"
+                            else
+                              raise ActionController::UnknownAction
+                            end
+      }
     end
   end
 
@@ -65,6 +80,7 @@ class QuestionsController < ApplicationController
   # we just want it to go to the questions view.
   def update
     @question = Question.from_param(params[:id])
+
     raise SecurityTransgression unless present_user.can_update?(@question)
     if (@no_lock = !@question.check_and_unlock!(present_user))
       flash[:alert] = @question.errors[:base]
@@ -101,12 +117,13 @@ class QuestionsController < ApplicationController
   def preview
     @question = Question.from_param(params[:question_id])
     raise SecurityTransgression unless present_user.can_read?(@question)
-    
+
     @question.attributes = params[:question]
 
     Question.transaction do
       respond_to do |format|
         if @question.save
+          @question.variate!(QuestionVariator.new)
           format.js
         else
           format.js
@@ -123,6 +140,7 @@ class QuestionsController < ApplicationController
     raise SecurityTransgression unless parts.length >= params[:part_id].to_i
     
     @question = parts[params[:part_id].to_i-1].child_question
+    
     raise SecurityTransgression unless present_user.can_read?(@question)
     
     
@@ -346,6 +364,8 @@ class QuestionsController < ApplicationController
                                  @query, present_user, @exclude_type) \
                          .reject { |q| (q.is_published? && !q.is_latest?) ||
                                        !present_user.can_read?(q) }
+    # TODO: Possibly move the reject statement into the SQL query in Question.search
+    # This could speed up all searching, including pagination
     respond_to do |format|
       format.html do
         @questions = @questions.paginate(:page => params[:page], :per_page => @per_page)

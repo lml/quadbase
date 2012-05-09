@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.3'
+gem 'rails', '3.0.12'
 gem 'rake', '0.8.7'
 
 # Bundle edge Rails instead:
@@ -38,19 +38,29 @@ gem 'yajl-ruby'
 gem 'jsonify'
 gem 'jsonify-rails'
 
+gem 'execjs'
+gem 'therubyracer'
+gem 'uglifier'
+
+gem "bullring", "~> 0.7.4"
+
 group :development, :test do
-	gem 'sqlite3-ruby', :require => 'sqlite3'
+	gem 'sqlite3'
 	gem 'ruby-debug19'
    # gem 'machinist', '< 2.0'
    gem 'faker'
    gem 'factory_girl_rails', '<2.0'
+   gem 'timecop'
 end
+
+gem 'single_test'
 
 group :production do
 	gem 'mysql2'
 	gem 'rack-ssl-enforcer'
 end
 
+gem 'ruby-debug19'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'

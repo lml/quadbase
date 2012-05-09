@@ -1,0 +1,9 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%  style ||= '' %>
+
+<div class="question_edit_block roundedCorners10" style="<%= style %>" <%= "id=#{id}" unless local_assigns[:id].nil? %>>
+  <div class="question_edit_block_title"><%= title %></div>
+  <div class="question_edit_block_body"><%= body %></div>
+</div>

@@ -4,7 +4,7 @@
 <% content_for :after_form do %>
   <% @errors = @question.errors %>
 
-  <% @human_field_names = {:"question_setup.content" => "Introduction content"} %>
+  <% add_human_field_names(:"question_setup.content" => "Introduction content") %>
 
   <%= render :partial => "attachable_assets/add_image_dialog",
              :locals => {:attachable => @question.question_setup} %>
