@@ -9,18 +9,22 @@ class AnswerChoiceTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
   test "can't modify/destroy a choice for a published question" do
-    sq = make_simple_question({:answer_credits => [0,1,0,0], 
-                               :published => true,
+    sq = make_simple_question({:answer_credits => [0,1,0,0],
                                :method => :create})
-    
     ac1_id = sq.answer_choices.first.id
     sq.answer_choices.first.destroy
+    assert_raise(ActiveRecord::RecordNotFound) {AnswerChoice.find(ac1_id)}
+
+    pq = make_simple_question({:answer_credits => [0,1,0,0],
+                               :published => true,
+                               :method => :create})
+    pac1_id = pq.answer_choices.first.id
+    pq.answer_choices.first.destroy
+    assert_nothing_raised(ActiveRecord::RecordNotFound) {AnswerChoice.find(pac1_id)}
     
-    assert_nothing_raised(ActiveRecord::RecordNotFound) {AnswerChoice.find(ac1_id)}
-    
-    ac1 = AnswerChoice.find(ac1_id)
-    ac1.content = "This shouldn't stick"
-    assert_raise(ActiveRecord::RecordInvalid) {ac1.save!}
+    pac1 = AnswerChoice.find(pac1_id)
+    pac1.content = "This shouldn't stick"
+    assert_raise(ActiveRecord::RecordInvalid) {pac1.save!}
   end
 
   test "can't mass-assign question and content_html" do
