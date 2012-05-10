@@ -107,7 +107,7 @@ def make_simple_question(options = {})
   sq.answer_choices = 
     options[:answer_credits].map!{|c| Factory.build(:answer_choice, :credit => c)}
 
-  sq.question_setup = QuestionSetup.create(:content => "") if options[:no_setup] 
+  sq.question_setup.content = "" if options[:no_setup] 
   
   user = Factory.create(:user)
   

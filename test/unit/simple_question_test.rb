@@ -58,7 +58,7 @@ class SimpleQuestionTest < ActiveSupport::TestCase
   
   test "deleting unpub question deletes direct associations" do 
     sq = make_simple_question(:answer_credits => [1,0], :method => :create)
-    
+    sq.answer_choices.each { |ac| ac.save! }
     sq.destroy
     
     assert_raise(ActiveRecord::RecordNotFound) { AnswerChoice.find(sq.answer_choices.first.id) }

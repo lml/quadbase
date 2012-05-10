@@ -21,7 +21,7 @@ class SolutionsControllerTest < ActionController::TestCase
 
   test "should not get index not logged in" do
     get :index, :question_id => @question.to_param
-    assert_redirected_to login_path
+    assert_response(403)
   end
 
   test "should not get index not authorized" do
@@ -31,7 +31,6 @@ class SolutionsControllerTest < ActionController::TestCase
   end
 
   test "should get index published question" do
-    user_login
     get :index, :question_id => @published_question.to_param
     assert_response :success
   end
@@ -67,7 +66,7 @@ class SolutionsControllerTest < ActionController::TestCase
 
   test "should not show solution not logged in" do
     get :show, :id => @solution.to_param
-    assert_redirected_to login_path
+    assert_response(403)
   end
 
   test "should not show solution not authorized" do
@@ -89,7 +88,6 @@ class SolutionsControllerTest < ActionController::TestCase
   end
 
   test "should show visible solution published question" do
-    user_login
     get :show, :id => @visible_published_solution.to_param
     assert_response :success
   end
