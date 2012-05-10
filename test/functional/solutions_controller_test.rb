@@ -31,7 +31,6 @@ class SolutionsControllerTest < ActionController::TestCase
   end
 
   test "should get index published question" do
-    user_login
     get :index, :question_id => @published_question.to_param
     assert_response :success
   end
