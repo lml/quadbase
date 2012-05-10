@@ -102,6 +102,7 @@ class QuestionsControllerTest < ActionController::TestCase
 
   test "should get edit" do
     sign_in @user
+@question.save!
     get :edit, :id => @question.to_param
     assert_response :success
   end

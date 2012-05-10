@@ -21,7 +21,7 @@ class SolutionsControllerTest < ActionController::TestCase
 
   test "should not get index not logged in" do
     get :index, :question_id => @question.to_param
-    assert_redirected_to login_path
+    assert_response(403)
   end
 
   test "should not get index not authorized" do
@@ -67,7 +67,7 @@ class SolutionsControllerTest < ActionController::TestCase
 
   test "should not show solution not logged in" do
     get :show, :id => @solution.to_param
-    assert_redirected_to login_path
+    assert_response(403)
   end
 
   test "should not show solution not authorized" do
