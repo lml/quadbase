@@ -14,7 +14,7 @@
 
   <div id="tag_actions" style="margin-top:10px; font-size: 11px; <%= 'display:none' if show_remove_form %>">
     <%= link_to_function "Add Tag", 
-                         "$('#tag_entry_field').val(''); $('#add_tag_form').show(); $('#tag_actions').hide();", 
+                         "$('#tag_entry_field').val(''); $('#add_tag_form').show(); $('#tag_entry_field').focus(); $('#tag_actions').hide();", 
                          :style => "white-space: nowrap;" %> |
     <%= link_to_function "Remove Tags...", 
                          "$('#remove_tags_form').show(); $('#tag_actions').hide(); $('#tag_links').hide();", 
