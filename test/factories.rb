@@ -58,7 +58,7 @@ end
 
 Factory.define :simple_question do |f|
   f.content { Factory.next(:couple_of_words) }
-  f.question_setup {|q| q.association :question_setup}
+  f.association :question_setup
   f.number { Factory.next(:unique_number) }
   f.license_id { common_license.id }
   f.version nil
