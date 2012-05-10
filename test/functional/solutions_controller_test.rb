@@ -88,7 +88,6 @@ class SolutionsControllerTest < ActionController::TestCase
   end
 
   test "should show visible solution published question" do
-    user_login
     get :show, :id => @visible_published_solution.to_param
     assert_response :success
   end
