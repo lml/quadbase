@@ -48,7 +48,7 @@ class Solution < ActiveRecord::Base
   #############################################################################
 
   def can_be_read_by?(user)
-    !user.is_anonymous? && user.can_read?(question) && (is_visible || user == creator)
+    user.can_read?(question) && (is_visible || (!user.is_anonymous? && user == creator))
   end
 
   def can_be_created_by?(user)

@@ -39,7 +39,7 @@
                                  :height => 400, 
                                  :width =>900} %> your question?</p>
 
-  <% setup_blank = @question.question_setup.empty? %>
+  <% setup_blank = @question.question_setup.is_empty? %>
 
   <% intro_options = {:style => "#{setup_blank ? 'display:none' : ''}", :id => 'intro_text_block'} %>
 

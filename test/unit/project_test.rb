@@ -12,7 +12,7 @@ class ProjectTest < ActiveSupport::TestCase
     
     [0,1,2].each do |n|
       assert_raise(ActiveRecord::RecordNotFound) {ProjectQuestion.find(ww.project_questions[n].id)}
-      assert_nothing_raised(ActiveRecord::RecordNotFound) { Question.find(ww.project_questions[n].question.id) }
+      assert_raise(ActiveRecord::RecordNotFound) { Question.find(ww.project_questions[n].question.id) }
     end
     
     assert ww.questions.empty?

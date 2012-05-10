@@ -47,7 +47,7 @@ class QuestionSetup < ActiveRecord::Base
     @variated_content_html = variator.fill_in_variables(content_html)
   end
   
-  def empty?
+  def is_empty?
     content.blank? && (logic.nil? || logic.empty?)
   end
     
