@@ -61,11 +61,10 @@
                                    :disabled => !question.setup_is_changeable? %>
         <% end %>
       </div>
-      <% if !question.setup_is_changeable? %>
-      <br/>
-        To change the common introduction, remove any<br/>
-        published questions that have their own introduction.
-      <% end %>
+      <div id="disabled_explanation" style="<%= !question.setup_is_changeable? ? '' : 'display:none'%>">
+        To change the common introduction, first remove or unlock
+        <br/>any published questions that have their introductions set.
+      </div>
     </div>
     
 <%# The following JS manages the sorting of the parts table %>

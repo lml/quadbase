@@ -50,6 +50,19 @@ class QuestionSetup < ActiveRecord::Base
   def is_empty?
     content.blank? && (logic.nil? || logic.empty?)
   end
+
+  def merge(qs)
+    return self if self == qs
+    if (content.blank? || content == qs.content) && content_change_allowed?
+puts id
+puts 'aaaa'
+puts content_change_allowed?
+      return qs
+    elsif (qs.content.blank? || content == qs.content) && qs.content_change_allowed?
+      return self
+    end
+    nil
+  end
     
   #############################################################################
   # Access control methods
