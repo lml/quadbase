@@ -157,9 +157,9 @@ class Question < ActiveRecord::Base
   end
   
   def self.from_param(param)
-    if (param =~ /^d(\d+)/)
+    if (param =~ /^d(\d+)$/)
       q = Question.find($1.to_i) # Rails escapes this
-    elsif (param =~ /^q(\d+)(v(\d+))?/)
+    elsif (param =~ /^q(\d+)(v(\d+))?$/)
       if ($3.nil?)
         q = latest_published($1.to_i) # Somewhat dangerous but seems to be properly escaped
       else
@@ -457,9 +457,23 @@ class Question < ActiveRecord::Base
     wtscope = wscope.where(:question_type.matches % typify(type))
     wtscope = wtscope.where(:question_type.not_matches % typify(exclude_type)) if !exclude_type.blank?
 
-    wtscope.joins(:question_setup.outer).joins({:taggings.outer => :tag.outer}).where((:content.matches % query)\
-            | {:question_setup => [:content.matches % query]} | {:tags => [:name.matches % query]})\
-            .order(:id).select("DISTINCT questions.*")
+    # Search by question ID or number
+    id_query = ''
+    num_query = ''
+    if (text =~ /^(\d+)$/)
+      id_query = $1
+      num_query = $1
+    elsif (text =~ /^d(\d+)$/)
+      id_query = $1
+    elsif (text =~ /^q(\d+)(v(\d+))?$/)
+      # Note you cannot find old versions of published questions since
+      # those are automatically removed in the controller
+      num_query = $1
+    end
+
+    wtscope.joins(:question_setup.outer).joins({:taggings.outer => :tag.outer}).where((:id.eq % id_query) |\
+            (:number.eq % num_query) | (:content.matches % query) | {:question_setup => [:content.matches % query]} |\
+            {:tags => [:name.matches % query]}).order(:id).select("DISTINCT questions.*")
 
     # This should the most efficient way to do the search
     # (Inner joins with UNION could maybe be faster,
