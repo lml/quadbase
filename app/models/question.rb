@@ -541,11 +541,13 @@ class Question < ActiveRecord::Base
     # Othewise, returns false.
     return true if @@lock_timeout <= 0
     # Transaction to make testing and setting the lock atomic
-    Question.transaction do
-      return already_locked_error if (is_locked? && !has_lock?(user))
-      locked_by = user.id
-      locked_at = Time.now
-      save
+    # In rails 3.2, replace transaction and lock! with with_lock block
+    self.transaction do
+      self.lock!
+      return already_locked_error if (self.is_locked? && !self.has_lock?(user))
+      self.locked_by = user.id
+      self.locked_at = Time.now
+      self.save!
     end
   end
 
@@ -554,11 +556,13 @@ class Question < ActiveRecord::Base
     # Othewise, returns false.
     return true if @@lock_timeout <= 0
     # Transaction to make releasing the lock atomic
-    Question.transaction do
-      return not_locked_error if !is_locked?
-      return already_locked_error if (is_locked? && !has_lock?(user))
+    # In rails 3.2, replace transaction and lock! with with_lock block
+    self.transaction do
+      self.lock!
+      return not_locked_error if !self.is_locked?
+      return already_locked_error if (self.is_locked? && !self.has_lock?(user))
       self.locked_by = -1
-      save
+      self.save!
     end
   end
 
