@@ -5,7 +5,7 @@
 
 <tr id="part_<%= part.id %>" class="questionPartSummary roundedCorners5">
   <td width="5%" valign="top"><span class="ui-icon ui-icon-arrow-4 handle"></span></td>
-  <td width="80%"><%= link_to "Part #{part.order}", part_edit_or_show_path(part, @this_is_edit_view) %>
+  <td width="75%"><%= link_to "Part #{part.order}", part_edit_or_show_path(part, @this_is_edit_view) %>
   (<%= question_id_link(part.child_question) %>)
     <div class="linkedQuestions" id="dependencies_for_<%= part.child_question_id %>">
       <%= render :partial => 'multipart_questions/part_dependencies', 
