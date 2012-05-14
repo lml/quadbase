@@ -31,6 +31,10 @@ class QuestionSetupTest < ActiveSupport::TestCase
     qs_different = Factory.create(:question_setup)
     qs_different.content = "Something else"
 
+    qs.save!
+    qs_blank.save!
+    qs2.save!
+
     assert_equal qs.merge(qs_blank), qs
     assert_equal qs_blank.merge(qs), qs
 
@@ -42,6 +46,15 @@ class QuestionSetupTest < ActiveSupport::TestCase
 
     assert_nil qs.merge(qs_different)
     assert_nil qs_different.merge(qs)
+
+    pq = make_simple_question(:published => true, :question_setup => qs)
+    pq2 = make_simple_question(:published => true, :question_setup => qs2)
+
+    qs.reload
+    qs2.reload
+
+    assert_nil qs.merge(qs2)
+    assert_nil qs2.merge(qs)
   end
 
 end

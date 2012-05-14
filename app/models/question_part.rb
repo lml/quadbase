@@ -23,10 +23,11 @@ class QuestionPart < ActiveRecord::Base
   end
 
   def unlock!(user)
-    return if !child_question.is_published?
+    return false if !child_question.is_published?
     self.child_question = child_question.new_derivation!(user, multipart_question.project_questions.first.project)
     self.save!
     multipart_question.check_and_unlock_setup!
+    true
   end
 
   def self.sort(sorted_ids)
