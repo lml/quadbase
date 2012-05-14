@@ -5,10 +5,27 @@
 
 <tr id="part_<%= part.id %>" class="questionPartSummary roundedCorners5">
   <td width="5%" valign="top"><span class="ui-icon ui-icon-arrow-4 handle"></span></td>
-  <td width="95%"><%= link_to "Part #{part.order}", part_edit_or_show_path(part, @this_is_edit_view) %>
+  <td width="80%"><%= link_to "Part #{part.order}", part_edit_or_show_path(part, @this_is_edit_view) %>
   (<%= question_id_link(part.child_question) %>)
+    <div class="linkedQuestions" id="dependencies_for_<%= part.child_question_id %>">
+      <%= render :partial => 'multipart_questions/part_dependencies', 
+                 :locals => { :part => part } %>
+
+    </div>
+  </td>
+
+  <td width=15% align="left">
+  <% if part.child_question.is_published? && present_user.can_update?(part) %>
+    <%= button_to 'Unlock', 
+            question_part_unlock_path(part),
+            :method => :put,
+            :class => "button_link small",
+            :remote => true,
+            :onclick => please_wait_js %>
+  <% end %>
+  </td>
   
-  <span style="float:right">
+  <td width="5%">
     <% if present_user.can_destroy?(part) %>
       <%= link_to x_icon, 
                   question_part_path(part),
@@ -18,14 +35,6 @@
                               "itself will not be deleted.",
                   :remote => true %>
     <% end %>
-  </span>
-  
-  
-    <div class="linkedQuestions" id="dependencies_for_<%= part.child_question_id %>">
-      <%= render :partial => 'multipart_questions/part_dependencies', 
-                 :locals => { :part => part } %>
-
-    </div>
   </td>
 </tr>
    

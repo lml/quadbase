@@ -22,6 +22,12 @@ class QuestionPart < ActiveRecord::Base
                             :order => order)
   end
 
+  def unlock!(user)
+    return if !child_question.is_published?
+    self.child_question = child_question.new_derivation!(user, multipart_question.project_questions.first.project)
+    self.save!
+  end
+
   def self.sort(sorted_ids)
     QuestionPart.transaction do
       next_position = 1
