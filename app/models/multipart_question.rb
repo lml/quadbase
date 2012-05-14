@@ -179,6 +179,14 @@ class MultipartQuestion < Question
     # so that the multipart setup is editable again.  This would mean copying the 
     # content to a new setup and changing the setup_ids in the relevant questions.
     child_questions.delete(question)
+
+    check_and_unlock_setup!
+
+    QuestionPart.sort(child_question_parts) # Recompute part order
+  end
+
+  def check_and_unlock_setup!
+    # Will check if all published question parts are gone and if so copy and unlock the question setup
     published_uniq_setup_ids = child_questions.select{|q| q.is_published? && !q.question_setup.nil? &&
                                                           !q.question_setup.content.blank?}
                                               .collect{|q| q.question_setup_id}.uniq
@@ -188,10 +196,8 @@ class MultipartQuestion < Question
       new_setup.save!
       set_question_setup!(new_setup)
     end
-
-    QuestionPart.sort(child_question_parts) # Recompute part order
   end
-  
+
   def is_multipart?
     true
   end
