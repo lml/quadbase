@@ -86,7 +86,7 @@ When you have RVM and bundler, fork the code and change into the quadbase direct
 quadbase gemset.  
 
     bundle --without production
-    bundle rake db:migrate
+    bundle exec rake db:migrate
     bundle exec rails server
     
 To upload images to questions, you'll need to have ImageMagick installed and set the parameters appropriately
