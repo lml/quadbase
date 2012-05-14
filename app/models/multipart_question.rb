@@ -187,7 +187,6 @@ class MultipartQuestion < Question
       new_setup = question_setup.content_copy
       new_setup.save!
       set_question_setup!(new_setup)
-puts 'aaa'
     end
 
     QuestionPart.sort(child_question_parts) # Recompute part order
