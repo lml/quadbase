@@ -21,4 +21,27 @@ class QuestionSetupTest < ActiveSupport::TestCase
     assert_not_equal qs0, qs1
   end
 
+  test "merge" do
+    qs = Factory.create(:question_setup)
+    qs.content = "Something"
+    qs_blank = Factory.create(:question_setup)
+    qs_blank.content = ""
+    qs2 = Factory.create(:question_setup)
+    qs2.content = "Something"
+    qs_different = Factory.create(:question_setup)
+    qs_different.content = "Something else"
+
+    assert_equal qs.merge(qs_blank), qs
+    assert_equal qs_blank.merge(qs), qs
+
+    assert_equal qs.merge(qs2), qs2
+    assert_equal qs2.merge(qs), qs
+
+    assert_equal qs2.merge(qs_blank), qs2
+    assert_equal qs_blank.merge(qs2), qs2
+
+    assert_nil qs.merge(qs_different)
+    assert_nil qs_different.merge(qs)
+  end
+
 end

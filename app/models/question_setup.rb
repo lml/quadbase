@@ -52,10 +52,14 @@ class QuestionSetup < ActiveRecord::Base
   end
 
   def merge(qs)
+    # If the given question setup can be merged with self without losing content
+    # or changing any published questions, returns the result of merging the
+    # two setups. Otherwise, returns nil.
     return self if self == qs
-    if (content.blank? || content == qs.content) && content_change_allowed?
+    same_content = content == qs.content
+    if content.blank? || (same_content && content_change_allowed?)
       return qs
-    elsif (qs.content.blank? || content == qs.content) && qs.content_change_allowed?
+    elsif qs.content.blank? || (same_content && qs.content_change_allowed?)
       return self
     end
     nil

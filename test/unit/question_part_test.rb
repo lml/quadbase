@@ -4,8 +4,11 @@
 require 'test_helper'
 
 class QuestionPartTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
+
+  fixtures
+  self.use_transactional_fixtures = true
+
+  test "unlock" do
     assert true
   end
 end
