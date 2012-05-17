@@ -9,6 +9,7 @@ Bullring.configure do |config|
   config.jvm_init_heap_size = '80m'
   config.jvm_max_heap_size = '80m'
   config.jvm_young_heap_size = '40m'
+  config.server_max_bringup_time = 40
 end
 
 # Give Bullring all the library scripts, don't do this until the migration
