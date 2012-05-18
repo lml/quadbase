@@ -35,9 +35,21 @@ module ApplicationHelper
   def check_icon
     image_tag("check_icon_v1.png", {:border => 0, :alt => "Yes / Check", :title => "Yes / Check"})
   end
+
+  def check_credit
+    image_tag("checkCredit.png", {:display=>"inline-block",:height=> "30px", :width=> "30px", :margin=>"5px", :padding=>"0", :border => 0, :alt => "Yes / Check", :title => "Yes / Check"})
+  end
   
   def link_to_remove_fields(name, f)
     f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)")
+  end
+
+  def link_to_partial_fields(name, f)
+    link_to_function(name, "partial_fields(this)")
+  end
+
+  def link_to_rightwrong_fields(name, f)
+    link_to_function(name, "rightwrong_fields(this)")
   end
   
   # Options:

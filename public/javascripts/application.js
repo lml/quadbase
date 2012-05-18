@@ -12,6 +12,20 @@ function remove_fields(link) {
   $(link).closest(".fields").hide();
 }
 
+function partial_fields(link) {
+   
+   $(link).parent().hide();
+   $(link).parent().next(".partialtext").show();
+
+}
+
+function rightwrong_fields(link) {
+   
+   $(link).parent().hide();
+   $(link).parent().prev(".hidethis").show();
+
+}
+
 function add_fields(elem_to_append_to, association, content) {
   var new_id = new Date().getTime();
   var regexp = new RegExp("new_" + association, "g");

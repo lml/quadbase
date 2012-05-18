@@ -20,12 +20,27 @@ div.quad-question_setup {
 }
 
 div.quad-question_content {
-	margin-bottom: 10px;
+	position:relative
+	z-index:-1;
+}
+
+div.quad-answer_choices2 {
+	position:relative;
+	z-index:0;
+	margin-left: 60px;
+	width: 90%;
+	
+
 }
 
 div.quad-answer_choices {
+	position:relative;
+	z-index:1;
+	float:left;
+	width:10%;
 
 }
+
 
 .quad-answer_choice p {
    margin:0px;
@@ -34,6 +49,17 @@ div.quad-answer_choices {
 .quad-answer_choice {
    padding: 2px 8px 4px 8px;
 }
+
+.quad-credit_behind {
+   padding: 2px 8px 4px 8px;
+   z-index:1;
+}
+
+.quad-credit_behind {
+   padding: 2px 8px 4px 8px;
+   z-index:2;
+}
+
 
 
 .quad-answer_choice_index {

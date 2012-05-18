@@ -4,5 +4,22 @@
    <%= render :partial => "#{view_dir(question)}/show", 
               :locals => {:question => question} %>
    <p></p>
+   <%= link_to_function 'Toggle Credit', "toggleCredit(this)", {:value => 0} %>
+   <p></p>
    <%= render :partial => 'questions/attribution', 
               :locals => {:question => question }%>
+
+<script type="text/javascript">
+   function toggleCredit(temp){
+	if(temp.value == 0 || temp.value == undefined)
+	{
+		$(".alc").show();
+		temp.value = 1;
+	}
+	else
+	{
+		$(".alc").hide();
+		temp.value = 0;		
+	}
+	};
+</script>

@@ -4,21 +4,39 @@
 <div class="quad-question_content">
   <%= question.variated_content_html.html_safe %>
 </div>
-
 <% if !question.answer_choices.empty? %>
    <div class="quad-answer_choices">
       <% answer_letter_code = "a".ord-1 %>
-      <table width="100%">
+      <table>
       <% question.answer_choices.each do |ac| %>
          <tr>
-            <td class="quad-answer_choice_index" width="5%">
+	<td class="alc" style="display:none">
+	<div style="background-color: green; width:<%= 25 * ac.credit %>; color: white; line-height: 1; padding: 0; position: relative;">
+	<%= check_credit %>
+	</div>
+	</td>
+	</tr>
+	<% end %>
+	</table>
+    </div>
+<% end %>
+<% if !question.answer_choices.empty? %>
+   <div class="quad-answer_choices2">
+      <% answer_letter_code = "a".ord-1 %>
+      <table >
+      <% question.answer_choices.each do |ac| %>
+         <tr>
+            <td class="quad-answer_choice_index">
                <p><%= (answer_letter_code += 1).chr %>)</p>
             </td>
-            <td class="quad-answer_choice" width="95%">
+            <td class="quad-answer_choice" width="90%">
                <%= ac.variated_content_html.html_safe %>
             </td>
          </tr>
-      <% end %>
+      <% end %>	
       </table>  
    </div>
+   
 <% end %>
+
+

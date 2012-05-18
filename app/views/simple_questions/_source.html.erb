@@ -21,11 +21,11 @@
       <table width="100%">
       <% question.answer_choices.each do |ac| %>
          <tr class="quad-answer_choice">
-            <td class="quad-answer_choice_index" width="10%">
+            <td class="quad-answer_choice_index"width="10%">
                <%= (answer_letter_code += 1).chr %>)
             </td>
             <td class="code-box" width="90%">
-               <%= simple_format ac.content %>
+               <%= simple_format ac.content  %>
             </td>
          </tr>
       <% end %>
