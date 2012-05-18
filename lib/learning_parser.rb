@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'parslet'
 
 class Mini < Parslet::Parser
@@ -23,15 +24,15 @@ class Mini < Parslet::Parser
 	root :expression
 end
 
+
 def parse(str)
 	mini = Mini.new
 	print "Parsing #{str}: "
 
 	p mini.parse(str)
-rescue Parslet::ParseFailed => error
-	puts error, mini.root.error_tree
+
+	rescue Exception
+		puts "Sorry, but " + str + " contains non-ASCII characters. Please replace with the correct formatting."
 end
 
-parse "puts(1 + 2 + 3, 45)"
-
-
+parse 'puts(1 + 2 + 3, ω)'
