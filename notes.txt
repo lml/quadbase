@@ -12,10 +12,10 @@ tail -f /var/tmp/mailtrap.log
 
 --- production logging ---
 
-ActionController::Base.logger = Logger.new(STDOUT)
+ActionController::Base.logger = Logger.new {STDOUT}
 ActionController::Base.logger.level = Logger::DEBUG
 
-ActiveRecord::Base.logger = Logger.new(STDOUT)
+ActiveRecord::Base.logger = Logger.new {STDOUT}
 ActiveRecord::Base.logger.level = Logger::DEBUG
 
 
