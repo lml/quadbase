@@ -32,8 +32,10 @@
   <% else %>
     <p> You don't seem to have a project. You need to create a project, or shove the 
     question into a temporary workspace. Would you like to do so? </p>
+    <br/>
     
-    
+    <%= radio_button_tag "edit", "now", true %>
+    <%= label_tag "edit_now", "Edit Now" %>
   <% end %>
   
   
