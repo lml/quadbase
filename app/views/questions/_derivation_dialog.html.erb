@@ -21,7 +21,7 @@
     end
   %>
   
-  <% end %>
+  <% else %>
     <%= hidden_field_tag :question_id, question.id %>
     <%= radio_button_tag "edit", "now", true %>
     <%= label_tag "edit_now", "Edit Now" %>
@@ -41,6 +41,6 @@
         </tr>
       <% end %>
       </table>
-  <%# end %>
+  <% end %>
   
 <% end %> 
