@@ -10,7 +10,7 @@
   <% if projects.empty? %>
     <%= "You didn't seem to have a project. You need to create a project, or shove the 
     question into a temporary workspace. Quadbase has just now automatically created a 
-    project space, whether you like it or not." %>
+    project space, whether you like it or not. Try to copy the question again." %>
     
     <% projects = Project.new(params[:project])
     raise SecurityTransgression unless present_user.can_create?(projects)
