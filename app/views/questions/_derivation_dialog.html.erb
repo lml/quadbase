@@ -15,15 +15,16 @@
   <br/><br/>
   
   
-  
+<%#
   <% if !projects.empty? %>
-    <p> You didn't seem to have a project. You need to create a project, or shove the 
+<%#    <p> You didn't seem to have a project. You need to create a project, or shove the 
     question into a temporary workspace. Quadbase has just now automatically created a 
     project space, whether you like it or not. </p>
     <br/>
       
     <% projects = Project.new %>
-  <% end %>
+<%#  <% end %>
+  
     
   <%= label_tag "In:" %>
     <table>
