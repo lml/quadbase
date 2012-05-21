@@ -20,14 +20,13 @@
     question into a temporary workspace. Quadbase has just now automatically created a 
     project space, whether you like it or not." <p/>
     
-    <% @project = Project.new(params[:project])
+    <% projects = Project.new(params[:project])
     raise SecurityTransgression unless present_user.can_create?(@project)
     
     Project.transaction do
-      @project.save
-      @project.add_member!(current_user)
+      projects.save
+      projects.add_member!(current_user)
     end
-    respond_with(@project)
   end %>
     
   <%= label_tag "In:" %>
