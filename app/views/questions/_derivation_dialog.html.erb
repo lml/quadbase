@@ -16,12 +16,12 @@
   
   
   <% if projects.empty? %>
-    <p> "You didn't seem to have a project. You need to create a project, or shove the 
+    <%= "You didn't seem to have a project. You need to create a project, or shove the 
     question into a temporary workspace. Quadbase has just now automatically created a 
-    project space, whether you like it or not." <p/>
+    project space, whether you like it or not." %>
     
     <% projects = Project.new(params[:project])
-    raise SecurityTransgression unless present_user.can_create?(@project)
+    raise SecurityTransgression unless present_user.can_create?(projects)
     
     Project.transaction do
       projects.save
