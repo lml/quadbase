@@ -7,14 +7,6 @@
 %>
 
 <%= form_tag question_new_derivation_path(question), :method => :put, :remote => true do %>
-  <%= hidden_field_tag :question_id, question.id %>
-  <%= radio_button_tag "edit", "now", true %>
-  <%= label_tag "edit_now", "Edit Now" %>
-  <%= radio_button_tag "edit", "later", false %>
-  <%= label_tag "edit_later", "Edit Later" %>
-  <br/><br/>
-  
-  
   <% if projects.empty? %>
     <%= "You didn't seem to have a project. You need to create a project, or shove the 
     question into a temporary workspace. Quadbase has just now automatically created a 
@@ -30,20 +22,25 @@
   %>
   
   <% else %>
-    
-  <%= label_tag "In:" %>
-    <table>
-    <% projects.each do |w| %>
-      <tr>
-        <td>
-          <%= submit_tag w.name, :name => "project[" + w.id.to_s + "]",
-                                 :class => "#{submit_classes}",
-                                 :style => "width: 100%; text-align: left;" %>
-        </td>
-      </tr>
-    <% end %>
-    </table>
-  
+    <%= hidden_field_tag :question_id, question.id %>
+    <%= radio_button_tag "edit", "now", true %>
+    <%= label_tag "edit_now", "Edit Now" %>
+    <%= radio_button_tag "edit", "later", false %>
+    <%= label_tag "edit_later", "Edit Later" %>
+    <br/><br/>
+      
+    <%= label_tag "In:" %>
+      <table>
+      <% projects.each do |w| %>
+        <tr>
+          <td>
+            <%= submit_tag w.name, :name => "project[" + w.id.to_s + "]",
+                                   :class => "#{submit_classes}",
+                                   :style => "width: 100%; text-align: left;" %>
+          </td>
+        </tr>
+      <% end %>
+      </table>
   <% end %>
   
 <% end %> 
