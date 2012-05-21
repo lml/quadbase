@@ -14,6 +14,9 @@
   <%= label_tag "edit_later", "Edit Later" %>
   <br/><br/>
   <%= label_tag "In:" %>
+  
+  
+  <% if !projects.nil %>
   <table>
   <% projects.each do |w| %>
     <tr>
@@ -25,4 +28,10 @@
     </tr>
   <% end %>
   </table>
+  <% else %>
+    <p> You don't seem to have a seperate folder. Would you like to make a new folder </p>
+    
+  <% end %>
+  
+  
 <% end %> 
