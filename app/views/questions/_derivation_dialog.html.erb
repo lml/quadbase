@@ -16,21 +16,20 @@
   <%= label_tag "In:" %>
   
   
-  <% if !projects.nil %>
-  <table>
-  <% projects.each do |w| %>
-    <tr>
-      <td>
-        <%= submit_tag w.name, :name => "project[" + w.id.to_s + "]",
-                               :class => "#{submit_classes}",
-                               :style => "width: 100%; text-align: left;" %>
-      </td>
-    </tr>
-  <% end %>
-  </table>
+  <% if !projects.empty? %>
+    <table>
+    <% projects.each do |w| %>
+      <tr>
+        <td>
+          <%= submit_tag w.name, :name => "project[" + w.id.to_s + "]",
+                                 :class => "#{submit_classes}",
+                                 :style => "width: 100%; text-align: left;" %>
+        </td>
+      </tr>
+    <% end %>
+    </table>
   <% else %>
-    <p> You don't seem to have a seperate folder. Would you like to make a new folder </p>
-    
+    <p> You don't seem to have a folder. </p>
   <% end %>
   
   
