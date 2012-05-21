@@ -18,7 +18,6 @@
     Project.transaction do
       projects.save
       projects.add_member!(current_user)
-      projects:name = "TEMP"
     end
   %>
   
