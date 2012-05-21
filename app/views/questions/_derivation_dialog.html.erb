@@ -30,12 +30,13 @@
     <% end %>
     </table>
   <% else %>
-    <p> You don't seem to have a project. You need to create a project, or shove the 
-    question into a temporary workspace. Would you like to do so? </p>
+    <p> You didn't seem to have a project. You need to create a project, or shove the 
+    question into a temporary workspace. Quadbase has just now automatically created a 
+    project space, whether you like it or not. </p>
     <br/>
     
-    <%= radio_button_tag "edit", "now", true %>
-    <%= label_tag "edit_now", "Edit Now" %>
+    <% projects = Project.new %>
+    <% %>
   <% end %>
   
   
