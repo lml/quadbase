@@ -9,7 +9,7 @@
 <%= form_tag question_new_derivation_path(question), :method => :put, :remote => true do %>
   <%= hidden_field_tag :question_id, question.id %>
   <%= radio_button_tag "edit", "now", true %>
-  <%= label_tag "edit_now", "Edit Now" %>
+  <%= label_tag "edit_no", "Edit Now" %>
   <%= radio_button_tag "edit", "later", false %>
   <%= label_tag "edit_later", "Edit Later" %>
   <br/><br/>
@@ -29,7 +29,8 @@
     <% end %>
     </table>
   <% else %>
-    <p> You don't seem to have a folder. </p>
+    <p> You don't seem to have a project. You need to create a project, or shove the question into a temporary workspace. Would you like to do so? </p>
+    
   <% end %>
   
   
