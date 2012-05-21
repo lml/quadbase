@@ -27,7 +27,9 @@
       projects.save
       projects.add_member!(current_user)
     end
-  end %>
+  %>
+  
+  <% else %>
     
   <%= label_tag "In:" %>
     <table>
@@ -42,6 +44,6 @@
     <% end %>
     </table>
   
-  
+  <% end %>
   
 <% end %> 
