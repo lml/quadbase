@@ -26,7 +26,6 @@ div.quad-question_content {
 div.quad-answer_choices2 {
 	position:relative;
 	z-index:0;
-	margin-left: 60px;
 	width: 90%;
 	
 
@@ -58,10 +57,11 @@ div.quad-answer_choices {
 }
 
 .quad-answer_choice_index p {
-   margin:0px 0px 6px 0px;
+   margin:0px 0px 6px 40px;
 }
 
 .quad-part_index {
+	padding-right:8px;
 }
 
 .quad-quid {
