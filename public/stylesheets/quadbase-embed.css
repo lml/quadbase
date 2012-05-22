@@ -32,11 +32,7 @@ div.quad-answer_choices2 {
 }
 
 div.quad-answer_choices {
-	position:relative;
-	z-index:1;
-	float:left;
-	width:10%;
-
+	padding: 2px 8px 4px 8px;
 }
 
 .quad-answer_choice p {
