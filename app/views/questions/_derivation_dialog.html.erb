@@ -16,7 +16,8 @@
     <%= label_tag "You did not have an available project workspace available, so Quadbase 
                   just created one for you." %>
   <% end %>
-    
+  
+  <br/><br/>
   <%= hidden_field_tag :question_id, question.id %>
   <%= radio_button_tag "edit", "now", true %>
   <%= label_tag "edit_now", "Edit Now" %>
@@ -25,6 +26,7 @@
   <br/><br/>
     
   <%= label_tag "In:" %>
+    <br/>
     <table>
     <% projects.each do |w| %>
       <tr>
