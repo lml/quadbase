@@ -30,6 +30,7 @@ class LogicLibraryVersion < ActiveRecord::Base
   end
   
   def send_to_bullring
+    raise NotYetImplemented # temp fix to block Bullring
     Bullring.add_library(id.to_s, code)
   end
 
