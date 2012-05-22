@@ -1,10 +1,10 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-
 <div class="quad-question_content">
   <%= question.variated_content_html.html_safe %>
 </div>
+
 <% if !question.answer_choices.empty? %>
    <div class="quad-answer_choices">
       <% answer_letter_code = "a".ord-1 %>
@@ -32,10 +32,10 @@
       <table width="100%">
       <% question.answer_choices.each do |ac| %>
          <tr>
-            <td class="quad-answer_choice_index">
+            <td class="quad-answer_choice_index" width="5%">
                <p><%= (answer_letter_code += 1).chr %>)</p>
             </td>
-            <td class="quad-answer_choice" width="90%">
+            <td class="quad-answer_choice" width="95%">
                <%= ac.variated_content_html.html_safe %>
             </td>
          </tr>

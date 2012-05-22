@@ -44,13 +44,6 @@ module ApplicationHelper
     f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)")
   end
 
-  def link_to_partial_fields(name, f)
-    link_to_function(name, "partial_fields(this)")
-  end
-
-  def link_to_rightwrong_fields(name, f)
-    link_to_function(name, "rightwrong_fields(this)")
-  end
   
   # Options:
   #    options[:partial_name] - way to override the partial name (e.g. to include

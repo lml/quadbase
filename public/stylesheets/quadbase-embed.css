@@ -20,7 +20,7 @@ div.quad-question_setup {
 }
 
 div.quad-question_content {
-	margin-bottom:10px;
+	margin-bottom: 10px;
 }
 
 div.quad-answer_choices2 {
@@ -40,7 +40,6 @@ div.quad-answer_choices {
 
 }
 
-
 .quad-answer_choice p {
    margin:0px;
 }
@@ -48,17 +47,6 @@ div.quad-answer_choices {
 .quad-answer_choice {
    padding: 2px 8px 4px 8px;
 }
-
-.quad-credit_behind {
-   padding: 2px 8px 4px 8px;
-   z-index:1;
-}
-
-.quad-credit_behind {
-   padding: 2px 8px 4px 8px;
-   z-index:2;
-}
-
 
 
 .quad-answer_choice_index {
@@ -74,7 +62,6 @@ div.quad-answer_choices {
 }
 
 .quad-part_index {
-   margin-right: 8px;
 }
 
 .quad-quid {
