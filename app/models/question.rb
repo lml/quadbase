@@ -384,9 +384,6 @@ class Question < ActiveRecord::Base
   end
   
   def new_derivation!(user, project = nil)
-    options[:set_initial_roles] = true if options[:set_initial_roles].nil?
-    options[:project] = Project.default_for_user!(user) if options[:project].nil?
-  
     return if !is_published?
     derived_question = self.content_copy
     
