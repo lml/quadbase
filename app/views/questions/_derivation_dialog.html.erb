@@ -6,41 +6,24 @@
    # projects
 %>
 
-<%= form_tag question_new_derivation_path(question), :method => :put, :remote => true do %>
-  <% if projects.empty? %>
-    <%= "You didn't seem to have a project. You need to create a project, or shove the 
-    question into a temporary workspace. Quadbase has just now automatically created a 
-    project space, whether you like it or not. Please try to copy the question again." %>
+<%= form_tag question_new_derivation_path(question), :method => :put, :remote => true do %>  
+  <%= hidden_field_tag :question_id, question.id %>
+  <%= radio_button_tag "edit", "now", true %>
+  <%= label_tag "edit_now", "Edit Now" %>
+  <%= radio_button_tag "edit", "later", false %>
+  <%= label_tag "edit_later", "Edit Later" %>
+  <br/><br/>
     
-    <% projects = Project.new(params[:project])
-    raise SecurityTransgression unless present_user.can_create?(projects)
-    
-    Project.transaction do
-      projects.save
-      projects.add_member!(current_user)
-    end
-  %>
-  
-  <% else %>
-    <%= hidden_field_tag :question_id, question.id %>
-    <%= radio_button_tag "edit", "now", true %>
-    <%= label_tag "edit_now", "Edit Now" %>
-    <%= radio_button_tag "edit", "later", false %>
-    <%= label_tag "edit_later", "Edit Later" %>
-    <br/><br/>
-      
-    <%= label_tag "In:" %>
-      <table>
-      <% projects.each do |w| %>
-        <tr>
-          <td>
-            <%= submit_tag w.name, :name => "project[" + w.id.to_s + "]",
-                                   :class => "#{submit_classes}",
-                                   :style => "width: 100%; text-align: left;" %>
-          </td>
-        </tr>
-      <% end %>
-      </table>
-  <% end %>
-  
+  <%= label_tag "In:" %>
+    <table>
+    <% projects.each do |w| %>
+      <tr>
+        <td>
+          <%= submit_tag w.name, :name => "project[" + w.id.to_s + "]",
+                                 :class => "#{submit_classes}",
+                                 :style => "width: 100%; text-align: left;" %>
+        </td>
+      </tr>
+    <% end %>
+    </table>
 <% end %> 
