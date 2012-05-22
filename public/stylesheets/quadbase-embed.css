@@ -20,8 +20,7 @@ div.quad-question_setup {
 }
 
 div.quad-question_content {
-	position:relative
-	z-index:-1;
+	margin-bottom:10px;
 }
 
 div.quad-answer_choices2 {
@@ -75,7 +74,7 @@ div.quad-answer_choices {
 }
 
 .quad-part_index {
-   padding-right:8px;
+   margin-right: 8px;
 }
 
 .quad-quid {

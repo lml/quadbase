@@ -1,6 +1,7 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
+
 <div class="quad-question_content">
   <%= question.variated_content_html.html_safe %>
 </div>
@@ -9,10 +10,15 @@
       <% answer_letter_code = "a".ord-1 %>
       <table>
       <% question.answer_choices.each do |ac| %>
-         <tr>
+         <tr style="height:px">
 	<td class="alc" style="display:none">
-	<div style="background-color: green; width:<%= 25 * ac.credit %>; color: white; line-height: 1; padding: 0; position: relative;">
-	<%= check_credit %>
+	<div style="position:relative; height: 25">
+	    <div style="position:absolute; background-color: white; height:<%= 14 -(14 * ac.credit) + 6 %>; color: white; line-height: 1; z-index: 2;">
+	      <%= check_credit %>
+	    </div>
+	    <div style="position:absolute; background-color: green; height:22; color: white; line-height: 1; z-index: 1;">
+	      <%= check_credit %>
+	    </div>
 	</div>
 	</td>
 	</tr>
@@ -23,7 +29,7 @@
 <% if !question.answer_choices.empty? %>
    <div class="quad-answer_choices2">
       <% answer_letter_code = "a".ord-1 %>
-      <table >
+      <table width="100%">
       <% question.answer_choices.each do |ac| %>
          <tr>
             <td class="quad-answer_choice_index">

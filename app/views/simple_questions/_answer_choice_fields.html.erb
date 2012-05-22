@@ -28,7 +28,7 @@ width: 100px; height: 20px;
      <% if f.object.credit != 1 && f.object.credit != 0 %>
 	 <%= text_field_tag 'partcred', nil, :value => f.object.credit, :class =>'texty', :onblur => "changePartial(this)" %>
      <% else %>
-	 <%= text_field_tag 'partcred', nil, :value => '', :style => 'display:none', :class =>'texty', :onblur => "changePartial(this)" %>
+	 <%= text_field_tag 'partcred', nil, :value => '', :style => 'display:none', :class =>'texty', :onblur => "changePartial(this)" %></input>
      <% end %>
     
 
@@ -41,14 +41,20 @@ width: 100px; height: 20px;
 <script type="text/javascript">
   $(document).ready(function() {
      refresh_mark_it_up_textareas();
+      $('.texty').each(function(i, obj) {
+         $(obj).prev().attr('value', obj.value);
+      });
    });
    function changePartial(temp){
 	$(temp).prev().attr('value', temp.value);
+	$(temp).prev('.field_with_errors').children().attr('value', temp.value);
 	};
    function enablePartial(temp){
 	$(temp).nextAll('.texty').show();
+	$(temp).closest('.field_with_errors').nextAll('.texty').show();
 	};
    function disablePartial(temp){
 	$(temp).nextAll('.texty').hide();
+	$(temp).closest('.field_with_errors').nextAll('.texty').hide();
 	};
 </script>
