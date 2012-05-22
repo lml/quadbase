@@ -361,6 +361,11 @@ a:active {
   display: table;
 }
 
+.part_cred_field {
+  width: 100px; 
+  height: 18px;
+}
+
 .notebox {
    font-size: 16px;
    font-style: italic;
@@ -771,6 +776,13 @@ th .desc {
 	background-image: url(../images/trash.gif);
 	width: 16px;
 	height: 16px;
+}
+
+.creditIcon{
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+	padding:0;
 }
 
 .xIcon {

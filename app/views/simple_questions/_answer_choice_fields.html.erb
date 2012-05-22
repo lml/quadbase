@@ -1,13 +1,6 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<style type="text/css">
-
-.texty {
-width: 100px; height: 20px;
-}
-
-</style>
 <%= question_edit_block "Answer Choice Text" do %>
   <div class="fields">
     <%= f.text_area :content, :rows => 3, :class => "mark_it_up", :style => 'width:100%' %>
@@ -18,30 +11,27 @@ width: 100px; height: 20px;
     
     <% # Couldn't get the buttons to be checked on load without manually %>
     <% # checking the status %>
+    <% credit = f.object.credit %>
     <div class = "hidethis">
-    	<%= f.radio_button :credit, 1, {:checked => f.object.credit == 1, :onclick => "disablePartial(this)"} %>
+    	<%= f.radio_button :credit, 1, {:checked => credit == 1, :onclick => "disablePartial(this)"} %>
     	Right
-    	<%= f.radio_button :credit, 0, {:checked => f.object.credit == 0, :onclick => "disablePartial(this)"} %>
+    	<%= f.radio_button :credit, 0, {:checked => credit == 0, :onclick => "disablePartial(this)"} %>
 	Wrong
-	<%= f.radio_button :credit, 0.5, {:checked => f.object.credit != 1 && f.object.credit != 0, :onclick => "enablePartial(this)"}%>
+	<%= f.radio_button :credit, 0.5, {:checked => credit != 1 && f.object.credit != 0, :onclick => "enablePartial(this)"}%>
 	Partial Credit:
-     <% if f.object.credit != 1 && f.object.credit != 0 %>
-	 <%= text_field_tag 'partcred', nil, :value => f.object.credit, :class =>'texty', :onblur => "changePartial(this)" %>
-     <% else %>
-	 <%= text_field_tag 'partcred', nil, :value => '', :style => 'display:none', :class =>'texty', :onblur => "changePartial(this)" %></input>
-     <% end %>
-    
-
-	
-    </div>
-      
+        <% if credit != 1 && credit != 0 %>
+	 	<%= text_field_tag 'partcred', nil, :value => credit, :class =>'part_cred_field', :onblur => "changePartial(this)" %>
+        <% else %>
+		<%= text_field_tag 'partcred', nil, :value => '', :style => 'display:none', :class =>'part_cred_field', :onblur => "changePartial(this)" %></input>
+        <% end %>
+    </div>    
   </div>
 <% end %>
 
 <script type="text/javascript">
   $(document).ready(function() {
      refresh_mark_it_up_textareas();
-      $('.texty').each(function(i, obj) {
+      $('.part_cred_field').each(function(i, obj) {
          $(obj).prev().attr('value', obj.value);
       });
    });
@@ -50,11 +40,11 @@ width: 100px; height: 20px;
 	$(temp).prev('.field_with_errors').children().attr('value', temp.value);
 	};
    function enablePartial(temp){
-	$(temp).nextAll('.texty').show();
-	$(temp).closest('.field_with_errors').nextAll('.texty').show();
+	$(temp).nextAll('.part_cred_field').show();
+	$(temp).closest('.field_with_errors').nextAll('.part_cred_field').show();
 	};
    function disablePartial(temp){
-	$(temp).nextAll('.texty').hide();
-	$(temp).closest('.field_with_errors').nextAll('.texty').hide();
+	$(temp).nextAll('.part_cred_field').hide();
+	$(temp).closest('.field_with_errors').nextAll('.part_cred_field').hide();
 	};
 </script>

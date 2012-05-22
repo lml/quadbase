@@ -2,12 +2,9 @@
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
 
-$("#quickview_dialog").html("<%= escape_javascript(render :partial => "#{view_dir(@question)}/show", 
-                                                   :locals => {:question =>  @question}) %> <p></p>  <%= escape_javascript(render :partial => 'questions/attribution', 
-              :locals => {:question => @question })%> "); 
-
+$("#quickview_dialog").html("<%= escape_javascript(render :partial => "show",
+                                                   :locals => {:question => @question}) %>");
 <%= reload_mathjax("quickview_dialog") %>
- 
 
 $("#quickview_dialog").dialog('open');
 

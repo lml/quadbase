@@ -7,28 +7,28 @@
 
 
 <% if !question.answer_choices.empty? %>
-   <div class="quad-answer_choices2">
+   <div class="quad-answer_choices">
       <% answer_letter_code = "a".ord-1 %>
       <table width="100%">
       <% question.answer_choices.each do |ac| %>
-         <tr>
-		<td class="alc" style="display:none">
-	<div style="position:relative; height: 25">
-	    <div style="position:absolute; background-color: white; height:<%= 16 -(16 * ac.credit) + 6 %>; color: white; line-height: 1; z-index: 2;">
-	      <%= check_credit %>
-	    </div>
-	    <div style="position:absolute; background-color: green; height:22; color: white; line-height: 1; z-index: 1;">
-	      <%= check_credit %>
-	    </div>
-	</div>
+        <tr>
+	<td class="part_cred_mark" style="display:none">
+		<div style="position:relative; height: 25">
+	    	<div style="position:absolute; background-color: white; height:<%= 16 -(16 * ac.credit) + 6 %>; color: white; line-height: 1; z-index: 2;">
+	      			<%= check_credit %>
+	    	</div>
+	    	<div style="position:absolute; background-color: green; height:22; color: white; line-height: 1; z-index: 1;">
+	      		<%= check_credit %>
+	    	</div>
+		</div>
 	</td>
-            <td class="quad-answer_choice_index" width="5%">
+        <td class="quad-answer_choice_index" width="5%">
                <p><%= (answer_letter_code += 1).chr %>)</p>
-            </td>
-            <td class="quad-answer_choice" width="95%">
+        </td>
+        <td class="quad-answer_choice" width="95%">
                <%= ac.variated_content_html.html_safe %>
-            </td>
-         </tr>
+        </td>
+        </tr>
       <% end %>	
       </table>  
    </div>

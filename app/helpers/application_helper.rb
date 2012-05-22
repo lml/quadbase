@@ -37,7 +37,7 @@ module ApplicationHelper
   end
 
   def check_credit
-    image_tag("checkCredit.png", {:display=>"inline-block",:height=> "30px", :width=> "30px", :margin=>"5px", :padding=>"0", :border => 0, :alt => "Yes / Check", :title => "Yes / Check"})
+    image_tag("checkCredit.png", {:class => "creditIcon", :border => 0, :alt => "Yes / Check", :title => "Yes / Check"})
   end
   
   def link_to_remove_fields(name, f)

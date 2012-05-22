@@ -23,12 +23,10 @@ div.quad-question_content {
 	margin-bottom: 10px;
 }
 
-div.quad-answer_choices2 {
+div.quad-answer_choices {
 	position:relative;
 	z-index:0;
 	width: 90%;
-	
-
 }
 
 div.quad-answer_choices {
