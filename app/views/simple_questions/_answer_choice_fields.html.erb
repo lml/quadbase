@@ -12,18 +12,15 @@
     <% # Couldn't get the buttons to be checked on load without manually %>
     <% # checking the status %>
     <% credit = f.object.credit %>
-    <div class = "hidethis">
-    	<%= f.radio_button :credit, 1, {:checked => credit == 1, :onclick => "disablePartial(this)"} %>
+    <% id = f.object.id %>
+    <div class = "marked">
+    	<%= f.radio_button :credit, 1, {:checked => credit == 1, :onclick => "$(tft#{id}).hide();"} %>
     	Right
-    	<%= f.radio_button :credit, 0, {:checked => credit == 0, :onclick => "disablePartial(this)"} %>
+    	<%= f.radio_button :credit, 0, {:checked => credit == 0, :onclick => "$(tft#{id}).hide();"} %>
 	Wrong
-	<%= f.radio_button :credit, 0.5, {:checked => credit != 1 && f.object.credit != 0, :onclick => "enablePartial(this)"}%>
+	<%= f.radio_button :credit, 0.5, {:id => "frb" + "#{id}", :checked => credit != 1 && credit != 0, :onclick => "$(tft#{id}).show();"}%>
 	Partial Credit:
-        <% if credit != 1 && credit != 0 %>
-	 	<%= text_field_tag 'partcred', nil, :value => credit, :class =>'part_cred_field', :onblur => "changePartial(this)" %>
-        <% else %>
-		<%= text_field_tag 'partcred', nil, :value => '', :style => 'display:none', :class =>'part_cred_field', :onblur => "changePartial(this)" %></input>
-        <% end %>
+       	<%= text_field_tag 'partcred', nil, :id => 'tft' + "#{id}", :value => credit, :class => 'part_cred_field', :style => "#{credit != 1 && credit != 0 ? '' : 'display:none'}", :onblur => "$(frb#{id}).attr('value', this.value)" %>
     </div>    
   </div>
 <% end %>
@@ -31,20 +28,5 @@
 <script type="text/javascript">
   $(document).ready(function() {
      refresh_mark_it_up_textareas();
-      $('.part_cred_field').each(function(i, obj) {
-         $(obj).prev().attr('value', obj.value);
-      });
    });
-   function changePartial(temp){
-	$(temp).prev().attr('value', temp.value);
-	$(temp).prev('.field_with_errors').children().attr('value', temp.value);
-	};
-   function enablePartial(temp){
-	$(temp).nextAll('.part_cred_field').show();
-	$(temp).closest('.field_with_errors').nextAll('.part_cred_field').show();
-	};
-   function disablePartial(temp){
-	$(temp).nextAll('.part_cred_field').hide();
-	$(temp).closest('.field_with_errors').nextAll('.part_cred_field').hide();
-	};
 </script>

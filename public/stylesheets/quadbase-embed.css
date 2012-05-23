@@ -30,7 +30,7 @@ div.quad-answer_choices {
 }
 
 div.quad-answer_choices {
-	padding: 2px 8px 4px 8px;
+	padding: 2px -10px 4px 8px;
 }
 
 .quad-answer_choice p {
@@ -51,7 +51,7 @@ div.quad-answer_choices {
 }
 
 .quad-answer_choice_index p {
-   margin:0px 0px 6px 40px;
+   margin:0px 0px 6px 33px;
 }
 
 .quad-part_index {

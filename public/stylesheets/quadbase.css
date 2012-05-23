@@ -361,6 +361,12 @@ a:active {
   display: table;
 }
 
+.marked .field_with_errors {
+  padding: 2px;
+  background-color: red;
+  display: inline;
+}
+
 .part_cred_field {
   width: 100px; 
   height: 18px;
