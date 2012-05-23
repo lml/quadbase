@@ -414,7 +414,6 @@ class Question < ActiveRecord::Base
 
   # Sets common question properties, given a copied question object
   def init_copy(kopy)
-    kopy.question_setup = self.question_setup.content_copy if !self.question_setup_id.nil?
     kopy.license_id = self.license_id
     self.attachable_assets.each {|aa| kopy.attachable_assets.push(aa.content_copy) }
     kopy.tag_list = self.tag_list
@@ -473,7 +472,7 @@ class Question < ActiveRecord::Base
 
     wtscope.joins(:question_setup.outer).joins({:taggings.outer => :tag.outer}).where((:id.eq % id_query) |\
             (:number.eq % num_query) | (:content.matches % query) | {:question_setup => [:content.matches % query]} |\
-            {:tags => [:name.matches % query]}).order(:id).select("DISTINCT questions.*")
+            {:tags => [:name.matches % query]}).group(:id).order(:id)
 
     # This should the most efficient way to do the search
     # (Inner joins with UNION could maybe be faster,
