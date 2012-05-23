@@ -8,16 +8,11 @@ require 'parslet/convenience'
 
 class QTIParser < Parslet::Parser
 	def parse(str)
-		
-		rescue image_start_tag.absent?
-			puts "You need to attach " + filename + " ."
-		rescue Parslet::ParseFailed 
-			puts "Sorry, but " + str + " contains unknown characters."
 	end
 
 	#Check for accompanying images
 	rule(:filename)        { match['a-zA-z0-9_\.-\()\/?\\ '].repeat(1) }
-	rule(:image_start_tag) { str("<img src=") }
+	rule(:image_start_tag) { match('<img src=\"') }
 	rule(:image)           { (image_start_tag >> filename.as(:filename) >> str("\">")).as(:image) }
 
 	#Check for formatting
@@ -36,7 +31,7 @@ class QTIParser < Parslet::Parser
 	rule(:eol)     { crlf | lf }
 
 	#Grammar parts
-	rule(:text) { (letters | eol | any ) >> text.repeat }
+	rule(:text) { ( image_start_tag.absent? | letters | eol | any ) >> text.repeat }
 	rule(:ques) { text.repeat(1) }
 
 	rule(:expression) { ques }

@@ -20,6 +20,7 @@ class Mini < Parslet::Parser
 	rule(:arglist) { expression >> (comma >> expression).repeat }
 	rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
+
 	rule(:expression) { funcall | sum | integer }
 	root :expression
 end
@@ -35,4 +36,6 @@ def parse(str)
 		puts "Sorry, but " + str + " contains non-ASCII characters. Please replace with the correct formatting."
 end
 
-parse 'puts(1 + 2 + 3, ω)'
+parse 'puts(1 + 2 + 3)'
+
+
