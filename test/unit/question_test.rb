@@ -173,7 +173,7 @@ class QuestionTest < ActiveSupport::TestCase
     q.create!(u)
     q.publish!(u)
     
-    :user.projects = nil
+    ##:user.projects = nil ???
     
     q_derived = q.new_derivation!(u)
     
@@ -195,7 +195,7 @@ class QuestionTest < ActiveSupport::TestCase
     q.create!(u)
     q.publish!(u)
     
-    :user.projects = nil
+    ##:user.projects = nil ???
     
     q_derived = q.new_derivation!(u)
 
