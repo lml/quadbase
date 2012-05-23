@@ -173,6 +173,7 @@ Quadbase::Application.routes.draw do
   end
 
   resources :question_parts, :only => [:destroy] do
+    put 'unlock'
     sortable
   end
   
