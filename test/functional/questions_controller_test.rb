@@ -214,5 +214,13 @@ class QuestionsControllerTest < ActionController::TestCase
                          :question => {:license_id => License.default.id}
     assert_redirected_to question_path(assigns(:question))
   end
-
+  
+  # Since this method deletes the user's projects, this test is recommended to be last
+  test "should create new project via derivation_dialog" do
+    @user.projects.clear
+    QuestionsController.derivation_dialog(@question), :remote => true
+    
+    assert @user.projects.empty? == false
+    assert @user.projects[0].is_default_for_user == true
+  end
 end

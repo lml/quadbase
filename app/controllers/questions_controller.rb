@@ -292,7 +292,7 @@ class QuestionsController < ApplicationController
 
     @projects = current_user.projects
     if @projects.empty?
-        @projects.default_for_user!(current_user)
+        @projects.push(Project.default_for_user!(current_user))
     end
     
     respond_to do |format|
