@@ -8,6 +8,7 @@ require 'parslet/convenience'
 
 class QTIParser < Parslet::Parser
 	def parse(str)
+		super(str)
 	end
 
 	#Check for accompanying images
@@ -16,7 +17,7 @@ class QTIParser < Parslet::Parser
 	rule(:image)           { (image_start_tag >> filename.as(:filename) >> str("\">")).as(:image) }
 
 	#Check for formatting
-	rule(:italic_tag) { match("<i>" | "</i>").as(:italic) }
+	rule(:italic_tag) { (str("<i>") | str("</i>")).as(:italic) }
 	rule(:bold_tag)   { match("<b>" | "</b>").as(:bold) }
 
 	#Single character rules
@@ -24,21 +25,23 @@ class QTIParser < Parslet::Parser
 	rule(:space?)     { space.maybe }
 
 	#Things 
-	rule(:letters) { (match(/\w/) >> space?).repeat(1) }
-	rule(:any)     { match(/./) >> space? }
+	rule(:letters) { (match(/\w/) >> space?).repeat(1).as(:letters) }	
 	rule(:crlf)    { match("\r\n") >> space? }
 	rule(:lf)      { match("\n") >> space? }
-	rule(:eol)     { crlf | lf }
+	rule(:eol)     { (crlf | lf).as(:eol) }
 
 	#Grammar parts
-	rule(:text) { ( image_start_tag.absent? | letters | eol | any ) >> text.repeat }
-	rule(:ques) { text.repeat(1) }
+	rule(:format) { italic_tag }
+	rule(:text)   { ( format | letters | eol | (any.as(:any)) ).repeat(1) }
+	rule(:ques)   { text.repeat(1).as(:text) }
 
 	rule(:expression) { ques }
 	root :expression
 end
 
-class Question_Transform < Parslet::Transform
-	rule(:italic) {"'"}
-	rule(:bold)   {"!!"}
+class QTITransform < Parslet::Transform
+	rule(:italic => simple(:italic))   {"'"}
+	rule(:letters => simple(:letters)) { letters }
+	rule(:any => simple(:any))         { any }
+	rule(:text => sequence(:entries))  { entries.join}
 end

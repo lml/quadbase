@@ -14,7 +14,17 @@ class QTITransfromTest < ActiveSupport::TestCase
 
 	 test "images" do 
 	 	parser = QTIParser.new
-	 	assert_raise(Parslet::ParseFailed) {parser.parse(samples[0])}
+	 	#p parser.expression.parse('if')
+	 	#assert_raise(Parslet::ParseFailed) {parser.parse(samples[0])}
 	 end
+
+	 test "italics" do
+	 	parser = QTIParser.new
+	 	a = parser.expression.parse('<i>This is italics.</i>')	
+	 	expected = "'This is italics.'"
+	 	output1 = QTITransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
+
 	 	
 end
