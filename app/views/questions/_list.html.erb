@@ -69,13 +69,13 @@
      </tr>
    <p> does my thing get here? </p>
      <% entries.each do |entry| %>
-   <p> does my thing even touching the partial? </p>
-     <% render  :partial => 'questions/fill_row', 
+     <% question = method_for_question.nil? ? entry : entry.method(method_for_question).call() %>
+   <p> does my thing even touch the partial? </p>
+     <% render  :partial => 'questions/fill_row',
                 :locals => {:entry => entry,
+                            :row_id_base => row_id_base,
                             :show_checkboxes => show_checkboxes,
-                            :method_for_question => method_for_question,
-                            :checkbox_options => {:method_for_value => "id",
-                                                  :name_base => "project_question_ids"}
+                            :question => question,
                            } %>
      <% end %>
   </table>
