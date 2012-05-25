@@ -10,11 +10,12 @@ class QTIParser < Parslet::Parser
 	def parse(str)
 		super(str)
 	end
-
+# [a-z]*[0-9]*\/*-*\.*\?*\\*
 	#Check for accompanying images
-	rule(:filename)        { match['a-zA-z0-9_\.-\()\/?\\ '].repeat(1) }
-	rule(:image_start_tag) { match('<img src=\"') }
-	rule(:image)           { (image_start_tag >> filename.as(:filename) >> str("\">")).as(:image) }
+	rule(:filename)        { match(/[a-z|0-9|\/|\-|\.|\?|\\]/).repeat(1).as(:filename) }
+	rule(:image_start_tag) { str('<img src="') }
+	rule(:image_end_tag)   { str('">').as(:image_end_tag) }
+	rule(:image)           { (image_start_tag.as(:image_start_tag) >> ( filename | image_end_tag ).repeat).as(:image) }
 
 	#Check for formatting
 	rule(:italic_tag) { (str("<i>") | str("</i>")).as(:italic) }
@@ -32,7 +33,7 @@ class QTIParser < Parslet::Parser
 
 	#Grammar parts
 	rule(:format) { italic_tag }
-	rule(:text)   { ( format | letters | eol | (any.as(:any)) ).repeat(1) }
+	rule(:text)   { ( image.as(:image) | format | letters | eol | (any.as(:any)) ).repeat(1) }
 	rule(:ques)   { text.repeat(1).as(:text) }
 
 	rule(:expression) { ques }
