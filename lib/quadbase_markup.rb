@@ -9,6 +9,8 @@ class QuadbaseParser < Parslet::Parser
   def parse(str)
     # Always make sure we have one 'paragraph'
     super(str.strip + "\n\n")
+
+    
   end
 
   # TODO add \# and \* as allowed in text
