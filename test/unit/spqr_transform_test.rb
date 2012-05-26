@@ -40,7 +40,9 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 test "text_w_images" do
 	 	parser = SPQRParser.new
 	 	a = parser.parse(samples[0])
-	 	assert_raise(UnavailableImage) {SPQRTransform.new.apply(a)}
+	 	expected = "iejfeiMISSING IMAGE: /ece2025/cgi-bin/mimetex.exe?\\hat\\omega (blue to red), "
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
 	 end
 
 	 test "italics" do
@@ -118,6 +120,62 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 	output1 = SPQRTransform.new.apply(a)
 	 	expected = "Determine the smallest !!integer!! \n\tvalue of the sampling rate"
 	 	assert_equal expected, output1
+	 end
+
+	 test "phi" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('&phi;')
+	 	expected = "\phi"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
+
+	 test "pi" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('a&pi;')
+	 	expected = "a\pi"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
+
+	 test "omega" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('a&omega;')
+	 	expected = "a\omega"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
+
+	 test "curly_f" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('&fnof;s')
+	 	expected = "fs"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
+
+	 test "sub" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('a<sub>&phi;</sub>')
+	 	expected1 = "a_{phi}"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected1, output1
+	 	b = parser.parse('a<SUB>eie</SUB>w')
+	 	expected2 = "a_{eie}w"
+	 	output2 = SPQRTransform.new.apply(b)
+	 	assert_equal expected2, output2
+	 end
+
+	 test "sup" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('a<sup>&pi;</sup>')
+	 	expected1 = "a^{\pi}"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected1, output1
+	 	b = parser.parse('b<SUP>iefie</SUP>')
+	 	expected2 = "b^{iefie}"
+	 	output2 = SPQRTransform.new.apply(b)
+	 	assert_equal expected2, output2
 	 end
 
 end
