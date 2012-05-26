@@ -20,17 +20,32 @@ module ImportQuestions
 	end
 end
 
+# module find_parser
+# 	def choose_parser(content_type)
+# 		if 
+# end
+
 class QTImport 
 	include ImportQuestions
+	# include 
 
-	attr_reader :filename, :content_type
+	attr_reader :filename, :content_type, :parser, :transformer
 
 	def initialize(filename, content_type)
 		@filename = filename
 		@content_type = content_type
 		content = openfile(filename)
-		savefile(content)
+		#savefile(content)
 		import_project = createproject
+		parser, transformer = choose_import(content_type)
+	end
+
+	def choose_import(content_type)
+		if (content_type == 'SPQR')
+			a = SPQRParser.new
+			b = SPQRTransform.new
+		end
+		return a, b
 	end
 end
 

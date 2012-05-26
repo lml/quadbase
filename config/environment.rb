@@ -14,7 +14,6 @@ require 'vote_methods'
 require 'form_builder_extensions'
 require 'acts_as_numberable'
 require 'spqr_parser'
-require 'smart_spqr_parser'
 
 ActionMailer::Base.delivery_method = :sendmail
 
