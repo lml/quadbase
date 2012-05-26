@@ -3,6 +3,7 @@
 
 require 'open-uri'
 require '/home/railsoer/Documents/quadbase/app/models/project.rb'
+require '/home/railsoer/Documents/quadbase/app/models/question.rb'
 require '/home/railsoer/Documents/quadbase/lib/spqr_parser.rb'
 
 module ImportQuestions
@@ -20,24 +21,44 @@ module ImportQuestions
 	end
 end
 
-# module find_parser
-# 	def choose_parser(content_type)
-# 		if 
-# end
+#For the SPQR content, it seems that a series of questions are embedded 
+#within each <item></item> tag.  As such, we search and save only 
+#content within each tag and "discard" the rest.
+module GetContent
+	def iterate_items(document)
+		items = document.xpath('//item').to_a
+	end
+
+	def get_questions(content)
+		a = content[0]
+		inter = a.attributes["ident"]
+		ques_name = inter.value
+		number = get_q_id(ques_name)
+		p ques_name
+		p number
+	end
+
+	def get_q_id(str)
+		value = (str.gsub("QUE_","")).to_i
+	end
+
+
+end
 
 class QTImport 
 	include ImportQuestions
-	# include 
+	include GetContent
 
 	attr_reader :filename, :content_type, :parser, :transformer
 
 	def initialize(filename, content_type)
 		@filename = filename
 		@content_type = content_type
-		content = openfile(filename)
-		#savefile(content)
+		document = openfile(filename)
 		import_project = createproject
 		parser, transformer = choose_import(content_type)
+		content = iterate_items(document)
+		get_questions(content)
 	end
 
 	def choose_import(content_type)
