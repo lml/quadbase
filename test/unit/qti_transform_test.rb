@@ -11,6 +11,9 @@ class QTITransfromTest < ActiveSupport::TestCase
 	samples = Array.new
 	samples [0] = 'iejfei<img src="/ece2025/cgi-bin/mimetex.exe?\hat\om
 	ega"> (blue to red), '
+	samples [1] = 'Determine the smallest <font color="darkgreen">integer</font> 
+	value of the sampling rate'
+
 
 	 test "img_filename" do
 	 	parser = QTIParser.new
@@ -94,4 +97,27 @@ class QTITransfromTest < ActiveSupport::TestCase
 	 	output2 = QTITransform.new.apply(b)
 	 	assert_equal expected, output2
 	 end
+
+	 test "font_open" do
+	 	parser = QTIParser.new
+	 	a = parser.font_open.parse('<font color="blue">')
+	 	expected = "<font color=\"blue\">"
+	 	assert_equal expected, a.to_s
+	 end
+
+	 test "font_change" do
+	 	parser = QTIParser.new
+	 	a = parser.font.parse('<font color="blue">blah</font>')
+	 	expected = "{:font=>[{:content_f=>\"blah\"@19}]}"
+	 	assert_equal expected, a.to_s
+	 end
+
+	 test "font" do
+	 	parser = QTIParser.new
+	 	a = parser.parse(samples[1])
+	 	output1 = QTITransform.new.apply(a)
+	 	expected = "Determine the smallest !!integer!! \n\tvalue of the sampling rate"
+	 	assert_equal expected, output1
+	 end
+
 end
