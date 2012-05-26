@@ -14,8 +14,8 @@ class QTIParser < Parslet::Parser
 	#Check for accompanying images
 	rule(:filename)        { match(/[a-z|0-9|\/|\-|\.|\?|\\\n\t\s]/).repeat(1).as(:filename) }
 	rule(:image_start_tag) { str('<img src="') }
-	rule(:image_end_tag)   { str('">').as(:image_end_tag) }
-	rule(:image)           { (image_start_tag.as(:image_start_tag) >> ( filename | image_end_tag ).repeat(1)).as(:image) }
+	rule(:image_end_tag)   { str('">') }
+	rule(:image)           { (image_start_tag >> ( filename >> image_end_tag ).repeat(1)).as(:image) }
 
 	#Check for formatting
 	rule(:italic_tag) { (str("<i>") | str("</i>") | str("<I>") | str("</I>")).as(:italic) }
@@ -41,11 +41,15 @@ class QTIParser < Parslet::Parser
 	root :expression
 end
 
+class UnavailableImage < StandardError; end
+
 class QTITransform < Parslet::Transform
 	rule(:italic => simple(:italic))   {"'"}
 	rule(:bold => simple(:bold))       {"!!"}
 	rule(:line_break => simple(:break)) {"\n"}
 	rule(:letters => simple(:letters)) { letters }
 	rule(:any => simple(:any))         { any }
+	rule(:image => sequence(:parts))   { raise UnavailableImage, "Image #{parts[0].to_s} must be uploaded"}
+	rule(:filename => simple(:filename)) {filename.str.gsub(/[\n\t]/, "").strip}
 	rule(:text => sequence(:entries))  { entries.join }
 end

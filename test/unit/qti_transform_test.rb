@@ -10,7 +10,7 @@ class QTITransfromTest < ActiveSupport::TestCase
 	#This array contains sample questions used for testing.
 	samples = Array.new
 	samples [0] = 'iejfei<img src="/ece2025/cgi-bin/mimetex.exe?\hat\om
-	 ega"> (blue to red), '
+	ega"> (blue to red), '
 
 	 test "img_filename" do
 	 	parser = QTIParser.new
@@ -30,14 +30,16 @@ class QTITransfromTest < ActiveSupport::TestCase
 	 test "images" do 
 	 	parser = QTIParser.new
 	 	a = parser.image.parse('<img src="/ece2025/cgi-bin/mimetex.exe?\hat\omega">')
-	 	expected1 = "{:image=>[{:image_start_tag=>\"<img src=\\\"\"@0}, {:filename=>\"/ece2025/cgi-bin/mimetex.exe?\\\\hat\\\\omega\"@10}, {:image_end_tag=>\"\\\">\"@49}]}"
+	 	expected1 = "{:image=>[{:filename=>\"/ece2025/cgi-bin/mimetex.exe?\\\\hat\\\\omega\"@10}]}"
 	 	assert_equal expected1,a.to_s()
 	 	#assert_raise(Parslet::ParseFailed) {parser.parse(samples[0])}
 	 end
 
 	 test "text_w_images" do
 	 	parser = QTIParser.new
-	 	a = parser.parse(samples[0])	 
+	 	a = parser.parse(samples[0])
+	 	#p QTITransform.new.apply(a)
+	 	assert_raise(UnavailableImage) {QTITransform.new.apply(a)}
 	 end
 
 	 test "italics" do
