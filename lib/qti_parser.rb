@@ -20,7 +20,8 @@ class QTIParser < Parslet::Parser
 	#Check for formatting
 	rule(:italic_tag) { (str("<i>") | str("</i>") | str("<I>") | str("</I>")).as(:italic) }
 	rule(:bold_tag)   { (str("<b>") | str("</b>") | str("<B>") | str("</B>")).as(:bold) }
-	rule(:line_break) { (str("<br>") | str("<BR>")).as(:line_break)}
+	rule(:line_break) { (str("<br>") | str("<BR>")).as(:line_break) }
+	rule(:tt_tag)     { (str("<tt>") | str("</tt>") | str("<TT>") | str("</TT>")).as(:ttype)}
 
 	#Single character rules
 	rule(:space)      { match("\s").repeat(1) }
@@ -33,7 +34,7 @@ class QTIParser < Parslet::Parser
 	rule(:eol)     { (crlf | lf).as(:eol) }
 
 	#Grammar parts
-	rule(:format) { italic_tag | bold_tag | line_break }
+	rule(:format) { italic_tag | bold_tag | line_break | tt_tag}
 	rule(:text)   { ( image | format | letters | eol | (any.as(:any)) ).repeat(1) }
 	rule(:ques)   { text.repeat(1).as(:text) }
 
@@ -44,12 +45,13 @@ end
 class UnavailableImage < StandardError; end
 
 class QTITransform < Parslet::Transform
-	rule(:italic => simple(:italic))   {"'"}
-	rule(:bold => simple(:bold))       {"!!"}
-	rule(:line_break => simple(:break)) {"\n"}
-	rule(:letters => simple(:letters)) { letters }
-	rule(:any => simple(:any))         { any }
-	rule(:image => sequence(:parts))   { raise UnavailableImage, "Image #{parts[0].to_s} must be uploaded"}
-	rule(:filename => simple(:filename)) {filename.str.gsub(/[\n\t]/, "").strip}
-	rule(:text => sequence(:entries))  { entries.join }
+	rule(:italic => simple(:italic))     {"'"}
+	rule(:bold => simple(:bold))         {"!!"}
+	rule(:line_break => simple(:break))  {"\n"}
+	rule(:ttype => simple(:ttype))       {"$"}
+	rule(:letters => simple(:letters))   { letters }
+	rule(:any => simple(:any))           { any }
+	rule(:image => sequence(:parts))     { raise UnavailableImage, "Image #{parts[0].to_s} must be uploaded"}
+	rule(:filename => simple(:filename)) { filename.str.gsub(/[\n\t]/, "").strip }
+	rule(:text => sequence(:entries))    { entries.join }
 end
