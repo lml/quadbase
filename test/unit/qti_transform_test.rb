@@ -64,11 +64,11 @@ class QTITransfromTest < ActiveSupport::TestCase
 
 	 test "line_break" do
 	 	parser = QTIParser.new
-	 	a = parser.parse('aThat was <br>unexpected.')
-	 	expected = "aThat was \nunexpected."
+	 	a = parser.parse('That was <br>unexpected.')
+	 	expected = "That was \nunexpected."
 	 	output1 = QTITransform.new.apply(a)
 	 	assert_equal expected, output1
-	 	b = parser.parse('aThat was <BR>unexpected.')
+	 	b = parser.parse('That was <BR>unexpected.')
 	 	output2 = QTITransform.new.apply(b)
 	 	assert_equal expected, output2
 	 end
@@ -80,6 +80,17 @@ class QTITransfromTest < ActiveSupport::TestCase
 	 	output1 = QTITransform.new.apply(a)
 	 	assert_equal expected, output1
 	 	b = parser.parse('a<TT>MATH111</TT>')
+	 	output2 = QTITransform.new.apply(b)
+	 	assert_equal expected, output2
+	 end
+
+	 test "new_paragraph" do
+	 	parser = QTIParser.new
+	 	a = parser.parse('That was <p>unexpected</p>.')
+	 	expected = "That was \n\nunexpected\n\n."
+	 	output1 = QTITransform.new.apply(a)
+	 	assert_equal expected, output1
+	 	b = parser.parse('That was <P>unexpected</P>.')
 	 	output2 = QTITransform.new.apply(b)
 	 	assert_equal expected, output2
 	 end

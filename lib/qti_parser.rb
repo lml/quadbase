@@ -22,6 +22,7 @@ class QTIParser < Parslet::Parser
 	rule(:bold_tag)   { (str("<b>") | str("</b>") | str("<B>") | str("</B>")).as(:bold) }
 	rule(:line_break) { (str("<br>") | str("<BR>")).as(:line_break) }
 	rule(:tt_tag)     { (str("<tt>") | str("</tt>") | str("<TT>") | str("</TT>")).as(:ttype)}
+	rule(:new_p)      { (str("<p>") | str("</p>") | str("<P>") | str("</P>")).as(:para)}
 
 	#Single character rules
 	rule(:space)      { match("\s").repeat(1) }
@@ -35,7 +36,7 @@ class QTIParser < Parslet::Parser
 
 	#Grammar parts
 	rule(:format) { italic_tag | bold_tag | line_break | tt_tag}
-	rule(:text)   { ( image | format | letters | eol | (any.as(:any)) ).repeat(1) }
+	rule(:text)   { ( image | format | letters | eol | new_p | (any.as(:any)) ).repeat(1) }
 	rule(:ques)   { text.repeat(1).as(:text) }
 
 	rule(:expression) { ques }
@@ -49,6 +50,7 @@ class QTITransform < Parslet::Transform
 	rule(:bold => simple(:bold))         {"!!"}
 	rule(:line_break => simple(:break))  {"\n"}
 	rule(:ttype => simple(:ttype))       {"$"}
+	rule(:para => simple(:para))         {"\n\n"}
 	rule(:letters => simple(:letters))   { letters }
 	rule(:any => simple(:any))           { any }
 	rule(:image => sequence(:parts))     { raise UnavailableImage, "Image #{parts[0].to_s} must be uploaded"}
