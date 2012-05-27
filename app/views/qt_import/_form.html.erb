@@ -1,0 +1,13 @@
+<%= form_tag :url => 'import/qti' do %>
+	<%= label_tag "File", "File" %>
+	<br>
+	<%= text_field_tag :File %>
+	<br>
+	<br>
+	<%= label_tag "name", "Content Type" %>
+	<br>
+	<%= select_tag :content_type, options_for_select(@content_types).html_safe, :include_blank => true %>
+	<br>
+	<br>
+	<%= submit_tag "Import" %>
+<% end %>

@@ -5,9 +5,15 @@ require 'open-uri'
 require 'spqr_parser.rb'
 
 class QTImport 
+
+	@@content_types = ['SPQR']
+
 	attr_reader :filename, :content_type, :parser, :transformer
 
-private
+	def self.content_types
+		@@content_types
+	end
+
 	def self.add_questions(project,questions)
 		for a in 0..(questions.length-1)
 			project.add_question!(questions[a])
