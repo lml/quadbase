@@ -32,7 +32,7 @@ module GetContent
 
 	def get_questions(content,parser,transformer)
 		a = content[0]
-		ques_num = a.attributes["ident"]
+		ques_num = a.attributes["ident"].value
 
 		#Why is this such a roundabout way of getting the question? Well, the 
 		#questions and answer choices have the same tag, with the answer choices
@@ -48,7 +48,7 @@ module GetContent
 		b1 = parser.parse(text)
 		ques = transformer.apply(b1)
 
-		answers = get_answers(a,parser,transformer)
+		answers = get_answers(a,parser,transformer,ques_num)
 		fake_ans = AnswerChoice.new(:content => "fake", :credit => 1)
 
 		q = SimpleQuestion.new(:content => ques )
@@ -59,10 +59,19 @@ module GetContent
 		return q
 	end
 
-	def get_answers(content,parser,transformer)
-		a = content.xpath('//presentation//response_lid//mattext')
-		b = a[0]
-		text = (b.children[0]).content
+	def get_answers(content,parser,transformer,id_num)
+		#Find only the relevant answer choices, using the question id number
+		answers = Array.new
+		z = content.xpath('//presentation//response_lid//response_label')
+		for y in 0..(z.length-1)
+			label = z[y].attributes["ident"].value
+			x = label.match(id_num + "_A")
+			if x != nil
+				answers << z[y]
+			end
+		end		
+		b = answers[0].children.children.children
+		text = b[0].content
 		b1 = parser.parse(text)
 		ans = transformer.apply(b1)
 		credit = get_credit(content)
