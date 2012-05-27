@@ -4,28 +4,33 @@
 require 'test_helper'
 
 class QTImportTest < ActiveSupport::TestCase
-	test "1_question" do
-		import = QTImport.new('/home/railsoer/Documents/spqr1.xml','SPQR')
-		assert_nothing_raised(import)
+	test "1_question" do	
+		assert_nothing_raised do
+			QTImport.new("#{::Rails.root}/test/fixtures/files/spqr1.xml",'SPQR')
+		end
 	end
 
-	test "2_question" do
-		import = QTImport.new('home/railsoer/Documents/spqr2.xml','SPQR')
-		assert_nothing_raised(import)
+	test "2_question" do		
+		assert_nothing_raised do
+			QTImport.new("#{::Rails.root}/test/fixtures/files/spqr2.xml",'SPQR')
+		end
 	end
 
 	test "5_question" do
-		import = QTImport.new('home/railsoer/Documents/spqr3.xml','SPQR')
-		assert_nothing_raised(import)
+		assert_nothing_raised do
+			QTImport.new("#{::Rails.root}/test/fixtures/files/spqr3.xml",'SPQR')
+		end
 	end
 
 	test "25_question" do
-		import = QTImport.new('home/railsoer/Documents/spqr4.xml','SPQR')
-		assert_nothing_raised(import)
+		assert_nothing_raised do
+			QTImport.new("#{::Rails.root}/test/fixtures/files/spqr4.xml",'SPQR')
+		end
 	end
 
 	test "all_question" do
-		import = QTImport.new('home/railsoer/Documents/spqr_original.xml','SPQR')
-		assert_nothing_raised(import)
+		assert_nothing_raised do
+			QTImport.new("#{::Rails.root}/test/fixtures/files/spqr_original.xml",'SPQR')
+		end
 	end
 end

@@ -2,10 +2,7 @@
 # License version 3 or later.  See the COPYRIGHT file for details.
 
 require 'open-uri'
-require 'project.rb'
-require 'question.rb'
 require 'spqr_parser.rb'
-require 'answer_choice.rb'
 
 module ImportQuestions
 	def openfile(filename)
@@ -19,7 +16,7 @@ module ImportQuestions
 
 	def createproject
 		a = Project.create(:name => 'Import')
-		a.add_member!(current_user)
+		# a.add_member!(current_user)
 	end
 end
 
@@ -154,5 +151,3 @@ private
 		return a, b
 	end
 end
-
-try = QTImport.new("/home/railsoer/Documents/QTI_original.xml",'SPQR')
