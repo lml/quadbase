@@ -52,7 +52,7 @@ module GetContent
 		fake_ans = AnswerChoice.new(:content => "fake", :credit => 1)
 
 		q = SimpleQuestion.new(:content => ques )
-		q.answer_choices << answers
+		q.answer_choices << answers[0]
 		q.answer_choices << fake_ans
 		
 		q.save!
@@ -69,14 +69,18 @@ module GetContent
 			if x != nil
 				answers << z[y]
 			end
-		end		
-		b = answers[0].children.children.children
-		text = b[0].content
-		b1 = parser.parse(text)
-		ans = transformer.apply(b1)
-		credit = get_credit(content)
-
-		choice = AnswerChoice.new(:content => ans, :credit => credit[0])
+		end
+		choices = Array.new
+		for a in 0..(answers.length-1)
+			b = answers[a].children.children.children
+			text = b[0].content
+			b1 = parser.parse(text)
+			ans = transformer.apply(b1)
+			credit = get_credit(content)
+			choice = AnswerChoice.new(:content => ans, :credit =>0)
+			choices << choice
+		end
+		return choices
 	end
 
 	def get_credit(content)
