@@ -19,6 +19,7 @@ module ImportQuestions
 
 	def createproject
 		a = Project.create(:name => 'Import')
+		a.add_member!(current_user)
 	end
 end
 
@@ -29,35 +30,41 @@ module GetContent
 	def iterate_items(document)
 		items = document.xpath('//item')
 	end
-
+#Why is this such a roundabout way of getting the question? Well, the 
+#questions and answer choices have the same tag, with the answer choices
+#nested more deeply.  I can do a specific search for the path the answer
+#choices are on and get those back.  But, I can't do a more general 
+#search and get only questions back.  Each time it returns the questions
+#and answer choices, in sequence, but this is a problem, especially since
+#the number of answer choices per question varies widely.  Hence the 
+#roundabout method.
 	def get_questions(content,parser,transformer)
-		a = content[0]
-		ques_num = a.attributes["ident"].value
-
-		#Why is this such a roundabout way of getting the question? Well, the 
-		#questions and answer choices have the same tag, with the answer choices
-		#nested more deeply.  I can do a specific search for the path the answer
-		#choices are on and get those back.  But, I can't do a more general 
-		#search and get only questions back.  Each time it returns the questions
-		#and answer choices, in sequence, but this is a problem, especially since
-		#the number of answer choices per question varies widely.  Hence the 
-		#roundabout method.
-		b = a.xpath('//presentation')
-		c = b[0].children.children.children
-		text = c[0].content
-		b1 = parser.parse(text)
-		ques = transformer.apply(b1)
-
-		answers = get_answers(a,parser,transformer,ques_num)
-		p answers
-		fake_ans = AnswerChoice.new(:content => "fake", :credit => 1)
-
-		q = SimpleQuestion.new(:content => ques )
-		q.answer_choices << answers[0]
-		q.answer_choices << fake_ans
-		
-		q.save!
-		return q
+		ques = Array.new
+		ques_id = Array.new
+		questions = Array.new
+		for z in 0..(content.length-1)
+			y = content[z]
+			ques_num  = y.attributes["ident"].value
+			ques_id << ques_num
+			x = y.xpath('//presentation')
+			w = x[0].children.children.children
+			text = w[0].content
+			v = parser.parse(text)
+			ques1 = transformer.apply(v)
+			ques << ques1
+		end		
+		answers = get_answers(content,parser,transformer,ques_num)
+		for a in 0..(ques.length-1)
+			b = Comment.new(:message => ques_id[a])
+			q = SimpleQuestion.new(:content => ques[a])
+			q.comment_thread = b.comment_thread
+			for i in 0..(answers.length-1)
+				q.answer_choices << answers[i]
+			end
+			q.save!
+			questions << q
+		end
+		return questions
 	end
 
 	def get_answers(content,parser,transformer,id_num)
@@ -111,12 +118,13 @@ module GetContent
 		end
 		return array
 	end
-
-
 end
 
 module AddQuestions
 	def add_questions(project,questions)
+		for a in 0..(questions.length-1)
+			project.add_question!(questions[a])
+		end
 	end
 end
 
