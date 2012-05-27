@@ -49,6 +49,7 @@ module GetContent
 		ques = transformer.apply(b1)
 
 		answers = get_answers(a,parser,transformer,ques_num)
+		p answers
 		fake_ans = AnswerChoice.new(:content => "fake", :credit => 1)
 
 		q = SimpleQuestion.new(:content => ques )
@@ -71,35 +72,35 @@ module GetContent
 			end
 		end
 		choices = Array.new
+		credit = get_credit(content,id_num)
 		for a in 0..(answers.length-1)
 			b = answers[a].children.children.children
 			text = b[0].content
 			b1 = parser.parse(text)
 			ans = transformer.apply(b1)
-			credit = get_credit(content)
-			choice = AnswerChoice.new(:content => ans, :credit =>0)
+			choice = AnswerChoice.new(:content => ans, :credit => credit[a])
 			choices << choice
 		end
 		return choices
 	end
 
-	def get_credit(content)
-		a = content.xpath('//resprocessing')
-		b = a[0].children.children.children
-		b.remove_attr("respident")
-		b.children.remove
-		len = b.length
+	def get_credit(content,id_num)
+		numbers = Array.new
 		points = Array.new
-		for z in 0..(len-1)
-			y = b[z].element?()			
-			if y == false
-				x = b[z].content
-				w = x.match(/\D/)
-				if w == nil
-					points << x.to_f
-				end
+		a = content.xpath('//resprocessing//respcondition')
+		for b in 0..(a.length-1)
+			c = a[b].children.children[1].children[0]			
+			label = c.content
+			d = label.match(id_num + "_A")
+			if d != nil
+				numbers << a[b]
 			end
 		end
+		for i in 0..(numbers.length-1)
+			j = numbers[i].children.children.last
+			k = (j.content).to_f
+			points << k
+		end		
 		credits = normalize(points)		
 	end
 
