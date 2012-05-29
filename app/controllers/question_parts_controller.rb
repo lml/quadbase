@@ -38,4 +38,16 @@ class QuestionPartsController < ApplicationController
     end
   end
 
+  def unlock
+    @part = QuestionPart.find(params[:question_part_id])
+    raise SecurityTransgression unless present_user.can_update?(@part)
+    @multipart_question = @part.multipart_question
+    @part.unlock!(present_user)
+    @multipart_question.reload
+    respond_to do |format|
+      format.js
+      format.html { redirect_to edit_question_path(@multipart_question) }
+    end
+  end
+
 end

@@ -8,6 +8,8 @@ Quadbase::Application.routes.draw do
       resources :logic_library_versions, :shallow => true
       post 'sort', :on => :collection
     end
+    get 'log_level'
+    put 'set_log_level'
   end
 
   def commentable
@@ -171,6 +173,7 @@ Quadbase::Application.routes.draw do
   end
 
   resources :question_parts, :only => [:destroy] do
+    put 'unlock'
     sortable
   end
   
