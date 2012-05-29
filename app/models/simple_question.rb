@@ -30,6 +30,9 @@ class SimpleQuestion < Question
   def content_copy
     kopy = SimpleQuestion.create
     init_copy(kopy)
+    old_setup = kopy.question_setup
+    kopy.question_setup = self.question_setup.content_copy if !self.question_setup_id.nil?
+    old_setup.destroy_if_unattached
     self.answer_choices.each {|ac| kopy.answer_choices.push(ac.content_copy) }
     kopy.content = self.content
     kopy

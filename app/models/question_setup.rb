@@ -50,6 +50,20 @@ class QuestionSetup < ActiveRecord::Base
   def is_empty?
     content.blank? && (logic.nil? || logic.empty?)
   end
+
+  def merge(qs)
+    # If the given question setup can be merged with self without losing content
+    # or changing any published questions, returns the result of merging the
+    # two setups. Otherwise, returns nil.
+    return self if self == qs
+    same_content = content == qs.content
+    if content.blank? || (same_content && content_change_allowed?)
+      return qs
+    elsif qs.content.blank? || (same_content && qs.content_change_allowed?)
+      return self
+    end
+    nil
+  end
     
   #############################################################################
   # Access control methods
