@@ -50,10 +50,9 @@
     });
   <% end %>
 <% end %>
-<% debugger %>
 <% if !entries.nil? %>
   <% entries = entries.to_a %>
-  <table class="list" width="100%">
+  <table class="list" width="100%" id="question_list">
      <tr>
         <% if show_checkboxes %>
           <% num_cols += 1 %>
@@ -67,16 +66,15 @@
      <tr id="none_row" style="<%= !entries.empty? ? 'display:none' : '' %>">
         <td colspan="<%= num_cols %>" style="text-align:center">[ No questions ]</td>
      </tr>
-   <p> does my thing get here? </p>
      <% entries.each do |entry| %>
      <% question = method_for_question.nil? ? entry : entry.method(method_for_question).call() %>
-   <p> does my thing even touch the partial? </p>
-     <% render  :partial => 'questions/fill_row',
-                :locals => {:entry => entry,
-                            :row_id_base => row_id_base,
-                            :show_checkboxes => show_checkboxes,
-                            :question => question,
-                           } %>
+     <%= render  :partial => 'questions/fill_row',
+                 :locals => { :entry => entry,
+                              :row_id_base => row_id_base,
+                              :show_checkboxes => show_checkboxes,
+                              :question => question,
+                              :checkbox_options => checkbox_options
+                            } %>
      <% end %>
   </table>
 <% end %>

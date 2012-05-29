@@ -12,7 +12,7 @@ render  :partial => 'questions/fill_row',
                                           :name_base => "project_question_ids"}
                    }
 %> 
-<%# <p> A row is being created </p> %>
+
 <tr id="<%= row_id_base + question.id.to_s %>"%>
   <% if show_checkboxes %>
     <% checkbox_value = entry.call(checkbox_options[:method_for_value]) %>
