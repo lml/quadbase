@@ -27,7 +27,7 @@ class QuestionPartTest < ActiveSupport::TestCase
     assert mpq.add_parts([sq, psq])
     assert mpq.errors.empty?
 
-    assert mpq.reload!
+    assert mpq.reload
 
     assert !mpq.child_question_parts.first.child_question.is_published?
     assert mpq.child_question_parts.second.child_question.is_published?
