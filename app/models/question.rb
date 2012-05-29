@@ -541,7 +541,7 @@ class Question < ActiveRecord::Base
     # Othewise, returns false.
     return true if @@lock_timeout <= 0
     # Transaction to make testing and setting the lock atomic
-    # In rails 3.2, replace transaction and lock! with with_lock block
+    # In rails 3.2, replace self.transaction and self.lock! with self.with_lock block
     self.transaction do
       self.lock!
       return already_locked_error if (self.is_locked? && !self.has_lock?(user))
@@ -556,7 +556,7 @@ class Question < ActiveRecord::Base
     # Othewise, returns false.
     return true if @@lock_timeout <= 0
     # Transaction to make releasing the lock atomic
-    # In rails 3.2, replace transaction and lock! with with_lock block
+    # In rails 3.2, replace self.transaction and self.lock! with self.with_lock block
     self.transaction do
       self.lock!
       return not_locked_error if !self.is_locked?
