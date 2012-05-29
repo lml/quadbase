@@ -123,11 +123,12 @@ class QuestionTest < ActiveSupport::TestCase
     q1.create!(u)
     q1.publish!(u)
     
-    q2 = q1.new_version!(Factory.create(:user))
-    q3 = q1.new_version!(Factory.create(:user))
+    q2 = q1.new_version!(u)
+    q3 = q1.new_version!(u)
     
     assert !q2.superseded?
     
+    sleep 1 #second
     q3.publish!(u)
     
     assert q2.superseded?

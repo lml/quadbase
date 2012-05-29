@@ -51,7 +51,7 @@ class ProjectTest < ActiveSupport::TestCase
     assert_raise(ActiveRecord::RecordNotFound) {ProjectQuestion.find(sq.id)}
     ww.add_question!(sq)
     ww.save!
-    assert_equal sq.id, ProjectQuestion.find(sq.id).question_id
+    assert_equal sq.id, ProjectQuestion.find_by_question_id(sq.id).question_id
   end
   
   test "add member" do
@@ -61,7 +61,7 @@ class ProjectTest < ActiveSupport::TestCase
     assert_raise(ActiveRecord::RecordNotFound) {ProjectMember.find(user.id)}
     ww.add_member!(user)
     ww.save!
-    assert_equal user, ProjectMember.find(user.id).user
+    assert_equal user, ProjectMember.find_by_user_id(user.id).user
   end
 
   test "all for user" do
