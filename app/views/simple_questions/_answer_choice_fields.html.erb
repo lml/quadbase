@@ -4,23 +4,45 @@
 <%= question_edit_block "Answer Choice Text" do %>
   <div class="fields">
     <%= f.text_area :content, :rows => 3, :class => "mark_it_up", :style => 'width:100%' %>
-    
     <span style="float:right">  
       <%= link_to_remove_fields "Delete this answer", f %>
     </span>
-    
     <% # Couldn't get the buttons to be checked on load without manually %>
     <% # checking the status %>
     <% credit = f.object.credit %>
     <% id = f.object.id %>
     <div class = "marked">
-    	<%= f.radio_button :credit, 1, {:checked => credit == 1, :onclick => "$(tft#{id}).hide();"} %>
+    	<%= f.radio_button :credit, '1', {:checked => credit == 1, :onclick => "$(tft#{id}).hide();"} %>
     	Right
-    	<%= f.radio_button :credit, 0, {:checked => credit == 0, :onclick => "$(tft#{id}).hide();"} %>
+    	<%= f.radio_button :credit, '0', {:checked => credit == 0, :onclick => "$(tft#{id}).hide();"} %>
 	Wrong
-	<%= f.radio_button :credit, 0.5, {:id => "frb" + "#{id}", :checked => credit != 1 && credit != 0, :onclick => "$(tft#{id}).show();"}%>
+	<%= f.radio_button :credit, 0.5, {:id => "frb" + "#{id}", :checked => (credit != 1 && credit != 0), :onclick => "$(tft#{id}).show();"}%>
 	Partial Credit:
-       	<%= text_field_tag 'partcred', nil, :id => 'tft' + "#{id}", :value => credit, :class => 'part_cred_field', :style => "#{credit != 1 && credit != 0 ? '' : 'display:none'}", :onblur => "$(frb#{id}).attr('value', this.value)" %>
+       	<%= f.text_field :value, :id => 'tft' + "#{id}", :value => credit, :class => 'part_cred_field', :style => "#{credit != 1 && credit != 0 ? '' : 'display:none'}", :onblur => "$(frb#{id}).attr('value', this.value);"%>
+	<% temp = '' %>
+	<%= request.POST.each do |k,v| %>
+	<% if k == "question" %>
+	<% v.each do |k2, v2| %>
+		<% if k2 == "answer_choices_attributes" %>
+			<% v2.each do |k3, v3|  %>
+				<% v3.each do |k4, v4| %>
+					<% if k4 == "credit" %>
+						<% temp = v4 %>
+					<% end %>
+				<% end %>
+				<script type="text/javascript">
+					<% if temp != '0' && temp != '1' %>
+					document.getElementsByName("question[answer_choices_attributes][<%= k3 %>][value]")[0].value = '<%= temp %>';
+					document.getElementsByName("question[answer_choices_attributes][<%= k3 %>][value]")[0].style.display = 'inline';
+					document.getElementsByName("question[answer_choices_attributes][<%= k3 %>][credit]")[2].value = '<%= temp %>';
+					document.getElementsByName("question[answer_choices_attributes][<%= k3 %>][credit]")[2].checked = 'true';
+					<% end %>
+				</script>
+			<% end %> 
+		<% end %>
+	<% end %>
+	<% end %>
+	<% end %>
     </div>    
   </div>
 <% end %>
@@ -29,4 +51,5 @@
   $(document).ready(function() {
      refresh_mark_it_up_textareas();
    });
+  
 </script>
