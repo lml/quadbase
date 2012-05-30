@@ -507,7 +507,8 @@ class Question < ActiveRecord::Base
   end
 
   def main_project
-    project_questions.empty? ? nil : project_questions.first.project
+    raise SecurityTransgression if is_published?
+    project_questions.first.project
   end
   
   # In some cases, there could be some outstanding role requests on this question
