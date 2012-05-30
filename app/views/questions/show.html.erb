@@ -16,8 +16,13 @@
 <div class="quad-question">
    
   <% if @question.errors.none? %>
+    <span style="float:right">
+      <%= render :partial => 'shared/votes',
+                 :locals => {:votable => @question} %>
+    </span>
     <%= render :partial => "show", 
                :locals => {:question => @question} %>
+    
   <% else %>
     This question cannot be shown because one or more errors occurred when retrieving it.
   <% end %>

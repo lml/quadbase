@@ -3,6 +3,7 @@
 
 class Question < ActiveRecord::Base
   include AssetMethods
+  include VoteMethods
   
   acts_as_taggable
   
@@ -17,6 +18,7 @@ class Question < ActiveRecord::Base
            :through => :question_collaborators,
            :source => :user
   has_many :project_questions, :dependent => :destroy
+  has_many :votes, :as => :votable, :dependent => :destroy
 
   belongs_to :license
   belongs_to :question_setup
@@ -612,6 +614,16 @@ class Question < ActiveRecord::Base
   # defined here b/c called from different places
   def role_requests_can_be_created_by?(user)
     user.can_update?(self)
+  end
+  
+  def can_be_voted_on_by?(user)
+    is_a_collaborator = false
+    collaborators.each do |collaborator|
+      if collaborator == user
+        is_a_collaborator = true
+      end 
+    end
+    can_be_read_by?(user)  && !is_a_collaborator
   end
   
 #############################################################################
