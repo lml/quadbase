@@ -112,6 +112,7 @@ class Question < ActiveRecord::Base
   before_save :clear_empty_logic
 
   validate :not_published, :on => :update
+  validate :single_project, :unless => :is_published?
   validates_presence_of :license
   
   after_initialize :set_default_license!, :unless => :license
@@ -505,6 +506,10 @@ class Question < ActiveRecord::Base
   def base_class
     Question
   end
+
+  def main_project
+    project_questions.empty? ? nil : project_questions.first.project
+  end
   
   # In some cases, there could be some outstanding role requests on this question
   # but no role holders left to approve/reject them.  This method is a utility for
@@ -632,6 +637,14 @@ protected
   def not_published
     return if (version_was.nil?)
     errors.add(:base, "Changes cannot be made to a published question.#{self.changes}")
+    false
+  end
+
+  def single_project
+    return if project_questions.count > -1
+    errors.add(:base, "Draft question is in an invalid state")
+    logger.error {"Draft question #{self.id} is in an invalid state"}
+    raise IllegalState
     false
   end
   

@@ -95,7 +95,7 @@ class QuestionsController < ApplicationController
       if (@updated = @question.update_attributes(params[:question]))
         flash[:notice] = "Your draft has been saved.
                           Until you publish this draft, please remember that only members of " +
-                          @question.project_questions.first.project.name +
+                          @question.main_project.name +
                           " will be able to see it."
         format.html { redirect_to question_path(@question) }
       else

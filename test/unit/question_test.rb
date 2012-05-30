@@ -145,14 +145,14 @@ class QuestionTest < ActiveSupport::TestCase
   
   test "delete destroys appropriate assocs" do
     q = make_simple_question()
-    wq = Factory.create(:project_question, :question => q)
+    pq = Factory.create(:project_question, :question => q)
     c = Factory.create(:question_collaborator, :question => q)
 
-    q.destroy
+    assert q.destroy
     assert_raise(ActiveRecord::RecordNotFound) { Question.find(q.id) }
 
     assert_raise(ActiveRecord::RecordNotFound) { QuestionCollaborator.find(c.id) }
-    assert_raise(ActiveRecord::RecordNotFound) { ProjectQuestion.find(wq.id) }
+    assert_raise(ActiveRecord::RecordNotFound) { ProjectQuestion.find(pq.id) }
   end
   
   test "create" do
