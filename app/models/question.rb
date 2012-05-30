@@ -112,7 +112,6 @@ class Question < ActiveRecord::Base
   before_save :clear_empty_logic
 
   validate :not_published, :on => :update
-  validate :single_project, :unless => :is_published?
   validates_presence_of :license
   
   after_initialize :set_default_license!, :unless => :license
@@ -640,14 +639,6 @@ protected
     false
   end
 
-  def single_project
-    return if project_questions.count > -1
-    errors.add(:base, "Draft question is in an invalid state")
-    logger.error {"Draft question #{self.id} is in an invalid state"}
-    raise IllegalState
-    false
-  end
-  
   def clear_empty_logic
     if !logic.nil? && logic.empty?
       logic.destroy 

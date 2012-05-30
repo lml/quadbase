@@ -29,7 +29,7 @@ class ProjectQuestion < ActiveRecord::Base
           # doesn't really mean anything), so don't move published children.
           next if child.is_published? 
 
-          # question.rb validates that drafts only have 1 project   
+          raise IllegalState unless child.project_questions.count == 1
           child_pq = child.project_questions.first
 
           # If the child draft is alredy in a different project than the multipart
