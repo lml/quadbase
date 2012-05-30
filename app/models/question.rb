@@ -118,8 +118,8 @@ class Question < ActiveRecord::Base
 
   before_create :assign_number
 
-  scope :draft_questions, where(:version => nil)
-  scope :published_questions, where(:version.not_eq => nil)
+  scope :draft_questions, where(:version == nil)
+  scope :published_questions, where(:version != nil)
   scope :questions_in_projects, lambda { |projects|
     joins(:project_questions).where(:project_questions => {
           :project_id => projects.collect { |p| p.id }})
@@ -449,30 +449,44 @@ class Question < ActiveRecord::Base
       wscope = draft_questions
     when 'My Projects'
       wscope = user_project_questions(user)
-    else
+    else #All Places
       wscope = Question
     end
 
-    wtscope = wscope.where(:question_type.matches % typify(type))
-    wtscope = wtscope.where(:question_type.not_matches % typify(exclude_type)) if !exclude_type.blank?
+    wtscope = wscope.where{question_type =~ typify(type)}
+    wtscope = wtscope.where{question_type !~ typify(exclude_type)} if !exclude_type.blank?
 
-    # Search by question ID or number
-    id_query = ''
-    num_query = ''
-    if (text =~ /^(\d+)$/)
-      id_query = $1
-      num_query = $1
-    elsif (text =~ /^d(\d+)$/)
-      id_query = $1
-    elsif (text =~ /^q(\d+)(v(\d+))?$/)
-      # Note you cannot find old versions of published questions since
-      # those are automatically removed in the controller
-      num_query = $1
+    case what
+    when 'idnum'
+      # Search by question ID or number
+      id_query = ''
+      num_query = ''
+      if (text =~ /^(\d+)$/)
+        id_query = $1
+        num_query = $1
+      elsif (text =~ /^d(\d+)$/)
+        id_query = $1
+      elsif (text =~ /^q(\d+)(v(\d+))?$/)
+        # Note you cannot find old versions of published questions since
+        # those are automatically removed in the controller
+        num_query = $1
+      end
+      questions = wtscope.where{(id == id_query) | (number == num_query)}
+    when 'tags'
+      # Search by tags
+      questions = wtscope.joins{taggings.tag.outer}.where{tags.name =~ query}
+    when 'author'
+      # Search by author (or editor)
+      questions = wtscope.joins{question_collaborators}.where{question_collaborators.name =~ query}
+    else #content
+      questions = wtscope.joins{question_setup.outer}.where{(content =~ query) | (question_setup.content =~ query)}
     end
+    
+    # Remove (in SQL) published questions that have a newer published version and questions the user can't read
+    sql = Question.joins{project_questions.project.project_members}.joins{question_collaborators.outer}.where{(version == nil) & (project_question.project.project_members.user_id == present_user.id) | (question_collaborators.user_id == present_user.id)}.union(Question.where{version != nil}.group{number}.having{version == max(version)}).to_sql
 
-    wtscope.joins(:question_setup.outer).joins({:taggings.outer => :tag.outer}).where((:id.eq % id_query) |\
-            (:number.eq % num_query) | (:content.matches % query) | {:question_setup => [:content.matches % query]} |\
-            {:tags => [:name.matches % query]}).group(:id).order(:id)
+    # Workaround for the fact that AREL UNION sucks
+    Question.find_by_sql(sql.slice(2..sql.length-3)).group{id}.order{id}
 
     # This should the most efficient way to do the search
     # (Inner joins with UNION could maybe be faster,
@@ -481,7 +495,6 @@ class Question < ActiveRecord::Base
     # I'm allowing partial tag searches for now (e.g. 'PEN' will match 2011 SPEN Sprint)
     # If this is not desirable, replace :name.matches % query with :name => text
     # An ordering other than by id could also be used without any other modifications
-    # Note: There seems to be no MetaWhere alternative for using the distinct keyword
   end
 
   def roleless_collaborators

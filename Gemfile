@@ -24,7 +24,7 @@ gem "paperclip", "~> 2.3"
 gem 'mime-types', :require => 'mime/types'
 
 # Search
-gem "meta_where"
+gem "squeel", "~> 1.0.2"
 
 gem 'acts-as-taggable-on', '~>2.1.0'
 
