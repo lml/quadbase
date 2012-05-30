@@ -104,8 +104,8 @@ class QuestionsController < ApplicationController
 	end
         if !is_number?(params[:question][:answer_choices_attributes][key][:credit])
 		tempchoice = @question.answer_choices.find(value[:id])
-		tempchoice.credit = -1
- 		puts tempchoice.save
+		tempchoice.credit = 0.5
+ 		tempchoice.save
 		temp = false
 	end
       end
