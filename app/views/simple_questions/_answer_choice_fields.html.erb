@@ -10,15 +10,15 @@
     <% # Couldn't get the buttons to be checked on load without manually %>
     <% # checking the status %>
     <% credit = f.object.credit %>
-    <% id = f.object.id %>
+    <% @id = (@id ||= 0) + 1 %>
     <div class = "marked">
-    	<%= f.radio_button :credit, '1', {:checked => credit == 1, :onclick => "$(tft#{id}).hide();"} %>
+    	<%= f.radio_button :credit, '1', {:checked => credit == 1, :onclick => "$(tft#{@id}).hide();"} %>
     	Right
-    	<%= f.radio_button :credit, '0', {:checked => credit == 0, :onclick => "$(tft#{id}).hide();"} %>
+    	<%= f.radio_button :credit, '0', {:checked => credit == 0, :onclick => "$(tft#{@id}).hide();"} %>
 	Wrong
-	<%= f.radio_button :credit, 0.5, {:id => "frb" + "#{id}", :checked => (credit != 1 && credit != 0), :onclick => "$(tft#{id}).show();"}%>
+	<%= f.radio_button :credit, 0.5, {:id => "frb" + "#{@id}", :checked => (credit != 1 && credit != 0), :onclick => "$(tft#{@id}).show();"}%>
 	Partial Credit:
-       	<%= f.text_field :value, :id => 'tft' + "#{id}", :value => credit, :class => 'part_cred_field', :style => "#{credit != 1 && credit != 0 ? '' : 'display:none'}", :onblur => "$(frb#{id}).attr('value', this.value);"%>
+       	<%= f.text_field :value, :id => 'tft' + "#{@id}", :value => credit, :class => 'part_cred_field', :style => "#{credit != 1 && credit != 0 ? '' : 'display:none'}", :onkeyup => "$(frb#{@id}).attr('value', this.value);"%>
 	<% temp = '' %>
 	<%= request.POST.each do |k,v| %>
 	<% if k == "question" %>

@@ -95,19 +95,27 @@ class QuestionsController < ApplicationController
       return
     end
 
+    temp = true
     respond_to do |format|
       
        params[:question][:answer_choices_attributes].each do |key, value|
 	if params[:question][:answer_choices_attributes][key][:id] == nil
 		next
 	end
-	tempchoice = @question.answer_choices.find(value[:id])
-	tempchoice.credit = -1
- 	tempchoice.save
+        if !is_number?(params[:question][:answer_choices_attributes][key][:credit])
+		tempchoice = @question.answer_choices.find(value[:id])
+		tempchoice.credit = -1
+ 		puts tempchoice.save
+		temp = false
+	end
       end
-     
-     
-       if (  @updated = @question.update_attributes(params[:question]))
+     @updated = @question.update_attributes(params[:question])
+     if !temp
+	format.html { render 'questions/edit' }
+     end
+
+     if temp
+       if (@updated)
         flash[:notice] = "Your draft has been saved.
                           Until you publish this draft, please remember that only members of " +
                           @question.project_questions.first.project.name +
@@ -116,6 +124,7 @@ class QuestionsController < ApplicationController
        else
         format.html { render 'questions/edit' }
        end
+     end
     end
   end
 

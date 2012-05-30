@@ -8,7 +8,10 @@ class AnswerChoice < ActiveRecord::Base
   belongs_to :question
   validates_presence_of :content, :credit
   validate :parse_succeeds
-  validates_numericality_of :credit
+  validates_numericality_of :credit,
+                            :greater_than_or_equal_to => 0,
+                            :less_than_or_equal_to => 1,
+                            :allow_nil => true
 
   before_save :cache_html
   before_destroy :question_not_published

@@ -16,7 +16,9 @@ function remove_fields(link) {
 function add_fields(elem_to_append_to, association, content) {
   var new_id = new Date().getTime();
   var regexp = new RegExp("new_" + association, "g");
-  $(elem_to_append_to).append(content.replace(regexp, new_id));
+  var regexp2 = new RegExp("rb", "g");
+  var regexp3 = new RegExp("ft", "g");
+  $(elem_to_append_to).append(content.replace(regexp, new_id).replace(regexp2, new_id).replace(regexp3, new_id));
 }
 
 // Use this method when you want to do an AJAX "DELETE", which 
