@@ -76,8 +76,8 @@ class QuestionsController < ApplicationController
     respond_with(@question)
   end
 
-    def is_number?(object)
-  	true if Float(object) rescue false
+  def is_number?(object)
+    true if Float(object) rescue false
   end
 
   # We can't use the normal respond_with here b/c the STI we're using confuses it.  
@@ -98,18 +98,17 @@ class QuestionsController < ApplicationController
 
     temp = true
     respond_to do |format|
-      
-       params[:question][:answer_choices_attributes].each do |key, value|
-	if params[:question][:answer_choices_attributes][key][:id] == nil
-		next
-	end
-        if !is_number?(params[:question][:answer_choices_attributes][key][:credit])
+      params[:question][:answer_choices_attributes].each do |key, value|
+      if params[:question][:answer_choices_attributes][key][:id] == nil
+	next
+      end
+      if !is_number?(params[:question][:answer_choices_attributes][key][:credit])
 		tempchoice = @question.answer_choices.find(value[:id])
 		tempchoice.credit = 0.5
  		tempchoice.save
 		temp = false
-	end
       end
+     end
      @updated = @question.update_attributes(params[:question])
      if !temp
 	format.html { render 'questions/edit' }
