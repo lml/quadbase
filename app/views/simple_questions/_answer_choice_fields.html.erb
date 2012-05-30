@@ -16,7 +16,7 @@
     	Right
     	<%= f.radio_button :credit, '0', {:checked => credit == 0, :onclick => "$(tft#{@id}).hide();"} %>
 	Wrong
-	<%= f.radio_button :credit, 0.5, {:id => "frb" + "#{@id}", :checked => (credit != 1 && credit != 0), :onclick => "$(tft#{@id}).show();"}%>
+	<%= f.radio_button :credit, credit, {:id => "frb" + "#{@id}", :checked => (credit != 1 && credit != 0),  :onclick => "$(tft#{@id}).show();"}%>
 	Partial Credit:
        	<%= f.text_field :value, :id => 'tft' + "#{@id}", :value => credit, :class => 'part_cred_field', :style => "#{credit != 1 && credit != 0 ? '' : 'display:none'}", :onkeyup => "$(frb#{@id}).attr('value', this.value);"%>
     </div>
