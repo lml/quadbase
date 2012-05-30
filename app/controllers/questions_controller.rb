@@ -17,6 +17,7 @@ class QuestionsController < ApplicationController
   autocomplete :tag, :name, :class_name => 'ActsAsTaggableOn::Tag'
   
   def index
+    @where ||= 'Published Questions'
   end
 
   def show
