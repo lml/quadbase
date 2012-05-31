@@ -8,7 +8,7 @@ class Question < ActiveRecord::Base
   
   @@lock_timeout = Quadbase::Application.config.question_lock_timeout
 
-  set_inheritance_column "question_type"
+  self.inheritance_column = "question_type"
   
   has_many :question_collaborators, 
            :order => :position, 
