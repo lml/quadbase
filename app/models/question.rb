@@ -506,8 +506,8 @@ class Question < ActiveRecord::Base
     Question
   end
 
-  def main_project
-    raise SecurityTransgression if is_published?
+  def project
+    raise IllegalState if is_published?
     project_questions.first.project
   end
   
