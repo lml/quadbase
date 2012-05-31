@@ -4,14 +4,13 @@
 <% # Clients of this partial must provide the following variables:
    # votable
 %>
+<% if votable.class == SimpleQuestion || votable.class == MultipartQuestion %>
+  <% votable = votable.becomes(votable.base_class)%>
+<% end %>
 <% can_vote = present_user.can_vote_on?(votable) %>
 <% vote = get_vote_for(votable, present_user) if can_vote %>
 
 <div id="votes_for_<%= votable.class.base_class.to_s %>_<%= votable.id %>">
-
-<% if votable.class == SimpleQuestion || votable.class == MultipartQuestion %>
-  <% votable = votable.becomes(votable.base_class)%>
-<% end %>
 
 <%= form_tag polymorphic_path([:up, votable, :votes]),
              :remote => true do %>
