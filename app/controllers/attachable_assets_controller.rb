@@ -56,7 +56,7 @@ class AttachableAssetsController < ApplicationController
                        end }
          format.js
       else
-        logger.debug {@attachable_asset.errors.inspect)}
+        logger.debug {@attachable_asset.errors.inspect}
         format.json { render :json => @attachable_asset.errors, :status => :unprocessable_entity }
       end
     end
