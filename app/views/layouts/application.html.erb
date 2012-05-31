@@ -38,7 +38,7 @@
        });
      </script>
      
-     <% if WebsiteConfiguration.get_value(:use_mathjax_cdn) %>
+     <% if WebsiteConfiguration.get_value('use_mathjax_cdn') %>
        <% mj_url_base = request.ssl? ? 
                         "https://d3eoax9i5htok0.cloudfront.net" : 
                         "http://cdn.mathjax.org" %>

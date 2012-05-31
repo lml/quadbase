@@ -84,7 +84,7 @@
 
   <div id="homeCarousel" class="carousel">
 	  <ul>
-		<% WebsiteConfiguration.get_value(:home_highlighted_questions).split(',').each do |param|%>
+		<% WebsiteConfiguration.get_value('home_highlighted_questions').split(',').each do |param|%>
 		  <% question = Question.from_param(param)
 		     question.variate!(QuestionVariator.new) %>
   		<li>

@@ -83,7 +83,7 @@ class ApplicationController < ActionController::Base
   end
 
   def site_in_maintenance?
-    WebsiteConfiguration.get_value(:in_maintenance)
+    WebsiteConfiguration.get_value('in_maintenance')
   end
 
   def site_not_in_maintenance!

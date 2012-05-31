@@ -1,7 +1,16 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
-gem 'rails', '3.0.12'
-gem 'rake', '0.8.7'
+gem 'rails', '3.2.4'
+
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'sass-rails',   '~> 3.2.3'
+  gem 'coffee-rails', '~> 3.2.1'
+  gem 'uglifier', '>= 1.0.3'
+end
+
+gem 'jquery-rails'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -12,11 +21,9 @@ gem 'capistrano'
 # Authentication
 gem 'devise'
 
-gem 'jquery-rails'
-
 # gem "nested_form"
 
-gem "will_paginate", "3.0.pre2"
+gem "will_paginate", "~> 3.0.0"
 
 gem 'parslet', '~> 1.2'
 
@@ -25,6 +32,7 @@ gem 'mime-types', :require => 'mime/types'
 
 # Search
 gem "squeel", "~> 1.0.2"
+gem "ransack", "~> 0.6.0"
 
 gem 'acts-as-taggable-on', '~>2.1.0'
 
@@ -40,13 +48,12 @@ gem 'jsonify-rails'
 
 gem 'execjs'
 gem 'therubyracer'
-gem 'uglifier'
 
 gem "bullring", "~> 0.7.4"
 
 group :development, :test do
-	gem 'sqlite3'
-	gem 'ruby-debug19'
+   gem 'sqlite3'
+   gem 'ruby-debug19'
    # gem 'machinist', '< 2.0'
    gem 'faker'
    gem 'factory_girl_rails', '<2.0'

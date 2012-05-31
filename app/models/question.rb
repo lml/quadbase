@@ -437,7 +437,7 @@ class Question < ActiveRecord::Base
     !has_role?(user, :is_listed)
   end
   
-  def self.search(type, where, text, user, exclude_type = '')
+  def self.get_search_params(type, where, text, user, exclude_type = '')
 
     query = text.blank? ? '%' : '%' + text + '%'
     # Note: % is the wildcard. This allows the user to search for stuff that "begins with" and "ends with".

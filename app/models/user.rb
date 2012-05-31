@@ -51,11 +51,17 @@ class User < ActiveRecord::Base
 
   scope :active_users, where(:disabled_at => nil)
   scope :administrators, where(:is_administrator => true)
-  scope :active_administrators, administrators & active_users
+  scope :active_administrators, administrators.merge(active_users)
   scope :subscribers_for, lambda { |comment_thread|
     joins(:comment_thread_subscriptions).where(:comment_thread_subscriptions => {
           :comment_thread_id => comment_thread.id})
   }
+
+  ransacker :full_name do |u|
+    Arel::Nodes::InfixOperation.new('||',
+      Arel::Nodes::InfixOperation.new('||', u.table[:first_name], ' '),
+      u.table[:last_name])
+  end
   
   def full_name
     first_name + " " + last_name

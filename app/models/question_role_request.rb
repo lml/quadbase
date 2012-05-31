@@ -17,6 +17,11 @@ class QuestionRoleRequest < ActiveRecord::Base
   
   before_create :autoset_approved_and_accepted
   after_create :execute_if_ready!
+
+  def initialize
+    @has_been_executed = false
+    super
+  end
   
   def self.approvable_by(user)
     # TODO the implementation below is not efficient.  There must be some cool 
@@ -184,7 +189,7 @@ class QuestionRoleRequest < ActiveRecord::Base
   
 protected
 
-  attr_accessor_with_default :has_been_executed, false
+  attr_accessor :has_been_executed
 
   def execute!
     qc = question_collaborator
