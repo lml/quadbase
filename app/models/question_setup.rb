@@ -12,12 +12,6 @@ class QuestionSetup < ActiveRecord::Base
   
   has_one :logic, :as => :logicable, :dependent => :destroy
   
-  attr_writer :variated_content_html
-  
-  def variated_content_html
-    @variated_content_html || self.content_html
-  end
-  
   validate :validate_content_change_allowed
 
   attr_accessible :content, :logic_attributes

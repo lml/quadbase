@@ -90,12 +90,6 @@ class Question < ActiveRecord::Base
            
 
   has_many :solutions, :dependent => :destroy
-
-  attr_writer :variated_content_html
-  
-  def variated_content_html
-    @variated_content_html || self.content_html
-  end
   
   has_one :comment_thread, :as => :commentable, :dependent => :destroy
   before_validation :build_comment_thread, :on => :create
