@@ -48,6 +48,16 @@
       $('.pq_checkbox').attr('checked',!tog); 
       tog=!tog;
     });
+
+    $('.pq_checkbox').live('click', function() {
+      $('.pq_checkbox').each(function() {
+        if(this.checked){
+          $('#toggle_checkbox').attr('checked', false);
+          tog = false;
+        }
+      });
+    });
+
   <% end %>
 <% end %>
 
