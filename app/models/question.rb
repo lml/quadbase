@@ -3,6 +3,7 @@
 
 class Question < ActiveRecord::Base
   include AssetMethods
+  include VariatedContentHTML
   
   acts_as_taggable
   

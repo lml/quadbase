@@ -4,6 +4,7 @@
 class QuestionSetup < ActiveRecord::Base
   include ContentParseAndCache
   include AssetMethods
+  include VariatedContentHTML
   
   has_many :questions
 
