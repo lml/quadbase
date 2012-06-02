@@ -12,26 +12,23 @@ end
 
 gem 'jquery-rails'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
 # Deploy with Capistrano
 gem 'capistrano'
 
 # Authentication
 gem 'devise'
 
-# gem "nested_form"
-
-gem "will_paginate"
-
+# Assets
 gem 'parslet', '~> 1.2'
 
 gem "paperclip", "~> 2.3"
+
 gem 'mime-types', :require => 'mime/types'
 
 # Search
 gem "squeel"
+
+gem "will_paginate"
 
 gem 'acts-as-taggable-on', '~>2.1.0'
 
