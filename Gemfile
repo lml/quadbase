@@ -23,7 +23,7 @@ gem 'devise'
 
 # gem "nested_form"
 
-gem "will_paginate", "~> 3.0.0"
+gem "will_paginate"
 
 gem 'parslet', '~> 1.2'
 
@@ -31,8 +31,7 @@ gem "paperclip", "~> 2.3"
 gem 'mime-types', :require => 'mime/types'
 
 # Search
-gem "squeel", "~> 1.0.2"
-gem "ransack", "~> 0.6.0"
+gem "squeel"
 
 gem 'acts-as-taggable-on', '~>2.1.0'
 

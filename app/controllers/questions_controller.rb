@@ -17,8 +17,6 @@ class QuestionsController < ApplicationController
   autocomplete :tag, :name, :class_name => 'ActsAsTaggableOn::Tag'
   
   def index
-    search
-    render :search
   end
 
   def show
@@ -357,8 +355,20 @@ class QuestionsController < ApplicationController
   end
 
   def search
-    @q = Question.search(params[:q])
-    @questions = @q.result(:distinct => true).paginate(:page => params[:page], :per_page => params[:per_page])
+    @type = params[:type]
+    @location = params[:location]
+    @part = params[:part]
+    @query = params[:query]
+    @exclude_type = params[:exclude_type]
+    @per_page = params[:per_page]
+    @questions = Question.search(@type, @location, @part,
+                                 @query, present_user, @exclude_type)
+    respond_to do |format|
+      format.html do
+        @questions = @questions.paginate(:page => params[:page], :per_page => @per_page)
+      end
+      format.js
+    end
   end
   
 protected

@@ -3,9 +3,9 @@
 
 <%
   @type ||= 'All Questions'
-  @where ||= 'All Places'
+  @location ||= 'All Places'
+  @part ||= 'Content'
   @query ||= ''
-  @what ||= 'Content'
   @per_page ||= 20
   question_form_action ||= nil
   make_search_remote ||= nil
@@ -18,61 +18,30 @@
   type_options.delete(exclude_type)
   locations = ['All Places', 'Published Questions']
   locations.push('My Drafts', 'My Projects') if user_signed_in?
-  fields = ['ID', 'Content', 'Author', 'Tags']
+  parts = ['ID/Number', 'Content', 'Author/Editor', 'Tags']
 %>
-<%= search_form_for @q do |f| %>
-  <%= f.label :content_or_question_setup_content_cont %>
-  <%= f.text_field :content_or_question_setup_content_cont %>
-  <%= f.label :id_cont %>
-  <%= f.text_field :id_cont %>
-  <%= f.label :question_collaborators_user_full_name_cont, "Author/Editor name contains" %>
-  <%= f.text_field :question_collaborators_user_full_name_cont %>
-  <%= f.label :taggings_tag_name_cont %>
-  <%= f.text_field :taggings_tag_name_cont %>
-  <%= f.submit %>
-<% end %>
-
-<%= search_form_for @q, :html => { :method => :post } do |f| %>
-  <fieldset>aaaaaaaa
-    <%= f.grouping_fields do |g| %>
-      bbbbbb
-    <% end %>
-  </fieldset>
-
+<%= form_tag(questions_search_path, 
+             :method => :get,
+             :id => 'find_question_form',
+             :remote => make_search_remote) do %>
 
   <%= hidden_field_tag :per_page, @per_page %>
   <%= hidden_field_tag :exclude_type, exclude_type %>
   
   <table width="100%" align="center">
     <tr>
-      <td>
-        <%= f.label :question_type_eq, 'Search For:' %>
-      </td>
-      <td>
-        <%= f.select :question_type_eq, options_for_select(type_options, @type) %>
-      </td>
-      <td>
-        <%= f.label 'in:' %>
-      </td>
-      <td>
-        <%= select_tag 'where', options_for_select(locations, @where) %>
-      </td>
-      <td>
-        <%= f.object_name %>
-        <%= f.condition_fields @q.c[0] do |c| %><%= c.object_name %>
-          <%= c.attribute_fields do |a| %>
-            <%= a.attribute_select %>
-          <% end %>
-        <% end %>
-      </td>
+      <td><%= label_tag 'Search For:' %></td>
+      <td><%= select_tag 'type', options_for_select(type_options, @type) %></td>
+
+      <td><%= label_tag 'in:' %></td>
+      <td><%= select_tag 'location', options_for_select(locations, @location) %></td>
+
       <td><%= label_tag 'containing:' %></td>
       <td><%= text_field_tag 'query', @query %></td>
-      <td>
-        <%= label_tag 'in:' %>
-      </td>
-      <td>
-        <%= select_tag 'where', options_for_select(fields, @what) %>
-      </td>
+
+      <td><%= label_tag 'in:' %></td>
+      <td><%= select_tag 'part', options_for_select(parts, @part) %></td>
+
       <td><%= submit_tag 'Search', :class => "#{submit_classes}" %></td>
     </tr>
   </table>

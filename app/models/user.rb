@@ -56,12 +56,6 @@ class User < ActiveRecord::Base
     joins(:comment_thread_subscriptions).where(:comment_thread_subscriptions => {
           :comment_thread_id => comment_thread.id})
   }
-
-  ransacker :full_name do |u|
-    Arel::Nodes::InfixOperation.new('||',
-      Arel::Nodes::InfixOperation.new('||', u.table[:first_name], ' '),
-      u.table[:last_name])
-  end
   
   def full_name
     first_name + " " + last_name

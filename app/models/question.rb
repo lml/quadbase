@@ -8,7 +8,7 @@ class Question < ActiveRecord::Base
   
   @@lock_timeout = Quadbase::Application.config.question_lock_timeout
 
-  self.inheritance_column = "question_type"
+  set_inheritance_column "question_type"
   
   has_many :question_collaborators, 
            :order => :position, 
@@ -118,14 +118,17 @@ class Question < ActiveRecord::Base
 
   before_create :assign_number
 
-  scope :draft_questions, where(:version == nil)
-  scope :published_questions, where(:version != nil)
+  scope :draft_questions, where{version == nil}
+  scope :published_questions, where{version != nil}
   scope :questions_in_projects, lambda { |projects|
-    joins(:project_questions).where(:project_questions => {
-          :project_id => projects.collect { |p| p.id }})
+    joins{project_questions}.where{project_questions.project_id.in(projects.collect { |p| p.id })}
+  }
+  scope :user_project_questions, lambda { |user|
+    joins{project_questions.project.project_members}\
+      .where{project_questions.project.project_members.user_id == user.id}
   }
   scope :published_with_number, lambda { |number|
-    published_questions.where(:number => number).order("updated_at DESC")
+    published_questions.where{number == number}.order{updated_at.desc}
   }
 
   # This type is passed in some questions params; we need an accessor for it 
@@ -437,12 +440,14 @@ class Question < ActiveRecord::Base
     !has_role?(user, :is_listed)
   end
   
-  def self.get_search_params(type, where, text, user, exclude_type = '')
+  def self.search(type, location, part, text, user, exclude_type = '')
+    # This should the most efficient way to do the search (I hope)
+    # It does not use tagged_with and instead searches the database directly
+    # I'm allowing partial tag searches for now (e.g. 'PEN' will match 2011 SPEN Sprint)
+    # If this is not desirable, replace tags.name =~ query with tags.name == text
+    # An ordering other than by id could also be used without any other modifications
 
-    query = text.blank? ? '%' : '%' + text + '%'
-    # Note: % is the wildcard. This allows the user to search for stuff that "begins with" and "ends with".
-
-    case where
+    case location
     when 'Published Questions'
       wscope = published_questions
     when 'My Drafts'
@@ -453,48 +458,71 @@ class Question < ActiveRecord::Base
       wscope = Question
     end
 
-    wtscope = wscope.where{question_type =~ typify(type)}
-    wtscope = wtscope.where{question_type !~ typify(exclude_type)} if !exclude_type.blank?
+    type_query = typify(type)
+    wtscope = wscope.where{question_type =~ type_query}
 
-    case what
-    when 'idnum'
+    if !exclude_type.blank?
+      exclude_type_query = typify(exclude_type)
+      wtscope = wtscope.where{question_type !~ exclude_type_query}
+    end
+
+    latest_only = true
+    case part
+    when 'ID/Number'
       # Search by question ID or number
-      id_query = ''
-      num_query = ''
-      if (text =~ /^(\d+)$/)
+      if text.blank?
+        q = wtscope
+      elsif (text =~ /^(\d+)$/)
         id_query = $1
         num_query = $1
+        q = wtscope.where{(id == id_query) | (number == num_query)}
       elsif (text =~ /^d(\d+)$/)
         id_query = $1
-      elsif (text =~ /^q(\d+)(v(\d+))?$/)
-        # Note you cannot find old versions of published questions since
-        # those are automatically removed in the controller
+        q = wtscope.where{id == id_query}
+        latest_only = false
+      elsif (text =~ /^q\.?\s?(\d+),?\s?(v\.?\s?(\d+))?$/)
         num_query = $1
+        if ($2.nil? || $3.nil?)
+          q = wtscope.where{number == num_query}
+        else
+          ver_query = $3
+          q = wtscope.where{(number == num_query) & (version == ver_query)}
+          latest_only = false
+        end
+      else
+        return Question.where{id == nil}.where{id != nil} # Empty
       end
-      questions = wtscope.where{(id == id_query) | (number == num_query)}
-    when 'tags'
-      # Search by tags
-      questions = wtscope.joins{taggings.tag.outer}.where{tags.name =~ query}
-    when 'author'
+    when 'Author/Editor'
       # Search by author (or editor)
-      questions = wtscope.joins{question_collaborators}.where{question_collaborators.name =~ query}
+      q = wtscope.joins{question_collaborators.user}
+      text.gsub(",", "").split.each do |t|
+        query = t.blank? ? '%' : '%' + t + '%'
+        q = q.where{(question_collaborators.user.first_name =~ query) |\
+                                    (question_collaborators.user.last_name =~ query)}
+      end
+    when 'Tags'
+      # Search by tags
+      q = wtscope.joins{taggings.tag}
+      text.split(",").each do |t|
+        query = t.blank? ? '%' : '%' + t + '%'
+        q = q.where{tags.name =~ query}
+      end
     else #content
-      questions = wtscope.joins{question_setup.outer}.where{(content =~ query) | (question_setup.content =~ query)}
+      query = text.blank? ? '%' : '%' + text + '%'
+      q = wtscope.joins{question_setup.outer}.where{(content =~ query) | (question_setup.content =~ query)}
     end
     
-    # Remove (in SQL) published questions that have a newer published version and questions the user can't read
-    sql = Question.joins{project_questions.project.project_members}.joins{question_collaborators.outer}.where{(version == nil) & (project_question.project.project_members.user_id == present_user.id) | (question_collaborators.user_id == present_user.id)}.union(Question.where{version != nil}.group{number}.having{version == max(version)}).to_sql
+    # Remove (in SQL) questions the user can't read and (optionally) published questions that have a newer published version
+    if latest_only
+      q = q.where{questions.id.in(Question.joins{project_questions.project.project_members}.joins{question_collaborators.outer}.where{(version == nil) &\
+                           ((project_question.project.project_members.user_id == user.id) | (question_collaborators.user_id == user.id))}) |\
+                  questions.id.in(Question.where{version != nil}.group{number}.having{version == max(version)})}
+    else
+      q = q.joins{project_questions.outer.project.outer.project_members.outer}.joins{question_collaborators.outer}.where{(version != nil) |\
+            ((project_question.project.project_members.user_id == user.id) | (question_collaborators.user_id == user.id))}
 
-    # Workaround for the fact that AREL UNION sucks
-    Question.find_by_sql(sql.slice(2..sql.length-3)).group{id}.order{id}
-
-    # This should the most efficient way to do the search
-    # (Inner joins with UNION could maybe be faster,
-    # but it seems Rails has very limited support for unions)
-    # It does not use tagged_with and instead searches the database directly
-    # I'm allowing partial tag searches for now (e.g. 'PEN' will match 2011 SPEN Sprint)
-    # If this is not desirable, replace :name.matches % query with :name => text
-    # An ordering other than by id could also be used without any other modifications
+    end
+    q.group{questions.id}.order{number}
   end
 
   def roleless_collaborators
@@ -658,10 +686,6 @@ protected
   def is_project_member?(user)
     project_questions.each { |wp| return true if wp.project.is_member?(user) }
     false
-  end
-
-  def self.user_project_questions(user)
-    questions_in_projects(Project.all_for_user(user))
   end
 
   def set_default_license!
