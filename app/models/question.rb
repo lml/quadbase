@@ -3,7 +3,6 @@
 
 class Question < ActiveRecord::Base
   include AssetMethods
-  include VariatedContentHTML
   
   acts_as_taggable
   
@@ -44,6 +43,12 @@ class Question < ActiveRecord::Base
   
   has_many :attachable_assets, :as => :attachable, :dependent => :destroy
   has_many :assets, :through => :attachable_assets
+  
+#  attr_writer :variated_content_html
+  
+#  def variated_content_html
+#    @variated_content_html || self.content_html
+#  end
 
   
   # Sometimes question A is required to be shown before question B.  In this

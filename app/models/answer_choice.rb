@@ -4,7 +4,6 @@
 class AnswerChoice < ActiveRecord::Base
   include ContentParseAndCache
   include AssetMethods
-  include VariatedContentHTML
 
   belongs_to :question
   
@@ -19,6 +18,12 @@ class AnswerChoice < ActiveRecord::Base
   before_save :cache_html
   before_destroy :question_not_published
   validate :question_not_published, :on => :update
+
+  attr_writer :variated_content_html
+  
+  def variated_content_html
+    @variated_content_html || self.content_html
+  end
 
   attr_accessible :content, :credit
   
