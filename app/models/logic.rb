@@ -19,6 +19,8 @@ class Logic < ActiveRecord::Base
   
   serialize :variables_array
   serialize :required_logic_library_version_ids
+
+  attr_accessible :variables
   
   JS_RESERVED_WORDS_REGEX = /^(do|if|in|for|let|new|try|var|case|else|enum|eval|
                                false|null|this|true|void|with|break|catch|class|
@@ -169,9 +171,10 @@ protected
   end
   
   def logic_library_versions_valid
-    included_library_versions = LogicLibraryVersion.where{id.in(required_logic_library_version_ids)}
+    req_lib_ver_ids = required_logic_library_version_ids
+    included_library_versions = LogicLibraryVersion.where{id.in(req_lib_ver_ids)}
     
-    if included_library_versions.count != required_logic_library_version_ids.size
+    if included_library_versions.count != req_lib_ver_ids.size
       errors.add(:base, "You have specified libraries that do not exist")
     end
 
