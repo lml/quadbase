@@ -59,7 +59,7 @@ class ApplicationController < ActionController::Base
     when ActiveRecord::RecordNotFound, 
          ActionController::RoutingError,
          ActionController::UnknownController,
-         ActionController::UnknownAction
+         ActionController::ActionNotFound
       error_page = 404
       send_email = false
     # when ::ActionController::MissingTemplate,

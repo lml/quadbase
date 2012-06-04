@@ -116,9 +116,10 @@ module ActsAsNumberable
 
     def remove_from_container!
       # logger.debug("In remove_from_container: " + self.class.name + " " + self.id.to_s)
-      
-      later_items = self.class.where{container_column == self.send(container_column)}
-                              .where{number > self.number}
+      cc = self.send(container_column)
+      nb = self.number
+      later_items = self.class.where{container_column == cc}
+                              .where{number > nb}
 
       # logger.debug("later_items:" + later_items.inspect)
       # logger.debug("is destroyed?: " + self.destroyed.inspect)
@@ -143,8 +144,9 @@ module ActsAsNumberable
     protected
     
     def assign_number
+      cc = self.send(container_column)
       self.number = self.class
-                      .where(container_column => self.send(container_column))
+                      .where{container_column == cc}
                       .count + 1
     end
   end

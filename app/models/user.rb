@@ -53,7 +53,7 @@ class User < ActiveRecord::Base
   scope :administrators, where{is_administrator == true}
   scope :active_administrators, administrators.merge(active_users)
   scope :subscribers_for, lambda { |comment_thread|
-    joins{comment_thread_subscriptions}.where{comment_thread_subscriptions.comment_thread_id == self.comment_thread.id}
+    joins{comment_thread_subscriptions}.where{comment_thread_subscriptions.comment_thread_id == comment_thread.id}
   }
   
   def full_name

@@ -175,18 +175,16 @@ class Question < ActiveRecord::Base
     raise ActiveRecord::RecordNotFound if q.nil?
     q
   end
-    
-  def self.find_by_number_and_version(number, version)
-    Question.first{(conditions.number == self.number) & (conditions.version == self.version)}
-  end
   
   def self.latest_published(number)
     Question.published_with_number(number).first
   end
   
   def prior_version
+    n = self.number
+    v = self.version - 1
     has_earlier_versions? ? 
-      Question.first{(number == self.number) & (version == self.version-1)} :
+      Question.where{(number == n) & (version == v)}.first :
       nil
   end
     
@@ -533,7 +531,8 @@ class Question < ActiveRecord::Base
     s = solutions.visible_for(user)
     return s if changes_solution
     previous_published_questions = Question.published_with_number(number)
-    previous_published_questions = previous_published_questions.where{version < self.version} \
+    v = self.version
+    previous_published_questions = previous_published_questions.where{version < v} \
                                      if is_published?
     previous_published_questions.each do |pq|
       s |= pq.solutions.visible_for(user)

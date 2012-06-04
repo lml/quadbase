@@ -55,7 +55,8 @@ protected
 
   # TODO 80% of this method could be put into a library that could be reused elsewhere.
   def make_local_name_unique
-    local_names = AttachableAsset.where{attachable_id == self.attachable_id}.all.collect{|aa| aa.local_name}
+    a_id = self.attachable_id
+    local_names = AttachableAsset.where{attachable_id == a_id}.all.collect{|aa| aa.local_name}
     return if !local_names.include?(self.local_name)
 
     extension = File.extname(self.local_name)

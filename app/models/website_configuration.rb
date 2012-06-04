@@ -19,15 +19,15 @@ class WebsiteConfiguration < ActiveRecord::Base
     @@defaults
   end
 
-  def self.get_value(name)
-    configuration = WebsiteConfiguration.find_by_name(name)
+  def self.get_value(n)
+    configuration = WebsiteConfiguration.where{name == n}.first
     
     # Check if we need to lazily instantiate this parameter
     if configuration.nil?
-      default = @@defaults[name]
+      default = @@defaults[n]
       raise IllegalArgument if default.nil?
       configuration = WebsiteConfiguration.new
-      configuration.name = name
+      configuration.name = n
       configuration.value = default[0]
       configuration.value_type = default[1]
       configuration.save!
