@@ -38,6 +38,7 @@ class Project < ActiveRecord::Base
   
   
   def self.all_for_user(user)
+    Project.default_for_user!(user)
     ProjectMember.all_for_user(user).collect{|wm| wm.project}
   end
   
