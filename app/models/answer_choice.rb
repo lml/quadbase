@@ -21,7 +21,7 @@ class AnswerChoice < ActiveRecord::Base
 
   attr_accessible :content, :credit
   
-    attr_accessor :variated_content_html
+  attr_accessor :variated_content_html
 #  attr_writer :variated_content_html
 #  
 #  def variated_content_html
