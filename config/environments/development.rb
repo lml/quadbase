@@ -41,6 +41,9 @@ Quadbase::Application.configure do
   
   config.default_url_options = { :host => 'localhost:3000' }
 
+  # Raise exception on mass assignment protection for Active Record models
+  #config.active_record.mass_assignment_sanitizer = :strict
+
   # This disables the recaptcha for the development environment
   config.enable_recaptcha = false
 

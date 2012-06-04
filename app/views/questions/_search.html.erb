@@ -18,7 +18,7 @@
   type_options.delete(exclude_type)
   locations = ['All Places', 'Published Questions']
   locations.push('My Drafts', 'My Projects') if user_signed_in?
-  parts = ['ID/Number', 'Content', 'Author/Editor', 'Tags']
+  parts = ['ID/Number', 'Content', 'Author/Copyright Holder', 'Tags']
 %>
 <%= form_tag(questions_search_path, 
              :method => :get,

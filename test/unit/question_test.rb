@@ -122,15 +122,21 @@ class QuestionTest < ActiveSupport::TestCase
     u = Factory.create(:user)
     q1.create!(u)
     q1.publish!(u)
+
+    assert q1.is_published?
     
     q2 = q1.new_version!(u)
     q3 = q1.new_version!(u)
-    
+
     assert !q2.superseded?
     
     sleep 1 #second
     q3.publish!(u)
-    
+
+    assert q3.is_published?
+
+    q2.reload
+
     assert q2.superseded?
   end
   
@@ -238,12 +244,12 @@ class QuestionTest < ActiveSupport::TestCase
     Factory.create(:project_question, :question => sq4,
                    :project => Project.default_for_user!(user))
 
-    search0 = Question.search('All Questions', 'All Places', '', user)
-    search1 = Question.search('All Questions', 'Published Questions', '', user)
-    search2 = Question.search('All Questions', 'My Drafts', '', user)
-    search3 = Question.search('All Questions', 'My Projects', '', user)
-    search4 = Question.search('All Questions', 'All Places', 'not', user)
-    search5 = Question.search('All Questions', 'My Projects', 'this', user)
+    search0 = Question.search('All Questions', 'All Places', 'Content', '', user)
+    search1 = Question.search('All Questions', 'Published Questions', 'Content', '', user)
+    search2 = Question.search('All Questions', 'My Drafts', 'Content', '', user)
+    search3 = Question.search('All Questions', 'My Projects', 'Content', '', user)
+    search4 = Question.search('All Questions', 'All Places', 'Content', 'not', user)
+    search5 = Question.search('All Questions', 'My Projects', 'Content', 'this', user)
 
     assert search0.include?(sq0)
     assert search0.include?(sq1)
@@ -297,12 +303,12 @@ class QuestionTest < ActiveSupport::TestCase
     Factory.create(:project_question, :question => sq4,
                    :project => Project.default_for_user!(user))
 
-    search0 = Question.search('Simple Questions', 'All Places', '', user)
-    search1 = Question.search('Simple Questions', 'Published Questions', '', user)
-    search2 = Question.search('Simple Questions', 'My Drafts', '', user)
-    search3 = Question.search('Simple Questions', 'My Projects', '', user)
-    search4 = Question.search('Simple Questions', 'All Places', 'not', user)
-    search5 = Question.search('Simple Questions', 'My Projects', 'this', user)
+    search0 = Question.search('Simple Questions', 'All Places', 'Content', '', user)
+    search1 = Question.search('Simple Questions', 'Published Questions', 'Content', '', user)
+    search2 = Question.search('Simple Questions', 'My Drafts', 'Content', '', user)
+    search3 = Question.search('Simple Questions', 'My Projects', 'Content', '', user)
+    search4 = Question.search('Simple Questions', 'All Places', 'Content', 'not', user)
+    search5 = Question.search('Simple Questions', 'My Projects', 'Content', 'this', user)
 
     assert search0.include?(sq0)
     assert search0.include?(sq1)
@@ -376,13 +382,13 @@ class QuestionTest < ActiveSupport::TestCase
     sq4.update_attribute(:tag_list, tags)
 
 
-    search0 = Question.search('Simple Questions', 'All Places', '%Tag', user)
-    search1 = Question.search('Simple Questions', 'Published Questions', 'Some Tag', user)
-    search2 = Question.search('Simple Questions', 'Published Questions', 'Another Tag', user)
-    search3 = Question.search('Simple Questions', 'My Drafts', 'Some Tag', user)
-    search4 = Question.search('Simple Questions', 'My Drafts', 'Another Tag', user)
-    search5 = Question.search('Simple Questions', 'My Projects', 'Some Tag', user)
-    search6 = Question.search('Simple Questions', 'My Projects', 'Another Tag', user)
+    search0 = Question.search('Simple Questions', 'All Places', 'Tags', '%Tag', user)
+    search1 = Question.search('Simple Questions', 'Published Questions', 'Tags', 'Some Tag', user)
+    search2 = Question.search('Simple Questions', 'Published Questions', 'Tags', 'Another Tag', user)
+    search3 = Question.search('Simple Questions', 'My Drafts', 'Tags', 'Some Tag', user)
+    search4 = Question.search('Simple Questions', 'My Drafts', 'Tags', 'Another Tag', user)
+    search5 = Question.search('Simple Questions', 'My Projects', 'Tags', 'Some Tag', user)
+    search6 = Question.search('Simple Questions', 'My Projects', 'Tags', 'Another Tag', user)
 
     assert search0.include?(sq0)
     assert search0.include?(sq1)

@@ -79,6 +79,7 @@ protected
   def assign_order
     self.order ||= (QuestionPart.where{multipart_question_id == self.multipart_question_id} \
                                 .maximum('order') || 0) + 1
+puts self.order
   end
   
   

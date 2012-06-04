@@ -492,7 +492,7 @@ class Question < ActiveRecord::Base
       else
         return Question.where{id == nil}.where{id != nil} # Empty
       end
-    when 'Author/Editor'
+    when 'Author/Copyright Holder'
       # Search by author (or editor)
       q = wtscope.joins{question_collaborators.user}
       text.gsub(",", "").split.each do |t|
