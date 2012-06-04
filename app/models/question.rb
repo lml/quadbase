@@ -127,8 +127,8 @@ class Question < ActiveRecord::Base
     joins{project_questions.project.project_members}\
       .where{project_questions.project.project_members.user_id == user.id}
   }
-  scope :published_with_number, lambda { |number|
-    published_questions.where{number == number}.order{updated_at.desc}
+  scope :published_with_number, lambda { |num|
+    published_questions.where{number == num}.order{updated_at.desc}
   }
 
   # This type is passed in some questions params; we need an accessor for it 

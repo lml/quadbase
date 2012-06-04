@@ -18,9 +18,9 @@ class QuestionRoleRequest < ActiveRecord::Base
   before_create :autoset_approved_and_accepted
   after_create :execute_if_ready!
 
-  def initialize
+  def initialize(attributes = nil, options = {})
     @has_been_executed = false
-    super
+    super(attributes, options)
   end
   
   def self.approvable_by(user)
@@ -214,9 +214,12 @@ protected
   end
 
   def no_duplicate_requests
-    return if !QuestionRoleRequest.where{(question_collaborator_id == self.question_collaborator_id) &\
-                                         (toggle_is_author == self.toggle_is_author) &\
-                                         (toggle_is_copyright_holder == self.toggle_is_copyright_holder)}.any?
+    qcid = self.question_collaborator_id
+    tia = self.toggle_is_author
+    tich = self.toggle_is_copyright_holder
+    return if !QuestionRoleRequest.where{(question_collaborator_id == qcid) &\
+                                         (toggle_is_author == tia) &\
+                                         (toggle_is_copyright_holder == tich)}.any?
     errors.add(:base, "That request has already been made.")
     false
   end

@@ -253,7 +253,7 @@ class QuestionTest < ActiveSupport::TestCase
 
     assert search0.include?(sq0)
     assert search0.include?(sq1)
-    assert search0.include?(sq2)
+    assert !search0.include?(sq2)
     assert search0.include?(sq3)
     assert search0.include?(sq4)
 
@@ -265,7 +265,7 @@ class QuestionTest < ActiveSupport::TestCase
 
     assert search2.include?(sq0)
     assert search2.include?(sq1)
-    assert search2.include?(sq2)
+    assert !search2.include?(sq2)
     assert !search2.include?(sq3)
     assert !search2.include?(sq4)
 
@@ -277,7 +277,7 @@ class QuestionTest < ActiveSupport::TestCase
 
     assert !search4.include?(sq0)
     assert !search4.include?(sq1)
-    assert search4.include?(sq2)
+    assert !search4.include?(sq2)
     assert !search4.include?(sq3)
     assert !search4.include?(sq4)
 
@@ -312,7 +312,7 @@ class QuestionTest < ActiveSupport::TestCase
 
     assert search0.include?(sq0)
     assert search0.include?(sq1)
-    assert search0.include?(sq2)
+    assert !search0.include?(sq2)
     assert search0.include?(sq3)
     assert search0.include?(sq4)
 
@@ -324,7 +324,7 @@ class QuestionTest < ActiveSupport::TestCase
 
     assert search2.include?(sq0)
     assert search2.include?(sq1)
-    assert search2.include?(sq2)
+    assert !search2.include?(sq2)
     assert !search2.include?(sq3)
     assert !search2.include?(sq4)
 
@@ -336,7 +336,7 @@ class QuestionTest < ActiveSupport::TestCase
 
     assert !search4.include?(sq0)
     assert !search4.include?(sq1)
-    assert search4.include?(sq2)
+    assert !search4.include?(sq2)
     assert !search4.include?(sq3)
     assert !search4.include?(sq4)
 
