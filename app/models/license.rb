@@ -18,7 +18,7 @@ class License < ActiveRecord::Base
   attr_accessible :short_name, :long_name, :url, :agreement_partial_name
 
   def self.default
-    where(:is_default => true).first
+    where{is_default == true}.first
   end
 
   def make_default!

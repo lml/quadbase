@@ -2,7 +2,7 @@
 # License version 3 or later.  See the COPYRIGHT file for details.
 
 class LogicLibraryVersion < ActiveRecord::Base
-  # default_scope order(:version.asc)
+  # default_scope order{version.asc}
   
   belongs_to :logic_library  
   before_validation :assign_version, :on => :create
@@ -15,14 +15,14 @@ class LogicLibraryVersion < ActiveRecord::Base
   
   after_save :send_to_bullring
   
-  scope :ordered, order(:version.asc)
+  scope :ordered, order{version.asc}
 
   def name
     logic_library.name + " v." + version.to_s
   end
   
   def logics_using
-    Logic.where(:required_logic_library_version_ids.matches => "%'#{id}'%")
+    Logic.where{required_logic_library_version_ids =~ "%'#{id}'%"}
   end
   
   def v_dot
@@ -37,7 +37,7 @@ class LogicLibraryVersion < ActiveRecord::Base
   protected
   
   def assign_version
-    self.version = LogicLibraryVersion.where(:logic_library => logic_library).count + 1
+    self.version = LogicLibraryVersion.where{logic_library == self.logic_library}.count + 1
   end
   
   def not_used

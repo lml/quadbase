@@ -169,7 +169,7 @@ protected
   end
   
   def logic_library_versions_valid
-    included_library_versions = LogicLibraryVersion.where(:id => required_logic_library_version_ids)
+    included_library_versions = LogicLibraryVersion.where{id.in(required_logic_library_version_ids)}
     
     if included_library_versions.count != required_logic_library_version_ids.size
       errors.add(:base, "You have specified libraries that do not exist")
@@ -177,7 +177,7 @@ protected
 
     # Make sure that the included library versions cover the required libraries
     
-    always_required_libraries = LogicLibrary.where(:always_required => true)
+    always_required_libraries = LogicLibrary.where{always_required == true}
     included_libraries = included_library_versions.collect{|version| version.logic_library}
 
     if (included_libraries & always_required_libraries).length < always_required_libraries.length

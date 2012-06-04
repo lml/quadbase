@@ -64,7 +64,7 @@ class QuestionCollaborator < ActiveRecord::Base
   # Copies the roles that are assigned to the source question over to the 
   # target question
   def self.copy_roles(source_question, target_question)
-    source_roles = QuestionCollaborator.where(:question_id => source_question.id).all
+    source_roles = QuestionCollaborator.where{question_id == source_question.id}.all
     source_roles.each do |source_role| 
       target_role = source_role.clone
       target_role.question_id = target_question.id
@@ -105,7 +105,7 @@ protected
   end  
   
   def assign_position
-    self.position = (QuestionCollaborator.where(:question_id => question_id).maximum(:position) || -1) + 1
+    self.position = (QuestionCollaborator.where{question_id == self.question_id}.maximum('position') || -1) + 1
   end
 
   def no_roles

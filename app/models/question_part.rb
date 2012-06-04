@@ -77,9 +77,8 @@ protected
   # Opting to go with 1-based indexing here; the first part will likely be
   # referred to as part "1", so better for the order number to match
   def assign_order
-    self.order ||= (QuestionPart.where(:multipart_question_id => multipart_question_id) \
-                                .maximum(:order) || 
-                    0) + 1
+    self.order ||= (QuestionPart.where{multipart_question_id == self.multipart_question_id} \
+                                .maximum('order') || 0) + 1
   end
   
   

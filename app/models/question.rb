@@ -8,7 +8,7 @@ class Question < ActiveRecord::Base
   
   @@lock_timeout = Quadbase::Application.config.question_lock_timeout
 
-  set_inheritance_column "question_type"
+  self.inheritance_column = "question_type"
   
   has_many :question_collaborators, 
            :order => :position, 
@@ -112,9 +112,9 @@ class Question < ActiveRecord::Base
   before_save :clear_empty_logic
 
   validate :not_published, :on => :update
+
   validates_presence_of :license
-  
-  after_initialize :set_default_license!, :unless => :license
+  before_validation :set_default_license!, :on => :create, :unless => :license
 
   before_create :assign_number
 
@@ -164,7 +164,7 @@ class Question < ActiveRecord::Base
       q = Question.find($1.to_i) # Rails escapes this
     elsif (param =~ /^q(\d+)(v(\d+))?$/)
       if ($3.nil?)
-        q = latest_published($1.to_i) # Somewhat dangerous but seems to be properly escaped
+        q = latest_published($1.to_i) # Rails escapes this
       else
         q = find_by_number_and_version($1.to_i, $3.to_i) # Rails escapes this
       end
@@ -177,7 +177,7 @@ class Question < ActiveRecord::Base
   end
     
   def self.find_by_number_and_version(number, version)
-    Question.first(:conditions => {:number => number, :version => version})
+    Question.first{(conditions.number == self.number) & (conditions.version == self.version)}
   end
   
   def self.latest_published(number)
@@ -186,7 +186,7 @@ class Question < ActiveRecord::Base
   
   def prior_version
     has_earlier_versions? ? 
-      Question.first(:number.eq % number & :version.eq % version-1) :
+      Question.first{(number == self.number) & (version == self.version-1)} :
       nil
   end
     
@@ -526,15 +526,14 @@ class Question < ActiveRecord::Base
   end
 
   def roleless_collaborators
-    question_collaborators.where(:is_author => false,
-                                 :is_copyright_holder => false)
+    question_collaborators.where{(is_author == false) & (is_copyright_holder == false)}
   end
 
   def valid_solutions_visible_for(user)
     s = solutions.visible_for(user)
     return s if changes_solution
     previous_published_questions = Question.published_with_number(number)
-    previous_published_questions = previous_published_questions.where(:version.lt => version) \
+    previous_published_questions = previous_published_questions.where{version < self.version} \
                                      if is_published?
     previous_published_questions.each do |pq|
       s |= pq.solutions.visible_for(user)
@@ -667,7 +666,7 @@ protected
   # of an existing question is made, the number will already be set to the correct
   # value before this method is called.
   def assign_number
-    self.number ||= (Question.maximum(:number) || 1) + 1
+    self.number ||= (Question.maximum('number') || 1) + 1
   end
   
   def not_published

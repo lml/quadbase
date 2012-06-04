@@ -9,7 +9,7 @@ class QuestionRoleRequest < ActiveRecord::Base
   validate :valid_request
 
   scope :for_question, lambda { |question|
-    joins(:question_collaborator).where(:question_collaborators => {:question_id => question.id})
+    joins{question_collaborator}.where{question_collaborators.question_id == question.id}
   }
 
   attr_accessible :question_collaborator, :toggle_is_author, :toggle_is_copyright_holder,
@@ -214,9 +214,9 @@ protected
   end
 
   def no_duplicate_requests
-    return if !QuestionRoleRequest.where(:question_collaborator_id => question_collaborator_id,
-                                    :toggle_is_author => toggle_is_author,
-                                    :toggle_is_copyright_holder => toggle_is_copyright_holder).any?
+    return if !QuestionRoleRequest.where{(question_collaborator_id == self.question_collaborator_id) &\
+                                         (toggle_is_author == self.toggle_is_author) &\
+                                         (toggle_is_copyright_holder == self.toggle_is_copyright_holder)}.any?
     errors.add(:base, "That request has already been made.")
     false
   end
