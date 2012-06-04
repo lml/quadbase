@@ -6,3 +6,6 @@ $("#attribution_dialog").html("<%= escape_javascript(
          :locals => {:question_ids => @question_ids}) %>");
 
 $("#attribution_dialog").dialog('open');
+$('.ui-widget-overlay').live("click",function(){
+            $("#attribution_dialog").dialog("close");
+        });    
