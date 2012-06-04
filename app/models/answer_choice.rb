@@ -19,13 +19,14 @@ class AnswerChoice < ActiveRecord::Base
   before_destroy :question_not_published
   validate :question_not_published, :on => :update
 
-  attr_writer :variated_content_html
-  
-  def variated_content_html
-    @variated_content_html || self.content_html
-  end
-
   attr_accessible :content, :credit
+  
+    attr_accessor :variated_content_html
+#  attr_writer :variated_content_html
+#  
+#  def variated_content_html
+#    @variated_content_html || self.content_html
+#  end
   
   def content_copy
     AnswerChoice.new(:content => content, :credit => credit)

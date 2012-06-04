@@ -44,8 +44,9 @@ class Question < ActiveRecord::Base
   has_many :attachable_assets, :as => :attachable, :dependent => :destroy
   has_many :assets, :through => :attachable_assets
   
+  attr_accessor :variated_content_html
 #  attr_writer :variated_content_html
-  
+#  
 #  def variated_content_html
 #    @variated_content_html || self.content_html
 #  end

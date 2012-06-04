@@ -20,11 +20,12 @@ class QuestionSetup < ActiveRecord::Base
   
   accepts_nested_attributes_for :logic
   
-  attr_writer :variated_content_html
-  
-  def variated_content_html
-    @variated_content_html || self.content_html
-  end
+  attr_accessor :variated_content_html
+#  attr_writer :variated_content_html
+#  
+#  def variated_content_html
+#    @variated_content_html || self.content_html
+#  end
   
   def content_copy
     kopy = QuestionSetup.new(:content => content)
