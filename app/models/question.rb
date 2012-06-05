@@ -156,6 +156,23 @@ class Question < ActiveRecord::Base
     end
   end
   
+  def self.is_number?(object)
+    true if Float(object) rescue false
+  end
+
+  # Since rails doesn't have a parameter for save, we need to force an update
+  # when the activerecord thinks we don't want to validate.
+  def self.force_update(params)
+     params[:question][:answer_choices_attributes].each do |key, value|
+      if params[:question][:answer_choices_attributes][key][:id] == nil
+	next
+      end
+      if !is_number?(params[:question][:answer_choices_attributes][key][:credit])
+		params[:question][:answer_choices_attributes][key][:updated_at] = Time.now
+      end
+     end
+  end
+
   def self.from_param(param)
     if (param =~ /^d(\d+)$/)
       q = Question.find($1.to_i) # Rails escapes this

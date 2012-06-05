@@ -76,10 +76,7 @@ class QuestionsController < ApplicationController
     respond_with(@question)
   end
 
-  def is_number?(object)
-    true if Float(object) rescue false
-  end
-
+  
   # We can't use the normal respond_with here b/c the STI we're using confuses it.  
   # Rails tries to render simple_questions/edit when there are update errors, but
   # we just want it to go to the questions view.
@@ -96,25 +93,9 @@ class QuestionsController < ApplicationController
       return
     end
 
-    temp = true
     respond_to do |format|
-      params[:question][:answer_choices_attributes].each do |key, value|
-      if params[:question][:answer_choices_attributes][key][:id] == nil
-	next
-      end
-      if !is_number?(params[:question][:answer_choices_attributes][key][:credit])
-		tempchoice = @question.answer_choices.find(value[:id])
-		tempchoice.credit = 0.5
- 		tempchoice.save
-		temp = false
-      end
-     end
+     Question.force_update(params)
      @updated = @question.update_attributes(params[:question])
-     if !temp
-	format.html { render 'questions/edit' }
-     end
-
-     if temp
        if (@updated)
         flash[:notice] = "Your draft has been saved.
                           Until you publish this draft, please remember that only members of " +
@@ -125,7 +106,6 @@ class QuestionsController < ApplicationController
         format.html { render 'questions/edit' }
        end
      end
-    end
   end
 
   def quickview

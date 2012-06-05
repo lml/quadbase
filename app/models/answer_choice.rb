@@ -4,7 +4,7 @@
 class AnswerChoice < ActiveRecord::Base
   include ContentParseAndCache
   include AssetMethods
-
+  
   belongs_to :question
   validates_presence_of :content, :credit
   validate :parse_succeeds
@@ -17,7 +17,7 @@ class AnswerChoice < ActiveRecord::Base
   before_destroy :question_not_published
   validate :question_not_published, :on => :update
 
-  attr_accessible :content, :credit
+  attr_accessible :content, :credit, :updated_at
   
   attr_writer :variated_content_html
   
@@ -25,7 +25,9 @@ class AnswerChoice < ActiveRecord::Base
     @variated_content_html || self.content_html
   end
 
- 
+  def credit_is
+	errors.add(:base, "sdsds")
+  end
 
   def content_copy
     AnswerChoice.new(:content => content, :credit => credit)
