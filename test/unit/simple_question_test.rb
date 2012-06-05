@@ -84,17 +84,17 @@ class SimpleQuestionTest < ActiveSupport::TestCase
     assert_equal sq0.license_id, sq1.license_id
   end
   
-#  test "basic logic" do
-#    ContentParseAndCache.enable_test_parser = true
-#    ll = Factory.create(:logic, :code => 'x = 4;', :variables => 'x')
-#    sq = Factory.build(:simple_question, :content => 'The magic variable is =x=')
-#    sq.logic = ll
-#    sq.save
-#    ll.save
-#    qv = QuestionVariator.new(2e9)
-#    sq.variate!(qv)
-#    ContentParseAndCache.enable_test_parser = false
-#  end
+  test "basic logic" do
+    ContentParseAndCache.enable_test_parser = true
+    ll = Factory.create(:logic, :code => 'x = 4;', :variables => 'x')
+    sq = Factory.build(:simple_question, :content => 'The magic variable is =x=')
+    sq.logic = ll
+    sq.save
+    ll.save
+    qv = QuestionVariator.new(2e9)
+    sq.variate!(qv)
+    ContentParseAndCache.enable_test_parser = false
+  end
   
   # TODO implement the following tests
   # 

@@ -207,7 +207,7 @@ DEPENDENCIES
   mime-types
   mysql2
   paperclip (~> 2.3)
-  parslet (~> 1.2)
+  parslet
   rack-ssl-enforcer
   rails (= 3.2.4)
   rails3-jquery-autocomplete

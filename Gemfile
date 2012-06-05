@@ -19,7 +19,7 @@ gem 'capistrano'
 gem 'devise'
 
 # Assets
-gem 'parslet', '~> 1.2'
+gem 'parslet'
 
 gem "paperclip", "~> 2.3"
 
