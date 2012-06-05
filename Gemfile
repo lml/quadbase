@@ -5,87 +5,59 @@ gem 'rails', '3.2.4'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-  gem 'uglifier', '>= 1.0.3'
+  gem 'sass-rails',   '~> 3.2.5'
+  gem 'coffee-rails', '~> 3.2.2'
+  gem 'uglifier', '~> 1.2.4'
 end
 
-gem 'jquery-rails'
+gem 'jquery-rails', '~> 2.0.2'
 
 # Deploy with Capistrano
-gem 'capistrano'
+gem 'capistrano', '~> 2.12.0'
 
 # Authentication
-gem 'devise'
+gem 'devise', '~> 2.1.0'
 
 # Assets
-gem 'parslet'
+gem 'parslet', '~> 1.4.0'
 
-gem "paperclip"
+gem 'paperclip', '~> 2.7.0'
 
-gem 'mime-types', :require => 'mime/types'
+gem 'mime-types', '~> 1.18', :require => 'mime/types'
 
 # Search
-gem "squeel"
+gem 'squeel', '~> 1.0.2'
 
-gem "will_paginate"
+gem 'will_paginate', '~> 3.0.3'
 
-gem 'acts-as-taggable-on'
+gem 'acts-as-taggable-on', '~> 2.1.1'
 
-gem 'rails3-jquery-autocomplete'
+gem 'rails3-jquery-autocomplete', '~> 1.0.7'
 
 # reCAPTCHA
-gem "recaptcha", :require => "recaptcha/rails"
+gem 'recaptcha', '~> 0.3.4', :require => 'recaptcha/rails'
 
-gem 'yajl-ruby'
+gem 'yajl-ruby', '~> 1.1.0'
 
-gem 'jsonify'
-gem 'jsonify-rails'
+gem 'jsonify', '~> 0.3.1'
+gem 'jsonify-rails', '~> 0.3.2'
 
-gem 'execjs'
-gem 'therubyracer'
+gem 'execjs', '~> 1.4.0'
+gem 'therubyracer', '~> 0.10.1'
 
-gem "bullring", "~> 0.7.4"
+gem 'bullring', '~> 0.7.4'
 
 group :development, :test do
-   gem 'sqlite3'
-   gem 'ruby-debug19'
-   gem 'faker'
-   gem 'factory_girl_rails'
-   gem 'timecop'
+   gem 'sqlite3', '~> 1.3.6'
+   gem 'ruby-debug19', '~> 0.11.6'
+   gem 'faker', '~> 1.0.1'
+   gem 'factory_girl_rails', '~> 1.7.0'
+   gem 'timecop', '~> 0.3.5'
 end
 
-gem 'single_test'
+gem 'single_test', '~> 0.5.1'
 
 group :production do
-	gem 'mysql2'
-	gem 'rack-ssl-enforcer'
+	gem 'mysql2', '~> 0.3.11'
+	gem 'rack-ssl-enforcer', '~> 0.2.4'
 end
-
-gem 'ruby-debug19'
-
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
-# Use unicorn as the web server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
-# gem 'ruby-debug'
-# gem 'ruby-debug19'
-
-# Bundle the extra gems:
-# gem 'bj'
-# gem 'nokogiri'
-# gem 'sqlite3-ruby', :require => 'sqlite3'
-# gem 'aws-s3', :require => 'aws/s3'
-
-# Bundle gems for the local environment. Make sure to
-# put test-only gems in this group so their generators
-# and rake tasks are available in development mode:
-# group :development, :test do
-#   gem 'webrat'
-# end

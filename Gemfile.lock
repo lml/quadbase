@@ -194,7 +194,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-taggable-on
-  bullring (~> 0.7.4)
+  bullring
   capistrano
   coffee-rails (~> 3.2.1)
   devise
@@ -219,6 +219,6 @@ DEPENDENCIES
   squeel
   therubyracer
   timecop
-  uglifier (>= 1.0.3)
+  uglifier
   will_paginate
   yajl-ruby
