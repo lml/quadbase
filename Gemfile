@@ -21,7 +21,7 @@ gem 'devise'
 # Assets
 gem 'parslet'
 
-gem "paperclip", "~> 2.3"
+gem "paperclip"
 
 gem 'mime-types', :require => 'mime/types'
 
@@ -30,7 +30,7 @@ gem "squeel"
 
 gem "will_paginate"
 
-gem 'acts-as-taggable-on', '~>2.1.0'
+gem 'acts-as-taggable-on'
 
 gem 'rails3-jquery-autocomplete'
 

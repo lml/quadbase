@@ -40,6 +40,7 @@ class AttachableAsset < ActiveRecord::Base
   end
    
   def can_be_created_by?(user)
+    puts attachable_id
     !user.is_anonymous? && user.can_update?(attachable)
   end
 

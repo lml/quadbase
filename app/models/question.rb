@@ -656,6 +656,11 @@ class Question < ActiveRecord::Base
   def role_requests_can_be_created_by?(user)
     user.can_update?(self)
   end
+
+  def is_project_member?(user)
+    project_questions.each { |wp| return true if wp.project.is_member?(user) }
+    false
+  end
   
 #############################################################################
 protected
@@ -679,11 +684,6 @@ protected
       logic.destroy 
       self.logic = nil
     end
-  end
-
-  def is_project_member?(user)
-    project_questions.each { |wp| return true if wp.project.is_member?(user) }
-    false
   end
 
   def set_default_license!
