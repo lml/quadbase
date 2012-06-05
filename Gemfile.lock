@@ -193,32 +193,32 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  acts-as-taggable-on
-  bullring
-  capistrano
-  coffee-rails (~> 3.2.1)
-  devise
-  execjs
-  factory_girl_rails
-  faker
-  jquery-rails
-  jsonify
-  jsonify-rails
-  mime-types
-  mysql2
-  paperclip
-  parslet
-  rack-ssl-enforcer
+  acts-as-taggable-on (~> 2.1.1)
+  bullring (~> 0.7.4)
+  capistrano (~> 2.12.0)
+  coffee-rails (~> 3.2.2)
+  devise (~> 2.1.0)
+  execjs (~> 1.4.0)
+  factory_girl_rails (~> 1.7.0)
+  faker (~> 1.0.1)
+  jquery-rails (~> 2.0.2)
+  jsonify (~> 0.3.1)
+  jsonify-rails (~> 0.3.2)
+  mime-types (~> 1.18)
+  mysql2 (~> 0.3.11)
+  paperclip (~> 2.7.0)
+  parslet (~> 1.4.0)
+  rack-ssl-enforcer (~> 0.2.4)
   rails (= 3.2.4)
-  rails3-jquery-autocomplete
-  recaptcha
-  ruby-debug19
-  sass-rails (~> 3.2.3)
-  single_test
-  sqlite3
-  squeel
-  therubyracer
-  timecop
-  uglifier
-  will_paginate
-  yajl-ruby
+  rails3-jquery-autocomplete (~> 1.0.7)
+  recaptcha (~> 0.3.4)
+  ruby-debug19 (~> 0.11.6)
+  sass-rails (~> 3.2.5)
+  single_test (~> 0.5.1)
+  sqlite3 (~> 1.3.6)
+  squeel (~> 1.0.2)
+  therubyracer (~> 0.10.1)
+  timecop (~> 0.3.5)
+  uglifier (~> 1.2.4)
+  will_paginate (~> 3.0.3)
+  yajl-ruby (~> 1.1.0)
