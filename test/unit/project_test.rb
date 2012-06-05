@@ -69,16 +69,16 @@ class ProjectTest < ActiveSupport::TestCase
     ww1 = make_project(:num_questions => 4, :num_members => 2, :method => :create)
     ww2 = make_project(:num_questions => 5, :num_members => 3, :method => :create)
     user = Factory.create(:user)
-    assert Project.all_for_user(user).empty?
+    assert_equal Project.all_for_user(user).length, 1
     ww0.add_member!(user)
     ww0.save!
-    assert_equal Project.all_for_user(user).length, 1
-    assert_equal Project.all_for_user(user).first, ww0
+    assert_equal Project.all_for_user(user).length, 2
+    assert_equal Project.all_for_user(user).second, ww0
     ww1.add_member!(user)
     ww1.save!
     ww2.add_member!(user)
     ww2.save!
-    assert_equal Project.all_for_user(user).length, 3
+    assert_equal Project.all_for_user(user).length, 4
     assert Project.all_for_user(user).include?(ww0)
     assert Project.all_for_user(user).include?(ww1)
     assert Project.all_for_user(user).include?(ww2)

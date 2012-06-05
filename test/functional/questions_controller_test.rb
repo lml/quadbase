@@ -319,11 +319,12 @@ class QuestionsControllerTest < ActionController::TestCase
   
   # Since this method deletes the user's projects, this test is recommended to be last
   test "should create new project via derivation_dialog" do
-    @user.projects.clear
-    post :derivation_dialog
-    
-    assert @user.projects.empty? == false
-    assert @user.projects[0].is_default_for_user == true
-    assert @user.projects[0].name == (@user.full_name + "'s Project'")
+    sign_in @user
+    @user.projects.destroy
+    assert = @user.projects.empty?
+    get :derivation_dialog, :question_id => @question.to_param
+    assert_equal @user.projects.count, 1
+    assert_equal @user.projects.first, Project.default_for_user(@user)
+    assert_equal @user.projects.first.name, @user.full_name + "'s Project"
   end
 end
