@@ -25,10 +25,6 @@ class AnswerChoice < ActiveRecord::Base
     @variated_content_html || self.content_html
   end
 
-  def credit_is
-	errors.add(:base, "sdsds")
-  end
-
   def content_copy
     AnswerChoice.new(:content => content, :credit => credit)
   end
