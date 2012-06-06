@@ -28,21 +28,28 @@
   <%= hidden_field_tag :per_page, @per_page %>
   <%= hidden_field_tag :exclude_type, exclude_type %>
   
-  <table width="100%" align="center">
+  <table width="100%">
     <tr>
-      <td><%= label_tag 'Search For:' %></td>
-      <td><%= select_tag 'type', options_for_select(type_options, @type) %></td>
+      <td><%= label_tag 'Search for' %>&nbsp;</td>
+      <td><%= text_field_tag 'query', @query, :style => "width: 90%;" %>&nbsp;</td>
 
-      <td><%= label_tag 'in:' %></td>
-      <td><%= select_tag 'location', options_for_select(locations, @location) %></td>
+      <td>&nbsp;<%= label_tag 'in' %>&nbsp;</td>
+      <td><%= select_tag 'part', options_for_select(parts, @part), :style => "width: 90%;" %></td>
 
-      <td><%= label_tag 'containing:' %></td>
-      <td><%= text_field_tag 'query', @query %></td>
+      <td rowspan="3" style="vertical-align:middle;"><%= submit_tag 'Search', :class => "#{submit_classes}" %></td>
 
-      <td><%= label_tag 'in:' %></td>
-      <td><%= select_tag 'part', options_for_select(parts, @part) %></td>
+    </tr>
+    <tr>
+      <td colspan="4"><hr style="float:left; width: 97%; color: lightgray; background-color: lightgray;" /></td>
+    </tr>
+    <tr>
 
-      <td><%= submit_tag 'Search', :class => "#{submit_classes}" %></td>
+      <td><%= label_tag 'Restrict to' %>&nbsp;</td>
+      <td><%= select_tag 'type', options_for_select(type_options, @type), :style => "width: 90%;" %></td>
+
+      <td>&nbsp;<%= label_tag 'in' %>&nbsp;</td>
+      <td><%= select_tag 'location', options_for_select(locations, @location), :style => "width: 90%;" %></td>
+
     </tr>
   </table>
 <% end %>
