@@ -87,5 +87,4 @@ class Project < ActiveRecord::Base
   def can_be_destroyed_by?(user)
     !user.is_anonymous? && is_member?(user)
   end
-
 end
