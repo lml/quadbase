@@ -35,10 +35,6 @@ module ApplicationHelper
   def check_icon
     image_tag("check_icon_v1.png", {:border => 0, :alt => "Yes / Check", :title => "Yes / Check"})
   end
-
-  def check_credit
-    image_tag("checkCredit.png", {:class => "creditIcon", :border => 0, :alt => "Yes / Check", :title => "Yes / Check"})
-  end
   
   def link_to_remove_fields(name, f)
     f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)")
