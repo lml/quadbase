@@ -317,14 +317,40 @@ class QuestionsControllerTest < ActionController::TestCase
     assert_redirected_to question_path(assigns(:question))
   end
   
+  test "should derive question" do
+    sign_in @user
+    put :new_derivation, :question_id => @published_question.to_param,
+                         :project => {Project.default_for_user!(@user).id => "blah"}
+    assert_redirected_to question_path(@published_question)
+    assert_not_nil assigns(:question)
+  end
+  
+  test "should not derive question not authorized" do
+    user_login
+    put :new_derivation, :question_id => @published_question.to_param,
+                         :project => {Project.default_for_user!(@user).id => "blah"}
+    assert_response(403)
+  end
+  
+  test "should not derive question not logged in" do
+    put :new_derivation, :question_id => @published_question.to_param,
+                         :project => {Project.default_for_user!(@user).id => "blah"}
+    assert_redirected_to login_path
+  end
+    
+  test "should not derive question not published" do
+    sign_in @user
+    put :new_derivation, :question_id => @question.to_param,
+                         :project => {Project.default_for_user!(@user).id => "blah"}
+    assert_response(403)
+  end
   # Since this method deletes the user's projects, this test is recommended to be last
   test "should create new project via derivation_dialog" do
     sign_in @user
+    @user.projects.clear
+    assert @user.projects.empty?
+    get :derivation_dialog, :question_id => @published_question.to_param
     assert_equal @user.projects.count, 1
-#    @user.projects.clear
-#    assert @user.projects.empty?
-#    get :new_derivation, :question_id => @question.to_param
-#    assert_equal @user.projects.count, 1
 #    assert_equal @user.projects.first, Project.default_for_user(@user)
 #    assert_equal @user.projects.first.name, @user.full_name + "'s Project"
 #    assert_equal @user.projects.first.questions.first, @question
