@@ -76,6 +76,7 @@ class QuestionsController < ApplicationController
     respond_with(@question)
   end
 
+  
   # We can't use the normal respond_with here b/c the STI we're using confuses it.  
   # Rails tries to render simple_questions/edit when there are update errors, but
   # we just want it to go to the questions view.
@@ -91,18 +92,18 @@ class QuestionsController < ApplicationController
       end
       return
     end
-    
-    respond_to do |format|
-      if (@updated = @question.update_attributes(params[:question]))
+
+    respond_to do |format|  
+       if (@updated = @question.update_attributes(params[:question]))
         flash[:notice] = "Your draft has been saved.
                           Until you publish this draft, please remember that only members of " +
                           @question.project_questions.first.project.name +
                           " will be able to see it."
         format.html { redirect_to question_path(@question) }
-      else
+       else
         format.html { render 'questions/edit' }
-      end
-    end
+       end
+     end
   end
 
   def quickview
