@@ -67,6 +67,8 @@ class ProjectQuestionTest < ActiveSupport::TestCase
   test "copy!" do
     u = Factory.create(:user)
     q = make_simple_question
+    q.content = 'Unpublished'
+    q.save!
     
     old_project = Factory.create(:project)
     new_project = Factory.create(:project)
@@ -77,32 +79,52 @@ class ProjectQuestionTest < ActiveSupport::TestCase
     
     
     assert_difference('new_project.questions.count') do
-      wq.copy!(new_project, u)
+      qc = wq.copy!(new_project, u).question
+      assert_equal q.content, qc.content
     end
-    
-    pq = make_simple_question(:method => :create, :published => true)
+
+    pq = make_simple_question(:method => :create)
+    pq.content = 'Published'
+    pq.save!
+    pq.publish!(u)
 
     pwq = Factory.create(:project_question, 
                          :question => pq,
                          :project => old_project)
 
     assert_difference('pq.derived_questions.count') do
-      pwq.copy!(new_project, u)
+      assert_difference('new_project.questions.count') do
+        qc = pwq.copy!(new_project, u).question
+        assert_equal pq.content, qc.content
+      end
     end
 
     q2 = pq.new_derivation!(u, old_project)
+    q2.content = 'Published derivation'
+    q2.save!
+
     wq2 = q2.project_questions.first
 
     assert_difference('pq.derived_questions.count') do
-      wq2.copy!(new_project, u)
+      assert_difference('new_project.questions.count') do
+        qc = wq2.copy!(new_project, u).question
+        assert_equal q2.content, qc.content
+      end
     end
 
     q3 = pq.new_version!(u, old_project)
+    q3.content = 'Published v2'
+    q3.save!
+
     wq3 = q3.project_questions.first
 
     assert_difference('pq.derived_questions.count') do
-      wq3.copy!(new_project, u)
+      assert_difference('new_project.questions.count') do
+        qc = wq3.copy!(new_project, u).question
+        assert_equal q3.content, qc.content
+      end
     end
+
   end
   
 end

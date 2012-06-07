@@ -61,3 +61,8 @@ module Quadbase
     config.question_lock_timeout = 0
   end
 end
+
+def database_for(env)
+  return 'quadbase_' + env if ENV['DB'] == 'mysql'
+  'db/' + env + '.sqlite3'
+end

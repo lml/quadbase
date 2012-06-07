@@ -12,5 +12,10 @@ class AdminController < ApplicationController
     sign_in(:user, User.find(params[:user_id]))
     redirect_to root_path
   end
+  
+  def set_log_level
+    session[:log_level] = params[:log_level]
+    redirect_to admin_path
+  end
 
 end

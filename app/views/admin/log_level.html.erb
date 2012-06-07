@@ -1,0 +1,10 @@
+<p>The current log level is <%= Rails.logger.level.inspect %></p>
+
+New level: 
+<%= form_tag(admin_set_log_level_path,
+    :method => :put,
+    :style => "display:inline") do %>
+    <%= select_tag 'log_level', options_for_select([["DEBUG", 0], ["INFO", 1], ["WARN", 2], ["ERROR", 3], ["FATAL", 4]]) %>
+    
+  <%= submit_tag "Set", :class => "button_link" %>
+<% end %> 

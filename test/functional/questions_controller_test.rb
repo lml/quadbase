@@ -8,11 +8,17 @@ class QuestionsControllerTest < ActionController::TestCase
   setup do
     ContentParseAndCache.enable_test_parser = true
     @user = Factory.create(:user)
+    @user2 = Factory.create(:user)
     @question = Factory.create(:project_question,
                                :project => Project.default_for_user!(@user)).question
     @question_collaborator = Factory.create(:question_collaborator,
                                             :question => @question,
                                             :user => @user,
+                                            :is_author => true,
+                                            :is_copyright_holder => true)
+    @question_collaborator1 = Factory.create(:question_collaborator,
+                                            :question => @question,
+                                            :user => @user2,
                                             :is_author => true,
                                             :is_copyright_holder => true)
     @question2 = Factory.create(:project_question,
@@ -22,9 +28,31 @@ class QuestionsControllerTest < ActionController::TestCase
                                             :user => @user,
                                             :is_author => true,
                                             :is_copyright_holder => true)
+    @question_collaborator3 = Factory.create(:question_collaborator,
+                                            :question => @question2,
+                                            :user => @user2,
+                                            :is_author => true,
+                                            :is_copyright_holder => true)
     @published_question = make_simple_question(:method => :create,
                                                :published => true)
     ContentParseAndCache.enable_test_parser = false
+  end
+
+  def enable_lock
+    Question.class_variable_set('@@lock_timeout', 15.minutes)
+  end
+
+  def disable_lock
+    Question.class_variable_set('@@lock_timeout', 0)
+  end
+
+  def with_lock
+    # Enables locks for the given block
+    # and ensures it is disabled afterwards
+    enable_lock
+    yield
+    ensure
+      disable_lock
   end
 
   test "should get index" do
@@ -106,6 +134,26 @@ class QuestionsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "should get edit with lock" do
+    with_lock do
+      sign_in @user
+      get :edit, :id => @question.to_param
+      assert_response :success
+    end
+  end
+
+  test "should not get edit locked question" do
+    with_lock do
+      sign_in @user
+      get :edit, :id => @question.to_param
+      assert_response :success
+      sign_out @user
+      sign_in @user2
+      get :edit, :id => @question.to_param
+      assert_redirected_to question_path(@question)
+    end
+  end
+
   test "should not update question not logged in" do
     put :update, :id => @question.to_param, :question => @question.attributes
     assert_redirected_to login_path
@@ -119,8 +167,62 @@ class QuestionsControllerTest < ActionController::TestCase
 
   test "should update question" do
     sign_in @user
-    put :update, :id => @question.to_param, :question => @question.attributes
+    old_content = @question.content
+    attributes = @question.attributes
+    new_content = 'New content'
+    attributes[:content] = new_content
+    assert_not_equal old_content, new_content
+    put :update, :id => @question.to_param, :question => attributes
+    assert_equal @question.reload.content, new_content
     assert_redirected_to question_path(assigns(:question))
+  end
+
+  test "should update question with lock" do
+    with_lock do
+      sign_in @user
+      get :edit, :id => @question.to_param
+      assert_response :success
+      old_content = @question.content
+      attributes = @question.attributes
+      new_content = 'New content'
+      attributes[:content] = new_content
+      assert_not_equal old_content, new_content
+      put :update, :id => @question.to_param, :question => attributes
+      assert_equal @question.reload.content, new_content
+      assert_redirected_to question_path(assigns(:question))
+    end
+  end
+
+  test "should not update question no lock" do
+    with_lock do
+      sign_in @user
+      old_content = @question.content
+      attributes = @question.attributes
+      new_content = 'New content'
+      attributes[:content] = new_content
+      assert_not_equal old_content, new_content
+      put :update, :id => @question.to_param, :question => attributes
+      assert_equal @question.reload.content, old_content
+      assert_redirected_to question_path(assigns(:question))
+    end
+  end
+
+  test "should not update locked question" do
+    with_lock do
+      sign_in @user
+      get :edit, :id => @question.to_param
+      assert_response :success
+      sign_out @user
+      sign_in @user2
+      old_content = @question.content
+      attributes = @question.attributes
+      new_content = 'New content'
+      attributes[:content] = new_content
+      assert_not_equal old_content, new_content
+      put :update, :id => @question.to_param, :question => attributes
+      assert_equal @question.reload.content, old_content
+      assert_redirected_to question_path(assigns(:question))
+    end
   end
 
   test "should not destroy question not logged in" do
