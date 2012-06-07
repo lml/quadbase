@@ -37,8 +37,7 @@ class LogicLibraryVersion < ActiveRecord::Base
   protected
   
   def assign_version
-    ll = self.logic_library
-    self.version = LogicLibraryVersion.where{logic_library == ll}.count + 1
+    self.version = LogicLibraryVersion.where{logic_library_id == my{logic_library.id}}.count + 1
   end
   
   def not_used

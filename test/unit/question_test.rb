@@ -135,8 +135,6 @@ class QuestionTest < ActiveSupport::TestCase
 
     assert q3.is_published?
 
-    q2.reload
-
     assert q2.superseded?
   end
   
@@ -229,7 +227,76 @@ class QuestionTest < ActiveSupport::TestCase
     #TODO test prior_version
   end
 
-  test 'question search' do
+  test 'id search' do
+    user = Factory.create(:user)
+
+    sq0 = Factory.create(:simple_question, :content => 'This is in your project')
+
+    sq1 = make_simple_question(:set_license => true)
+    sq1.content = 'This is published (old version)'
+    sq1.create!(user)
+    sq1.publish!(user)
+    
+    sq2 = sq1.new_version!(user)
+    sq2.content = 'This is published (new version)'
+    sq2.publish!(user)
+    
+    Factory.create(:project_question, :question => sq0,
+                   :project => Project.default_for_user!(user))
+
+    search0 = Question.search('All Questions', 'All Places', 'ID/Number', '', user)
+    search1 = Question.search('All Questions', 'All Places', 'ID/Number', '#{sq2.id}', user)
+    search2 = Question.search('All Questions', 'All Places', 'ID/Number', ' #{sq2.id} ', user)
+    search3 = Question.search('All Questions', 'All Places', 'ID/Number', 'd#{sq0.id}', user)
+    search4 = Question.search('All Questions', 'All Places', 'ID/Number', ' d. #{sq0.id} ', user)
+    search5 = Question.search('All Questions', 'All Places', 'ID/Number', 'q#{sq1.number}', user)
+    search6 = Question.search('All Questions', 'All Places', 'ID/Number', ' q. #{sq1.number} ', user)
+    search7 = Question.search('All Questions', 'All Places', 'ID/Number', 'q#{sq1.number}v{sq1.version}', user)
+    search8 = Question.search('All Questions', 'All Places', 'ID/Number', ' q. #{sq1.number}, v. {sq1.version} ', user)
+    search9 = Question.search('All Questions', 'All Places', 'ID/Number', 'q#{sq1.number}v', user)
+
+    assert search0.include?(sq0)
+    assert !search0.include?(sq1)
+    assert search0.include?(sq2)
+
+    assert !search1.include?(sq0)
+    assert !search1.include?(sq1)
+    assert search1.include?(sq2)
+
+    assert !search2.include?(sq0)
+    assert !search2.include?(sq1)
+    assert search2.include?(sq2)
+
+    assert search3.include?(sq0)
+    assert !search3.include?(sq1)
+    assert !search3.include?(sq2)
+
+    assert search4.include?(sq0)
+    assert !search4.include?(sq1)
+    assert !search4.include?(sq2)
+
+    assert !search5.include?(sq0)
+    assert !search5.include?(sq1)
+    assert search5.include?(sq2)
+
+    assert !search6.include?(sq0)
+    assert !search6.include?(sq1)
+    assert search6.include?(sq2)
+
+    assert !search7.include?(sq0)
+    assert search7.include?(sq1)
+    assert !search7.include?(sq2)
+
+    assert !search8.include?(sq0)
+    assert search8.include?(sq1)
+    assert !search8.include?(sq2)
+
+    assert !search9.include?(sq0)
+    assert !search9.include?(sq1)
+    assert !search9.include?(sq2)
+  end
+
+  test 'content search' do
     sq0 = Factory.create(:simple_question, :content => '')
     sq1 = Factory.create(:simple_question, :content => 'This is in your project')
     sq2 = Factory.create(:simple_question, :content => 'This is NOT in your project')
@@ -288,7 +355,7 @@ class QuestionTest < ActiveSupport::TestCase
     assert search5.include?(sq4)
   end
 
-  test 'simple question search' do
+  test 'simple question content search' do
     sq0 = Factory.create(:simple_question, :content => '')
     sq1 = Factory.create(:simple_question, :content => 'This is in your project')
     sq2 = Factory.create(:simple_question, :content => 'This is NOT in your project')

@@ -113,8 +113,7 @@ protected
   end  
   
   def assign_position
-    qid = self.question_id
-    self.position = (QuestionCollaborator.where{question_id == qid}.maximum('position') || -1) + 1
+    self.position = (QuestionCollaborator.where{question_id == my{question_id}}.maximum('position') || -1) + 1
   end
 
   def no_roles

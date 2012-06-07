@@ -6,7 +6,7 @@ include ActionDispatch::TestProcess
 
 # Workaround to make fixture_file_upload work in Rails 3.2
 def (self.class).fixture_path
-  "#{::Rails.root}/test/fixtures"
+  "#{::Rails.root}/test/fixtures/"
 end
 
 ###############################################################################
@@ -216,7 +216,7 @@ end
 
 Factory.define :asset do |f|
   # http://apidock.com/rails/ActionDispatch/TestProcess/fixture_file_upload
-  f.attachment { fixture_file_upload("/files/check_icon_v1.png", "image/png") }
+  f.attachment { fixture_file_upload("files/check_icon_v1.png", "image/png") }
   f.association :uploader, :factory => :user
 end
 

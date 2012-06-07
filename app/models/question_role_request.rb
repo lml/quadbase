@@ -214,12 +214,9 @@ protected
   end
 
   def no_duplicate_requests
-    qcid = self.question_collaborator_id
-    tia = self.toggle_is_author
-    tich = self.toggle_is_copyright_holder
-    return if !QuestionRoleRequest.where{(question_collaborator_id == qcid) &\
-                                         (toggle_is_author == tia) &\
-                                         (toggle_is_copyright_holder == tich)}.any?
+    return if !QuestionRoleRequest.where{(question_collaborator_id == my{question_collaborator_id}) &\
+                                         (toggle_is_author == my{toggle_is_author}) &\
+                                         (toggle_is_copyright_holder == my{toggle_is_copyright_holder})}.any?
     errors.add(:base, "That request has already been made.")
     false
   end

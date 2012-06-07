@@ -43,10 +43,6 @@
        <%= javascript_include_tag 'MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML' %>
      <% end %>
   <% end %>
-  
-  <% if @include_jquery %>
-    <%= javascript_include_tag "jquery_manifest" %>
-  <% end %>
 
   <% if @include_autocomplete %>
     <%= javascript_include_tag "autocomplete-rails" %>

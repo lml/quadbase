@@ -130,6 +130,22 @@ class Question < ActiveRecord::Base
   scope :published_with_number, lambda { |num|
     published_questions.where{number == num}.order{updated_at.desc}
   }
+  # Can read a question if any of those:
+  #   - Question is published
+  #   - User is a member or a project that contains the question
+  #   - User is a question collaborator with roles
+  #   - User is a deputy of a question collaborator with roles
+  scope :which_can_be_read_by, lambda { |user|
+    return published_questions if user.is_anonymous?
+    joins{project_questions.outer.project.outer.project_members.outer}\
+    .joins{question_collaborators.outer.user.outer.deputies.outer}\
+    .where{(version != nil) |\
+    (project_question.project.project_members.user_id == user.id) |\
+    (((question_collaborators.user_id == user.id) |\
+    (question_collaborators.user.deputies.id == user.id)) &\
+    ((question_collaborators.is_author == true) |\
+    (question_collaborators.is_copyright_holder == true)))}
+  }
 
   # This type is passed in some questions params; we need an accessor for it 
   # even though we don't explicitly save it.
@@ -181,10 +197,8 @@ class Question < ActiveRecord::Base
   end
   
   def prior_version
-    n = self.number
-    v = self.version - 1
     has_earlier_versions? ? 
-      Question.where{(number == n) & (version == v)}.first :
+      Question.where{(number == my{number}) & (version == my{version - 1})}.first :
       nil
   end
     
@@ -467,31 +481,34 @@ class Question < ActiveRecord::Base
     latest_only = true
     case part
     when 'ID/Number'
-      # Search by question ID or number
+      # Search by question ID or number (more relaxed than to_param)
       if text.blank?
         q = wtscope
-      elsif (text =~ /^(\d+)$/)
+      elsif (text =~ /^\s?(\d+)\s?$/) # Format: (id or number)
         id_query = $1
         num_query = $1
         q = wtscope.where{(id == id_query) | (number == num_query)}
-      elsif (text =~ /^d(\d+)$/)
+      elsif (text =~ /^\s?d\.?\s?(\d+)\s?$/) # Format: d(id)
         id_query = $1
         q = wtscope.where{id == id_query}
         latest_only = false
-      elsif (text =~ /^q\.?\s?(\d+),?\s?(v\.?\s?(\d+))?$/)
+      elsif (text =~ /^\s?q\.?\s?(\d+)(,?\s?v\.?\s?(\d+))?\s?$/)
+        # Format: q(number) or q(number)v(version)
         num_query = $1
-        if ($2.nil? || $3.nil?)
+        if $2.nil?
           q = wtscope.where{number == num_query}
-        else
+        elsif !$3.nil?
           ver_query = $3
           q = wtscope.where{(number == num_query) & (version == ver_query)}
           latest_only = false
+        else # Invalid version
+          return Question.where{id == nil}.where{id != nil} # Empty
         end
-      else
+      else # Invalid ID/Number
         return Question.where{id == nil}.where{id != nil} # Empty
       end
     when 'Author/Copyright Holder'
-      # Search by author (or editor)
+      # Search by author (or copyright holder)
       q = wtscope.joins{question_collaborators.user}
       text.gsub(",", "").split.each do |t|
         query = t.blank? ? '%' : '%' + t + '%'
@@ -505,20 +522,17 @@ class Question < ActiveRecord::Base
         query = t.blank? ? '%' : '%' + t + '%'
         q = q.where{tags.name =~ query}
       end
-    else #content
+    else # Content
       query = text.blank? ? '%' : '%' + text + '%'
       q = wtscope.joins{question_setup.outer}.where{(content =~ query) | (question_setup.content =~ query)}
     end
     
-    # Remove (in SQL) questions the user can't read and (optionally) published questions that have a newer published version
-    if latest_only
-      q = q.where{questions.id.in(Question.joins{project_questions.project.project_members}.joins{question_collaborators.outer}.where{(version == nil) &\
-                           ((project_question.project.project_members.user_id == user.id) | (question_collaborators.user_id == user.id))}) |\
-                  questions.id.in(Question.where{version != nil}.group{number}.having{version == max(version)})}
-    else
-      q = q.joins{project_questions.outer.project.outer.project_members.outer}.joins{question_collaborators.outer}.where{(version != nil) |\
-            ((project_question.project.project_members.user_id == user.id) | (question_collaborators.user_id == user.id))}
+    # Remove (in SQL) questions the user can't read
+    q = q.which_can_be_read_by(user)
 
+    if latest_only # Remove old published versions
+      q = q.where{questions.id.in(Question.draft_questions) |\
+                  questions.id.in(Question.published_questions.group{number}.having{version == max(version)})}
     end
     q.group{questions.id}.order{number}
   end
@@ -531,8 +545,7 @@ class Question < ActiveRecord::Base
     s = solutions.visible_for(user)
     return s if changes_solution
     previous_published_questions = Question.published_with_number(number)
-    v = self.version
-    previous_published_questions = previous_published_questions.where{version < v} \
+    previous_published_questions = previous_published_questions.where{version < my{version}} \
                                      if is_published?
     previous_published_questions.each do |pq|
       s |= pq.solutions.visible_for(user)

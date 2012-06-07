@@ -47,16 +47,15 @@ class AttachableAsset < ActiveRecord::Base
     !user.is_anonymous? && user.can_update?(attachable)
   end
   
-  def self.get_asset(a_id, l_name)
-    AttachableAsset.where{(attachable_id == a_id) & (local_name == l_name)}.first.asset
+  def self.get_asset(attachable_id, local_name)
+    AttachableAsset.find_by_attachable_id_and_local_name(attachable_id, local_name).asset
   end
   
 protected
 
   # TODO 80% of this method could be put into a library that could be reused elsewhere.
   def make_local_name_unique
-    a_id = self.attachable_id
-    local_names = AttachableAsset.where{attachable_id == a_id}.all.collect{|aa| aa.local_name}
+    local_names = AttachableAsset.find_all_by_attachable_id(attachable_id).collect{|aa| aa.local_name}
     return if !local_names.include?(self.local_name)
 
     extension = File.extname(self.local_name)
