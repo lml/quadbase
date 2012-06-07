@@ -93,10 +93,8 @@ class QuestionsController < ApplicationController
       return
     end
 
-    respond_to do |format|
-     Question.force_update(params)
-     @updated = @question.update_attributes(params[:question])
-       if (@updated)
+    respond_to do |format|  
+       if (@updated = @question.update_attributes(params[:question]))
         flash[:notice] = "Your draft has been saved.
                           Until you publish this draft, please remember that only members of " +
                           @question.project_questions.first.project.name +
