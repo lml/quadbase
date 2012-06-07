@@ -194,8 +194,7 @@ class ApplicationController < ActionController::Base
   end
 
   def protect_beta
-    env = Rails.env
-    return if (env == "development" || env == "test")
+    return if Rails.env.development? || Rails.env.test?
     
     authenticate_or_request_with_http_basic do |username, password|
       username == "quadbase" && password == "beta"

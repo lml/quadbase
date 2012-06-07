@@ -7,7 +7,7 @@ class License < ActiveRecord::Base
   validates_presence_of :short_name, :long_name, :url
   validates_uniqueness_of :short_name, :long_name, :url
   validates_uniqueness_of :is_default, :allow_blank => true
-  validates_as_url :url, :unless => Proc.new { Rails.env == 'test' }
+  validates_as_url :url, :unless => Rails.env.test?
 
   before_destroy :destroyable?
   before_create :make_default_if_first!
