@@ -33,6 +33,8 @@ class Logic < ActiveRecord::Base
   VARIABLE_REGEX = /^[_a-zA-Z]{1}\w*$/
   
   def run(options = {})
+    return Output.new # temp fix to block bullring
+    
     options[:seed] ||= rand(2e9)
     options[:prior_output] ||= Output.new
     options[:library_version_ids] ||= required_logic_library_version_ids
@@ -76,6 +78,8 @@ class Logic < ActiveRecord::Base
 protected
 
   def code_compiles
+    errors.add(:base, "Logic authoring temporarily disabled") if !code.blank?; return false  # Temp fix to block bullring
+    
     code_errors = Bullring.check(code)
     code_errors.each do |code_error|
       next if code_error.nil?

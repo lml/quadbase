@@ -157,7 +157,7 @@ class Question < ActiveRecord::Base
       return false
     end
   end
-  
+
   def self.from_param(param)
     if (param =~ /^d(\d+)$/)
       q = Question.find($1.to_i) # Rails escapes this
@@ -416,7 +416,6 @@ class Question < ActiveRecord::Base
 
   # Sets common question properties, given a copied question object
   def init_copy(kopy)
-    kopy.question_setup = self.question_setup.content_copy if !self.question_setup_id.nil?
     kopy.license_id = self.license_id
     self.attachable_assets.each {|aa| kopy.attachable_assets.push(aa.content_copy) }
     kopy.tag_list = self.tag_list
@@ -475,7 +474,7 @@ class Question < ActiveRecord::Base
 
     wtscope.joins(:question_setup.outer).joins({:taggings.outer => :tag.outer}).where((:id.eq % id_query) |\
             (:number.eq % num_query) | (:content.matches % query) | {:question_setup => [:content.matches % query]} |\
-            {:tags => [:name.matches % query]}).order(:id).select("DISTINCT questions.*")
+            {:tags => [:name.matches % query]}).group(:id).order(:id)
 
     # This should the most efficient way to do the search
     # (Inner joins with UNION could maybe be faster,
@@ -543,25 +542,30 @@ class Question < ActiveRecord::Base
     # This method checks that the user can get the lock and, if so, gets it and returns true.
     # Othewise, returns false.
     return true if @@lock_timeout <= 0
-    if (!is_locked? || has_lock?(user))
-      return lock!(user)
+    # Transaction to make testing and setting the lock atomic
+    # In rails 3.2, replace self.transaction and self.lock! with self.with_lock block
+    self.transaction do
+      self.lock! # Database-based locking (on MySQL, requires InnoDB engine)
+      return already_locked_error if (self.is_locked? && !self.has_lock?(user))
+      self.locked_by = user.id
+      self.locked_at = Time.now
+      self.save!
     end
-    already_locked_error
   end
 
   def check_and_unlock!(user)
     # This method checks that the user has the lock and, if so, releases it and returns true.
     # Othewise, returns false.
     return true if @@lock_timeout <= 0
-    if (is_locked? && has_lock?(user))
-      return unlock!
-    elsif (!is_locked?)
-      errors.add(:base, "You do not currently have the lock on draft " + to_param +
-                        " (q. " + number.to_s + "). This is usually caused by long periods" +
-                        " of inactivity. Please try again.")
-      return false
+    # Transaction to make releasing the lock atomic
+    # In rails 3.2, replace self.transaction and self.lock! with self.with_lock block
+    self.transaction do
+      self.lock! # Database-based locking (on MySQL, requires InnoDB engine)
+      return not_locked_error if !self.is_locked?
+      return already_locked_error if (self.is_locked? && !self.has_lock?(user))
+      self.locked_by = -1
+      self.save!
     end
-    already_locked_error
   end
 
   def is_locked?
@@ -569,7 +573,7 @@ class Question < ActiveRecord::Base
   end
 
   def has_lock?(user)
-    # This method assumes is_locked == true
+    # This method's return value is only valid if is_locked? == true
     locked_by == user.id
   end
 
@@ -668,17 +672,6 @@ protected
       question_setup.destroy_if_unattached
     end
   end
-  
-  def lock!(user)
-    self.locked_by = user.id
-    self.locked_at = Time.now
-    save
-  end
-
-  def unlock!
-    self.locked_by = -1
-    save
-  end
 
   def already_locked_error
     lock_minutes = ((locked_at + @@lock_timeout - Time.now)/60).ceil
@@ -687,6 +680,13 @@ protected
                       User.find(locked_by).full_name + " for at least " +
                       lock_minutes.to_s +
                       " more " + (lock_minutes == 1 ? "minute" : "minutes") + ".")
+    false
+  end
+
+  def not_locked_error
+    errors.add(:base, "You do not currently have the lock on draft " + to_param +
+                      " (q. " + number.to_s + "). This can be caused by long" +
+                      " periods of inactivity. Please try again.")
     false
   end
 

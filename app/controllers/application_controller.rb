@@ -6,6 +6,9 @@ class ApplicationController < ActionController::Base
   prepend_before_filter :user_not_disabled!,
                         :site_not_in_maintenance!,
                         :authenticate_user!
+                        
+  around_filter :set_admin_overrides
+  
   # Prepend ensures we run those filters before authenticate_admin! no matter what
   # this used to have :protect_beta which provides a basic HTTP auth on the site
 
@@ -26,6 +29,24 @@ class ApplicationController < ActionController::Base
   end
                   
   protected
+  
+  def set_admin_overrides
+    
+    overrides_enabled = user_signed_in? && current_user.is_administrator? && !(override_log_level = session[:log_level]).nil?
+              
+    original_log_level = Rails.logger.level
+
+    if overrides_enabled
+      Rails.logger.level = override_log_level.to_i
+    end
+    
+    yield
+
+    if overrides_enabled
+      Rails.logger.level = original_log_level
+    end
+     
+  end
 
   def rescue_from_exception(exception)
     error_page = 500
@@ -83,6 +104,8 @@ class ApplicationController < ActionController::Base
   def authenticate_admin!
     user_is_admin? || redirect_not_admin
   end
+
+
 
   # Like current_user, but for users who aren't logged in returns an 
   # AnonymousUser instead of nil

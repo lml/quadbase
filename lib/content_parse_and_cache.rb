@@ -31,6 +31,7 @@ protected
     !self.id.nil? && !content_changed?
   end
 
+
   def check_for_no_html
     return if content_unchanged? ||
               (Rails.env.test? && !ContentParseAndCache.enable_test_parser)

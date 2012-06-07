@@ -24,11 +24,15 @@ Factory.sequence :email_suffix do |n|
 end
 
 def next_email(first_name, last_name)
-  "#{first_name}.#{last_name}#{Factory.next :email_suffix}"
+  first_name_s = first_name.gsub(/\W/, '')
+  last_name_s = first_name.gsub(/\W/, '')
+  "#{first_name_s}.#{last_name_s}#{Factory.next :email_suffix}"
 end
 
 def unique_username(first_name, last_name)
-  "#{first_name[0,3]}#{last_name[0,4]}" + "#{ActiveSupport::SecureRandom.hex(4)}"
+  first_name_s = first_name.gsub(/\W/, '')
+  last_name_s = first_name.gsub(/\W/, '')
+  "#{first_name_s[0,3]}#{last_name_s[0,4]}" + "#{ActiveSupport::SecureRandom.hex(4)}"
 end
 
 Factory.sequence :password do |n|
@@ -52,7 +56,7 @@ end
 Factory.define :license do |f|
   f.short_name "Simple License"
   f.long_name "A Very Simple License"  
-  f.url "http://www.google.com"
+  f.url "http://www.iana.org/domains/example/"
   f.agreement_partial_name "Agreement Partial Name"
 end
 
