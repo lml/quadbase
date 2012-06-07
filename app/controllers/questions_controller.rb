@@ -110,6 +110,8 @@ class QuestionsController < ApplicationController
     @question = Question.from_param(params[:question_id])
     raise SecurityTransgression unless present_user.can_read?(@question)
 
+    @show_credit = true
+
     respond_to do |format|
       format.html { redirect_to question_path(@question) }
       format.js
@@ -121,6 +123,7 @@ class QuestionsController < ApplicationController
     raise SecurityTransgression unless present_user.can_read?(@question)
 
     @question.attributes = params[:question]
+    @show_credit = true
 
     Question.transaction do
       respond_to do |format|

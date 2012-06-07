@@ -4,7 +4,5 @@
    <%= render :partial => "#{view_dir(question)}/show", 
               :locals => {:question => question} %>
    <p></p>
-   <%= link_to_function 'Toggle Credit', "$('.part_cred_mark').toggle();" %>
-   <p></p>
    <%= render :partial => 'questions/attribution', 
               :locals => {:question => question }%>
