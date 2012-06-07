@@ -1,17 +1,14 @@
 # Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
 # License version 3 or later.  See the COPYRIGHT file for details.
 
-
 sqlite: &sqlite
   adapter: sqlite3
-  database: db/<%= Rails.env %>.sqlite3
 
 mysql: &mysql
   adapter: mysql2
   username: root
   encoding: utf8
   password:
-  database: quadbase_<%= Rails.env %>
 
 defaults: &defaults
   pool: 5
@@ -21,14 +18,15 @@ defaults: &defaults
 
 development:
   <<: *defaults
+  database: <%= database_for('development') %>
 
 test:
   <<: *defaults
+  database: <%= database_for('test') %>
 
 production:
   <<: *defaults
-
-
+  database: <%= database_for('production') %>
 
 # development:
 #   adapter: sqlite3
