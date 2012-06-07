@@ -200,6 +200,176 @@ class MultipartQuestionTest < ActiveSupport::TestCase
     # Make sure original didnt' change
     assert mpq.child_question_parts[0].updated_at < pre_copy_time, "e"
   end
+
+  test "merging question setups" do
+    mpq = Factory.create(:multipart_question)
+    mpq.question_setup.content = "Something"
+    mpq.question_setup.save!
+
+    mpq_blank = Factory.create(:multipart_question)
+    mpq_blank.question_setup.content = ""
+    mpq_blank.question_setup.save!
+
+    sq = Factory.create(:simple_question)
+    sq.question_setup.content = "Something"
+    sq.question_setup.save!
+
+    sq_different = Factory.create(:simple_question)
+    sq_different.question_setup.content = "Something else"
+    sq_different.question_setup.save!
+
+    sq_blank = make_simple_question(:no_setup => true)
+
+    psq = Factory.create(:simple_question)
+    psq.question_setup.content = "Something"
+    psq.question_setup.save!
+    psq.publish!(Factory.create(:user))
+
+    psq_different = Factory.create(:simple_question)
+    psq_different.question_setup.content = "Something else"
+    psq_different.question_setup.save!
+    psq_different.publish!(Factory.create(:user))
+
+    psq_blank = make_simple_question(:no_setup => true, :published => true)
+
+    mpq0 = mpq.content_copy
+    mpq0.save!
+    mpq0.add_parts(sq)
+    assert_equal mpq0.child_question_parts.size, 1
+
+    mpq1 = mpq.content_copy
+    mpq1.save!
+    sq_blank0 = sq_blank.content_copy
+    sq_blank0.save!
+    mpq1.add_parts(sq_blank0)
+    assert_equal mpq1.child_question_parts.size, 1
+    assert_equal sq_blank0.question_setup.content, "Something"
+
+    mpq2 = mpq.content_copy
+    mpq2.save!
+    mpq2.add_parts(sq_different)
+    assert_equal mpq2.child_question_parts.size, 0
+    assert_equal mpq2.question_setup.content, "Something"
+    assert_equal sq_different.question_setup.content, "Something else"
+
+    mpq3 = mpq.content_copy
+    mpq3.save!
+    sq_blank1 = sq_blank.content_copy
+    sq_blank1.save!
+    mpq3.add_parts([sq, sq_blank1])
+    assert_equal mpq3.child_question_parts.size, 2
+    assert_equal sq_blank1.question_setup.content, "Something"
+
+    mpq4 = mpq.content_copy
+    mpq4.save!
+    sq_blank2 = sq_blank.content_copy
+    sq_blank2.save!
+    mpq4.add_parts([sq, sq_blank2, sq_different])
+    assert_equal mpq4.child_question_parts.size, 0
+    assert_equal sq_blank2.question_setup.content, ""
+    assert_equal sq_different.question_setup.content, "Something else"
+
+    mpq5 = mpq.content_copy
+    mpq5.save!
+    mpq5.add_parts(psq)
+    assert_equal mpq5.child_question_parts.size, 1
+
+    mpq6 = mpq.content_copy
+    mpq6.save!
+    mpq6.add_parts(psq_blank)
+    assert_equal mpq6.child_question_parts.size, 1
+    assert_equal mpq6.question_setup.content, "Something"
+    assert_nil psq_blank.question_setup
+
+    mpq7 = mpq.content_copy
+    mpq7.save!
+    mpq7.add_parts(psq_different)
+    assert_equal mpq7.child_question_parts.size, 0
+    assert_equal mpq7.question_setup.content, "Something"
+
+    mpq8 = mpq.content_copy
+    mpq8.save!
+    mpq8.add_parts([psq, psq_blank])
+    assert_equal mpq8.child_question_parts.size, 2
+    assert_equal mpq8.question_setup.content, "Something"
+    assert_nil psq_blank.question_setup
+
+    mpq9 = mpq.content_copy
+    mpq9.save!
+    mpq9.add_parts([psq, psq_blank, psq_different])
+    assert_equal mpq9.child_question_parts.size, 0
+    assert_equal mpq9.question_setup.content, "Something"
+    assert_nil psq_blank.question_setup
+
+    mpq_blank0 = mpq_blank.content_copy
+    mpq_blank0.save!
+    mpq_blank0.add_parts(sq)
+    assert_equal mpq_blank0.child_question_parts.size, 1
+    assert_equal mpq_blank0.question_setup.content, "Something"
+
+    mpq_blank1 = mpq_blank.content_copy
+    mpq_blank1.save!
+    sq_blank3 = sq_blank.content_copy
+    sq_blank3.save!
+    mpq_blank1.add_parts(sq_blank3)
+    assert_equal mpq_blank1.child_question_parts.size, 1
+
+    mpq_blank2 = mpq_blank.content_copy
+    mpq_blank2.save!
+    mpq_blank2.add_parts(sq_different)
+    assert_equal mpq_blank2.child_question_parts.size, 1
+    assert_equal mpq_blank2.question_setup.content, "Something else"
+
+    mpq_blank3 = mpq_blank.content_copy
+    mpq_blank3.save!
+    sq_blank4 = sq_blank.content_copy
+    sq_blank4.save!
+    mpq_blank3.add_parts([sq, sq_blank4])
+    assert_equal mpq_blank3.child_question_parts.size, 2
+    assert_equal mpq_blank3.question_setup.content, "Something"
+    assert_equal sq_blank4.question_setup.content, "Something"
+
+    mpq_blank4 = mpq_blank.content_copy
+    mpq_blank4.save!
+    sq_blank5 = sq_blank.content_copy
+    sq_blank5.save!
+    mpq_blank4.add_parts([sq, sq_blank5, sq_different])
+    assert_equal mpq_blank4.child_question_parts.size, 0
+    assert_equal mpq_blank4.question_setup.content, ""
+
+    mpq_blank5 = mpq_blank.content_copy
+    mpq_blank5.save!
+    mpq_blank5.add_parts(psq)
+    assert_equal mpq_blank5.child_question_parts.size, 1
+    assert_equal mpq_blank5.question_setup.content, "Something"
+
+    mpq_blank6 = mpq_blank.content_copy
+    mpq_blank6.save!
+    mpq_blank6.add_parts(psq_blank)
+    assert_equal mpq_blank6.child_question_parts.size, 1
+    assert_equal mpq_blank6.question_setup.content, ""
+    assert_nil psq_blank.question_setup
+
+    mpq_blank7 = mpq_blank.content_copy
+    mpq_blank7.save!
+    mpq_blank7.add_parts(psq_different)
+    assert_equal mpq_blank7.child_question_parts.size, 1
+    assert_equal mpq_blank7.question_setup.content, "Something else"
+
+    mpq_blank8 = mpq_blank.content_copy
+    mpq_blank8.save!
+    mpq_blank8.add_parts([psq, psq_blank])
+    assert_equal mpq_blank8.child_question_parts.size, 2
+    assert_equal mpq_blank8.question_setup.content, "Something"
+    assert_nil psq_blank.question_setup
+
+    mpq_blank9 = mpq_blank.content_copy
+    mpq_blank9.save!
+    mpq_blank9.add_parts([psq, psq_blank, psq_different])
+    assert_equal mpq_blank9.child_question_parts.size, 0
+    assert_equal mpq_blank9.question_setup.content, ""
+    assert_nil psq_blank.question_setup
+  end
   
   # TODO
   #
