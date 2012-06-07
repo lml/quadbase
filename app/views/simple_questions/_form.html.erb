@@ -111,19 +111,19 @@
     <%= f.fields_for :answer_choices do |ac_form| %>
       <%= render 'simple_questions/answer_choice_fields', :f => ac_form %>
       <% temp = '' %>
-      <% prev = -1 %>
+      <% prev = 0 %>
       <% if !params[:question].nil? %>
 	 <% params[:question][:answer_choices_attributes].each do |k, v| %>
 	 <% if !v[:credit].nil? %>
 	   <% temp = v[:credit] %>
 	 <% end %>
 	 <% prev = prev + 1 %>
-	 <% if temp != '0' && temp != '1' && temp != '' %>
+	 <% if temp != '0' && temp != '1' && temp != '' || temp != 'on' %>
 	   <script type="text/javascript">
-	   document.getElementsByName("question[answer_choices_attributes][<%= prev %>][value]")[0].value = '<%= temp %>';
-	   document.getElementsByName("question[answer_choices_attributes][<%= prev %>][value]")[0].style.display = 'inline';
-	   document.getElementsByName("question[answer_choices_attributes][<%= prev %>][credit]")[2].value = '<%= temp %>';
-	   document.getElementsByName("question[answer_choices_attributes][<%= prev %>][credit]")[2].checked = 'true';
+	   $("#text_field_tid<%= prev %>").attr('value', '<%= temp %>');
+	    $("#text_field_tid<%= prev %>").show();
+	   $("#radio_button_rid<%= prev %>").attr('value', '<%= temp %>');
+	  $("#radio_button_rid<%= prev %>").attr('checked', 'true');
 	   </script>
 	 <% end %>
 	<% end %>
