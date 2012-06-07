@@ -105,6 +105,8 @@ class ApplicationController < ActionController::Base
     user_is_admin? || redirect_not_admin
   end
 
+
+
   # Like current_user, but for users who aren't logged in returns an 
   # AnonymousUser instead of nil
   def present_user
