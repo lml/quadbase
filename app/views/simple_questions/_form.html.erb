@@ -120,10 +120,10 @@
 	 <% prev = prev + 1 %>
 	 <% if temp != '0' && temp != '1' && temp != '' || temp != 'on' %>
 	   <script type="text/javascript">
-	   $("#text_field_tid<%= prev %>").attr('value', '<%= temp %>');
-	    $("#text_field_tid<%= prev %>").show();
-	   $("#radio_button_rid<%= prev %>").attr('value', '<%= temp %>');
-	  $("#radio_button_rid<%= prev %>").attr('checked', 'true');
+	     $("#text_field_tid<%= prev %>").attr('value', '<%= temp %>');
+	     $("#text_field_tid<%= prev %>").show();
+	     $("#radio_button_rid<%= prev %>").attr('value', '<%= temp %>');
+	     $("#radio_button_rid<%= prev %>").attr('checked', 'true');
 	   </script>
 	 <% end %>
 	<% end %>
