@@ -1,0 +1,25 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%# Example usage for this partial: 
+
+render  :partial => 'questions/fill_row', 
+        :locals => {:entry => entry,
+                    :row_id_base => row_id_base,
+                    :show_checkboxes => true,
+                    :question => question,
+                    :checkbox_options => {:method_for_value => "id",
+                                          :name_base => "project_question_ids"}
+                   }
+%> 
+
+<tr id="<%= row_id_base + question.id.to_s %>"%>
+  <% if show_checkboxes %>
+    <% checkbox_value = entry.call(checkbox_options[:method_for_value]) %>
+      <td><%= check_box_tag("#{checkbox_options[:name_base]}[]", checkbox_value, false, {:class => 'pq_checkbox'}) %></td>
+  <% end %>
+      <td><%= question_id_link(question) %></td>
+      <td style="text-align:center"><%= question_type_abbreviation(question) %></td>
+      <td style="text-align:center"><%= question.modified_at.strftime('%b %d %Y') %></td>
+      <td class="tex2jax_ignore"><%= question_preview_link(question) %></td>
+</tr>
