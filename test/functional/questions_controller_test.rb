@@ -345,14 +345,15 @@ class QuestionsControllerTest < ActionController::TestCase
     assert_response(403)
   end
   # Since this method deletes the user's projects, this test is recommended to be last
-  test "should create new project via derivation_dialog" do
+  test "should create new project via derivation_dialog if no projects" do
     sign_in @user
-    @user.projects.clear
+    @user.projects.delete_all
     assert @user.projects.empty?
     get :derivation_dialog, :question_id => @published_question.to_param
+    @user.reload                        
     assert_equal @user.projects.count, 1
-#    assert_equal @user.projects.first, Project.default_for_user(@user)
-#    assert_equal @user.projects.first.name, @user.full_name + "'s Project"
-#    assert_equal @user.projects.first.questions.first, @question
+    assert_equal @user.projects.first, Project.default_for_user(@user)
+    assert_equal @user.projects.first.name, @user.full_name + "'s Project"
+    assert_equal @user.projects.first.questions.first, @published_question
   end
 end
