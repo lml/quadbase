@@ -9,6 +9,8 @@
 <%= link_to_function "Show the question", 
                       "$('.hidden_content').toggle();", :class => "hidden_content", :style => "float:right" %>
 <div class="hidden_content" style="display:none">
+
+<% @show_credit = true %>
 <%= render :partial => 'questions/show', 
            :locals => {:question => @question} %>
 </div>

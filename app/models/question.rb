@@ -150,7 +150,7 @@ class Question < ActiveRecord::Base
       return false
     end
   end
-  
+
   def self.from_param(param)
     if (param =~ /^d(\d+)$/)
       q = Question.find($1.to_i) # Rails escapes this

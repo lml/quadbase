@@ -12,9 +12,10 @@ function remove_fields(link) {
   $(link).closest(".fields").hide();
 }
 
+
 function add_fields(elem_to_append_to, association, content) {
   var new_id = new Date().getTime();
-  var regexp = new RegExp("new_" + association, "g");
+  var regexp = new RegExp("new_" + association + "|tid|fid", "g");
   $(elem_to_append_to).append(content.replace(regexp, new_id));
 }
 
