@@ -48,12 +48,19 @@ class ProjectMembersControllerTest < ActionController::TestCase
     assert_response(403)
   end
 
-  test "should destroy project_member" do
+  test "should destroy project_members" do
     sign_in @member
+    @project_member2 = Factory.create(:project_member, :project => @project_member.project)
+
+    assert_difference('ProjectMember.count', -1) do
+      delete :destroy, :id => @project_member2.to_param
+    end
+    assert_redirected_to project_path(@project_member.project)
+
     assert_difference('ProjectMember.count', -1) do
       delete :destroy, :id => @project_member.to_param
     end
-    assert_redirected_to project_path(@project_member.project)
+    assert_redirected_to projects_path
   end
 
   test "should not make_default project_member not logged in" do

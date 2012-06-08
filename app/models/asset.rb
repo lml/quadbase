@@ -41,7 +41,7 @@ private
 
   def randomize_file_name
     extension = File.extname(attachment_file_name).downcase
-    self.attachment.instance_write(:file_name, "#{ActiveSupport::SecureRandom.hex(16)}#{extension}")
+    self.attachment.instance_write(:file_name, "#{SecureRandom.hex(16)}#{extension}")
   end
   
   def content_type_allowed

@@ -3,7 +3,7 @@
 
 dev_settings = {}
 
-if Rails.env == "development" || Rails.env == "test"
+if Rails.env.development? || Rails.env.test?
   filename = File.join(File.dirname(__FILE__), '..', 'developer_settings.yml')
   if File.file?(filename)
     dev_settings = YAML::load_file(filename)
