@@ -3,11 +3,11 @@
 
 <table class="list" width="100%">
   <tr>
-    <th width="20%">First Name</th>
-    <th width="20%">Last Name</th>
-    <th width="20%">Username</th>
-    <th width="20%">Email</th>
-    <th width="20%"></th>
+    <th width="20%">First Name&nbsp;</th>
+    <th width="20%">Last Name&nbsp;</th>
+    <th width="20%">Username&nbsp;</th>
+    <th width="25%">Email&nbsp;</th>
+    <th width="15%"></th>
   </tr>
 
 <% if @users.nil? || @users.empty? %>
@@ -17,11 +17,11 @@
 <% else %>
 <% @users.each do |user| %>
   <tr>
-    <td><%= auth_only(user.first_name) %></td>
-    <td><%= auth_only(user.last_name) %></td>
-    <td><%= auth_only(user.username) %></td>
-    <td><%= auth_only(hide_email(user.email)) %></td>
-    <td align="center">
+    <td><%= auth_only(user.first_name) %>&nbsp;</td>
+    <td><%= auth_only(user.last_name) %>&nbsp;</td>
+    <td><%= auth_only(user.username) %>&nbsp;</td>
+    <td><%= auth_only(hide_email(user.email)) %>&nbsp;</td>
+    <td style="text-align: center;">
       <span id="user_action_form_<%= user.id %>">
         <%= render :partial => @action_partial, 
                    :locals => { :user => user } %>
