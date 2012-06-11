@@ -5,18 +5,18 @@ require 'test_helper'
 
 class QuestionCollaboratorsControllerTest < ActionController::TestCase
   setup do
-    @user = Factory.create(:user)
-    @question = Factory.create(:project_question,
+    @user = FactoryGirl.create(:user)
+    @question = FactoryGirl.create(:project_question,
                                :project => Project.default_for_user!(@user)).question
-    @other_user_in_project = Factory.create(:user)
-    Factory.create(:project_member, :user => @other_user_in_project, 
+    @other_user_in_project = FactoryGirl.create(:user)
+    FactoryGirl.create(:project_member, :user => @other_user_in_project, 
                                     :project => Project.default_for_user!(@user))
-    @published_question = Factory.create(:project_question,
+    @published_question = FactoryGirl.create(:project_question,
                                          :project => Project.default_for_user!(@user)).question
-    @question_collaborator = Factory.create(:question_collaborator, :question => @question, :is_author => true)
-    Factory.create(:project_member, :user => @question_collaborator.user, 
+    @question_collaborator = FactoryGirl.create(:question_collaborator, :question => @question, :is_author => true)
+    FactoryGirl.create(:project_member, :user => @question_collaborator.user, 
                                     :project => Project.default_for_user!(@user))
-    @published_question_collaborator = Factory.create(:question_collaborator, :question => @published_question, :is_copyright_holder => true)
+    @published_question_collaborator = FactoryGirl.create(:question_collaborator, :question => @published_question, :is_copyright_holder => true)
     @published_question.version = @published_question.next_available_version
     @published_question.save!
     @published_question.reload
@@ -42,7 +42,7 @@ class QuestionCollaboratorsControllerTest < ActionController::TestCase
   end
 
   test "should not create question_collaborator not logged in" do
-    new_collaborator = Factory.build(:question_collaborator, :question => @question)
+    new_collaborator = FactoryGirl.build(:question_collaborator, :question => @question)
     assert_difference('QuestionCollaborator.count', 0) do
       post :create, :question_id => @question.to_param, :question_collaborator => new_collaborator.attributes, :username => new_collaborator.user.username
     end
@@ -51,18 +51,18 @@ class QuestionCollaboratorsControllerTest < ActionController::TestCase
 
   test "should not create question_collaborator not authorized" do
     user_login
-    new_collaborator = Factory.build(:question_collaborator, :question => @question)
+    new_collaborator = FactoryGirl.build(:question_collaborator, :question => @question)
     assert_difference('QuestionCollaborator.count', 0) do
       post :create, 
            :question_id => @question.to_param, 
-           :question_collaborator => {:username => Factory.create(:user).username}
+           :question_collaborator => {:username => FactoryGirl.create(:user).username}
     end
     assert_response(403)
   end
 
   test "should not create question_collaborator published question" do
     sign_in @user
-    new_collaborator = Factory.build(:question_collaborator, :question => @published_question)
+    new_collaborator = FactoryGirl.build(:question_collaborator, :question => @published_question)
     assert_difference('QuestionCollaborator.count', 0) do
       post :create, 
            :question_id => @published_question.to_param, 

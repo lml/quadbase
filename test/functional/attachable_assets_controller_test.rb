@@ -11,12 +11,12 @@ class AttachableAssetsControllerTest < ActionController::TestCase
   end
 
   setup do
-    @user = Factory.create(:user)
-    question = Factory.create(:project_question,
+    @user = FactoryGirl.create(:user)
+    question = FactoryGirl.create(:project_question,
                    :project => Project.default_for_user!(@user)).question
-    @attachable_asset = Factory.build(:attachable_asset, :attachable => question)
+    @attachable_asset = FactoryGirl.build(:attachable_asset, :attachable => question)
     attachment = @attachable_asset.asset.attachment
-    fileHash = Hash[ :tempfile => attachment.to_tempfile(attachment.to_file) ]
+    fileHash = Hash[ :tempfile => attachment ]
     uploadedFile = ActionDispatch::Http::UploadedFile.new(fileHash)
     uploadedFile.content_type = attachment.content_type
     uploadedFile.original_filename = attachment.original_filename
