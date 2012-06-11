@@ -7,10 +7,11 @@ class ProjectQuestion < ActiveRecord::Base
 
   after_destroy :destroy_projectless_draft_question
   
-  # A published question (which is immutable) can be in any number of workgroups.
+  # A published question (which is immutable) can be in any number of projects.
   # However, a draft question can be in only one.    
   validates_uniqueness_of :question_id, 
                           :unless => Proc.new { |wq| wq.question.is_published? }
+  validates_uniqueness_of :project_id, :scope => :question_id
 
   attr_accessible :project, :question
   

@@ -9,6 +9,7 @@ class QuestionCollaborator < ActiveRecord::Base
   validates_presence_of :user, :question
   validate :question_not_published
   validates_uniqueness_of :user_id, :scope => :question_id, :message => "This user is already collaborating with this question."
+  validates_uniqueness_of :position, :scope => :question_id, :allow_nil => true
   
   before_create :assign_position
 

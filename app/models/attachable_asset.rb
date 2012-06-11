@@ -6,7 +6,7 @@ class AttachableAsset < ActiveRecord::Base
   belongs_to :asset
   
   before_validation :make_local_name_unique
-  validates_uniqueness_of :local_name, :scope => :attachable_id
+  validates_uniqueness_of :local_name, :scope => [:attachable_id, :attachable_type]
   after_destroy :destroy_orphan_asset
   
   accepts_nested_attributes_for :asset

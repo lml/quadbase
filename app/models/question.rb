@@ -118,6 +118,8 @@ class Question < ActiveRecord::Base
 
   before_create :assign_number
 
+  validates_uniqueness_of :version, :scope => :number
+
   scope :draft_questions, where{version == nil}
   scope :published_questions, where{version != nil}
   scope :questions_in_projects, lambda { |projects|
