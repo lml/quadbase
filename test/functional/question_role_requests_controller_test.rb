@@ -5,23 +5,23 @@ require 'test_helper'
 
 class QuestionRoleRequestsControllerTest < ActionController::TestCase
   setup do
-    @member = Factory.create(:user)
-    @collaborator = Factory.create(:user)
-    @collaborator_member = Factory.create(:user)
-    wq = Factory.create(:project_question,
+    @member = FactoryGirl.create(:user)
+    @collaborator = FactoryGirl.create(:user)
+    @collaborator_member = FactoryGirl.create(:user)
+    wq = FactoryGirl.create(:project_question,
                         :project => Project.default_for_user!(@member))
     w = wq.project
     @question = wq.question
-    Factory.create(:project_member, :project => w, :user => @collaborator_member)
-    qc = Factory.create(:question_collaborator,
+    FactoryGirl.create(:project_member, :project => w, :user => @collaborator_member)
+    qc = FactoryGirl.create(:question_collaborator,
                          :user => @collaborator,
                          :question => @question)
-    qc2 = Factory.create(:question_collaborator,
+    qc2 = FactoryGirl.create(:question_collaborator,
                          :user => @collaborator_member,
                          :question => @question,
                          :is_author => true) #already an author so can auto accept
-    @question_role_request = Factory.build(:question_role_request, :question_collaborator => qc, :requestor => @member, :toggle_is_author => true)
-    @question_role_request_auto = Factory.build(:question_role_request, :question_collaborator => qc2, :requestor => @collaborator_member, :toggle_is_copyright_holder => true)
+    @question_role_request = FactoryGirl.build(:question_role_request, :question_collaborator => qc, :requestor => @member, :toggle_is_author => true)
+    @question_role_request_auto = FactoryGirl.build(:question_role_request, :question_collaborator => qc2, :requestor => @collaborator_member, :toggle_is_copyright_holder => true)
   end
 
   test "should not create question_role_request not logged in" do
