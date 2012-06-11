@@ -70,8 +70,7 @@ class ProjectQuestionsController < ApplicationController
     ProjectQuestion.transaction do 
       if target_project == @project
         @copied_questions = @project_questions.collect{ |pq|
-          pq.copy!(target_project, present_user).derived_question.project_questions.first
-          }
+          pq.copy!(target_project, present_user)      }
       else
         @project_questions.each do |pq|
           pq.copy!(target_project, present_user)
