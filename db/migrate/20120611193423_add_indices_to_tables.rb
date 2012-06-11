@@ -3,9 +3,9 @@ class AddIndicesToTables < ActiveRecord::Migration
     add_index :announcements, :user_id
     add_index :answer_choices, :question_id
     add_index :assets, :uploader_id
-    add_index :attachable_assets, [:attachable_id, :attachable_type, :local_name], :unique => true
-    add_index :comment_thread_subscriptions, [:comment_thread_id, :user_id], :unique => true
-    add_index :comment_threads, [:commentable_id, :commentable_type], :unique => true
+    add_index :attachable_assets, [:attachable_id, :attachable_type, :local_name], :unique => true, :name => "index_aa_on_a_id_and_a_type_and_local_name"
+    add_index :comment_thread_subscriptions, [:comment_thread_id, :user_id], :unique => true, :name => "index_cts_on_ct_id_and_u_id"
+    add_index :comment_threads, [:commentable_id, :commentable_type]
     add_index :comments, :comment_thread_id
     add_index :comments, :creator_id
     add_index :deputizations, [:deputizer_id, :deputy_id], :unique => true
@@ -26,14 +26,14 @@ class AddIndicesToTables < ActiveRecord::Migration
     add_index :question_collaborators, [:user_id, :question_id], :unique => true
     add_index :question_collaborators, :is_author
     add_index :question_collaborators, :is_copyright_holder
-    add_index :question_dependency_pairs, [:independent_question_id, :dependent_question_id, :kind], :unique => true
+    add_index :question_dependency_pairs, [:independent_question_id, :dependent_question_id, :kind], :unique => true, :name => "index_qdp_on_iq_id_and_dq_id_and_kind"
     add_index :question_dependency_pairs, :dependent_question_id
     add_index :question_derivations, :source_question_id
     add_index :question_derivations, :derived_question_id, :unique => true
     add_index :question_parts, [:multipart_question_id, :order], :unique => true
-    add_index :question_parts, [:child_question_id, :multipart_question_id], :unique => true
-    add_index :question_role_requests, [:question_collaborator_id, :toggle_is_author, :toggle_is_copyright_holder], :unique => true
-    add_index :questions, [:number, :version], :unique => true
+    add_index :question_parts, [:child_question_id, :multipart_question_id], :unique => true, :name => "index_qp_on_cq_id_and_mq_id"
+    add_index :question_role_requests, [:question_collaborator_id, :toggle_is_author, :toggle_is_copyright_holder], :unique => true, :name => "index_qrr_on_qc_id_and_t_i_a_and_t_i_ch"
+    add_index :questions, [:number, :version]
     add_index :questions, :version
     add_index :questions, :question_type
     add_index :questions, :question_setup_id

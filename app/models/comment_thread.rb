@@ -8,8 +8,6 @@ class CommentThread < ActiveRecord::Base
   has_many :comments, :dependent => :destroy
   has_many :comment_thread_subscriptions, :dependent => :destroy
 
-  validates_uniqueness_of :commentable_id, :scope => :commentable_type
-
   attr_accessible # none
 
   def clear!
