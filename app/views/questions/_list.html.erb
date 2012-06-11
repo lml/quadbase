@@ -17,7 +17,8 @@
       
     :checkbox_options gives directions for how to implement checkboxes along
       to the left of each question row.  If specified, both of its child 
-      values must be provided.  
+      values must be provided. If no checkboxes are desired, then pass "nil" to
+      :checkbox_options because this partial will bark without a previous  
           :method_for_value gives the method name to call on each entry to 
             retrieve the checkbox value.  
           :name_base gives the base for the name of each checkbox element.

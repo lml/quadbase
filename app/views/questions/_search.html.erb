@@ -56,7 +56,7 @@
 <% else %>
 <div id="question_list">
   <%= render :partial => 'questions/list', 
-             :locals => { :entries => @questions } %>
+             :locals => { :entries => @questions, :checkbox_options => nil } %>
 </div>
 <%= will_paginate @questions if !@questions.nil? %>
 <% end %>
