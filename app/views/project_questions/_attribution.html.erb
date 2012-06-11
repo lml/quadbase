@@ -7,5 +7,32 @@
 
 <% # Replace with code to print attribution for all of the given questions
 %>
+<% @question_ids.each do |id| %>
+  <% question = Question.find_by_id(id) %>
+  <% collaborators = question.question_collaborators %>
 
-<%= @question_ids %>
+  <%= question_id_link(question) %><br/>
+  Question ID: <%= question.id %>
+  
+  <% author_names = collaborator_names(collaborators.select{|c| c.is_author}) %>
+  <% copyright_names = collaborator_names(collaborators.select{|c| c.is_copyright_holder}) %>
+
+  <% if author_names == copyright_names %>
+     &copy; <%= author_names %>.
+  <% else %>
+     Written by <%= author_names %>, &copy; <%= copyright_names %>.
+  <% end %>
+  Licensed under <%= question.license_id.nil? ? "[unspecified]" : link_to(question.license.short_name, question.license.url) %>.
+
+  <% if question.is_derivation? %>
+    <% source_question = question.source_question %>
+    <% source_collaborators = source_question.question_collaborators %>
+    <br/>Derived from <%= question_id_link(source_question) %> by 
+    <%= collaborator_names(source_collaborators.select{|c| c.is_author}) %>.
+  <% end %>
+  <% if question.is_published? %>
+    <%= link_to "Version History", 
+          question_history_path(question) %>.
+  <% end %>
+  <br></br>
+<% end %>
