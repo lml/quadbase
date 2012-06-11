@@ -22,7 +22,7 @@ class AddIndicesToTables < ActiveRecord::Migration
     add_index :project_members, [:user_id, :is_default]
     add_index :project_questions, [:project_id, :question_id], :unique => true
     add_index :project_questions, :question_id
-    add_index :question_collaborators, [:question_id, :position], :unique => true
+    add_index :question_collaborators, [:question_id, :position]
     add_index :question_collaborators, [:user_id, :question_id], :unique => true
     add_index :question_collaborators, :is_author
     add_index :question_collaborators, :is_copyright_holder
@@ -30,7 +30,7 @@ class AddIndicesToTables < ActiveRecord::Migration
     add_index :question_dependency_pairs, :dependent_question_id
     add_index :question_derivations, :source_question_id
     add_index :question_derivations, :derived_question_id, :unique => true
-    add_index :question_parts, [:multipart_question_id, :order], :unique => true
+    add_index :question_parts, [:multipart_question_id, :order]
     add_index :question_parts, [:child_question_id, :multipart_question_id], :unique => true, :name => "index_qp_on_cq_id_and_mq_id"
     add_index :question_role_requests, [:question_collaborator_id, :toggle_is_author, :toggle_is_copyright_holder], :unique => true, :name => "index_qrr_on_qc_id_and_t_i_a_and_t_i_ch"
     add_index :questions, [:number, :version]

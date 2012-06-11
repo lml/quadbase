@@ -27,12 +27,18 @@ class QuestionCollaborator < ActiveRecord::Base
   end
   
   # TODO validate that a question always has at least one role
-  
+
   def self.sort(sorted_ids)
     QuestionCollaborator.transaction do
       next_position = 0
       sorted_ids.each do |sorted_id|
         collaborator = QuestionCollaborator.find(sorted_id)
+        if (collaborator.position != next_position) && (
+             conflicting_collaborator = QuestionCollaborator.find_by_position_and_question_id(
+                                               next_position, collaborator.question_id))
+          conflicting_collaborator.position = nil
+          conflicting_collaborator.save!
+        end
         collaborator.position = next_position
         next_position += 1
         collaborator.save!

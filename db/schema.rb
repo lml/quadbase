@@ -199,7 +199,7 @@ ActiveRecord::Schema.define(:version => 20120611193423) do
 
   add_index "question_collaborators", ["is_author"], :name => "index_question_collaborators_on_is_author"
   add_index "question_collaborators", ["is_copyright_holder"], :name => "index_question_collaborators_on_is_copyright_holder"
-  add_index "question_collaborators", ["question_id", "position"], :name => "index_question_collaborators_on_question_id_and_position", :unique => true
+  add_index "question_collaborators", ["question_id", "position"], :name => "index_question_collaborators_on_question_id_and_position"
   add_index "question_collaborators", ["user_id", "question_id"], :name => "index_question_collaborators_on_user_id_and_question_id", :unique => true
 
   create_table "question_dependency_pairs", :force => true do |t|
@@ -233,7 +233,7 @@ ActiveRecord::Schema.define(:version => 20120611193423) do
   end
 
   add_index "question_parts", ["child_question_id", "multipart_question_id"], :name => "index_qp_on_cq_id_and_mq_id", :unique => true
-  add_index "question_parts", ["multipart_question_id", "order"], :name => "index_question_parts_on_multipart_question_id_and_order", :unique => true
+  add_index "question_parts", ["multipart_question_id", "order"], :name => "index_question_parts_on_multipart_question_id_and_order"
 
   create_table "question_role_requests", :force => true do |t|
     t.integer  "question_collaborator_id"
