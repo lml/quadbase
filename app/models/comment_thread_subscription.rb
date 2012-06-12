@@ -10,11 +10,10 @@ class CommentThreadSubscription < ActiveRecord::Base
 
   validates_uniqueness_of :user_id, :scope => :comment_thread_id
 
-  scope :message_subscriptions, joins(:comment_thread).where(
-    :comment_thread => {:commentable_type => "Message"})
+  scope :message_subscriptions, joins{comment_thread}.where{comment_thread.commentable_type == "Message"}
 
   def self.message_subscriptions_for(user)
-    where(:user_id => user.id).message_subscriptions
+    where{user_id == user.id}.message_subscriptions
   end
 
   def mark_all_as_read!
