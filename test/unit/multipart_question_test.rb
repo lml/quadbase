@@ -183,6 +183,8 @@ class MultipartQuestionTest < ActiveSupport::TestCase
     mpq.add_parts([sq1, sq2, sq3])
     
     pre_copy_time = Time.now
+
+    sleep 1 # second
     
     kopy = mpq.content_copy
     

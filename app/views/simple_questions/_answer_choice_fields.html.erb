@@ -4,19 +4,35 @@
 <%= question_edit_block "Answer Choice Text" do %>
   <div class="fields">
     <%= f.text_area :content, :rows => 3, :class => "mark_it_up", :style => 'width:100%' %>
-    
     <span style="float:right">  
       <%= link_to_remove_fields "Delete this answer", f %>
     </span>
-    
     <% # Couldn't get the buttons to be checked on load without manually %>
     <% # checking the status %>
- 
-    <%= f.radio_button :credit, 1, {:checked => f.object.credit == 1} %>
-    Right
-    <%= f.radio_button :credit, 0, {:checked => f.object.credit != 1} %>
-    Wrong
-
+    <% credit = f.object.credit %>
+    <% @id = (@id ||= 0) + 1 %>
+    <div class = "marked">
+      <%= f.radio_button :credit, '1', {:checked => credit == 1,
+        :onclick => "$('#text_field_tid#{@id}').hide();"} %>
+      Right
+      <%= f.radio_button :credit, '0', {:checked => credit == 0, 
+        :onclick => "$('#text_field_tid#{@id}').hide();"} %>
+      Wrong
+      <%= f.radio_button :credit, credit, 
+        {:id => "radio_button_rid#{@id}", :checked => 
+        (credit != 1 && credit != 0), 
+        :onclick => "$('#text_field_tid#{@id}').show();"}%>
+      Partial Credit:
+      <%= f.text_field :value, :id => 'text_field_tid' + "#{@id}", 
+        :value => credit, :class => 'part_cred_field', 
+        :style => "#{credit != 1 && 
+        credit != 0 ? '' :   'display:none'}", 
+        :onkeyup => "$(radio_button_rid#{@id}).attr('value', this.value);"%>
+      <%# hidden field that updates the time for the update_attributes in
+        question_helper so that the save forces a save even if no
+        other attributes seem to be updated #%>
+      <%= f.hidden_field :updated_at, :value => Time.now %>
+    </div>
   </div>
 <% end %>
 
@@ -24,4 +40,5 @@
   $(document).ready(function() {
      refresh_mark_it_up_textareas();
    });
+  
 </script>
