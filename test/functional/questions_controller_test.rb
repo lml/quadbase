@@ -317,10 +317,20 @@ class QuestionsControllerTest < ActionController::TestCase
     assert_redirected_to question_path(assigns(:question))
   end
   
-  test "should derive question" do
+  test "should derive question and redirect to question edit page" do
     sign_in @user
     put :new_derivation, :question_id => @published_question.to_param,
-                         :project => {Project.default_for_user!(@user).id => "blah"}
+                         :project => {Project.default_for_user!(@user).id => "blah"},
+                         :edit => "now"
+    assert_redirected_to edit_question_path(Project.default_for_user!(@user).project_questions.last.question)
+    assert_not_nil assigns(:question)
+  end
+  
+  test "should derive question and redirect to original question" do
+    sign_in @user
+    put :new_derivation, :question_id => @published_question.to_param,
+                         :project => {Project.default_for_user!(@user).id => "blah"},
+                         :edit => "later"
     assert_redirected_to question_path(@published_question)
     assert_not_nil assigns(:question)
   end
@@ -344,7 +354,7 @@ class QuestionsControllerTest < ActionController::TestCase
                          :project => {Project.default_for_user!(@user).id => "blah"}
     assert_response(403)
   end
-  # Since this method deletes the user's projects, this test is recommended to be last
+  
   test "should create new project via derivation_dialog if no projects" do
     sign_in @user
     @user.projects.delete_all
