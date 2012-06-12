@@ -212,7 +212,7 @@ Quadbase::Application.routes.draw do
     votable
   end
 
-  resources :messages, :only => [:new, :show, :update] do
+  resources :discussions, :only => [:new, :show, :update] do
     get 'new_recipient'
     post 'search_recipients'
     post 'add_recipient'

@@ -1,19 +1,19 @@
 # Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
 # License version 3 or later.  See the COPYRIGHT file for details.
 
-class MessagesController < ApplicationController
+class DiscussionsController < ApplicationController
 
   before_filter :include_jquery
   
-  before_filter :get_message, :only => [:add_recipient, :search_recipients, :leave]
+  before_filter :get_discussion, :only => [:add_recipient, :search_recipients, :leave]
 
-  # GET /messages/1
+  # GET /discussions/1
   def show
-    @message = Message.find(params[:id])
+    @discussion = Discussion.find(params[:id])
 
-    raise SecurityTransgression unless present_user.can_read?(@message)
+    raise SecurityTransgression unless present_user.can_read?(@discussion)
 
-    @message.comment_thread.mark_as_read_for(present_user)
+    @discussion.comment_thread.mark_as_read_for(present_user)
     present_user.reload
 
     respond_to do |format|
@@ -21,50 +21,50 @@ class MessagesController < ApplicationController
     end
   end
 
-  # GET /messages/new
+  # GET /discussions/new
   def new
-    @message = Message.new
+    @discussion = Discussion.new
 
-    raise SecurityTransgression unless present_user.can_create?(@message)
+    raise SecurityTransgression unless present_user.can_create?(@discussion)
 
     respond_to do |format|
-      if @message.save
-        @message.comment_thread.subscribe!(present_user)
-        format.html { redirect_to @message }
+      if @discussion.save
+        @discussion.comment_thread.subscribe!(present_user)
+        format.html { redirect_to @discussion }
       else
         format.html { redirect_to inbox_path }
       end
     end
   end
 
-  # PUT /messages/1
+  # PUT /discussions/1
   def update
-    @message = Message.find(params[:id])
+    @discussion = Discussion.find(params[:id])
 
-    raise SecurityTransgression unless present_user.can_create?(@message)
+    raise SecurityTransgression unless present_user.can_create?(@discussion)
 
-    @message.subject = params[:message][:subject]
+    @discussion.subject = params[:message][:subject]
 
     @comment = Comment.new
     @comment.message = params[:message][:body]
-    @comment.comment_thread = @message.comment_thread
+    @comment.comment_thread = @discussion.comment_thread
     @comment.creator = present_user
 
     raise SecurityTransgression unless present_user.can_create?(@comment)
 
     respond_to do |format|
-      if @message.save && @comment.save
-        @message.comment_thread.add_unread_except_for(present_user)
+      if @discussion.save && @comment.save
+        @discussion.comment_thread.add_unread_except_for(present_user)
         flash[:notice] = 'Message was sent successfully.'
-        format.html { redirect_to @message }
+        format.html { redirect_to @discussion }
       else
-        format.html { redirect_to @message }
+        format.html { redirect_to @discussion }
       end
     end
   end
   
   def leave
-    @message.comment_thread.unsubscribe!(present_user)    
+    @discussion.comment_thread.unsubscribe!(present_user)    
   end
 
   def new_recipient
@@ -82,7 +82,7 @@ class MessagesController < ApplicationController
     @users = User.search(@selected_type, @text_query)
 
     @users.reject! do |user| 
-      @message.has_recipient?(user)
+      @discussion.has_recipient?(user)
     end    
 
     @action_partial = 'messages/create_recipient_form'
@@ -94,27 +94,27 @@ class MessagesController < ApplicationController
 
   # POST /messages/1/add_recipient
   def add_recipient
-    raise SecurityTransgression unless present_user.can_update?(@message)
+    raise SecurityTransgression unless present_user.can_update?(@discussion)
     
     @recipient = User.find_by_username(params[:username])
 
     if @recipient.nil?
       flash[:alert] = 'User ' + params[:username] + ' not found!'
       respond_to do |format|
-        format.html { redirect_to @message }
+        format.html { redirect_to @discussion }
         format.js { render :template => 'shared/display_flash' }
       end
       return
     end
 
     respond_to do |format|
-      if @message.comment_thread.subscribe!(@recipient)
-        @message.comment_thread.mark_as_unread_for(@recipient)
-        format.html { redirect_to @message }
+      if @discussion.comment_thread.subscribe!(@recipient)
+        @discussion.comment_thread.mark_as_unread_for(@recipient)
+        format.html { redirect_to @discussion }
         format.js
       else
-        flash[:alert] = @message.comment_thread.errors.values.to_sentence
-        format.html { redirect_to @message }
+        flash[:alert] = @discussion.comment_thread.errors.values.to_sentence
+        format.html { redirect_to @discussion }
         format.js { render :template => 'shared/display_flash' }
       end
     end
@@ -123,7 +123,7 @@ class MessagesController < ApplicationController
 protected
 
   def get_message
-    @message = Message.find(params[:message_id])
+    @discussion = Discussion.find(params[:message_id])
   end
 
 end

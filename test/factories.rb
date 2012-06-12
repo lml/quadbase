@@ -267,7 +267,7 @@ Factory.define :comment_thread_subscription do |f|
   f.association :user
 end
 
-Factory.define :message do |f|
+Factory.define :discussion do |f|
   f.subject {Factory.next :content}
 end
 
