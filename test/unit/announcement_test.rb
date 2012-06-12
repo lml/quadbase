@@ -10,7 +10,7 @@ class AnnouncementTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
   setup do
-    @admin = Factory.build(:user)
+    @admin = FactoryGirl.build(:user)
     @admin.is_administrator = true
     @admin.save!
   end

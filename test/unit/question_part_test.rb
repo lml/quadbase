@@ -9,16 +9,16 @@ class QuestionPartTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
   test "unlock!" do
-    user = Factory.create(:user)
+    user = FactoryGirl.create(:user)
     
-    qs = Factory.create(:question_setup)
+    qs = FactoryGirl.create(:question_setup)
     qs.content = "Something"
     qs.save!
 
-    mpq = Factory.create(:multipart_question, :question_setup => qs)
+    mpq = FactoryGirl.create(:multipart_question, :question_setup => qs)
 
-    Factory.create(:project_question, :project => Project.default_for_user!(user), :question => mpq)
-    sq = Factory.create(:project_question, :project => Project.default_for_user!(user)).question
+    FactoryGirl.create(:project_question, :project => Project.default_for_user!(user), :question => mpq)
+    sq = FactoryGirl.create(:project_question, :project => Project.default_for_user!(user)).question
     psq = make_simple_question(:published => true, :question_setup => qs)
 
     sq.question_setup = qs

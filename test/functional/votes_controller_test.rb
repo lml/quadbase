@@ -5,13 +5,13 @@ require 'test_helper'
 
 class VotesControllerTest < ActionController::TestCase
   setup do
-    @user = Factory.create(:user)
-    @solution = Factory.create(:solution, :is_visible => true)
+    @user = FactoryGirl.create(:user)
+    @solution = FactoryGirl.create(:solution, :is_visible => true)
     @question = @solution.question
     @project = Project.default_for_user!(@user)
-    @project_question = Factory.create(:project_question, :project => @project, :question => @question)
+    @project_question = FactoryGirl.create(:project_question, :project => @project, :question => @question)
     @published_question = make_simple_question(:method => :create, :published => true)
-    @published_solution = Factory.create(:solution, :question => @published_question,
+    @published_solution = FactoryGirl.create(:solution, :question => @published_question,
                                                     :is_visible => true)
   end
 
