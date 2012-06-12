@@ -10,15 +10,15 @@ class AttachableAssetTest < ActiveSupport::TestCase
 
   test "make_local_name_unique" do
     name = "some_file.name"
-    aa0 = Factory.create(:attachable_asset, :local_name => name)
+    aa0 = FactoryGirl.create(:attachable_asset, :local_name => name)
     assert aa0.local_name == name
-    aa1 = Factory.create(:attachable_asset, :attachable_id => aa0.attachable_id,
+    aa1 = FactoryGirl.create(:attachable_asset, :attachable_id => aa0.attachable_id,
                                            :local_name => name)
     assert aa1.local_name != name
   end
 
   test "destroy_orphan_asset" do
-    aa = Factory.create(:attachable_asset)
+    aa = FactoryGirl.create(:attachable_asset)
     a = aa.asset
     assert Asset.find_by_id(a.id)
     aa.destroy

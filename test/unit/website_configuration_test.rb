@@ -6,7 +6,7 @@ require 'test_helper'
 class WebsiteConfigurationTest < ActiveSupport::TestCase
 
   setup do
-    @wc = Factory.create(:website_configuration)
+    @wc = FactoryGirl.create(:website_configuration)
   end
 
   test "can't mass-assign name and value_type" do
@@ -18,18 +18,18 @@ class WebsiteConfigurationTest < ActiveSupport::TestCase
   end
 
   test "duplicate names not allowed" do
-    wc0 = Factory.build(:website_configuration, :name => @wc.name,
+    wc0 = FactoryGirl.build(:website_configuration, :name => @wc.name,
                                                 :value => "Another value",
                                                 :value_type => @wc.value_type)
     assert !wc0.save
-    wc1 = Factory.build(:website_configuration, :name => "Another name",
+    wc1 = FactoryGirl.build(:website_configuration, :name => "Another name",
                                                 :value => "Another value",
                                                 :value_type => @wc.value_type)
     wc1.save!
   end
 
   test "blank value_types not allowed" do
-    wc = Factory.build(:website_configuration, :name => "Another name",
+    wc = FactoryGirl.build(:website_configuration, :name => "Another name",
                                                :value => "Another value",
                                                :value_type => nil)
     assert !wc.save
@@ -38,29 +38,29 @@ class WebsiteConfigurationTest < ActiveSupport::TestCase
   test "get_value" do
     assert WebsiteConfiguration.get_value(@wc.name) == @wc.value
 
-    Factory.create(:website_configuration, :name => "true0",
+    FactoryGirl.create(:website_configuration, :name => "true0",
                                            :value => "Something",
                                            :value_type => "boolean")
-    Factory.create(:website_configuration, :name => "true1",
+    FactoryGirl.create(:website_configuration, :name => "true1",
                                            :value => "1",
                                            :value_type => "boolean")
-    Factory.create(:website_configuration, :name => "true2",
+    FactoryGirl.create(:website_configuration, :name => "true2",
                                            :value => "t",
                                            :value_type => "boolean")
 
-    Factory.create(:website_configuration, :name => "false0",
+    FactoryGirl.create(:website_configuration, :name => "false0",
                                            :value => nil,
                                            :value_type => "boolean")
-    Factory.create(:website_configuration, :name => "false1",
+    FactoryGirl.create(:website_configuration, :name => "false1",
                                            :value => "",
                                            :value_type => "boolean")
-    Factory.create(:website_configuration, :name => "false2",
+    FactoryGirl.create(:website_configuration, :name => "false2",
                                            :value => " ",
                                            :value_type => "boolean")
-    Factory.create(:website_configuration, :name => "false3",
+    FactoryGirl.create(:website_configuration, :name => "false3",
                                            :value => "0",
                                            :value_type => "boolean")
-    Factory.create(:website_configuration, :name => "false4",
+    FactoryGirl.create(:website_configuration, :name => "false4",
                                            :value => "f",
                                            :value_type => "boolean")
 

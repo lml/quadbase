@@ -34,13 +34,13 @@ class ActionController::TestCase
   end
 
   def admin_login
-    admin = Factory.create(:user, :is_administrator => true)
+    admin = FactoryGirl.create(:user, :is_administrator => true)
     sign_in admin
   end
 
   def user_login
-    admin = Factory.create(:user, :is_administrator => true)
-    user = Factory.create(:user)
+    admin = FactoryGirl.create(:user, :is_administrator => true)
+    user = FactoryGirl.create(:user)
     sign_in user
   end
 
