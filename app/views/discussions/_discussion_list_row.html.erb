@@ -1,0 +1,16 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% # Clients of this partial must supply the following variable:
+   # discussion
+%>
+<% unread_count = discussion.comment_thread.subscription_for(current_user).unread_count %>
+<tr id="discussion_<%= discussion.id %>">
+  <td><% if unread_count > 0 %>
+      <b><%= link_to discussion.subject + " (" + unread_count.to_s + ")", discussion %></b>
+      <% else %>
+      <%= link_to discussion.subject, discussion %>
+      <% end %></td>
+  <td><%= link_to "Leave this discussion", discussion_leave_path(discussion), :remote => true %>
+  <td><%= discussion.recipients.collect { |r| r.full_name }.to_sentence %></td>
+</tr>

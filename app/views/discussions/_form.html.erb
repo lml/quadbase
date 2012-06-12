@@ -1,0 +1,20 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%= form_for(@discussion) do |f| %>
+  <br/>
+  <div class="field">
+    <%= f.label :subject, "Subject:" %>
+    <%= f.text_field :subject %>
+  </div>
+  <br/>
+  <div class="field">
+    <%= f.label :body, "Body:" %><br/>
+    <%= f.text_area :body %>
+  </div>
+  <br/>
+  <div class="actions">
+    <%= f.submit :class => "#{submit_classes}",
+                 :value => "Send" %>
+  </div>
+<% end %>

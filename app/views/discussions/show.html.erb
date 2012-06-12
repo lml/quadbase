@@ -1,0 +1,40 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%= pageHeading("Viewing Discussion") %>
+
+<table width="100%">
+  <tr>
+    <td>To:</td>
+    <td id="recipient_list">
+      <% @discussion.recipients.each do |recipient| %>
+        <%= render :partial => 'recipient', :locals => {:recipient => recipient} %>
+      <% end %>
+    </td>
+    <td align="right">
+      <%= link_to "Add recipients ...", 
+                  discussion_new_recipient_path(@discussion), 
+                  :remote => true %>
+    </td>
+  </tr>
+</table>
+
+<% if @discussion.comment_thread.comments.blank? %>
+<%= render 'form' %>
+<% else %>
+<%= render :partial => 'show', :locals => {:discussion => @discussion} %>
+<% end %>
+
+<br/>
+
+<% if !@discussion.comment_thread.comments.blank? %>
+<%= render :partial => 'comments/index', :locals => {:commentable => @discussion,
+                                                     :hide_header => true,
+                                                     :hide_link => true,
+                                                     :hide_votes => true,
+                                                     :comment_name => 'Reply'} %>
+<% end %>
+
+<br/><br/>
+
+<%= link_to 'Back to Inbox', inbox_path %>

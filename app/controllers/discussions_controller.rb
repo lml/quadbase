@@ -69,7 +69,7 @@ class DiscussionsController < ApplicationController
 
   def new_recipient
     @action_dialog_title = "Add a recipient"
-    @action_search_path = message_search_recipients_path(params[:message_id])
+    @action_search_path = discussion_search_recipients_path(params[:discussion_id])
     
     respond_to do |format|
       format.js { render :template => 'users/action_new' }
@@ -85,14 +85,14 @@ class DiscussionsController < ApplicationController
       @discussion.has_recipient?(user)
     end    
 
-    @action_partial = 'messages/create_recipient_form'
+    @action_partial = 'discussions/create_recipient_form'
 
     respond_to do |format|
      format.js { render :template => 'users/action_search' }
     end
   end
 
-  # POST /messages/1/add_recipient
+  # POST /discussions/1/add_recipient
   def add_recipient
     raise SecurityTransgression unless present_user.can_update?(@discussion)
     
@@ -122,8 +122,8 @@ class DiscussionsController < ApplicationController
   
 protected
 
-  def get_message
-    @discussion = Discussion.find(params[:message_id])
+  def get_discussion
+    @discussion = Discussion.find(params[:discussion_id])
   end
 
 end

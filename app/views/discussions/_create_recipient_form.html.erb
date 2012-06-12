@@ -1,0 +1,11 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%# Callers must supply a 'user' local variable %>
+
+<%= form_tag(discussion_add_recipient_path(@discussion), 
+             :method => :post, 
+             :remote => true) do %>
+  <%= hidden_field_tag :username, user.username %>
+  <%= submit_tag "Add", :class => submit_classes, :onclick => please_wait_js %>
+<% end %>

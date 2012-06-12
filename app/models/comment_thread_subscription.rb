@@ -10,10 +10,10 @@ class CommentThreadSubscription < ActiveRecord::Base
 
   validates_uniqueness_of :user_id, :scope => :comment_thread_id
 
-  scope :message_subscriptions, joins{comment_thread}.where{comment_thread.commentable_type == "Message"}
+  scope :discussion_subscriptions, joins{comment_thread}.where{comment_thread.commentable_type == "Message"}
 
-  def self.message_subscriptions_for(user)
-    where{user_id == user.id}.message_subscriptions
+  def self.discussion_subscriptions_for(user)
+    where{user_id == user.id}.discussion_subscriptions
   end
 
   def mark_all_as_read!
@@ -33,11 +33,10 @@ class CommentThreadSubscription < ActiveRecord::Base
 
 protected
 
-  def update_message_cache
+  def update_discussion_cache
     return unless comment_thread.commentable_type == 'Message'
     user.update_attribute(:unread_message_count,
-      Array.new(CommentThreadSubscription.message_subscriptions_for(user)).sum { |ms|
-                                                                             ms.unread_count })
+      Array.new(CommentThreadSubscription.discussion_subscriptions_for(user)).sum { |ms|
+                                                                         ms.unread_count })
   end
-
 end

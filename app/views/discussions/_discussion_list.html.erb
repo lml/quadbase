@@ -1,0 +1,22 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% discussions = Discussion.discussions_for(current_user) %>
+
+<table id="discussion_table" class="list" width="100%">
+   <tr>
+      <th width="30%">Subject</th>
+      <th width="20%"></th>
+      <th width="50%">Recipients</th>
+   </tr>
+   <tr id="discussion_table_none_row" <% if !discussions.empty? %>style="display:none"<% end %>>
+      <td colspan="3" style="text-align:center">None</td>
+   </tr>
+   <% discussions.each do |discussion| %>
+     <%= render :partial => 'discussions/discussion_list_row', :locals => {:discussion => discussion} %>
+   <% end %>
+</table>
+
+<br/>
+
+<%= link_to "New discussion", new_discussion_path %>

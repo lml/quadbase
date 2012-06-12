@@ -12,8 +12,8 @@ class Discussion < ActiveRecord::Base
 
   attr_accessible #none
 
-  def self.messages_for(user)
-    CommentThreadSubscription.message_subscriptions_for(user).collect { |cts| cts.comment_thread.commentable }
+  def self.discussions_for(user)
+    CommentThreadSubscription.discussion_subscriptions_for(user).collect { |cts| cts.comment_thread.commentable }
   end
 
   def subject
