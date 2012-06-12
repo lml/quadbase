@@ -32,7 +32,7 @@ class RegistrationsController < Devise::RegistrationsController
       end
     else
       clean_up_passwords(resource)
-      render_with_scope :new
+      render 'new'
     end
   end
 
