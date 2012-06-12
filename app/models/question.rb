@@ -557,6 +557,11 @@ class Question < ActiveRecord::Base
   def base_class
     Question
   end
+
+  def project
+    raise IllegalState if is_published?
+    project_questions.first.project
+  end
   
   # In some cases, there could be some outstanding role requests on this question
   # but no role holders left to approve/reject them.  This method is a utility for
@@ -687,7 +692,7 @@ protected
     errors.add(:base, "Changes cannot be made to a published question.#{self.changes}")
     false
   end
-  
+
   def clear_empty_logic
     if !logic.nil? && logic.empty?
       logic.destroy 
