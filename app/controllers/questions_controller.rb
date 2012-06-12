@@ -282,7 +282,7 @@ class QuestionsController < ApplicationController
         format.html { redirect_to edit_question_path(@question) }
       end
     rescue ActiveRecord::RecordInvalid => invalid
-      logger.error("An error occurred when deriving a question: #{invalid.message}")
+      logger.error {"An error occurred when deriving a question: #{invalid.message}"}
       flash[:alert] = "We could not create a derived question as requested."
       respond_to do |format|
         format.html { redirect_to question_path(@source_question) }
@@ -323,7 +323,7 @@ class QuestionsController < ApplicationController
       end
 
     rescue ActiveRecord::RecordInvalid => invalid
-      logger.error("An error occurred when deriving a question: #{invalid.message}")
+      logger.error {"An error occurred when deriving a question: #{invalid.message}"}
       flash[:alert] = "We could not create a derived question as requested."
       respond_to do |format|
         format.html { redirect_to question_path(@source_question) }
@@ -389,7 +389,7 @@ protected
         format.html { redirect_to edit_question_path(@question) }
       end
     rescue ActiveRecord::RecordInvalid => invalid
-      logger.error("An error occurred when creating a question: #{invalid.message}")
+      logger.error {"An error occurred when creating a question: #{invalid.message}"}
     
       respond_to do |format|
         format.html {   
