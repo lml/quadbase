@@ -361,16 +361,13 @@ class QuestionsController < ApplicationController
 
   def search
     @type = params[:type]
-    @where = params[:where]
+    @location = params[:location]
+    @part = params[:part]
     @query = params[:query]
     @exclude_type = params[:exclude_type]
     @per_page = params[:per_page]
-    @questions = Question.search(@type, @where,
-                                 @query, present_user, @exclude_type) \
-                         .reject { |q| (q.is_published? && !q.is_latest?) ||
-                                       !present_user.can_read?(q) }
-    # TODO: Possibly move the reject statement into the SQL query in Question.search
-    # This could speed up all searching, including pagination
+    @questions = Question.search(@type, @location, @part,
+                                 @query, present_user, @exclude_type)
     respond_to do |format|
       format.html do
         @questions = @questions.paginate(:page => params[:page], :per_page => @per_page)

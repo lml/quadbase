@@ -52,12 +52,12 @@
     var allowed_ext = '<%= allowed_extensions.collect { |ext| "*.#{ext}" }.join(';') %>';
 
     $('<%= file_field %>').uploadify({
-      uploader      : '/javascripts/jquery.uploadify/uploadify.swf',
+      uploader      : "/assets/jquery.uploadify/uploadify.swf",
       script        : '<%= url %>',
       fileDataName  : $('#file_uploader input:file')[0].name, // Extract file name from form field
-      cancelImg     : '/javascripts/jquery.uploadify/cancel.png',
+      cancelImg     : "/assets/jquery.uploadify/cancel.png",
       buttonText    : 'Browse',
-      buttonImg     : '/javascripts/jquery.uploadify/browse_button.png',    
+      buttonImg     : "/assets/jquery.uploadify/browse_button.png",    
       fileDesc      : '<%= file_description %> (' + allowed_ext + ')',
       fileExt       : allowed_ext,
       sizeLimit     : <%= max_size %>,    

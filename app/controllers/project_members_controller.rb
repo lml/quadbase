@@ -76,7 +76,13 @@ class ProjectMembersController < ApplicationController
     respond_to do |format|
       if @project_member.destroy
         @project = @project_member.project
-        format.html { redirect_to project_path(@project) }
+        format.html do
+          if @project_member.user == present_user
+            redirect_to projects_path
+          else
+            redirect_to project_path(@project)
+          end
+        end
         format.js
       else
         format.json { render :json => @project_member.errors, :status => :unprocessable_entity }

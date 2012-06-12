@@ -23,7 +23,7 @@
         <% end %>
       </td>
       <td>
-        <%= label_tag votable.votes.where(:thumbs_up => true).count %>
+        <%= label_tag votable.votes.where{thumbs_up == true}.count %>
       </td>
     </tr>
   </table>
@@ -43,7 +43,7 @@
         <% end %>
       </td>
       <td>
-        <%= label_tag votable.votes.where(:thumbs_up => false).count %>
+        <%= label_tag votable.votes.where{thumbs_up == false}.count %>
       </td>
     </tr>
   </table>
