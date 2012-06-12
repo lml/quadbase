@@ -149,7 +149,7 @@ class QuestionTest < ActiveSupport::TestCase
   
   test "delete destroys appropriate assocs" do
     q = make_simple_question()
-    wq = FactoryGirl.create(:project_question, :question => q)
+    pq = FactoryGirl.create(:project_question, :question => q)
     c = FactoryGirl.create(:question_collaborator, :question => q)
 
     assert q.destroy
