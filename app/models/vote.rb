@@ -10,8 +10,8 @@ class Vote < ActiveRecord::Base
 
   attr_accessible # none
 
-  scope :positive, where(:thumbs_up => true)
-  scope :negative, where(:thumbs_up => false)
+  scope :positive, where{thumbs_up == true}
+  scope :negative, where{thumbs_up == false}
 
   def self.order_by_votes(votable_array)
     votable_array.sort { |a, b|

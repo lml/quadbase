@@ -6,21 +6,30 @@ require 'test_helper'
 class ProjectTest < ActiveSupport::TestCase
   
   test "destroy kills dependent assocs" do
-    ww = make_project(:num_questions => 3, :num_members => 1, :method => :create)
+    p = make_project(:num_questions => 3, :num_members => 1, :method => :create)
+
+    pq_ids = p.project_questions.collect{ |pq| pq.id }
+    q_ids = p.project_questions.collect{ |pq| pq.question.id }
+    pm_ids = p.project_members.collect{ |pm| pm.id }
+    u_ids = p.project_members.collect{ |pm| pm.user.id }
     
-    ww.destroy
+    p.destroy
     
-    [0,1,2].each do |n|
-      assert_raise(ActiveRecord::RecordNotFound) {ProjectQuestion.find(ww.project_questions[n].id)}
-      assert_raise(ActiveRecord::RecordNotFound) { Question.find(ww.project_questions[n].question.id) }
+    pq_ids.each do |pq_id|
+      assert_raise(ActiveRecord::RecordNotFound) {ProjectQuestion.find(pq_id)}
     end
-    
-    assert ww.questions.empty?
-    
-    assert_raise(ActiveRecord::RecordNotFound) {ProjectMember.find(ww.project_members.first.id)}
-    assert_nothing_raised(ActiveRecord::RecordNotFound) { User.find(ww.project_members.first.user.id) }
-    
-    assert ww.members.empty?
+
+    q_ids.each do |q_id|
+      assert_raise(ActiveRecord::RecordNotFound) { Question.find(q_id) }
+    end
+
+    pm_ids.each do |pm_id|
+      assert_raise(ActiveRecord::RecordNotFound) { ProjectMember.find(pm_id) }
+    end
+
+    u_ids.each do |u_id|
+      assert_nothing_raised { User.find(u_id) }
+    end
   end
   
   test "default for user" do

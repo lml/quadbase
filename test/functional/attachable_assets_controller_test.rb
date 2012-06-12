@@ -4,6 +4,12 @@
 require 'test_helper'
 
 class AttachableAssetsControllerTest < ActionController::TestCase
+
+  def paramify_values(values)
+    # Overloading this method to prevent TestCase from double quoting attachment object during POST
+    values
+  end
+
   setup do
     @user = Factory.create(:user)
     question = Factory.create(:project_question,

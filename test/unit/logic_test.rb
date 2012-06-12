@@ -53,4 +53,5 @@ class LogicTest < ActiveSupport::TestCase
     assert_equal 6, result_l2_1.variables["y"], "alpha"
     assert_equal 6, result_l2_2.variables["y"], "beta"
   end
+
 end

@@ -16,6 +16,14 @@ class QuestionCollaborator < ActiveRecord::Base
   after_destroy :grant_other_requests_if_this_is_last_roleholder
   
   attr_accessible :user, :question
+
+  def content_copy
+    kopy = QuestionCollaborator.create(:user => self.user, :question => self.question)
+    kopy.position = self.position
+    kopy.is_author = self.is_author
+    kopy.is_copyright_holder = self.is_copyright_holder
+    kopy
+  end
   
   # TODO validate that a question always has at least one role
   
@@ -64,9 +72,9 @@ class QuestionCollaborator < ActiveRecord::Base
   # Copies the roles that are assigned to the source question over to the 
   # target question
   def self.copy_roles(source_question, target_question)
-    source_roles = QuestionCollaborator.where(:question_id => source_question.id).all
+    source_roles = QuestionCollaborator.where{question_id == source_question.id}.all
     source_roles.each do |source_role| 
-      target_role = source_role.clone
+      target_role = source_role.content_copy
       target_role.question_id = target_question.id
       target_role.save!
     end
@@ -105,7 +113,8 @@ protected
   end  
   
   def assign_position
-    self.position = (QuestionCollaborator.where(:question_id => question_id).maximum(:position) || -1) + 1
+    self.position = (QuestionCollaborator.where{question_id == my{question_id}}\
+                                         .maximum('position') || -1) + 1
   end
 
   def no_roles

@@ -3,10 +3,6 @@
 
 <% @include_markitup = true %>
 
-<% content_for :javascript_includes do %>
-  <%= javascript_include_tag "markitup_set" %>
-<% end %>
-
 <% content_for :javascript do %>
   <%= javascript_tag do %>  
     $(document).ready(function() {

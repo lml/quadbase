@@ -58,21 +58,21 @@ class MultipartQuestion < Question
     kopy
   end
   
-  def add_parts(questions)
-    questions = Array(questions)
+  def add_parts(qs)
+    qs = Array(qs)
     
     self.errors.add(:base, "Cannot add parts to a published question.") if is_published?
     
     # There can be no duplicate incoming questions
     
-    if !questions.uniq!.nil?
+    if !qs.uniq!.nil?
       self.errors.add(:base, "Questions cannot be added more than once to " + 
                              "a multipart question.")
     end
     
     # The incoming questions can't already be in the multipart
     
-    preexisting_questions = child_questions & questions
+    preexisting_questions = child_questions & qs
 
     if !preexisting_questions.empty?
       id_string = preexisting_questions.collect{|q| q.to_param}.join(', ')
@@ -82,8 +82,8 @@ class MultipartQuestion < Question
 
     # Do not allow multiparts to be added to other multiparts
 
-    questions.each do |question|
-      if question.is_multipart?
+    qs.each do |q|
+      if q.is_multipart?
         self.errors.add(:base, "Question #{question.to_param} is a multipart question" +
                                " and cannot be part of another multipart question.")
       end
@@ -91,10 +91,10 @@ class MultipartQuestion < Question
     
     # All of the incoming questions must have the same introduction, if they have one.
     # Questions that don't have an intro will be changed (draft) or left unmodified (published)
-
-    uniq_non_nil_setups = QuestionSetup.joins(:questions).where(:questions => questions)\
-                                       .where(:content.not_eq % nil & :content.not_eq % '')\
-                                       .group('question_setups.id')
+    
+    uniq_non_nil_setups = QuestionSetup.joins{questions}.where{questions.id.in(qs)}\
+                                       .where{(content != nil) & (content != '')}\
+                                       .group{question_setups.id}
 
     while uniq_non_nil_setups.length > 1
       first_setup = uniq_non_nil_setups.pop
@@ -146,18 +146,18 @@ class MultipartQuestion < Question
 
       # Set all question setups to the single setup, unless published
 
-      questions.each do |question|
-        if !question.is_published?
-          old_question_setup = question.question_setup
-          question.question_setup = single_setup
-          question.save!
+      qs.each do |q|
+        if !q.is_published?
+          old_question_setup = q.question_setup
+          q.question_setup = single_setup
+          q.save!
           old_question_setup.destroy_if_unattached
         end
       end
 
       # Finally, add the incoming questions
       
-      child_questions << questions
+      child_questions << qs
     end
   end
   

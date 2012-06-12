@@ -7,14 +7,14 @@ class LogicLibrary < ActiveRecord::Base
   
   before_destroy :no_versions
 
-  scope :always_required, where(:always_required => true)
-  scope :ordered, order(:number.asc)
+  scope :always_required, where{always_required == true}
+  scope :ordered, order{number.asc}
   
   def latest_version(include_deprecated = true)
     (include_deprecated ?
       logic_library_versions :
-      logic_library_versions.where(:deprecated => false))
-    .order(:version.desc).first
+      logic_library_versions.where{deprecated == false})
+    .order{version.desc}.first
   end
   
   def self.latest_versions(include_deprecated = true)
