@@ -110,18 +110,18 @@
   <div class="answer_choices">
     <%= f.fields_for :answer_choices do |ac_form| %>
       <%= render 'simple_questions/answer_choice_fields', :f => ac_form %>
-      <% prev = 0 %>
+      <% id_number = 0 %>
       <% if !params[:question].nil? %>
 	 <% params[:question][:answer_choices_attributes].each do |k, v| %>
 	 <% if !v[:credit].nil? %>
 	   <% credit = v[:credit] || '' %>
 	 <% end %>
-	 <% prev = prev + 1 %>
+	 <% id_number = id_number + 1 %>
 	 <% if credit != '0' && credit != '1'%>
 	   <script type="text/javascript">
-	     $("#text_field_tid<%= prev %>").attr('value', 
+	     $("#text_field_tid<%= id_number %>").attr('value', 
 			'<%= credit %>').show();
-	     $("#radio_button_rid<%= prev %>").attr({value: 
+	     $("#radio_button_rid<%= id_number %>").attr({value: 
 			'<%= credit %>', checked: 'true'});
 	   </script>
 	 <% end %>
