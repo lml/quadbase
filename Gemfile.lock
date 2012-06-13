@@ -47,6 +47,8 @@ GEM
       net-sftp (>= 2.0.0)
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.0.0)
+    carrierwave (0.5.8)
+      activesupport (~> 3.0)
     columnize (0.3.4)
     devise (1.2.1)
       bcrypt-ruby (~> 2.1.2)
@@ -95,6 +97,7 @@ GEM
     net-ssh-gateway (1.0.1)
       net-ssh (>= 1.99.1)
     nokogiri (1.5.3)
+    nokogiri (1.5.3-x86-mingw32)
     orm_adapter (0.0.4)
     paperclip (2.3.11)
       activerecord (>= 2.3.0)
@@ -167,6 +170,7 @@ DEPENDENCIES
   acts-as-taggable-on (~> 2.1.0)
   bullring (~> 0.7.4)
   capistrano
+  carrierwave
   devise
   execjs
   factory_girl_rails (< 2.0)

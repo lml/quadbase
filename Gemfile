@@ -8,6 +8,8 @@ gem 'rake', '0.8.7'
 
 gem 'nokogiri'
 
+gem 'carrierwave'
+
 # Deploy with Capistrano
 gem 'capistrano'
 
