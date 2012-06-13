@@ -28,9 +28,9 @@ class QTImport
 		return a, b
 	end
 
-	def self.createproject
+	def self.createproject(current_user)
 		a = Project.create(:name => 'Import')
-		# a.add_member!(current_user)
+		a.add_member!(current_user)
 	end
 
 	def self.get_answers(content,parser,transformer,id_num)
