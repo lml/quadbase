@@ -40,7 +40,7 @@ class CommentThreadSubscriptionsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        if @comment_thread.commentable_type == 'Message'
+        if @comment_thread.commentable_type == 'Discussion'
           redirect_to inbox_path
         else
           redirect_to(polymorphic_path([@commentable, :comments]))

@@ -30,7 +30,7 @@ class CommentsController < ApplicationController
     @comment = Comment.new
     @comment.comment_thread = @comment_thread
     @comment.creator = present_user
-    if @comment_thread.commentable_type == 'Message'
+    if @comment_thread.commentable_type == 'Discussion'
       @create_verb = 'Send'
       @comment_name = 'Reply'
     else
@@ -55,7 +55,7 @@ class CommentsController < ApplicationController
     @comment.comment_thread = @comment_thread
     @comment.creator = present_user
 
-    if @comment_thread.commentable_type == 'Message'
+    if @comment_thread.commentable_type == 'Discussion'
       @comment_notice = 'Reply sent.'
       @hide_votes = true
     else
@@ -94,7 +94,7 @@ class CommentsController < ApplicationController
   def edit
     raise SecurityTransgression unless present_user.can_update?(@comment)
 
-    if @comment_thread.commentable_type == 'Message'
+    if @comment_thread.commentable_type == 'Discussion'
       @comment_name = 'Reply'
     else
       @comment_name = 'Comment'
@@ -110,7 +110,7 @@ class CommentsController < ApplicationController
   def update
     raise SecurityTransgression unless present_user.can_update?(@comment)
 
-    if @comment_thread.commentable_type == 'Message'
+    if @comment_thread.commentable_type == 'Discussion'
       @comment_notice = 'Reply updated.'
     else
       @comment_notice = 'Comment updated.'

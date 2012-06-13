@@ -143,8 +143,8 @@ module ApplicationHelper
       question_id_text(comment_thread.commentable.question)
     when 'Project'
       comment_thread.commentable.name
-    when 'Message'
-      "message: " + comment_thread.commentable.subject
+    when 'Discussion'
+      "discussion: " + comment_thread.commentable.subject
     end
   end
   

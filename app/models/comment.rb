@@ -29,16 +29,16 @@ class Comment < ActiveRecord::Base
   end
 
   def can_be_updated_by?(user)
-    !user.is_anonymous? && user == creator && (comment_thread.commentable_type != 'Message' || comment_thread.comments.last == self)
+    !user.is_anonymous? && user == creator && (comment_thread.commentable_type != 'Discussion' || comment_thread.comments.last == self)
   end
 
   def can_be_destroyed_by?(user)
     !user.is_anonymous? && (user == creator || user.is_administrator?) &&
-      (comment_thread.commentable_type != 'Message' || comment_thread.comments.last == self)
+      (comment_thread.commentable_type != 'Discussion' || comment_thread.comments.last == self)
   end
 
   def can_be_voted_on_by?(user)
-    can_be_read_by?(user) && user != creator && comment_thread.commentable_type != 'Message'
+    can_be_read_by?(user) && user != creator && comment_thread.commentable_type != 'Discussion'
   end
 
 end

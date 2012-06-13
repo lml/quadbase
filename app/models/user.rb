@@ -128,8 +128,8 @@ class User < ActiveRecord::Base
       return Question.find(container_id).can_be_joined_by?(self)
     when 'project'
       return Project.find(container_id).can_be_joined_by?(self)
-    when 'message'
-      return Message.find(container_id).can_be_joined_by?(self)
+    when 'discussion'
+      return Discussion.find(container_id).can_be_joined_by?(self)
     end
   end
   

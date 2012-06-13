@@ -19,41 +19,41 @@ class DiscussionsControllerTest < ActionController::TestCase
   test "should get new" do
     user_login
     get :new
-    assert_redirected_to message_path(assigns[:message])
+    assert_redirected_to discussion_path(assigns[:discussion])
   end
 
-  test "should not show message not logged in" do
-    get :show, :id => @message.to_param
+  test "should not show discussion not logged in" do
+    get :show, :id => @discussion.to_param
     assert_redirected_to login_path
   end
 
-  test "should not show message not authorized" do
+  test "should not show discussion not authorized" do
     user_login
-    get :show, :id => @message.to_param
+    get :show, :id => @discussion.to_param
     assert_response(403)
   end
 
-  test "should show message" do
+  test "should show discussion" do
     sign_in @user
-    get :show, :id => @message.to_param
+    get :show, :id => @discussion.to_param
     assert_response :success
   end
 
-  test "should not update message not logged in" do
-    put :update, :id => @message.to_param, :message => @message.attributes
+  test "should not update discussion not logged in" do
+    put :update, :id => @discussion.to_param, :discussion => @discussion.attributes
     assert_redirected_to login_path
   end
 
-  test "should not update message not authorized" do
+  test "should not update discussion not authorized" do
     user_login
-    put :update, :id => @message.to_param, :message => @message.attributes
+    put :update, :id => @discussion.to_param, :discussion => @discussion.attributes
     assert_response(403)
   end
 
-  test "should update message" do
+  test "should update discussion" do
     sign_in @user
-    put :update, :id => @message.to_param, :message => @message.attributes
-    assert_redirected_to message_path(assigns(:message))
+    put :update, :id => @discussion.to_param, :discussion => @discussion.attributes
+    assert_redirected_to discussion_path(assigns(:discussion))
   end
 
 end

@@ -41,7 +41,7 @@ class HelpControllerTest < ActionController::TestCase
   end
 
   test "should get topic" do
-    get :topic, :topic_name => "messages"
+    get :topic, :topic_name => "discussions"
     assert_response :success
   end
 
