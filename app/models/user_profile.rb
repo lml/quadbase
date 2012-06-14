@@ -6,11 +6,18 @@ class UserProfile < ActiveRecord::Base
   belongs_to :user
 
   attr_accessible :project_member_email, :role_request_email, 
-                  :announcement_email, :auto_author_subscribe, :user
-
+                  :announcement_email, :auto_author_subscribe, :user, :digest_email, :time
+                
+        
+  
+            
   #############################################################################
   # Access control methods
   #############################################################################
+  def digest_email
+  end
+
+  
 
   def can_be_read_by?(user)
     !user.is_anonymous? && user == self.user
@@ -21,3 +28,5 @@ class UserProfile < ActiveRecord::Base
   end
 
 end
+
+

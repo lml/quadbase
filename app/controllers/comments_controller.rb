@@ -67,12 +67,18 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
-        @comment_thread.subscribe!(present_user)
-        @comment_thread.add_unread_except_for(present_user)
-        flash[:notice] = @comment_notice
-        SubscriptionNotifier.comment_created_email(@comment)
-        format.html { redirect_to(polymorphic_path([@commentable, :comments])) }
-        format.js
+        if @digest.subscribe!(present_user)
+          @comment_thread.add_unread_except_for(present_user)
+          flash[:notice] = @comment_notice
+          SubscriptionNotifier.digest_email(@comment)
+          format.html { redirect_to(polymorphic_path([@commentable, :comments])) }
+          format.js
+        else if @comment_thread.subscribe!(present_user)
+          @comment_thread.add_unread_except_for(present_user)
+          flash[:notice] = @comment_notice
+          SubscriptionNotifier.comment_created_email(@comment)
+          format.html { redirect_to(polymorphic_path([@commentable, :comments])) }
+          format.js
       else
         @errors = @comment.errors
         format.html { render :action => 'new' }
