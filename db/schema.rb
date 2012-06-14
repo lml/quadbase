@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120613211916) do
+ActiveRecord::Schema.define(:version => 20120614200100) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -83,8 +83,9 @@ ActiveRecord::Schema.define(:version => 20120613211916) do
   end
 
   create_table "discussions", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string   "subject"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "licenses", :force => true do |t|
@@ -126,12 +127,6 @@ ActiveRecord::Schema.define(:version => 20120613211916) do
     t.text     "cached_code"
     t.string   "variables_array"
     t.string   "required_logic_library_version_ids"
-  end
-
-  create_table "messages", :force => true do |t|
-    t.string   "subject"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "project_members", :force => true do |t|
@@ -265,16 +260,16 @@ ActiveRecord::Schema.define(:version => 20120613211916) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                               :default => "",    :null => false
-    t.string   "encrypted_password",   :limit => 128, :default => "",    :null => false
+    t.string   "email",                                  :default => "",    :null => false
+    t.string   "encrypted_password",      :limit => 128, :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                       :default => 0
+    t.integer  "sign_in_count",                          :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.integer  "failed_attempts",                     :default => 0
+    t.integer  "failed_attempts",                        :default => 0
     t.string   "unlock_token"
     t.datetime "locked_at"
     t.string   "confirmation_token"
@@ -284,10 +279,10 @@ ActiveRecord::Schema.define(:version => 20120613211916) do
     t.datetime "updated_at"
     t.string   "first_name"
     t.string   "last_name"
-    t.boolean  "is_administrator",                    :default => false
+    t.boolean  "is_administrator",                       :default => false
     t.string   "username"
     t.datetime "disabled_at"
-    t.integer  "unread_message_count",                :default => 0
+    t.integer  "unread_discussion_count",                :default => 0
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

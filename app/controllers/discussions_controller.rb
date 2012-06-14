@@ -43,7 +43,7 @@ class DiscussionsController < ApplicationController
 
     raise SecurityTransgression unless present_user.can_create?(@discussion)
 
-    @discussion.subject = params[:message][:subject]
+    @discussion.subject = params[:discussion][:subject]
 
     @comment = Comment.new
     @comment.message = params[:message][:body]
