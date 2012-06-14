@@ -4,13 +4,19 @@
 require 'test_helper'
 
 class AttachableAssetsControllerTest < ActionController::TestCase
+
+  def paramify_values(values)
+    # Overloading this method to prevent TestCase from double quoting attachment object during POST
+    values
+  end
+
   setup do
-    @user = Factory.create(:user)
-    question = Factory.create(:project_question,
+    @user = FactoryGirl.create(:user)
+    question = FactoryGirl.create(:project_question,
                    :project => Project.default_for_user!(@user)).question
-    @attachable_asset = Factory.build(:attachable_asset, :attachable => question)
+    @attachable_asset = FactoryGirl.build(:attachable_asset, :attachable => question)
     attachment = @attachable_asset.asset.attachment
-    fileHash = Hash[ :tempfile => attachment.to_tempfile(attachment.to_file) ]
+    fileHash = Hash[ :tempfile => attachment ]
     uploadedFile = ActionDispatch::Http::UploadedFile.new(fileHash)
     uploadedFile.content_type = attachment.content_type
     uploadedFile.original_filename = attachment.original_filename

@@ -55,6 +55,16 @@
                            question_question_collaborators_path(@question) %></p>
          <% end %>
 
+         <% if @show_credit_toggle_link %>
+           <p>
+             <%= link_to_function 'Reveal Credit', 
+                                  "$('.part_cred_mark').show(); $(this).hide(); $(this).next().show();" %>
+             <%= link_to_function 'Hide Credit', 
+                                  "$('.part_cred_mark').hide(); $(this).hide(); $(this).prev().show();", 
+                                  :style => 'display:none' %>
+           </p>
+         <% end %>
+
          <% if @question.can_be_read_by?(present_user) %>
            <p><%= link_to "Solutions", question_solutions_path(@question) %>
          <% end %>
@@ -65,7 +75,7 @@
          <% end %>
 
          <% if @show_project_link && !@question.is_published? %>
-           <% project = @question.project_questions.first.project %>
+           <% project = @question.project %>
            <% if present_user.can_read?(project) %>
              <p><%= link_to "Open Project", 
                             project_path(project) %></p>

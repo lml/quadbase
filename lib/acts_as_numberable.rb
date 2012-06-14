@@ -36,8 +36,8 @@ module ActsAsNumberable
 
       attr_protected :number
     
-      scope :ordered, order('number ASC')
-      scope :reverse_ordered, order('number DESC')
+      scope :ordered, order{number.asc}
+      scope :reverse_ordered, order{number.desc}
       
       def self.sort!(sorted_ids)
         return if sorted_ids.blank?
@@ -115,13 +115,12 @@ module ActsAsNumberable
     end
 
     def remove_from_container!
-      # logger.debug("In remove_from_container: " + self.class.name + " " + self.id.to_s)
-      
-      later_items = self.class.where(container_column => self.send(container_column))
-                              .where{number.gt number}
+      # logger.debug {"In remove_from_container: " + self.class.name + " " + self.id.to_s}
+      later_items = self.class.where{container_column == my{self.send(container_column)}}
+                              .where{number > my{self.number}}
 
-      # logger.debug("later_items:" + later_items.inspect)
-      # logger.debug("is destroyed?: " + self.destroyed.inspect)
+      # logger.debug {"later_items:" + later_items.inspect}
+      # logger.debug {"is destroyed?: " + self.destroyed.inspect}
 
       if !self.destroyed
         self.number = nil
@@ -144,7 +143,7 @@ module ActsAsNumberable
     
     def assign_number
       self.number = self.class
-                      .where(container_column => self.send(container_column))
+                      .where{container_column == my{self.send(container_column)}}
                       .count + 1
     end
   end

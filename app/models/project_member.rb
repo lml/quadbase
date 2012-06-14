@@ -36,7 +36,7 @@ class ProjectMember < ActiveRecord::Base
   end
   
   def self.all_for_user(user)
-    ProjectMember.where(:user_id => user.id).all
+    ProjectMember.where{user_id == user.id}.all
   end
 
   def destroy_memberless_project
@@ -64,7 +64,7 @@ class ProjectMember < ActiveRecord::Base
 protected
 
   scope :defaults_for_user, lambda { |user| 
-    where(:user_id => user.id, :is_default => true)
+    where{(user_id == user.id) & (is_default == true)}
   }  
   
   # Ideally, we'd want for there to always be exactly one default project
@@ -78,9 +78,4 @@ protected
     errors.add(:base, "A user cannot have multiple default projects.")
     false
   end
-  
-  # THIS FUNCTIONALITY TAKEN OUT (REMOVE SOON)
-  # def make_users_first_project_the_default
-  #   self.is_default = true if ProjectMember.where(:user_id => user.id).count == 0
-  # end
 end
