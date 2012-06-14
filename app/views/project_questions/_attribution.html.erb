@@ -12,7 +12,6 @@
   <% collaborators = question.question_collaborators %>
 
   <%= question_id_link(question) %><br/>
-  Question ID: <%= question.id %>
   
   <% author_names = collaborator_names(collaborators.select{|c| c.is_author}) %>
   <% copyright_names = collaborator_names(collaborators.select{|c| c.is_copyright_holder}) %>
