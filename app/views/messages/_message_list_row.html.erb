@@ -11,6 +11,6 @@
       <% else %>
       <%= link_to message.subject, message %>
       <% end %></td>
-  <td><%= link_to "Leave this message", message_leave_path(message), :remote => true %>
+  <td><%= link_to "Leave this discussion", message_leave_path(message), :remote => true %>
   <td><%= message.recipients.collect { |r| r.full_name }.to_sentence %></td>
 </tr>
