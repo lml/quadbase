@@ -46,7 +46,7 @@ class DiscussionsController < ApplicationController
     @discussion.subject = params[:discussion][:subject]
 
     @comment = Comment.new
-    @comment.message = params[:message][:body]
+    @comment.message = params[:discussion][:body]
     @comment.comment_thread = @discussion.comment_thread
     @comment.creator = present_user
 
