@@ -31,7 +31,7 @@ class AssetTest < ActiveSupport::TestCase
     type = "image/png"
     size = 1024
     time = Time.now
-    user_id = Factory.create(:user).id
+    user_id = FactoryGirl.create(:user).id
     asset = Asset.new(:attachment_file_name => name,
                       :attachment_content_type => type,
                       :attachment_file_size => size,

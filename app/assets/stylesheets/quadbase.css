@@ -23,7 +23,7 @@ caption, th, td {
 }
 
 body {	
-	background: url("../images/gray_background_tall.png") repeat-x scroll 0 0 #FFFFFF;
+	background: url("/assets/gray_background_tall.png") repeat-x scroll 0 0 #FFFFFF;
 }
 
 #container {
@@ -73,7 +73,7 @@ a:active {
 	border: 0 none;
 	opacity: 1;
 	float: left;
-	background: url("../images/quadbase_logo_v1a.png") no-repeat transparent;
+	background: url("/assets/quadbase_logo_v1a.png") no-repeat transparent;
 	height: 78px;
 	width: 83px;
 }
@@ -82,13 +82,13 @@ a:active {
 	border: 0 none;
 	opacity: 1;
 	float: left;
-	background: url("../images/quadbase_banner_v6.png") no-repeat transparent;
+	background: url("/assets/quadbase_banner_v6.png") no-repeat transparent;
 	height: 78px;
 	width: 600px;
 }
 
 .pagehead {
-    background: url("../images/pagehead-background-white.png") no-repeat scroll 0 0 transparent;
+    background: url("/assets/pagehead-background-white.png") no-repeat scroll 0 0 transparent;
     margin: -20px 0 10px -25px;
     padding: 20px 25px 0;
     position: relative;
@@ -148,7 +148,7 @@ a:active {
 
 #banner {
 	background: #fff;
-	background-image:url('../images/sptopic_banner_v2.png'); 
+	background-image:url('/assets/sptopic_banner_v2.png'); 
     padding-top: 4px;
     padding-bottom: 1px;
 	padding-left: 10px;
@@ -359,6 +359,15 @@ a:active {
   padding: 2px;
   background-color: red;
   display: table;
+}
+
+.marked .field_with_errors {
+  display: inline;
+}
+
+.part_cred_field {
+  width: 100px; 
+  height: 18px;
 }
 
 .notebox {
@@ -760,33 +769,40 @@ th .current {
 }
 
 th .asc {
-	background-image: url(../images/up_arrow_head.png);
+	background-image: url(/assets/up_arrow_head.png);
 }
 
 th .desc {
-	background-image: url(../images/down_arrow_head.png);
+	background-image: url(/assets/down_arrow_head.png);
 }
 
 .trashIcon {
-	background-image: url(../images/trash.gif);
+	background-image: url(/assets/trash.gif);
 	width: 16px;
 	height: 16px;
 }
 
+.creditIcon{
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+	padding:0;
+}
+
 .xIcon {
-	background-image: url(../images/black_x_v1.png);
+	background-image: url(/assets/black_x_v1.png);
 	width: 16px;
 	height: 16px;
 }
 
 .editIcon {
-	background-image: url(../images/edit.gif);
+	background-image: url(/assets/edit.gif);
 	width: 16px;
 	height: 16px;
 }
 
 .showIcon {
-	background-image: url(../images/show.gif);
+	background-image: url(/assets/show.gif);
 	width: 16px;
 	height: 16px;
 }
@@ -802,11 +818,11 @@ th .desc {
 }
 
 .openTree {
-background: url(../images/down_arrow_head_sq.png) no-repeat left bottom;
+background: url(/assets/down_arrow_head_sq.png) no-repeat left bottom;
 }
 
 .closedTree {
-		background: url(../images/right_arrow_head_sq.png) no-repeat left bottom;
+		background: url(/assets/right_arrow_head_sq.png) no-repeat left bottom;
 }
 
 .hide_level_0, .hide_level_1,.hide_level_2, .hide_level_3, .hide_level_4, .hide_level_5, .hide_level_6, .hide_level_7, .hide_level_8, .hide_level_9, .hide_level_10, .hide_level_11, .hide_level_12 {
@@ -983,7 +999,7 @@ border-radius: 15px;
 }
 
 .bigRedButton{
-   background: url("../images/red_button_200_60.png") no-repeat scroll right top transparent;
+   background: url("/assets/red_button_200_60.png") no-repeat scroll right top transparent;
    color: #FFFFFF;
    display: block;
    font-size: 1.9em;
@@ -998,7 +1014,7 @@ border-radius: 15px;
 }
 
 a:hover.bigRedButton {
-   background: url("../images/red_button_hover_200_60.png") no-repeat scroll right top transparent;
+   background: url("/assets/red_button_hover_200_60.png") no-repeat scroll right top transparent;
 }
 
 a.bigRedButton {

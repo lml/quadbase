@@ -49,7 +49,7 @@ class QuestionTest < ActiveSupport::TestCase
   
   test "publish" do
     q = make_simple_question(:method => :create, :set_license => true)
-    u = Factory.create(:user)
+    u = FactoryGirl.create(:user)
     q.set_initial_question_roles(u)
     
     assert_nothing_raised(ActiveRecord::RecordInvalid) {q.publish!(u)}
@@ -65,13 +65,13 @@ class QuestionTest < ActiveSupport::TestCase
   
   test "can't publish because already published" do 
     q_pub = make_simple_question(:method => :create, :set_license => true, :published => :true)
-    q_pub.publish!(Factory.create(:user))
+    q_pub.publish!(FactoryGirl.create(:user))
     assert !q_pub.errors.empty?
   end
   
   test "can't publish because missing roles" do 
     q = make_simple_question()
-    u = Factory.create(:user)
+    u = FactoryGirl.create(:user)
     q.publish!(u)
     assert !q.errors.empty?
   end
@@ -94,9 +94,9 @@ class QuestionTest < ActiveSupport::TestCase
   
   test "has_all_roles" do
     q = make_simple_question
-    u = Factory.create(:user)
+    u = FactoryGirl.create(:user)
     
-    c = Factory.create(:question_collaborator, {:question => q, 
+    c = FactoryGirl.create(:question_collaborator, {:question => q, 
                                                 :user => u, 
                                                 :is_author => true,
                                                 :is_copyright_holder => true})
@@ -119,18 +119,22 @@ class QuestionTest < ActiveSupport::TestCase
   
   test "superseded" do 
     q1 = make_simple_question(:method => :build)
-    u = Factory.create(:user)
+    u = FactoryGirl.create(:user)
     q1.create!(u)
     q1.publish!(u)
+
+    assert q1.is_published?
     
     q2 = q1.new_version!(u)
     q3 = q1.new_version!(u)
-    
+
     assert !q2.superseded?
     
     sleep 1 #second
     q3.publish!(u)
-    
+
+    assert q3.is_published?
+
     assert q2.superseded?
   end
   
@@ -145,19 +149,19 @@ class QuestionTest < ActiveSupport::TestCase
   
   test "delete destroys appropriate assocs" do
     q = make_simple_question()
-    wq = Factory.create(:project_question, :question => q)
-    c = Factory.create(:question_collaborator, :question => q)
+    pq = FactoryGirl.create(:project_question, :question => q)
+    c = FactoryGirl.create(:question_collaborator, :question => q)
 
-    q.destroy
+    assert q.destroy
     assert_raise(ActiveRecord::RecordNotFound) { Question.find(q.id) }
 
     assert_raise(ActiveRecord::RecordNotFound) { QuestionCollaborator.find(c.id) }
-    assert_raise(ActiveRecord::RecordNotFound) { ProjectQuestion.find(wq.id) }
+    assert_raise(ActiveRecord::RecordNotFound) { ProjectQuestion.find(pq.id) }
   end
   
   test "create" do
     q = make_simple_question()
-    u = Factory.create(:user)
+    u = FactoryGirl.create(:user)
     
     q.create!(u)
     
@@ -170,7 +174,7 @@ class QuestionTest < ActiveSupport::TestCase
   
   test "new_derivation!" do
     q = make_simple_question(:set_license => true)
-    u = Factory.create(:user)
+    u = FactoryGirl.create(:user)
     q.create!(u)
     q.publish!(u)
     
@@ -190,7 +194,7 @@ class QuestionTest < ActiveSupport::TestCase
 
   test "copy_with_derivation" do
     q = make_simple_question(:set_license => true)
-    u = Factory.create(:user)
+    u = FactoryGirl.create(:user)
     q.create!(u)
     q.publish!(u)
     
@@ -205,7 +209,7 @@ class QuestionTest < ActiveSupport::TestCase
   
   test "new_version!" do
     q = make_simple_question(:set_license => true)
-    u = Factory.create(:user)
+    u = FactoryGirl.create(:user)
     q.create!(u)
     q.publish!(u)
     
@@ -223,31 +227,100 @@ class QuestionTest < ActiveSupport::TestCase
     #TODO test prior_version
   end
 
-  test 'question search' do
-    sq0 = Factory.create(:simple_question, :content => '')
-    sq1 = Factory.create(:simple_question, :content => 'This is in your project')
-    sq2 = Factory.create(:simple_question, :content => 'This is NOT in your project')
-    sq3 = Factory.create(:simple_question, :content => 'This is published', :version => '1.0')
-    sq4 = Factory.create(:simple_question, :content => 'This is published and in your project', :version => '1.0')
+  test 'id search' do
+    user = FactoryGirl.create(:user)
 
-    user = Factory.create(:user)
-    Factory.create(:project_question, :question => sq0,
-                   :project => Project.default_for_user!(user))
-    Factory.create(:project_question, :question => sq1,
-                   :project => Project.default_for_user!(user))
-    Factory.create(:project_question, :question => sq4,
+    sq0 = FactoryGirl.create(:simple_question, :content => 'This is in your project')
+
+    sq1 = make_simple_question(:set_license => true)
+    sq1.content = 'This is published (old version)'
+    sq1.create!(user)
+    sq1.publish!(user)
+    
+    sq2 = sq1.new_version!(user)
+    sq2.content = 'This is published (new version)'
+    sq2.publish!(user)
+    
+    FactoryGirl.create(:project_question, :question => sq0,
                    :project => Project.default_for_user!(user))
 
-    search0 = Question.search('All Questions', 'All Places', '', user)
-    search1 = Question.search('All Questions', 'Published Questions', '', user)
-    search2 = Question.search('All Questions', 'My Drafts', '', user)
-    search3 = Question.search('All Questions', 'My Projects', '', user)
-    search4 = Question.search('All Questions', 'All Places', 'not', user)
-    search5 = Question.search('All Questions', 'My Projects', 'this', user)
+    search0 = Question.search('All Questions', 'All Places', 'ID/Number', '', user)
+    search1 = Question.search('All Questions', 'All Places', 'ID/Number', "#{sq2.id}", user)
+    search2 = Question.search('All Questions', 'All Places', 'ID/Number', " #{sq2.id} ", user)
+    search3 = Question.search('All Questions', 'All Places', 'ID/Number', "d#{sq0.id}", user)
+    search4 = Question.search('All Questions', 'All Places', 'ID/Number', " d. #{sq0.id} ", user)
+    search5 = Question.search('All Questions', 'All Places', 'ID/Number', "q#{sq1.number}", user)
+    search6 = Question.search('All Questions', 'All Places', 'ID/Number', " q. #{sq1.number} ", user)
+    search7 = Question.search('All Questions', 'All Places', 'ID/Number', "q#{sq1.number}v#{sq1.version}", user)
+    search8 = Question.search('All Questions', 'All Places', 'ID/Number', " q. #{sq1.number}, v. #{sq1.version} ", user)
+    search9 = Question.search('All Questions', 'All Places', 'ID/Number', "q#{sq1.number}v", user)
+
+    assert search0.include?(sq0)
+    assert !search0.include?(sq1)
+    assert search0.include?(sq2)
+
+    assert !search1.include?(sq0)
+    assert !search1.include?(sq1)
+    assert search1.include?(sq2)
+
+    assert !search2.include?(sq0)
+    assert !search2.include?(sq1)
+    assert search2.include?(sq2)
+
+    assert search3.include?(sq0)
+    assert !search3.include?(sq1)
+    assert !search3.include?(sq2)
+
+    assert search4.include?(sq0)
+    assert !search4.include?(sq1)
+    assert !search4.include?(sq2)
+
+    assert !search5.include?(sq0)
+    assert !search5.include?(sq1)
+    assert search5.include?(sq2)
+
+    assert !search6.include?(sq0)
+    assert !search6.include?(sq1)
+    assert search6.include?(sq2)
+
+    assert !search7.include?(sq0)
+    assert search7.include?(sq1)
+    assert !search7.include?(sq2)
+
+    assert !search8.include?(sq0)
+    assert search8.include?(sq1)
+    assert !search8.include?(sq2)
+
+    assert !search9.include?(sq0)
+    assert !search9.include?(sq1)
+    assert !search9.include?(sq2)
+  end
+
+  test 'content search' do
+    sq0 = FactoryGirl.create(:simple_question, :content => '')
+    sq1 = FactoryGirl.create(:simple_question, :content => 'This is in your project')
+    sq2 = FactoryGirl.create(:simple_question, :content => 'This is NOT in your project')
+    sq3 = FactoryGirl.create(:simple_question, :content => 'This is published', :version => '1.0')
+    sq4 = FactoryGirl.create(:simple_question, :content => 'This is published and in your project', :version => '1.0')
+
+    user = FactoryGirl.create(:user)
+    FactoryGirl.create(:project_question, :question => sq0,
+                   :project => Project.default_for_user!(user))
+    FactoryGirl.create(:project_question, :question => sq1,
+                   :project => Project.default_for_user!(user))
+    FactoryGirl.create(:project_question, :question => sq4,
+                   :project => Project.default_for_user!(user))
+
+    search0 = Question.search('All Questions', 'All Places', 'Content', '', user)
+    search1 = Question.search('All Questions', 'Published Questions', 'Content', '', user)
+    search2 = Question.search('All Questions', 'My Drafts', 'Content', '', user)
+    search3 = Question.search('All Questions', 'My Projects', 'Content', '', user)
+    search4 = Question.search('All Questions', 'All Places', 'Content', 'not', user)
+    search5 = Question.search('All Questions', 'My Projects', 'Content', 'this', user)
 
     assert search0.include?(sq0)
     assert search0.include?(sq1)
-    assert search0.include?(sq2)
+    assert !search0.include?(sq2)
     assert search0.include?(sq3)
     assert search0.include?(sq4)
 
@@ -259,7 +332,7 @@ class QuestionTest < ActiveSupport::TestCase
 
     assert search2.include?(sq0)
     assert search2.include?(sq1)
-    assert search2.include?(sq2)
+    assert !search2.include?(sq2)
     assert !search2.include?(sq3)
     assert !search2.include?(sq4)
 
@@ -271,7 +344,7 @@ class QuestionTest < ActiveSupport::TestCase
 
     assert !search4.include?(sq0)
     assert !search4.include?(sq1)
-    assert search4.include?(sq2)
+    assert !search4.include?(sq2)
     assert !search4.include?(sq3)
     assert !search4.include?(sq4)
 
@@ -282,31 +355,31 @@ class QuestionTest < ActiveSupport::TestCase
     assert search5.include?(sq4)
   end
 
-  test 'simple question search' do
-    sq0 = Factory.create(:simple_question, :content => '')
-    sq1 = Factory.create(:simple_question, :content => 'This is in your project')
-    sq2 = Factory.create(:simple_question, :content => 'This is NOT in your project')
-    sq3 = Factory.create(:simple_question, :content => 'This is published', :version => '1.0')
-    sq4 = Factory.create(:simple_question, :content => 'This is published and in your project', :version => '1.0')
+  test 'simple question content search' do
+    sq0 = FactoryGirl.create(:simple_question, :content => '')
+    sq1 = FactoryGirl.create(:simple_question, :content => 'This is in your project')
+    sq2 = FactoryGirl.create(:simple_question, :content => 'This is NOT in your project')
+    sq3 = FactoryGirl.create(:simple_question, :content => 'This is published', :version => '1.0')
+    sq4 = FactoryGirl.create(:simple_question, :content => 'This is published and in your project', :version => '1.0')
 
-    user = Factory.create(:user)
-    Factory.create(:project_question, :question => sq0,
+    user = FactoryGirl.create(:user)
+    FactoryGirl.create(:project_question, :question => sq0,
                    :project => Project.default_for_user!(user))
-    Factory.create(:project_question, :question => sq1,
+    FactoryGirl.create(:project_question, :question => sq1,
                    :project => Project.default_for_user!(user))
-    Factory.create(:project_question, :question => sq4,
+    FactoryGirl.create(:project_question, :question => sq4,
                    :project => Project.default_for_user!(user))
 
-    search0 = Question.search('Simple Questions', 'All Places', '', user)
-    search1 = Question.search('Simple Questions', 'Published Questions', '', user)
-    search2 = Question.search('Simple Questions', 'My Drafts', '', user)
-    search3 = Question.search('Simple Questions', 'My Projects', '', user)
-    search4 = Question.search('Simple Questions', 'All Places', 'not', user)
-    search5 = Question.search('Simple Questions', 'My Projects', 'this', user)
+    search0 = Question.search('Simple Questions', 'All Places', 'Content', '', user)
+    search1 = Question.search('Simple Questions', 'Published Questions', 'Content', '', user)
+    search2 = Question.search('Simple Questions', 'My Drafts', 'Content', '', user)
+    search3 = Question.search('Simple Questions', 'My Projects', 'Content', '', user)
+    search4 = Question.search('Simple Questions', 'All Places', 'Content', 'not', user)
+    search5 = Question.search('Simple Questions', 'My Projects', 'Content', 'this', user)
 
     assert search0.include?(sq0)
     assert search0.include?(sq1)
-    assert search0.include?(sq2)
+    assert !search0.include?(sq2)
     assert search0.include?(sq3)
     assert search0.include?(sq4)
 
@@ -318,7 +391,7 @@ class QuestionTest < ActiveSupport::TestCase
 
     assert search2.include?(sq0)
     assert search2.include?(sq1)
-    assert search2.include?(sq2)
+    assert !search2.include?(sq2)
     assert !search2.include?(sq3)
     assert !search2.include?(sq4)
 
@@ -330,7 +403,7 @@ class QuestionTest < ActiveSupport::TestCase
 
     assert !search4.include?(sq0)
     assert !search4.include?(sq1)
-    assert search4.include?(sq2)
+    assert !search4.include?(sq2)
     assert !search4.include?(sq3)
     assert !search4.include?(sq4)
 
@@ -342,22 +415,22 @@ class QuestionTest < ActiveSupport::TestCase
   end
 
   test 'tag search' do
-    sq0 = Factory.create(:simple_question, :content => '')
-    sq1 = Factory.create(:simple_question, :content => 'This is in your project')
-    sq2 = Factory.create(:simple_question, :content => 'This is also in your project')
-    sq3 = Factory.create(:simple_question, :content => 'This is published and in your project', :version => '1.0')
-    sq4 = Factory.create(:simple_question, :content => 'This is also published and in your project', :version => '1.0')
+    sq0 = FactoryGirl.create(:simple_question, :content => '')
+    sq1 = FactoryGirl.create(:simple_question, :content => 'This is in your project')
+    sq2 = FactoryGirl.create(:simple_question, :content => 'This is also in your project')
+    sq3 = FactoryGirl.create(:simple_question, :content => 'This is published and in your project', :version => '1.0')
+    sq4 = FactoryGirl.create(:simple_question, :content => 'This is also published and in your project', :version => '1.0')
 
-    user = Factory.create(:user)
-    Factory.create(:project_question, :question => sq0,
+    user = FactoryGirl.create(:user)
+    FactoryGirl.create(:project_question, :question => sq0,
                    :project => Project.default_for_user!(user))
-    Factory.create(:project_question, :question => sq1,
+    FactoryGirl.create(:project_question, :question => sq1,
                    :project => Project.default_for_user!(user))
-    Factory.create(:project_question, :question => sq2,
+    FactoryGirl.create(:project_question, :question => sq2,
                    :project => Project.default_for_user!(user))
-    Factory.create(:project_question, :question => sq3,
+    FactoryGirl.create(:project_question, :question => sq3,
                    :project => Project.default_for_user!(user))
-    Factory.create(:project_question, :question => sq4,
+    FactoryGirl.create(:project_question, :question => sq4,
                    :project => Project.default_for_user!(user))
 
     tags = sq0.tag_list.concat(["Some Tag", "Another Tag"]).join(", ")
@@ -376,13 +449,13 @@ class QuestionTest < ActiveSupport::TestCase
     sq4.update_attribute(:tag_list, tags)
 
 
-    search0 = Question.search('Simple Questions', 'All Places', '%Tag', user)
-    search1 = Question.search('Simple Questions', 'Published Questions', 'Some Tag', user)
-    search2 = Question.search('Simple Questions', 'Published Questions', 'Another Tag', user)
-    search3 = Question.search('Simple Questions', 'My Drafts', 'Some Tag', user)
-    search4 = Question.search('Simple Questions', 'My Drafts', 'Another Tag', user)
-    search5 = Question.search('Simple Questions', 'My Projects', 'Some Tag', user)
-    search6 = Question.search('Simple Questions', 'My Projects', 'Another Tag', user)
+    search0 = Question.search('Simple Questions', 'All Places', 'Tags', '%Tag', user)
+    search1 = Question.search('Simple Questions', 'Published Questions', 'Tags', 'Some Tag', user)
+    search2 = Question.search('Simple Questions', 'Published Questions', 'Tags', 'Another Tag', user)
+    search3 = Question.search('Simple Questions', 'My Drafts', 'Tags', 'Some Tag', user)
+    search4 = Question.search('Simple Questions', 'My Drafts', 'Tags', 'Another Tag', user)
+    search5 = Question.search('Simple Questions', 'My Projects', 'Tags', 'Some Tag', user)
+    search6 = Question.search('Simple Questions', 'My Projects', 'Tags', 'Another Tag', user)
 
     assert search0.include?(sq0)
     assert search0.include?(sq1)
@@ -434,12 +507,12 @@ class QuestionTest < ActiveSupport::TestCase
     supporting = make_simple_question(:publish => true, :method => :create)
     supported = make_simple_question(:publish => false, :method => :create)
     
-    qdpr = Factory.create(:question_dependency_pair, 
+    qdpr = FactoryGirl.create(:question_dependency_pair, 
                           :independent_question => prereq, 
                           :dependent_question => dependent, 
                           :kind => "requirement")
     
-    qdps = Factory.create(:question_dependency_pair, 
+    qdps = FactoryGirl.create(:question_dependency_pair, 
                           :independent_question => supporting, 
                           :dependent_question => supported, 
                           :kind => "support")
@@ -456,9 +529,9 @@ class QuestionTest < ActiveSupport::TestCase
   end
 
   test 'get_lock' do
-    q = Factory.create(:simple_question)
-    u = Factory.create(:user)
-    u2 = Factory.create(:user)
+    q = FactoryGirl.create(:simple_question)
+    u = FactoryGirl.create(:user)
+    u2 = FactoryGirl.create(:user)
     assert !q.is_locked?
     assert !q.has_lock?(u)
     assert !q.has_lock?(u2)
@@ -473,9 +546,9 @@ class QuestionTest < ActiveSupport::TestCase
   end
 
   test 'check_and_unlock' do
-    q = Factory.create(:simple_question)
-    u = Factory.create(:user)
-    u2 = Factory.create(:user)
+    q = FactoryGirl.create(:simple_question)
+    u = FactoryGirl.create(:user)
+    u2 = FactoryGirl.create(:user)
     assert !q.is_locked?
     assert !q.has_lock?(u)
     assert !q.has_lock?(u2)
@@ -490,9 +563,9 @@ class QuestionTest < ActiveSupport::TestCase
   end
   
   test "has_role_permission_as_deputy" do
-    qc = Factory.create(:question_collaborator, :is_author => true)
-    dep_user = Factory.create(:user)
-    Factory.create(:deputization, :deputizer => qc.user, :deputy => dep_user)
+    qc = FactoryGirl.create(:question_collaborator, :is_author => true)
+    dep_user = FactoryGirl.create(:user)
+    FactoryGirl.create(:deputization, :deputizer => qc.user, :deputy => dep_user)
     
     assert !qc.user.deputies.empty?
     assert !dep_user.deputizers.empty?
@@ -503,7 +576,7 @@ class QuestionTest < ActiveSupport::TestCase
   
   test "blank setups removed on publish" do
     sq = make_simple_question(:method => :create, :no_setup => true)
-    u = Factory.create(:user)
+    u = FactoryGirl.create(:user)
     
     assert !sq.question_setup.nil?
     qs_id = sq.question_setup.id

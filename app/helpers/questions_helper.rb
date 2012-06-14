@@ -59,7 +59,21 @@ module QuestionsHelper
     end
     output
   end
-  
+
+  def check_credit_icon(credit)
+    partial_height = 16 - (16 *credit) + 6
+    output = content_tag(:div, image_tag("checkCredit.png", 
+      {:class => "creditIcon", :border => 0, :alt => "#{credit} / Check", 
+      :title => "#{credit} / Check"}), 
+      :style=>"position:absolute; background-color: white; 
+      height:#{partial_height}; color: white; line-height: 1; z-index: 2;")
+    output << content_tag(:div, image_tag("checkCredit.png", 
+      {:class => "creditIcon", :border => 0, :alt => "#{credit} / Check", 
+      :title => "#{credit} / Check"}), 
+      :style=>"position:absolute; background-color: green; 
+      height:22; color: white; line-height: 1; z-index: 1;")
+  end
+
   def example_problem(param)
     output = '<div class="exampleQuestion">'
     output << '<div class="questionBox quad-question" style="font-size:16px">'
