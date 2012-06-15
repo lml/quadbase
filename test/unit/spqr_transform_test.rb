@@ -108,7 +108,7 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 test "font_change" do
 	 	parser = SPQRParser.new
 	 	a = parser.font.parse('<font color="blue">blah</font>')
-	 	expected = "{:font=>{:content_f=>{:letters=>\"blah\"@19}}}"
+	 	expected = "{:font=>{:content_f=>[{:letters=>\"blah\"@19}]}}"
 	 	assert_equal expected, a.to_s
 	 end
 
@@ -208,6 +208,19 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 	assert_equal expected, output1
 	 end
 
-	 # test "less_than" do
-	 # end
+	 test "2tags" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('a<span class="comment"><img src="filename.jpg"></span>')
+	 	output1 = SPQRTransform.new.apply(a)
+	 	expected = "aMISSING IMAGE: filename.jpg"
+	 	assert_equal expected, output1
+	 end
+
+	 test "3tags" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('a<div class="four"><pre class="MATLAB"><i>&pi;</i></PRE></div>')
+	 	expected = "a$$'\pi'$$"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
 end

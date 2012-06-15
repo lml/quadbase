@@ -33,7 +33,7 @@ class SPQRParser < Parslet::Parser
 	rule(:extra)      { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\"|\_|\{|\}|=]/).repeat(1)}
 	rule(:font2)      { str(">")}
 	rule(:font_open)  { font1 >> extra.maybe >> font2 }
-	rule(:content_f)  { ( tags | format | letters | eol | new_p | greek | (punc.as(:any)) ).as(:content_f)  }
+	rule(:content_f)  { ( tags | format | letters | eol | new_p | greek | (punc.as(:any)) ).repeat.as(:content_f)  }
 	rule(:font_close) { str("</font>") | str("</FONT>") }
 	rule(:font)       { ( font_open >> content_f >> font_close ).as(:font) }
 
@@ -41,7 +41,7 @@ class SPQRParser < Parslet::Parser
 	rule(:pre1)      { str("<pre") | str("<PRE") }
 	rule(:pre2)      { str(">") }
 	rule(:pre_open)  { pre1 >> extra.maybe >> pre2 }
-	rule(:content_p) { ( tags | format | letters | eol | new_p | greek | (punc.as(:any)) ).as(:content_p) }
+	rule(:content_p) { ( tags | format | letters | eol | new_p | greek | (punc.as(:any)) ).repeat.as(:content_p) }
 	rule(:pre_close) { str("</pre>") | str("</PRE>") }
 	rule(:pre)       { ( pre_open >> content_p >> pre_close ).as(:pre) }
 
@@ -107,9 +107,9 @@ class SPQRTransform < Parslet::Transform
 	rule(:ttype => simple(:ttype))         {"$"}
 	rule(:para => simple(:para))           {"\n\n"}
 	rule(:eol => simple(:eol))             { eol }
-	rule(:content_f => simple(:content_f)) {"!!" + content_f + "!!"}
+	rule(:content_f => sequence(:content_f)) {"!!" + content_f.join + "!!"}
 	rule(:font => simple(:font))           { font }
-	rule(:content_p => simple(:content_p)) {"$$" + content_p + "$$"}
+	rule(:content_p => sequence(:content_p)) {"$$" + content_p.join + "$$"}
 	rule(:pre => simple(:pre))             { pre }
 	rule(:content => sequence(:content))   { content.join}
 	rule(:span => simple(:span))           { span }
