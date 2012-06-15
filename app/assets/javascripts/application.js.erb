@@ -31,7 +31,7 @@ function remove_fields(link) {
 
 function add_fields(elem_to_append_to, association, content) {
   var new_id = new Date().getTime();
-  var regexp = new RegExp("new_" + association + "|tid|fid", "g");
+  var regexp = new RegExp("new_" + association + "|tid|rid", "g");
   $(elem_to_append_to).append(content.replace(regexp, new_id));
 }
 
