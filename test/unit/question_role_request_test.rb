@@ -17,13 +17,17 @@ class QuestionRoleRequestTest < ActiveSupport::TestCase
   test "duplicate requests for same toggle not allowed" do
     qc = Factory.create(:question_collaborator)
 
-    Factory.create(:question_role_request, :toggle_is_author => true, :question_collaborator => qc)
+    assert_nothing_raised {
+      Factory.create(:question_role_request, :toggle_is_author => true, :question_collaborator => qc)
+    }
 
     assert_raise(ActiveRecord::RecordInvalid) {
       Factory.create(:question_role_request, :toggle_is_author => true, :question_collaborator => qc)
     }
     
-    Factory.create(:question_role_request, :toggle_is_copyright_holder => true, :question_collaborator => qc)
+    assert_nothing_raised {
+      Factory.create(:question_role_request, :toggle_is_copyright_holder => true, :question_collaborator => qc)
+    }
     
     assert_raise(ActiveRecord::RecordInvalid) {
       Factory.create(:question_role_request, :toggle_is_copyright_holder => true, :question_collaborator => qc)

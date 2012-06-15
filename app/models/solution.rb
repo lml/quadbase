@@ -21,7 +21,7 @@ class Solution < ActiveRecord::Base
   attr_accessible :content, :explanation, :is_visible
   
   scope :visible_for, lambda { |user|
-    where(:creator_id.eq % user.id | :is_visible.eq % true)
+    where{(creator_id == user.id) | (is_visible == true)}
   }
   
   before_save :auto_subscribe
