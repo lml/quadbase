@@ -11,10 +11,14 @@ class SPQRParser < Parslet::Parser
 		super(str)
 	end
 	#Check for accompanying images
-	rule(:filename)        { match(/[a-z|0-9|\/|\-|\.|\?|\\\n\t\s]/).repeat(1).as(:filename) }
-	rule(:image_start_tag) { str('<img src="') }
-	rule(:image_end_tag)   { str('">') }
-	rule(:image)           { (image_start_tag >> ( filename >> image_end_tag ).repeat(1)).as(:image) }
+	rule(:file)            { space? >> str('src="') >> name >> str('"') }
+	rule(:name)            { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\_|\{|\}|=]/).repeat(1).as(:filename) }
+	rule(:image_start_tag) { str('<img') | str("<IMG") }
+	rule(:image_end_tag)   { str('>') }
+	rule(:quote)           { str('"')}
+	rule(:attribute_con)   { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\_|\{|\}|=]/)}
+	rule(:attribute)       { attribute_con >> quote >> attribute_con >> quote }
+	rule(:image)           { (image_start_tag >> space? >> (( file | attribute ).repeat(1)) >> space? >> image_end_tag.maybe ).as(:image) }
 
 	#Check for formatting
 	rule(:italic_tag) { (str("<i>") | str("</i>") | str("<I>") | str("</I>")).as(:italic) }
@@ -22,15 +26,37 @@ class SPQRParser < Parslet::Parser
 	rule(:line_break) { (str("<br>") | str("<BR>")).as(:line_break) }
 	rule(:tt_tag)     { (str("<tt>") | str("</tt>") | str("<TT>") | str("</TT>")).as(:ttype)}
 	rule(:new_p)      { (str("<p>") | str("</p>") | str("<P>") | str("</P>")).as(:para)}
+	rule(:center)     { (str("<center>") | str("</center>") | str("<CENTER>") | str("</CENTER>")).as(:center)}
 
 	#Check for any font changes
-	rule(:font1)     { str("<font")}
-	rule(:extra_f)   { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\"|=]/).repeat(1)}
-	rule(:font2)     { str(">")}
-	rule(:font_open) { (font1 >> (extra_f >> font2).repeat(1)) }
-	rule(:content_f) { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\"|=]/).repeat(1).as(:content_f) }
-	rule(:font_close) { str("</font>") }
-	rule(:font)       { ( font_open >> (content_f >> font_close).repeat(1) ).as(:font) }
+	rule(:font1)      { str("<font") | str("<FONT") }
+	rule(:extra)      { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\"|\_|\{|\}|=]/).repeat(1)}
+	rule(:font2)      { str(">")}
+	rule(:font_open)  { font1 >> extra >> font2 }
+	rule(:content_f)  { text.as(:content_f) }
+	rule(:font_close) { str("</font>") | str("</FONT>") }
+	rule(:font)       { ( font_open >> ( content_f ).repeat ).as(:font) }
+
+	#Check for any special display classes
+	rule(:pre1)      { str("<pre") | str("<PRE") }
+	rule(:pre2)      { str(">") }
+	rule(:pre_open)  { pre1 >> extra >> pre2 }
+	rule(:content_p) { text.as(:content_p) }
+	rule(:pre_close) { str("</pre>") | str("</PRE>") }
+	rule(:pre)       { ( pre_open >> ( content_p ).repeat ).as(:pre) }
+
+	rule(:span1)      { str("<span") | str("<SPAN") }
+	rule(:span2)      { str(">") }
+	rule(:span_open)  { span1 >> extra >> span2 }
+	rule(:content)    { text.as(:content) }
+	rule(:span_close) { str("</span>") | str("</SPAN>") }
+	rule(:span)       { ( span_open >> ( content ).repeat ).as(:span) }
+
+	rule(:div1)      { str("<div") | str("<DIV") }
+	rule(:div2)      { str(">") }
+	rule(:div_open)  { div1 >> extra >> div2 }
+	rule(:div_close) { str("</div>") | str("</DIV>") }
+	rule(:div)       { ( div_open >> ( content ).repeat ).as(:div)}
 
 	#Greek letters
 	rule(:phi)   { str("&phi;").as(:phi) }
@@ -40,7 +66,7 @@ class SPQRParser < Parslet::Parser
 
 	#Superscripts and Subscripts
 	rule(:sub1) { str("<sub>") | str("<SUB>") }
-	rule(:con) { match(/[a-z|A-Z|0-9]/).repeat(1).as(:con) }
+	rule(:con)  { match(/[a-z|A-Z|0-9]/).repeat(1).as(:con) }
 	rule(:sub2) { str("</sub>") | str("</SUB>") }
 	rule(:sub)  { sub1 >> (con | greek).as(:sub) >> sub2 }
 	rule(:sup1) { str("<sup>") | str("<SUP>") }
@@ -61,9 +87,10 @@ class SPQRParser < Parslet::Parser
 	rule(:fnof)    { str("&fnof;").as(:fnof) }
 
 	#Grammar parts
-	rule(:format) { italic_tag | bold_tag | line_break | tt_tag | font | fnof | sub | sup }
-	rule(:text)   { ( image | format | letters | eol | new_p | greek | (any.as(:any)) ).repeat(1) }
-	rule(:ques)   { text.repeat(1).as(:text) }
+	rule(:tags)   { font | font_close | pre | pre_close | span | span_close | div | div_close | image }
+	rule(:format) { italic_tag | bold_tag | line_break | tt_tag | fnof | sub | sup }
+	rule(:text)   { ( tags | format | letters | eol | new_p | greek | (any.as(:any)) ).repeat(1) }
+	rule(:ques)   { text.repeat.as(:text) }
 
 	rule(:expression) { ques }
 	root :expression
@@ -80,6 +107,8 @@ class SPQRTransform < Parslet::Transform
 	rule(:eol => simple(:eol))             { eol }
 	rule(:content_f => simple(:content_f)) {"!!" + content_f + "!!"}
 	rule(:font => sequence(:font))         {"#{font[0].to_s}"}
+	rule(:content_p => simple(:content_p)) {"$$" + content_p + "$$"}
+	rule(:pre => sequence(:pre))           {"#{pre[0].to_s}"}
 	rule(:phi => simple(:phi))             {"\phi"}
 	rule(:pi => simple(:pi))               {"\pi"}
 	rule(:omega => simple(:omega))         {"\omega"}
