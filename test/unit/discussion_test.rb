@@ -16,7 +16,6 @@ class DiscussionTest < ActiveSupport::TestCase
   end
   
   test "gets user's subsciptions'" do
-    
     #discussions = Discussion.discussions_for(@user)
     #assert discussions.count == 0
   end
