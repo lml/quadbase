@@ -9,7 +9,7 @@ class QuestionRoleRequest < ActiveRecord::Base
   validate :valid_request
 
   scope :for_question, lambda { |question|
-    joins(:question_collaborator).where(:question_collaborators => {:question_id => question.id})
+    joins{question_collaborator}.where{question_collaborators.question_id == question.id}
   }
 
   attr_accessible :question_collaborator, :toggle_is_author, :toggle_is_copyright_holder,
@@ -17,6 +17,11 @@ class QuestionRoleRequest < ActiveRecord::Base
   
   before_create :autoset_approved_and_accepted
   after_create :execute_if_ready!
+
+  def initialize(attributes = nil, options = {})
+    @has_been_executed = false
+    super(attributes, options)
+  end
   
   def self.approvable_by(user)
     # TODO the implementation below is not efficient.  There must be some cool 
@@ -184,7 +189,7 @@ class QuestionRoleRequest < ActiveRecord::Base
   
 protected
 
-  attr_accessor_with_default :has_been_executed, false
+  attr_accessor :has_been_executed
 
   def execute!
     qc = question_collaborator
@@ -209,9 +214,9 @@ protected
   end
 
   def no_duplicate_requests
-    return if !QuestionRoleRequest.where(:question_collaborator_id => question_collaborator_id,
-                                    :toggle_is_author => toggle_is_author,
-                                    :toggle_is_copyright_holder => toggle_is_copyright_holder).any?
+    return if !QuestionRoleRequest.where{(question_collaborator_id == my{question_collaborator_id}) &\
+                                         (toggle_is_author == my{toggle_is_author}) &\
+                                         (toggle_is_copyright_holder == my{toggle_is_copyright_holder})}.any?
     errors.add(:base, "That request has already been made.")
     false
   end

@@ -11,7 +11,6 @@ class AttachableAssetsController < ApplicationController
     
     original_filename = params[:attachable_asset][:asset_attributes][:attachment].original_filename
     corrected_content_type = MIME::Types.type_for(original_filename.to_s).first
-    
     params[:attachable_asset][:asset_attributes][:attachment].content_type = corrected_content_type
 
     @attachable_asset = AttachableAsset.new(params[:attachable_asset])
@@ -27,7 +26,7 @@ class AttachableAssetsController < ApplicationController
            render :text => @attachable_asset.id
          }
       else
-        logger.debug(@attachable_asset.errors.inspect)
+        logger.debug {@attachable_asset.errors.inspect}
         format.json { render :json => @attachable_asset.errors, :status => :unprocessable_entity }
       end
     end
@@ -56,7 +55,7 @@ class AttachableAssetsController < ApplicationController
                        end }
          format.js
       else
-        logger.debug(@attachable_asset.errors.inspect)
+        logger.debug {@attachable_asset.errors.inspect}
         format.json { render :json => @attachable_asset.errors, :status => :unprocessable_entity }
       end
     end

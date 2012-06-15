@@ -3,7 +3,8 @@
 
 <%
   @type ||= 'All Questions'
-  @where ||= 'All Places'
+  @location ||= 'All Places'
+  @part ||= 'Content'
   @query ||= ''
   @per_page ||= 20
   question_form_action ||= nil
@@ -17,6 +18,7 @@
   type_options.delete(exclude_type)
   locations = ['All Places', 'Published Questions']
   locations.push('My Drafts', 'My Projects') if user_signed_in?
+  parts = ['ID/Number', 'Content', 'Author/Copyright Holder', 'Tags']
 %>
 <%= form_tag(questions_search_path, 
              :method => :get,
@@ -26,20 +28,28 @@
   <%= hidden_field_tag :per_page, @per_page %>
   <%= hidden_field_tag :exclude_type, exclude_type %>
   
-  <table width="100%" align="center">
+  <table width="100%">
     <tr>
-      <td><%= label_tag 'Search For:' %></td>
-      <td>
-        <%= select_tag 'type', 
-                       options_for_select(type_options, @type) %>
-      </td>
-      <td><%= label_tag 'in:' %></td>
-      <td>
-        <%= select_tag 'where', options_for_select(locations, @where) %>
-      </td>
-      <td><%= label_tag 'containing:' %></td>
-      <td><%= text_field_tag 'query', @query %></td>
-      <td><%= submit_tag 'Search', :class => "#{submit_classes}" %></td>
+      <td><%= label_tag 'Search for' %>&nbsp;</td>
+      <td><%= text_field_tag 'query', @query, :style => "width: 90%;" %>&nbsp;</td>
+
+      <td>&nbsp;<%= label_tag 'in' %>&nbsp;</td>
+      <td><%= select_tag 'part', options_for_select(parts, @part), :style => "width: 90%;" %></td>
+
+      <td rowspan="3" style="vertical-align:middle;"><%= submit_tag 'Search', :class => "#{submit_classes}" %></td>
+
+    </tr>
+    <tr>
+      <td colspan="4"><hr style="float:left; width: 97%; color: lightgray; background-color: lightgray;" /></td>
+    </tr>
+    <tr>
+
+      <td><%= label_tag 'Restrict to' %>&nbsp;</td>
+      <td><%= select_tag 'type', options_for_select(type_options, @type), :style => "width: 90%;" %></td>
+
+      <td>&nbsp;<%= label_tag 'in' %>&nbsp;</td>
+      <td><%= select_tag 'location', options_for_select(locations, @location), :style => "width: 90%;" %></td>
+
     </tr>
   </table>
 <% end %>

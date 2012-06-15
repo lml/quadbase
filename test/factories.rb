@@ -4,6 +4,11 @@
 # For http://apidock.com/rails/ActionDispatch/TestProcess/fixture_file_upload
 include ActionDispatch::TestProcess
 
+# Workaround to make fixture_file_upload work in Rails 3.2
+def (self.class).fixture_path
+  "#{::Rails.root}/test/fixtures/"
+end
+
 ###############################################################################
 #
 # Common sequences and helpers
@@ -20,7 +25,7 @@ end
 Factory.sequence :unique_number do |n| n end
 
 Factory.sequence :email_suffix do |n|
-  "#{ActiveSupport::SecureRandom.hex(6)}#{n}@example.com"
+  "#{SecureRandom.hex(6)}#{n}@example.com"
 end
 
 def next_email(first_name, last_name)
@@ -32,7 +37,7 @@ end
 def unique_username(first_name, last_name)
   first_name_s = first_name.gsub(/\W/, '')
   last_name_s = first_name.gsub(/\W/, '')
-  "#{first_name_s[0,3]}#{last_name_s[0,4]}" + "#{ActiveSupport::SecureRandom.hex(4)}"
+  "#{first_name_s[0,3]}#{last_name_s[0,4]}" + "#{SecureRandom.hex(4)}"
 end
 
 Factory.sequence :password do |n|
