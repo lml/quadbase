@@ -9,10 +9,7 @@
     </span>
     <% # Couldn't get the buttons to be checked on load without manually %>
     <% # checking the status %>
-    <% credit = f.object.credit %>
-    <% if credit.nil? %>
-    <% credit = 0 %>
-    <% end %>
+    <% credit = f.object.credit || 0 %>
     <% @id = (@id ||= 0) + 1 %>
     <div class = "marked">
       <%= f.radio_button :credit, '1', {:checked => credit == 1,

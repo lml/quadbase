@@ -113,9 +113,7 @@
       <% id_number = 0 %>
       <% if !params[:question].nil? %>
 	 <% params[:question][:answer_choices_attributes].each do |k, v| %>
-	 <% if !v[:credit].nil? %>
-	   <% credit = v[:credit] || '' %>
-	 <% end %>
+	 <% credit = v[:credit] || '' %>
 	 <% id_number = id_number + 1 %>
 	 <% if credit != '0' && credit != '1'%>
 	   <script type="text/javascript">
