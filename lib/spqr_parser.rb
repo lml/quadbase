@@ -8,7 +8,7 @@ require 'parslet/convenience'
 
 class SPQRParser < Parslet::Parser
 	def parse(str)
-		super(str)
+		a = super(str)
 	end
 	#Check for accompanying images
 	rule(:file)            { space? >> str('src="') >> name >> str('"') }
@@ -32,31 +32,31 @@ class SPQRParser < Parslet::Parser
 	rule(:font1)      { str("<font") | str("<FONT") }
 	rule(:extra)      { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\"|\_|\{|\}|=]/).repeat(1)}
 	rule(:font2)      { str(">")}
-	rule(:font_open)  { font1 >> extra >> font2 }
-	rule(:content_f)  { text.as(:content_f) }
+	rule(:font_open)  { font1 >> extra.maybe >> font2 }
+	rule(:content_f)  { ( tags | format | letters | eol | new_p | greek | (punc.as(:any)) ).as(:content_f)  }
 	rule(:font_close) { str("</font>") | str("</FONT>") }
-	rule(:font)       { ( font_open >> ( content_f ).repeat ).as(:font) }
+	rule(:font)       { ( font_open >> content_f >> font_close ).as(:font) }
 
 	#Check for any special display classes
 	rule(:pre1)      { str("<pre") | str("<PRE") }
 	rule(:pre2)      { str(">") }
-	rule(:pre_open)  { pre1 >> extra >> pre2 }
-	rule(:content_p) { text.as(:content_p) }
+	rule(:pre_open)  { pre1 >> extra.maybe >> pre2 }
+	rule(:content_p) { ( tags | format | letters | eol | new_p | greek | (punc.as(:any)) ).as(:content_p) }
 	rule(:pre_close) { str("</pre>") | str("</PRE>") }
-	rule(:pre)       { ( pre_open >> ( content_p ).repeat ).as(:pre) }
+	rule(:pre)       { ( pre_open >> content_p >> pre_close ).as(:pre) }
 
 	rule(:span1)      { str("<span") | str("<SPAN") }
 	rule(:span2)      { str(">") }
-	rule(:span_open)  { span1 >> extra >> span2 }
-	rule(:content)    { text.as(:content) }
+	rule(:span_open)  { span1 >> extra.maybe >> span2 }
+	rule(:content)    { ( tags | format | letters | eol | new_p | greek | (punc.as(:any)) ).repeat.as(:content) }
 	rule(:span_close) { str("</span>") | str("</SPAN>") }
-	rule(:span)       { ( span_open >> ( content ).repeat ).as(:span) }
+	rule(:span)       { ( span_open >>  content >> span_close ).as(:span) }
 
 	rule(:div1)      { str("<div") | str("<DIV") }
 	rule(:div2)      { str(">") }
-	rule(:div_open)  { div1 >> extra >> div2 }
+	rule(:div_open)  { div1 >> extra.maybe >> div2 }
 	rule(:div_close) { str("</div>") | str("</DIV>") }
-	rule(:div)       { ( div_open >> ( content ).repeat ).as(:div)}
+	rule(:div)       { ( div_open >>  content >> div_close ).as(:div)}
 
 	#Greek letters
 	rule(:phi)   { str("&phi;").as(:phi) }
@@ -87,8 +87,9 @@ class SPQRParser < Parslet::Parser
 	rule(:fnof)    { str("&fnof;").as(:fnof) }
 
 	#Grammar parts
-	rule(:tags)   { font | font_close | pre | pre_close | span | span_close | div | div_close | image }
-	rule(:format) { italic_tag | bold_tag | line_break | tt_tag | fnof | sub | sup }
+	rule(:punc)   { match(/[^<]/) }
+	rule(:tags)   { font | pre | span | div | image }
+	rule(:format) { italic_tag | bold_tag | line_break | tt_tag | fnof | sub | sup | center }
 	rule(:text)   { ( tags | format | letters | eol | new_p | greek | (any.as(:any)) ).repeat(1) }
 	rule(:ques)   { text.repeat.as(:text) }
 
@@ -99,6 +100,7 @@ end
 #class UnavailableImage < StandardError; end
 
 class SPQRTransform < Parslet::Transform
+	rule(:center => simple(:center))       {}
 	rule(:italic => simple(:italic))       {"'"}
 	rule(:bold => simple(:bold))           {"!!"}
 	rule(:line_break => simple(:break))    {"\n"}
@@ -106,9 +108,12 @@ class SPQRTransform < Parslet::Transform
 	rule(:para => simple(:para))           {"\n\n"}
 	rule(:eol => simple(:eol))             { eol }
 	rule(:content_f => simple(:content_f)) {"!!" + content_f + "!!"}
-	rule(:font => sequence(:font))         {"#{font[0].to_s}"}
+	rule(:font => simple(:font))           { font }
 	rule(:content_p => simple(:content_p)) {"$$" + content_p + "$$"}
-	rule(:pre => sequence(:pre))           {"#{pre[0].to_s}"}
+	rule(:pre => simple(:pre))             { pre }
+	rule(:content => sequence(:content))   { content.join}
+	rule(:span => simple(:span))           { span }
+	rule(:div => simple(:div))             { div }
 	rule(:phi => simple(:phi))             {"\phi"}
 	rule(:pi => simple(:pi))               {"\pi"}
 	rule(:omega => simple(:omega))         {"\omega"}
