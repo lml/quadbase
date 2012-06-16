@@ -341,7 +341,7 @@ class Question < ActiveRecord::Base
   end
   
   def is_multipart?
-    false
+    question_type == "MultipartQuestion"
   end
   
   def modified_at

@@ -4,4 +4,5 @@
 <%= pageHeading("Attribution") %>
 
 <%= render :partial => 'project_questions/attribution',
-           :locals => {:question_ids => @question_ids} %>
+           :locals => {:question_ids => @question_ids,
+                        :first_call => true} %>

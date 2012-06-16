@@ -20,6 +20,15 @@ Licensed under <%= question.license_id.nil? ? "[unspecified]" : link_to(question
   <br/>Derived from <%= question_id_link(source_question) %> by 
   <%= collaborator_names(source_collaborators.select{|c| c.is_author}) %>.
 <% end %>
+
+<% if question.is_multipart?%>
+    <% question.child_question_parts.each do |cq| %>
+      <br/>--> <%= render :partial => 'project_questions/attribution',
+                          :locals => {:question_ids => [cq.child_question_id],
+                                      :first_call => false} %>
+    <% end %>
+  <% end %>
+
 <% if question.is_published? %>
   <%= link_to "Version History", 
         question_history_path(question) %>.

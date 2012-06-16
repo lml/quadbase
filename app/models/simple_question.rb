@@ -46,6 +46,7 @@ class SimpleQuestion < Question
     super(variator)
     answer_choices.each {|ac| ac.variate!(variator)}
   end
+
   
 protected
   
