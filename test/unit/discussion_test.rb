@@ -9,17 +9,20 @@ class DiscussionTest < ActiveSupport::TestCase
     @user = Factory.create(:user)
     @user2 = Factory.create(:user)
     
-    @comment_thread = Factory.create(:comment_thread)
-    @comment_thread2 = Factory.create(:comment_thread)
+    @discussion = Factory.create(:discussion)
+    @comment_thread = @discussion.comment_thread
     @comment_thread.subscribe!(@user)
-    @comment_thread2.subscribe!(@user)
+
   end
   
-  test "gets user's subsciptions'" do
-    #discussions = Discussion.discussions_for(@user)
-    #assert discussions.count == 0
+  test "gets user's subsciptions" do
+    discussions = Discussion.discussions_for(@user)
+    assert discussions.count == 1
+    assert discussions.last == @discussion
   end
   
-  
+  test "gets subject" do
+    assert @discussion.subject != nil
+  end
   
 end
