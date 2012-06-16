@@ -6,6 +6,6 @@
 <% @use_columns = false %>
 
 <%= render :partial => 'questions/list', 
-           :locals => {:entries => @questions } %>
+           :locals => {:entries => @questions, :checkbox => nil } %>
 
 <%= will_paginate @questions %>

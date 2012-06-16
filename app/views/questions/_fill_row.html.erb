@@ -11,6 +11,8 @@ render  :partial => 'questions/fill_row',
                     :checkbox_options => {:method_for_value => "id",
                                           :name_base => "project_question_ids"}
                    }
+                   
+    This partial will fill out a row of information for 1 question.
 %> 
 
 <tr id="<%= row_id_base + question.id.to_s %>"%>
