@@ -269,6 +269,8 @@ end
 
 Factory.define :discussion do |f|
   f.subject {Factory.next :content}
+  f.body {Factory.next :content}
+  f.association :comment_thread
 end
 
 Factory.define :deputization do |f|

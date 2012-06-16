@@ -4,25 +4,31 @@
 require 'test_helper'
 
 class DiscussionTest < ActiveSupport::TestCase
-  
-  setup do
-    @user = Factory.create(:user)
-    @user2 = Factory.create(:user)
-    
-    @discussion = Factory.create(:discussion)
-    @comment_thread = @discussion.comment_thread
-    @comment_thread.subscribe!(@user)
 
+  test "cannot mass-assign comment_thread, subject, body" do
+    ct = Factory.create(:comment_thread)
+    d = Discussion.new(:comment_thread => ct, :subject => 'head', :body => 'bod')
+    assert d.comment_thread != ct
+    assert d.subject != 'head'
+    assert d.body != 'bod'
   end
   
-  test "gets user's subsciptions" do
-    discussions = Discussion.discussions_for(@user)
-    assert discussions.count == 1
-    assert discussions.last == @discussion
+  test "should have a recipient when subscribed" do
+    discussion = Factory.create(:discussion)
+    user = Factory.create(:user)
+    discussion.comment_thread.subscribe!(user)
+    assert discussion.has_recipient?(user)
   end
   
-  test "gets subject" do
-    assert @discussion.subject != nil
+  test "should delete discussion when no recipients are left" do
+    discussion = Factory.create(:discussion)
+    user = Factory.create(:user)
+    ct = discussion.comment_thread
+    ct.subscribe!(user)
+    assert discussion.has_recipient?(user)
+    
+    ct.unsubscribe!(user)
+    assert_raise(ActiveRecord::RecordNotFound) { Discussion.find(discussion.id) }
   end
   
 end
