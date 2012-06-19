@@ -7,7 +7,7 @@ Quadbase
 [![Build Status](https://secure.travis-ci.org/lml/quadbase.png)](http://travis-ci.org/lml/quadbase)
 
 Quadbase is an open homework and test question bank, where questions are written 
-by the community and access is free.  
+by the community and access is free.
 
 Check it out at http://quadbase.org
 
@@ -29,19 +29,19 @@ See the COPYRIGHT and LICENSING files.
 Contributing
 ------------
 
-Contributions to Quadbase are definitely welcome.  
+Contributions to Quadbase are definitely welcome.
 
 Note that like a bunch of other orgs (Apache, Sun, etc), we require contributors
 to sign and submit a Contributor Agreement.  The Rice University Contributor Agreement
 (RCA) gives Rice and you the contributor joint copyright interests in the code or
 other contribution.  The contributor retains copyrights while also granting those 
-rights to Rice as the project sponsor.   
+rights to Rice as the project sponsor.
 
 The RCA can be submitted for acceptance by emailing a scanned, completed, signed copy
 to info@[the quadbase domain].  Only scans of physically signed documents will be accepted.
 No electronically generated 'signatures' will be accepted.
 
-Here's how to contribute to Quadbase:  
+Here's how to contribute to Quadbase:
 
 1. Send us a completed Rice Contributor Agreement
    * Download it from http://quadbase.org/rice_university_contributor_agreement_v1.pdf
@@ -76,14 +76,14 @@ native tools.
 
 ### Install everything yourself
 
-The best way to go is to install RVM on your machine.  Install Ruby 1.9.2 (e.g. `rvm install 1.9.2-p290`)
+The best way to go is to install RVM on your machine.  Install Ruby 1.9.3 (e.g. `rvm install 1.9.3-p194`)
 and install the bundler gem.  You may run into some issues where you need to install some supplemental
 libraries first.  The question logic capability uses jruby under the covers, so you should also install
 jruby through rvm (`rvm install jruby`).
 
 When you have RVM and bundler, fork the code and change into the quadbase directory.  We have a 
-.rvmrc file in the top-level directory so RVM should setup things to use Ruby 1.9.2 and the 
-quadbase gemset.  
+.rvmrc file in the top-level directory so RVM should setup things to use Ruby 1.9.3 and the 
+quadbase gemset.
 
     bundle --without production
     bundle exec rake db:migrate
@@ -94,6 +94,10 @@ in config/developer_settings.yml.  Check out the developer_settings.yml.example 
 
 That's it.  You should then be able to point a web browser to http://localhost:3000.
 
-        
+### Dependencies
 
+- Ruby 1.9.3 (ruby-1.9.3-p194)
+- Rails 3.2.4
+- JRuby (jruby-1.6.7.2) for questions with logic
+- ImageMagick for image uploads
 
