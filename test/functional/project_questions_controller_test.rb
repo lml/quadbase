@@ -5,19 +5,19 @@ require 'test_helper'
 
 class ProjectQuestionsControllerTest < ActionController::TestCase
   setup do
-    @user = Factory.create(:user)
-    @question = Factory.create(:simple_question)
-    @question2 = Factory.create(:simple_question)
+    @user = FactoryGirl.create(:user)
+    @question = FactoryGirl.create(:simple_question)
+    @question2 = FactoryGirl.create(:simple_question)
     @project = Project.default_for_user!(@user)
-    @project_question = Factory.create(:project_question, :project => @project, :question => @question)
-    @project_question2 = Factory.create(:project_question, :project => @project, :question => @question2)
+    @project_question = FactoryGirl.create(:project_question, :project => @project, :question => @question)
+    @project_question2 = FactoryGirl.create(:project_question, :project => @project, :question => @question2)
     @published_question = make_simple_question(:method => :create, :published => true)
-    @published_project_question = Factory.create(:project_question,
+    @published_project_question = FactoryGirl.create(:project_question,
                                                    :question => @published_question)
   end
 
   test "should not move project_question not logged in" do
-    project = Factory.create(:project, :members => [@user])
+    project = FactoryGirl.create(:project, :members => [@user])
     assert @project.has_question?(@question)
     assert !project.has_question?(@question)
     put :move, :project_id => @project.to_param,
@@ -30,7 +30,7 @@ class ProjectQuestionsControllerTest < ActionController::TestCase
 
   test "should not move project_question not authorized" do
     user_login
-    project = Factory.create(:project, :members => [@user])
+    project = FactoryGirl.create(:project, :members => [@user])
     assert @project.has_question?(@question)
     assert !project.has_question?(@question)
     put :move, :project_id => @project.to_param,
@@ -43,7 +43,7 @@ class ProjectQuestionsControllerTest < ActionController::TestCase
 
   test "should move project_question" do
     sign_in @user
-    project = Factory.create(:project, :members => [@user])
+    project = FactoryGirl.create(:project, :members => [@user])
     assert @project.has_question?(@question), "a"
     assert !project.has_question?(@question), "b"
     put :move, :project_id => @project.to_param,
@@ -56,7 +56,7 @@ class ProjectQuestionsControllerTest < ActionController::TestCase
   end
 
   test "should not copy project_question not logged in" do
-    project = Factory.create(:project, :members => [@user])
+    project = FactoryGirl.create(:project, :members => [@user])
     assert !project.has_question?(@question)
     assert_difference('project.project_questions.count', 0) do
       put :copy, :project_id => @project.to_param,
@@ -69,7 +69,7 @@ class ProjectQuestionsControllerTest < ActionController::TestCase
 
   test "should not copy project_question not authorized" do
     user_login
-    project = Factory.create(:project, :members => [@user])
+    project = FactoryGirl.create(:project, :members => [@user])
     assert !project.has_question?(@question)
     assert_difference('project.project_questions.count', 0) do
       put :copy, :project_id => @project.to_param,
@@ -82,7 +82,7 @@ class ProjectQuestionsControllerTest < ActionController::TestCase
 
   test "should copy project_question" do
     sign_in @user
-    project = Factory.create(:project, :members => [@user])
+    project = FactoryGirl.create(:project, :members => [@user])
     assert !project.has_question?(@question)
     assert_difference('project.project_questions.count', 1) do
       put :copy, :project_id => @project.to_param,

@@ -101,7 +101,7 @@
            style="<%= @question.logic.empty? ? 'display:none;' : '' %>">Question Text</div>
     
       <div class="field">
-        <%= f.text_area :content, :rows => 8, :class => "mark_it_up", :style => 'width:100%', %>
+        <%= f.text_area :content, :rows => 8, :class => "mark_it_up", :style => 'width:100%' %>
       </div>
     </div>
     
@@ -110,6 +110,21 @@
   <div class="answer_choices">
     <%= f.fields_for :answer_choices do |ac_form| %>
       <%= render 'simple_questions/answer_choice_fields', :f => ac_form %>
+      <% id_number = 0 %>
+      <% if !params[:question].nil? %>
+	 <% params[:question][:answer_choices_attributes].each do |k, v| %>
+	 <% credit = v[:credit] || '' %>
+	 <% id_number = id_number + 1 %>
+	 <% if credit != '0' && credit != '1'%>
+	   <script type="text/javascript">
+	     $("#text_field_tid<%= id_number %>").attr('value', 
+			'<%= credit %>').show();
+	     $("#radio_button_rid<%= id_number %>").attr({value: 
+			'<%= credit %>', checked: 'true'});
+	   </script>
+	 <% end %>
+	<% end %>
+	<% end %>
     <% end %>
   </div>
   

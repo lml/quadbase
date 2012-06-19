@@ -11,20 +11,23 @@ class QuestionPart < ActiveRecord::Base
   # nil is used as a temporary value to avoid conflicts when sorting
   
   before_create :assign_order
+
+  attr_accessible :order
   
   def content_copy
     child_question_copy = child_question.is_published? ? 
                           child_question : 
                           child_question.content_copy
                           
-    kopy = QuestionPart.new(:multipart_question => multipart_question, 
-                            :child_question => child_question_copy,
-                            :order => order)
+    kopy = QuestionPart.new(:order => order)
+    kopy.multipart_question = multipart_question
+    kopy.child_question = child_question_copy
+    kopy
   end
 
   def unlock!(user)
     return false if !child_question.is_published?
-    self.child_question = child_question.new_derivation!(user, multipart_question.project_questions.first.project)
+    self.child_question = child_question.new_derivation!(user, multipart_question.project)
     self.save!
     multipart_question.check_and_unlock_setup!
     true
@@ -77,9 +80,8 @@ protected
   # Opting to go with 1-based indexing here; the first part will likely be
   # referred to as part "1", so better for the order number to match
   def assign_order
-    self.order ||= (QuestionPart.where(:multipart_question_id => multipart_question_id) \
-                                .maximum(:order) || 
-                    0) + 1
+    self.order ||= (QuestionPart.where{multipart_question_id == my{multipart_question_id}} \
+                                .maximum('order') || 0) + 1
   end
   
   
