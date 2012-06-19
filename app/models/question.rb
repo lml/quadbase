@@ -531,8 +531,10 @@ class Question < ActiveRecord::Base
     q = q.which_can_be_read_by(user)
 
     if latest_only # Remove old published versions
-      q = q.where{questions.id.in(Question.draft_questions) |\
-                  questions.id.in(Question.published_questions.group{number}.having{version == max(version)})}
+      q = q.select{`questions.*`}.select{version.as(v)}.select{number.as(n)}.where{\
+            (version == nil) | ((version != nil) &\
+            -(exists(Question.select(1).where{(number == `n`) &\
+                                              (version > `v`)})))}
     end
     q.group{questions.id}.order{number}
   end
