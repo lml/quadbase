@@ -45,7 +45,7 @@ gem 'jsonify-rails', '~> 0.3.2'
 gem 'execjs', '~> 1.4.0'
 gem 'therubyracer', '~> 0.10.1'
 
-gem 'bullring', '~> 0.8.1'
+gem 'bullring', '~> 0.8.2'
 
 group :development, :test do
    gem 'sqlite3', '~> 1.3.6'
