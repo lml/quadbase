@@ -16,7 +16,12 @@ Requirements
 
 To run Quadbase, you must have the following dependencies installed:
 
- * ImageMagick
+ * Ruby 1.9.3
+ 
+ * JRuby (for questions with logic)
+     -- Needs to be installed through RVM
+
+ * ImageMagick (for image uploads)
      -- Additionally, you'll need to set paths in config/initializers/paperclip.rb
         as well as in config/developer_settings.yml.
         
@@ -93,11 +98,4 @@ To upload images to questions, you'll need to have ImageMagick installed and set
 in config/developer_settings.yml.  Check out the developer_settings.yml.example file for help.
 
 That's it.  You should then be able to point a web browser to http://localhost:3000.
-
-### Dependencies
-
-- Ruby 1.9.3 (ruby-1.9.3-p194)
-- Rails 3.2.4
-- JRuby (jruby-1.6.7.2) for questions with logic
-- ImageMagick for image uploads
 
