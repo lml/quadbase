@@ -13,7 +13,7 @@ class QtImportController < ApplicationController
 		document = QTImport.openfile(f.path)
 		parser, transformer = QTImport.choose_import(params[:content_type])
 		content = QTImport.iterate_items(document)
-		debugger
+		# debugger
 		questions = QTImport.get_questions(content,parser,transformer)
 		project = QTImport.createproject(current_user)
 		QTImport.add_questions(project,questions)

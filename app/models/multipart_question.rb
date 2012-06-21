@@ -43,6 +43,13 @@ class MultipartQuestion < Question
   def content_copy
     kopy = MultipartQuestion.create
     init_copy(kopy)
+    old_setup = kopy.question_setup
+    if (!self.question_setup_id.nil? && self.question_setup.content_change_allowed?)
+      kopy.question_setup = self.question_setup.content_copy
+    else
+      kopy.question_setup = self.question_setup
+    end
+    old_setup.destroy_if_unattached
     self.child_question_parts.each do |part| 
       new_part = part.content_copy
       new_part.multipart_question = kopy
@@ -51,21 +58,21 @@ class MultipartQuestion < Question
     kopy
   end
   
-  def add_parts(questions)
-    questions = Array(questions)
+  def add_parts(qs)
+    qs = Array(qs)
     
     self.errors.add(:base, "Cannot add parts to a published question.") if is_published?
     
     # There can be no duplicate incoming questions
     
-    if !questions.uniq!.nil?
+    if !qs.uniq!.nil?
       self.errors.add(:base, "Questions cannot be added more than once to " + 
                              "a multipart question.")
     end
     
     # The incoming questions can't already be in the multipart
     
-    preexisting_questions = child_questions & questions
+    preexisting_questions = child_questions & qs
 
     if !preexisting_questions.empty?
       id_string = preexisting_questions.collect{|q| q.to_param}.join(', ')
@@ -75,47 +82,43 @@ class MultipartQuestion < Question
 
     # Do not allow multiparts to be added to other multiparts
 
-    questions.each do |question|
-      if question.is_multipart?
+    qs.each do |q|
+      if q.is_multipart?
         self.errors.add(:base, "Question #{question.to_param} is a multipart question" +
                                " and cannot be part of another multipart question.")
       end
     end
     
-    # All of the incoming questions must have the same introduction.  The one
-    # exception is questions that don't have to have an intro, in which case
-    # it will be changed (draft) or left unmodified (published)
+    # All of the incoming questions must have the same introduction, if they have one.
+    # Questions that don't have an intro will be changed (draft) or left unmodified (published)
+    
+    uniq_non_nil_setups = QuestionSetup.joins{questions}.where{questions.id.in(qs)}\
+                                       .where{(content != nil) & (content != '')}\
+                                       .group{question_setups.id}
 
-    setup_ids = questions.collect do |q|
-      setup = q.question_setup
-      setup.nil? ? nil : setup.content.blank? ? nil : setup.id
+    while uniq_non_nil_setups.length > 1
+      first_setup = uniq_non_nil_setups.pop
+      second_setup = uniq_non_nil_setups.pop
+      merged = first_setup.merge(second_setup)
+      if !merged
+        self.errors.add(:base, "The selected questions have different introductions.")
+        break
+      end
+      uniq_non_nil_setups.push(merged)
     end
 
-    setup_ids.reject!{|id| id.nil?}
-    uniq_non_nil_setup_ids = setup_ids.uniq
-
-    if uniq_non_nil_setup_ids.size > 1
-      self.errors.add(:base, "The selected questions have different introductions.")
-    else
-
-      # If this question's intro is blank and it is legal for it to be changed,
-      # the intro will change to match that of the incoming questions (assuming
-      # they have intros).  If this question's intro doesn't meet these conditions
-      # (i.e. it cannot be changed), then the intro from the incoming questions 
-      # must be identical to this question's existing intro.
+    # If this question's intro is blank and it is legal for it to be changed,
+    # the intro will change to match that of the incoming questions (assuming
+    # they have intros).  If this question's intro doesn't meet these conditions
+    # (i.e. it cannot be changed), then the intro from the incoming questions 
+    # must be identical to this question's existing intro.
     
-      single_setup_id = uniq_non_nil_setup_ids.size == 1 ? 
-                        uniq_non_nil_setup_ids.first : self.question_setup_id
+    single_setup = uniq_non_nil_setups.length == 1 ? 
+                   question_setup.merge(uniq_non_nil_setups.first) : question_setup
 
-      setup_can_change_to_incoming_setup = \
-        self.question_setup.content.blank? && setup_is_changeable?
-      
-      single_different_incoming_setup = self.question_setup_id != single_setup_id
-    
-      if single_different_incoming_setup && !setup_can_change_to_incoming_setup
-        self.errors.add(:base, "The selected questions have a different introduction than " +
-                               "that of the multipart question.")
-      end
+    if !single_setup
+      self.errors.add(:base, "The selected questions have a different introduction " +
+                             "than that of the multipart question.")
     end
     
     # Bail out before changing the question if there are errors
@@ -135,26 +138,26 @@ class MultipartQuestion < Question
       # a single incoming setup that differs from the existing multipart intro, go
       # ahead and change it in the multipart and in any children.
 
-      single_setup = QuestionSetup.find(single_setup_id)
+      single_setup = QuestionSetup.find(single_setup.id)
       
-      if single_different_incoming_setup
+      if single_setup != question_setup
         set_question_setup!(single_setup)
       end
 
       # Set all question setups to the single setup, unless published
 
-      questions.each do |question|
-        if !question.is_published?
-          old_question_setup = question.question_setup
-          question.question_setup = single_setup
-          question.save!
+      qs.each do |q|
+        if !q.is_published?
+          old_question_setup = q.question_setup
+          q.question_setup = single_setup
+          q.save!
           old_question_setup.destroy_if_unattached
         end
       end
 
       # Finally, add the incoming questions
       
-      child_questions << questions
+      child_questions << qs
     end
   end
   
@@ -166,7 +169,6 @@ class MultipartQuestion < Question
     super(user, options)
   end
   
-  
   def last_part
     child_question_parts.last
   end
@@ -177,20 +179,25 @@ class MultipartQuestion < Question
     # so that the multipart setup is editable again.  This would mean copying the 
     # content to a new setup and changing the setup_ids in the relevant questions.
     child_questions.delete(question)
+
+    check_and_unlock_setup!
+
+    QuestionPart.sort(child_question_parts) # Recompute part order
+  end
+
+  def check_and_unlock_setup!
+    # Will check if all published question parts are gone and if so copy and unlock the question setup
     published_uniq_setup_ids = child_questions.select{|q| q.is_published? && !q.question_setup.nil? &&
                                                           !q.question_setup.content.blank?}
                                               .collect{|q| q.question_setup_id}.uniq
-
     if published_uniq_setup_ids.size == 0
       # No more published questions with setup, so copy it and make editable
       new_setup = question_setup.content_copy
       new_setup.save!
       set_question_setup!(new_setup)
     end
-
-    QuestionPart.sort(child_question_parts) # Recompute part order
   end
-  
+
   def is_multipart?
     true
   end

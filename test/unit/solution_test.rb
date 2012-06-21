@@ -9,8 +9,8 @@ class SolutionTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
   test "can't mass-assign question, creator and content_html" do
-    question = Factory.create(:simple_question)
-    creator = Factory.create(:user)
+    question = FactoryGirl.create(:simple_question)
+    creator = FactoryGirl.create(:user)
     content_html = "Some content"
     s = Solution.new(:question => question,
                      :creator => creator,
@@ -21,9 +21,9 @@ class SolutionTest < ActiveSupport::TestCase
   end
 
   test "visible_for" do
-    q = Factory.create(:simple_question)
-    u = Factory.create(:user)
-    u2 = Factory.create(:user)
+    q = FactoryGirl.create(:simple_question)
+    u = FactoryGirl.create(:user)
+    u2 = FactoryGirl.create(:user)
 
     s0 = Solution.new
     s0.question = q

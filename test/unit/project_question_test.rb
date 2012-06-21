@@ -11,28 +11,28 @@ class ProjectQuestionTest < ActiveSupport::TestCase
   test "drafts can only be in one project" do
     q = make_simple_question
     
-    Factory.create(:project_question, :question => q)
+    FactoryGirl.create(:project_question, :question => q)
     assert_raise(ActiveRecord::RecordInvalid) { 
-      Factory.create(:project_question, :question => q)
+      FactoryGirl.create(:project_question, :question => q)
     }
   end
   
   test "published questions can be in any projects" do
     q = make_simple_question(:published => true)
     
-    Factory.create(:project_question, :question => q)
+    FactoryGirl.create(:project_question, :question => q)
     assert_nothing_raised(ActiveRecord::RecordInvalid) { 
-      Factory.create(:project_question, :question => q)
+      FactoryGirl.create(:project_question, :question => q)
     }    
   end
 
   test "move!" do
     q = make_simple_question
     
-    old_project = Factory.create(:project)
-    new_project = Factory.create(:project)
+    old_project = FactoryGirl.create(:project)
+    new_project = FactoryGirl.create(:project)
             
-    wq = Factory.create(:project_question, 
+    wq = FactoryGirl.create(:project_question, 
                         :question => q,
                         :project => old_project)
     
@@ -43,18 +43,18 @@ class ProjectQuestionTest < ActiveSupport::TestCase
   end
   
   test "move multipart" do
-    mpq = Factory.create(:multipart_question)
-    sq1 = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    mpq = FactoryGirl.create(:multipart_question)
+    sq1 = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
 
     mpq.add_parts([sq1])
     
-    old_project = Factory.create(:project)
-    new_project = Factory.create(:project)
+    old_project = FactoryGirl.create(:project)
+    new_project = FactoryGirl.create(:project)
     
-    mpq_pq = Factory.create(:project_question, 
+    mpq_pq = FactoryGirl.create(:project_question, 
                             :question => mpq,
                             :project => old_project)
-    sq1_pq = Factory.create(:project_question, 
+    sq1_pq = FactoryGirl.create(:project_question, 
                             :question => sq1,
                             :project => old_project)
 
@@ -65,44 +65,66 @@ class ProjectQuestionTest < ActiveSupport::TestCase
   end
   
   test "copy!" do
-    u = Factory.create(:user)
+    u = FactoryGirl.create(:user)
     q = make_simple_question
+    q.content = 'Unpublished'
+    q.save!
     
-    old_project = Factory.create(:project)
-    new_project = Factory.create(:project)
+    old_project = FactoryGirl.create(:project)
+    new_project = FactoryGirl.create(:project)
             
-    wq = Factory.create(:project_question, 
+    wq = FactoryGirl.create(:project_question, 
                         :question => q,
                         :project => old_project)
     
     
     assert_difference('new_project.questions.count') do
-      wq.copy!(new_project, u)
+      qc = wq.copy!(new_project, u).question
+      assert_equal q.content, qc.content
     end
-    
-    pq = make_simple_question(:method => :create, :published => true)
 
-    pwq = Factory.create(:project_question, 
+    pq = make_simple_question(:method => :create)
+    pq.content = 'Published'
+    pq.save!
+    pq.publish!(u)
+
+    pwq = FactoryGirl.create(:project_question, 
                          :question => pq,
                          :project => old_project)
 
     assert_difference('pq.derived_questions.count') do
-      pwq.copy!(new_project, u)
+      assert_difference('new_project.questions.count') do
+        qc = pwq.copy!(new_project, u).question
+        assert_equal pq.content, qc.content
+      end
     end
 
     q2 = pq.new_derivation!(u, old_project)
+    q2.content = 'Published derivation'
+    q2.save!
+
     wq2 = q2.project_questions.first
 
     assert_difference('pq.derived_questions.count') do
-      wq2.copy!(new_project, u)
+      assert_difference('new_project.questions.count') do
+        qc = wq2.copy!(new_project, u).question
+        assert_equal q2.content, qc.content
+      end
     end
 
     q3 = pq.new_version!(u, old_project)
+    q3.content = 'Published v2'
+    q3.save!
+
     wq3 = q3.project_questions.first
 
     assert_difference('pq.derived_questions.count') do
-      wq3.copy!(new_project, u)
+      assert_difference('new_project.questions.count') do
+        qc = wq3.copy!(new_project, u).question
+        assert_equal q3.content, qc.content
+      end
     end
+
   end
   
 end

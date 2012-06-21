@@ -31,6 +31,7 @@ protected
     !self.id.nil? && !content_changed?
   end
 
+
   def check_for_no_html
     return if content_unchanged? ||
               (Rails.env.test? && !ContentParseAndCache.enable_test_parser)
@@ -55,7 +56,7 @@ protected
     begin
       self.parse_tree = parser.parse(content)
     rescue Parslet::ParseFailed => error
-      # logger.debug("Parsing failed " + parser.error_tree.inspect.to_s)
+      # logger.debug {"Parsing failed " + parser.error_tree.inspect.to_s}
       errors.add(:content, "contains a formatting error.")
       false
     end
@@ -71,7 +72,7 @@ protected
 
     transformed_tree = transformer.apply(parse_tree)
     self.content_html = transformed_tree.force_encoding("UTF-8")
-    # logger.debug("SimpleQuestion::cache_html: "  + transformed_tree.inspect.to_s)
+    # logger.debug {"SimpleQuestion::cache_html: "  + transformed_tree.inspect.to_s}
   end
 
 end

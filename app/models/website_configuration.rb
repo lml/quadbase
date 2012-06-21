@@ -3,11 +3,11 @@
 
 class WebsiteConfiguration < ActiveRecord::Base
 
-  # Format: {:name => [value, value_type], :name => [value, value_type]}
+  # Format: {"name" => [value, "value_type"], "name" => [value, "value_type"]}
   @@defaults = {
-                  :in_maintenance => [false, "boolean"],
-                  :use_mathjax_cdn => [true, "boolean"],
-                  :home_highlighted_questions => ["", "text"]
+                  "in_maintenance" => [false, "boolean"],
+                  "use_mathjax_cdn" => [true, "boolean"],
+                  "home_highlighted_questions" => ["", "text"]
                }
 
   validates_uniqueness_of :name

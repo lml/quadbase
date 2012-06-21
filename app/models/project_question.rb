@@ -29,7 +29,7 @@ class ProjectQuestion < ActiveRecord::Base
           # doesn't really mean anything), so don't move published children.
           next if child.is_published? 
 
-          raise IllegalState if child.project_questions.size != 1            
+          raise IllegalState unless child.project_questions.count == 1
           child_pq = child.project_questions.first
 
           # If the child draft is alredy in a different project than the multipart
@@ -46,13 +46,15 @@ class ProjectQuestion < ActiveRecord::Base
 
   def copy!(new_project, user)
     if question.is_published?
-      question.new_derivation!(user, new_project)
+      qc = question.new_derivation!(user, new_project)
     elsif !question.latest_published_same_number.nil?
-      question.latest_published_same_number.new_derivation!(user, new_project)
+      qc = question.content_copy
+      qc.create!(user, :project => new_project, :source_question => question.latest_published_same_number, :deriver_id => user.id)
     else
       qc = question.content_copy
       qc.create!(user, :project => new_project, :source_question => question.source_question, :deriver_id => user.id)
     end
+    ProjectQuestion.find_by_project_id_and_question_id(new_project.id, qc.id)
   end
 
   def destroy_projectless_draft_question

@@ -17,6 +17,7 @@ class QuestionsController < ApplicationController
   autocomplete :tag, :name, :class_name => 'ActsAsTaggableOn::Tag'
   
   def index
+    @where ||= 'Published Questions'
   end
 
   def show
@@ -75,6 +76,7 @@ class QuestionsController < ApplicationController
     respond_with(@question)
   end
 
+  
   # We can't use the normal respond_with here b/c the STI we're using confuses it.  
   # Rails tries to render simple_questions/edit when there are update errors, but
   # we just want it to go to the questions view.
@@ -90,23 +92,25 @@ class QuestionsController < ApplicationController
       end
       return
     end
-    
-    respond_to do |format|
-      if (@updated = @question.update_attributes(params[:question]))
+
+    respond_to do |format|  
+       if (@updated = @question.update_attributes(params[:question]))
         flash[:notice] = "Your draft has been saved.
                           Until you publish this draft, please remember that only members of " +
-                          @question.project_questions.first.project.name +
+                          @question.project.name +
                           " will be able to see it."
         format.html { redirect_to question_path(@question) }
-      else
+       else
         format.html { render 'questions/edit' }
-      end
-    end
+       end
+     end
   end
 
   def quickview
     @question = Question.from_param(params[:question_id])
     raise SecurityTransgression unless present_user.can_read?(@question)
+
+    @show_credit = true
 
     respond_to do |format|
       format.html { redirect_to question_path(@question) }
@@ -119,6 +123,7 @@ class QuestionsController < ApplicationController
     raise SecurityTransgression unless present_user.can_read?(@question)
 
     @question.attributes = params[:question]
+    @show_credit = true
 
     Question.transaction do
       respond_to do |format|
@@ -277,7 +282,7 @@ class QuestionsController < ApplicationController
         format.html { redirect_to edit_question_path(@question) }
       end
     rescue ActiveRecord::RecordInvalid => invalid
-      logger.error("An error occurred when deriving a question: #{invalid.message}")
+      logger.error {"An error occurred when deriving a question: #{invalid.message}"}
       flash[:alert] = "We could not create a derived question as requested."
       respond_to do |format|
         format.html { redirect_to question_path(@source_question) }
@@ -318,7 +323,7 @@ class QuestionsController < ApplicationController
       end
 
     rescue ActiveRecord::RecordInvalid => invalid
-      logger.error("An error occurred when deriving a question: #{invalid.message}")
+      logger.error {"An error occurred when deriving a question: #{invalid.message}"}
       flash[:alert] = "We could not create a derived question as requested."
       respond_to do |format|
         format.html { redirect_to question_path(@source_question) }
@@ -356,16 +361,13 @@ class QuestionsController < ApplicationController
 
   def search
     @type = params[:type]
-    @where = params[:where]
+    @location = params[:location]
+    @part = params[:part]
     @query = params[:query]
     @exclude_type = params[:exclude_type]
     @per_page = params[:per_page]
-    @questions = Question.search(@type, @where,
-                                 @query, present_user, @exclude_type) \
-                         .reject { |q| (q.is_published? && !q.is_latest?) ||
-                                       !present_user.can_read?(q) }
-    # TODO: Possibly move the reject statement into the SQL query in Question.search
-    # This could speed up all searching, including pagination
+    @questions = Question.search(@type, @location, @part,
+                                 @query, present_user, @exclude_type)
     respond_to do |format|
       format.html do
         @questions = @questions.paginate(:page => params[:page], :per_page => @per_page)
@@ -387,7 +389,7 @@ protected
         format.html { redirect_to edit_question_path(@question) }
       end
     rescue ActiveRecord::RecordInvalid => invalid
-      logger.error("An error occurred when creating a question: #{invalid.message}")
+      logger.error {"An error occurred when creating a question: #{invalid.message}"}
     
       respond_to do |format|
         format.html {   

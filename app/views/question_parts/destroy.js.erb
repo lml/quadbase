@@ -13,4 +13,8 @@ $("#question_part_rows").html(
 
 $("#intro_field").attr("disabled", <%= !@multipart_question.setup_is_changeable? %>);
 
+<% if @multipart_question.setup_is_changeable? %>
+$("#disabled_explanation").hide();
+<% end %>
+
 $("#question_question_setup_attributes_id").val("<%= @multipart_question.question_setup.id %>");

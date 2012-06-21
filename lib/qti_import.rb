@@ -51,11 +51,9 @@ class QTImport
 		for a in 0..(answers.length-1)
 			b = answers[a].children.children.children
 			text = b[0].content
-			text.force_encoding('UTF-8')
 			b1 = parser.parse(text)
 			ans = transformer.apply(b1)			
 			choice = AnswerChoice.new(:content => ans, :credit => credit[a])
-			choice.content.force_encoding("UTF-8")
 			choices << choice
 		end
 		return choices
@@ -107,7 +105,7 @@ class QTImport
 			ques1 = transformer.apply(v)
 			ques << ques1
 		end
-		debugger
+		# debugger
 		for a in 0..(ques.length-1)
 			answers = self.get_answers(content,parser,transformer,ques_id[a])
 			b = Comment.new(:message => ques_id[a])

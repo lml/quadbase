@@ -9,7 +9,7 @@ class UserProfileTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
   setup do
-    @user_profile = Factory.create(:user_profile)
+    @user_profile = FactoryGirl.create(:user_profile)
     @user = @user_profile.user
     @user.user_profile = @user_profile
     @user.save!

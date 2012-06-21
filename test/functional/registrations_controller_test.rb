@@ -8,12 +8,12 @@ class RegistrationsControllerTest < ActionController::TestCase
 
   setup do
     request.env["devise.mapping"] = Devise.mappings[:user]
-    @admin = Factory.create(:user)
-    @user = Factory.create(:user)
+    @admin = FactoryGirl.create(:user)
+    @user = FactoryGirl.create(:user)
   end
 
   test "should not create user invalid recaptcha" do
-    user = Factory.build(:user)
+    user = FactoryGirl.build(:user)
     assert_difference('User.count', 0) do
       post :create, :user => user.attributes
     end
