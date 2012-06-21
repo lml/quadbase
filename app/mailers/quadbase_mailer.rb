@@ -4,9 +4,8 @@
 class QuadbaseMailer < ActionMailer::Base
   default :from => "noreply@quadbase.org"
 
-  def mail(headers={}, block={})
+  def mail(headers={}, &block)
     headers[:subject] = "[Quadbase] " + headers[:subject]
-    block[:message] = block[:message]
-    super(headers, block)
+    super(headers, &block)
   end
 end
