@@ -1,3 +1,5 @@
+#encoding: utf-8
+
 # Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
 # License version 3 or later.  See the COPYRIGHT file for details.
 
@@ -6,7 +8,7 @@ require 'spqr_parser.rb'
 
 class QTImport 
 
-	@@content_types = ['SPQR']
+	@@content_types = [['SPQR','SPQR']]
 
 	attr_reader :filename, :content_type, :parser, :transformer
 
@@ -51,6 +53,9 @@ class QTImport
 		for a in 0..(answers.length-1)
 			b = answers[a].children.children.children
 			text = b[0].content
+			text.gsub(/δ/,"\\delta")
+			text.gsub(/ω/,"\\omega")
+			text.gsub(/π/,"\\pi")
 			b1 = parser.parse(text)
 			ans = transformer.apply(b1)			
 			choice = AnswerChoice.new(:content => ans, :credit => credit[a])
@@ -100,7 +105,10 @@ class QTImport
 		for p in 0..(x.length-1)
 			w = x[p].children.children.children
 			text = w[0].content
-			#text.force_encoding('UTF-8')
+			text.gsub(/δ/,"\\delta")
+			text.gsub(/ω/,"\\omega")
+			text.gsub(/π/,"\\pi")
+			text.force_encoding('UTF-8')
 			v = parser.parse(text)
 			ques1 = transformer.apply(v)
 			ques << ques1
@@ -121,7 +129,6 @@ class QTImport
 					q.answer_choices << AnswerChoice.new(:content => "fake", :credit => 0)
 				end
 			end
-			Rails.logger.debug{ q.content}
 			q.save!
 			questions << q
 		end
