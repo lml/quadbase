@@ -10,6 +10,10 @@ gem 'nokogiri'
 
 gem 'carrierwave'
 
+gem 'upmark'
+
+gem 'htmlentities'
+
 # Deploy with Capistrano
 gem 'capistrano'
 

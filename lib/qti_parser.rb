@@ -26,13 +26,22 @@ class QTIParser < Parslet::Parser
 	rule(:new_p)      { (str("<p>") | str("</p>") | str("<P>") | str("</P>")).as(:para)}
 
 	#Check for any font changes
-	rule(:font1)     { str("<font")}
-	rule(:extra_f)   { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\"|=]/).repeat(1)}
-	rule(:font2)     { str(">")}
-	rule(:font_open) { (font1 >> (extra_f >> font2).repeat(1)) }
-	rule(:content_f) { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\"|=]/).repeat(1).as(:content_f) }
+	rule(:font1)      { str("<font")}
+	rule(:extra_f)    { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\"|=]/).repeat(1)}
+	rule(:font2)      { str(">")}
+	rule(:font_open)  { (font1 >> (extra_f >> font2).repeat(1)) }
+	rule(:content_f)  { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\"|=]/).repeat(1).as(:content_f) }
 	rule(:font_close) { str("</font>") }
 	rule(:font)       { ( font_open >> (content_f >> font_close).repeat(1) ).as(:font) }
+
+	#check for any special classes
+	rule(:pre1) { str("<pre") | str("<PRE")}
+	rule(:extra_p) { match(/[a-z|A-Z|0-9|\_|\"|\-|=|\s]/).repeat(1)}
+	rule(:pre2) { str(">") }
+	rule(:pre_open) { (pre1 >> (extra_p >> pre2).repeat(1)) }
+	rule(:content_p) { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\"|=]/).repeat(1).as(:content_p) }
+	rule(:pre_close) { str("</pre>") | str("</PRE>") }
+	rule(:pre) { (pre_open >> (content_p >> pre_close).repeat(1) ).as(:pre) }
 
 	#Single character rules
 	rule(:space)      { match("\s").repeat(1) }
@@ -46,7 +55,7 @@ class QTIParser < Parslet::Parser
 	rule(:eol)     { (crlf | lf | tab).as(:eol) }
 
 	#Grammar parts
-	rule(:format) { italic_tag | bold_tag | line_break | tt_tag | font }
+	rule(:format) { italic_tag | bold_tag | line_break | tt_tag | font | pre }
 	rule(:text)   { ( image | format | letters | eol | new_p | (any.as(:any)) ).repeat(1) }
 	rule(:ques)   { text.repeat(1).as(:text) }
 

@@ -123,7 +123,7 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 test "phi" do
 	 	parser = SPQRParser.new
 	 	a = parser.parse('&phi;')
-	 	expected = "\phi"
+	 	expected = "\\phi"
 	 	output1 = SPQRTransform.new.apply(a)
 	 	assert_equal expected, output1
 	 end
@@ -131,7 +131,7 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 test "pi" do
 	 	parser = SPQRParser.new
 	 	a = parser.parse('a&pi;')
-	 	expected = "a\pi"
+	 	expected = "a\\pi"
 	 	output1 = SPQRTransform.new.apply(a)
 	 	assert_equal expected, output1
 	 end
@@ -139,7 +139,7 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 test "omega" do
 	 	parser = SPQRParser.new
 	 	a = parser.parse('a&omega;')
-	 	expected = "a\omega"
+	 	expected = "a\\omega"
 	 	output1 = SPQRTransform.new.apply(a)
 	 	assert_equal expected, output1
 	 end
@@ -155,7 +155,7 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 test "sub" do
 	 	parser = SPQRParser.new
 	 	a = parser.parse('a<sub>&phi;</sub>')
-	 	expected1 = "a_{phi}"
+	 	expected1 = "a_{\\phi}"
 	 	output1 = SPQRTransform.new.apply(a)
 	 	assert_equal expected1, output1
 	 	b = parser.parse('a<SUB>eie</SUB>w')
@@ -167,13 +167,17 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 test "sup" do
 	 	parser = SPQRParser.new
 	 	a = parser.parse('a<sup>&pi;</sup>')
-	 	expected1 = "a^{\pi}"
+	 	expected1 = "a^{\\pi}"
 	 	output1 = SPQRTransform.new.apply(a)
 	 	assert_equal expected1, output1
 	 	b = parser.parse('b<SUP>iefie</SUP>')
 	 	expected2 = "b^{iefie}"
 	 	output2 = SPQRTransform.new.apply(b)
 	 	assert_equal expected2, output2
+	 	c = parser.parse('3<SUP> -x[n+3]</SUP>')
+	 	expected3 = "3^{-x[n+3]}"
+	 	output3 = SPQRTransform.new.apply(c)
+	 	assert_equal expected3, output3
 	 end
 
 	 test "pre_class" do
@@ -219,7 +223,35 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 test "3tags" do
 	 	parser = SPQRParser.new
 	 	a = parser.parse('a<div class="four"><pre class="MATLAB"><i>&pi;</i></PRE></div>')
-	 	expected = "a$$'\pi'$$"
+	 	expected = "a$$'\\pi'$$"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
+
+	 #Test for question that has answer choices that contain a formatting error.
+	 # test "answer_choices" do
+	 # 	parser = SPQRParser.new
+	 # 	a = parser.parse('omega-hat = 600 and -600')
+	 # 	b = parser.parse('omega-hat = 6/5 and -6/5')
+	 # 	c = parser.parse('omega-hat = 1.2*pi and -1.2*pi')
+	 # 	d = parser.parse('omega-hat = 0.4*pi and -0.4*pi')
+	 # 	e = parser.parse('omega-hat = pi/5 and -pi/5')
+	 # 	output1 = SPQRTransform.new.apply(a)
+	 # 	output2 = SPQRTransform.new.apply(b)
+	 # 	output3 = SPQRTransform.new.apply(c)
+	 # 	output4 = SPQRTransform.new.apply(d)
+	 # 	output5 = SPQRTransform.new.apply(e)
+	 # 	p output1
+	 # 	p output2
+	 # 	p output3
+	 # 	p output4
+	 # 	p output5
+	 # end
+
+	 test "asterisk" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('3*4')
+	 	expected = "3&times;4"
 	 	output1 = SPQRTransform.new.apply(a)
 	 	assert_equal expected, output1
 	 end

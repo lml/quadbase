@@ -18,6 +18,7 @@ class QTImport
 		for a in 0..(questions.length-1)
 			project.add_question!(questions[a])
 		end
+		return project
 	end
 
 	def self.choose_import(content_type)
@@ -31,6 +32,7 @@ class QTImport
 	def self.createproject(current_user)
 		a = Project.create(:name => 'Import')
 		a.add_member!(current_user)
+		a
 	end
 
 	def self.get_answers(content,parser,transformer,id_num)
@@ -49,9 +51,11 @@ class QTImport
 		for a in 0..(answers.length-1)
 			b = answers[a].children.children.children
 			text = b[0].content
+			text.force_encoding('UTF-8')
 			b1 = parser.parse(text)
-			ans = transformer.apply(b1)
+			ans = transformer.apply(b1)			
 			choice = AnswerChoice.new(:content => ans, :credit => credit[a])
+			choice.content.force_encoding("UTF-8")
 			choices << choice
 		end
 		return choices
@@ -93,21 +97,33 @@ class QTImport
 			y = content[z]
 			ques_num  = y.attributes["ident"].value
 			ques_id << ques_num
-			x = y.xpath('//presentation')
-			w = x[0].children.children.children
+		end
+		x = content.xpath('//presentation')
+		for p in 0..(x.length-1)
+			w = x[p].children.children.children
 			text = w[0].content
+			#text.force_encoding('UTF-8')
 			v = parser.parse(text)
 			ques1 = transformer.apply(v)
 			ques << ques1
-		end		
-		answers = self.get_answers(content,parser,transformer,ques_num)
+		end
+		debugger
 		for a in 0..(ques.length-1)
+			answers = self.get_answers(content,parser,transformer,ques_id[a])
 			b = Comment.new(:message => ques_id[a])
 			q = SimpleQuestion.new(:content => ques[a])
 			q.comment_thread = b.comment_thread
 			for i in 0..(answers.length-1)
 				q.answer_choices << answers[i]
+				if answers.length == 0
+					q.answer_choices << AnswerChoice.new(:content => "fake", :credit => 0)
+					q.answer_choices << AnswerChoice.new(:content => "not real", :credit => 1)
+				end
+				if answers.length == 1
+					q.answer_choices << AnswerChoice.new(:content => "fake", :credit => 0)
+				end
 			end
+			Rails.logger.debug{ q.content}
 			q.save!
 			questions << q
 		end

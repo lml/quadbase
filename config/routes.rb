@@ -3,9 +3,8 @@
 
 Quadbase::Application.routes.draw do
 
-  get "import/qti/new", :to => 'qt_import#new'
-
-  post "import/qti", :to => 'qt_import#create'
+  get "/import/qti/new", :to => 'qt_import#new'
+  post "/import/qti", :to => 'qt_import#create'
 
   namespace :admin do 
     resources :logic_libraries do

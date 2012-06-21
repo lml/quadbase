@@ -120,4 +120,10 @@ class QTITransfromTest < ActiveSupport::TestCase
 	 	assert_equal expected, output1
 	 end
 
+	 test "pre_class" do
+	 	parser = QTIParser.new
+	 	a = parser.parse('a<pre class = "ITS_EQUATION">blah</PRE>')
+	 	p a
+	 end
+
 end
