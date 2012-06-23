@@ -18,7 +18,7 @@ class QuadbaseParser < Parslet::Parser
   root(:paragraphs)
 
   rule(:paragraphs) { paragraph.repeat.as(:paragraphs) }
-  rule(:paragraph) { (( line | bulleted_list | numbered_list ).repeat(1) >> spaces >> eol).as(:paragraph) }
+  rule(:paragraph) { (( line | bulleted_list | numbered_list ).repeat >> spaces >> eol).as(:paragraph) }
   
   rule(:line) { (content >> eol).as(:line) }
   rule(:content) { (math | image | bold | italic | text).repeat(1) }
@@ -113,6 +113,7 @@ class QuadbaseHtmlTransformer < Parslet::Transform
   rule(:text => simple(:text)) { "#{text}" }
   rule(:line => sequence(:entries)) { entries.join }
   rule(:paragraph => sequence(:entries)) { "<p>#{entries.join}</p>" }
+  rule(:paragraph => simple(:paragraph)) { "\n" }
   rule(:paragraphs => sequence(:entries)) { entries.join("\n") }
   rule(:filename => simple(:filename)) { "#{filename}" }
   rule(:image => simple(:filename)) { "<center>" + TagHelper.make_image_tag(filename) + "</center>" }

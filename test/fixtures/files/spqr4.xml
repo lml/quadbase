@@ -966,68 +966,68 @@ omega-hat = pi/5 and -pi/5
 
 </resprocessing>
 </item>
-<!--<item title="chapter7DM" ident="QUE_19">-->
-<!--	<presentation>-->
-<!--	<material>-->
-<!--<mattext texttype="text/html"><![CDATA[Given <pre class="ITS_Equation">h[n] = δ[n] + 2δ[n-1]</pre>-->
-<!--<p>Find <tt>H(e<sup>jω</sup>) where <tt>ω</tt> is the normalized frequency called "omega-hat" in the text. </tt></p>]]></mattext>-->
-<!--</material>-->
-<!--<response_lid ident="QUE_19_RL" rcardinality="Multiple" rtiming="No">-->
-<!--<render_choice>-->
-<!--<response_label ident="QUE_19_A1">-->
-<!--<material>-->
-<!--<mattext texttype="text/html"><![CDATA[H(e<SUP>j&omega;</sup>) = 1 + 2(-1)]]></mattext>-->
-<!--</material>-->
-<!--</response_label>-->
-<!--<response_label ident="QUE_19_A2">-->
-<!--<material>-->
-<!--<mattext texttype="text/html"><![CDATA[H(e<SUP>j&omega;</SUP>) = 1 + 2e<SUP>-j&omega;</SUP>]]></mattext>-->
-<!--</material>-->
-<!--</response_label>-->
-<!--<response_label ident="QUE_19_A3">-->
-<!--<material>-->
-<!--<mattext texttype="text/html"><![CDATA[H(e<SUP>j&omega;</SUP>) = e<SUP>-j&omega; - 2j&omega;</SUP>]]></mattext>-->
-<!--</material>-->
-<!--</response_label>-->
-<!--<response_label ident="QUE_19_A4">-->
-<!--<material>-->
-<!--<mattext texttype="text/html"><![CDATA[H(e<SUP>j&omega;</SUP>) = e<SUP> -j&omega; </SUP>+ e<SUP> -2j&omega; </SUP>]]></mattext>-->
-<!--</material>-->
-<!--</response_label>-->
-<!--</render_choice>-->
-<!--</response_lid>-->
-<!--</presentation>-->
-<!--<resprocessing>-->
-<!--<outcomes>-->
-<!--<decvar vartype="Integer" defaultval="0" varname="que_score" maxvalue="100" minvalue="0"/>-->
-<!--</outcomes>-->
-<!--<respcondition>-->
-<!--<conditionvar>-->
-<!--<varequal respident="QUE_19_RL">QUE_19_A1</varequal>-->
-<!--</conditionvar>-->
-<!--<setvar varname="que_score" action="Add">0</setvar>-->
-<!--</respcondition>-->
-<!--<respcondition>-->
-<!--<conditionvar>-->
-<!--<varequal respident="QUE_19_RL">QUE_19_A2</varequal>-->
-<!--</conditionvar>-->
-<!--<setvar varname="que_score" action="Add">100</setvar>-->
-<!--</respcondition>-->
-<!--<respcondition>-->
-<!--<conditionvar>-->
-<!--<varequal respident="QUE_19_RL">QUE_19_A3</varequal>-->
-<!--</conditionvar>-->
-<!--<setvar varname="que_score" action="Add">0</setvar>-->
-<!--</respcondition>-->
-<!--<respcondition>-->
-<!--<conditionvar>-->
-<!--<varequal respident="QUE_19_RL">QUE_19_A4</varequal>-->
-<!--</conditionvar>-->
-<!--<setvar varname="que_score" action="Add">0</setvar>-->
-<!--</respcondition>-->
+<item title="chapter7DM" ident="QUE_19">
+	<presentation>
+	<material>
+<mattext texttype="text/html"><![CDATA[Given <pre class="ITS_Equation">h[n] = δ[n] + 2δ[n-1]</pre>
+<p>Find <tt>H(e<sup>jω</sup>) where <tt>ω</tt> is the normalized frequency called "omega-hat" in the text. </tt></p>]]></mattext>
+</material>
+<response_lid ident="QUE_19_RL" rcardinality="Multiple" rtiming="No">
+<render_choice>
+<response_label ident="QUE_19_A1">
+<material>
+<mattext texttype="text/html"><![CDATA[H(e<SUP>j&omega;</sup>) = 1 + 2(-1)]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_19_A2">
+<material>
+<mattext texttype="text/html"><![CDATA[H(e<SUP>j&omega;</SUP>) = 1 + 2e<SUP>-j&omega;</SUP>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_19_A3">
+<material>
+<mattext texttype="text/html"><![CDATA[H(e<SUP>j&omega;</SUP>) = e<SUP>-j&omega; - 2j&omega;</SUP>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_19_A4">
+<material>
+<mattext texttype="text/html"><![CDATA[H(e<SUP>j&omega;</SUP>) = e<SUP> -j&omega; </SUP>+ e<SUP> -2j&omega; </SUP>]]></mattext>
+</material>
+</response_label>
+</render_choice>
+</response_lid>
+</presentation>
+<resprocessing>
+<outcomes>
+<decvar vartype="Integer" defaultval="0" varname="que_score" maxvalue="100" minvalue="0"/>
+</outcomes>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_19_RL">QUE_19_A1</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_19_RL">QUE_19_A2</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">100</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_19_RL">QUE_19_A3</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_19_RL">QUE_19_A4</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
 
-<!--</resprocessing>-->
-<!--</item>-->
+</resprocessing>
+</item>
 <item title="Lab" ident="QUE_21">
 	<presentation>
 	<material>

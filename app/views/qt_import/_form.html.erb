@@ -1,7 +1,7 @@
 <%= form_tag("/import/qti", :multipart => true) do %>
   <%= label_tag("File") %>
   <br>
-  <%= file_field_tag(params[:File]) %>
+  <%= file_field_tag(:file) %>
   <br>
   <br>
   <%= label_tag("Content Type") %>

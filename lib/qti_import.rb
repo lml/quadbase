@@ -79,6 +79,9 @@ class QTImport
 		for i in 0..(numbers.length-1)
 			j = numbers[i].children.children.last
 			k = (j.content).to_f
+			if k < 0
+				k = 0
+			end
 			points << k
 		end		
 		credits = self.normalize(points)		
