@@ -11,12 +11,13 @@ class QtImportController < ApplicationController
 	def create
 		f = params[:file]
 		document = QTImport.openfile(f.path)
+		project = QTImport.createproject(current_user)
 		parser, transformer = QTImport.choose_import(params[:content_type])
 		content = QTImport.iterate_items(document)
 		# debugger
-		questions = QTImport.get_questions(content,parser,transformer)
-		project = QTImport.createproject(current_user)
-		QTImport.add_questions(project,questions)
+		QTImport.get_questions(project,content,parser,transformer,current_user)
+		# project = QTImport.createproject(current_user)
+		# QTImport.add_questions(project,questions)
 
 	# rescue
 	# 	render :text => "Sorry, there was a problem with importing your questions."

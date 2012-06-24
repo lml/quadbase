@@ -5062,7 +5062,7 @@ I will complete them now
 	<presentation>
 	<material>
 <mattext texttype="text/html"><![CDATA[What will be the output from the following MATLAB code?
-<PRE class="MATLAB">xx = [9 2 7 5 1 4 2 6 4];<BR>xx(4:6)</TT></PRE>]]></mattext>
+<PRE class="MATLAB">xx = [9 2 7 5 1 4 2 6 4];<BR>xx(4:6)</PRE>]]></mattext>
 </material>
 <response_lid ident="QUE_122_RL" rcardinality="Multiple" rtiming="No">
 <render_choice>

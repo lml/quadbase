@@ -255,4 +255,20 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 	output1 = SPQRTransform.new.apply(a)
 	 	assert_equal expected, output1
 	 end
+
+	 test "lessthan" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('3<4')
+	 	expected = "3&lt;4"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
+
+	 test "greatthan" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('4>3')
+	 	expected = "4&gt;3"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
 end

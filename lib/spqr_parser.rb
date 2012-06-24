@@ -25,8 +25,13 @@ class SPQRParser < Parslet::Parser
 	rule(:tt_tag)     { (str("<tt>") | str("</tt>") | str("<TT>") | str("</TT>")).as(:ttype)}
 	rule(:new_p)      { (str("<p>") | str("</p>") | str("<P>") | str("</P>")).as(:para)}
 	rule(:center)     { (str("<center>") | str("</center>") | str("<CENTER>") | str("</CENTER>")).as(:center)}
+
+	#Things to be changed to HTML entities
 	rule(:asterisk)   { str("*").as(:asterisk)}
-	rule(:quote1)     { str('"').as(:quote1)}
+	rule(:lthan)      { str("<").as(:lthan) }
+	rule(:gthan)      { str(">").as(:gthan) }
+	rule(:entities)   { asterisk | lthan | gthan }
+
 	#Check for any font changes
 	rule(:font1)      { str("<font") | str("<FONT") }
 	rule(:extra)      { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\"|\_|\{|\}|=]/).repeat(1)}
@@ -88,8 +93,8 @@ class SPQRParser < Parslet::Parser
 	#Grammar parts
 	rule(:punc)   { match(/[^<]/) }
 	rule(:tags)   { font | pre | span | div | image }
-	rule(:format) { italic_tag | bold_tag | line_break | tt_tag | fnof | sub | sup | center | asterisk | quote1 }
-	rule(:text)   { ( tags | format | letters | eol | new_p | greek | (any.as(:any)) ).repeat(1) }
+	rule(:format) { italic_tag | bold_tag | line_break | tt_tag | fnof | sub | sup | center | asterisk }
+	rule(:text)   { ( tags | format | letters | eol | new_p | greek | entities | (any.as(:any)) ).repeat(1) }
 	rule(:ques)   { text.repeat.as(:text) }
 
 	rule(:expression) { ques }
@@ -99,32 +104,33 @@ end
 #class UnavailableImage < StandardError; end
 
 class SPQRTransform < Parslet::Transform
-	rule(:quote1 => simple(:quote1))       {'\"'}
-	rule(:asterisk => simple(:asterisk))   {'&times;'}
-	rule(:center => simple(:center))       {}
-	rule(:italic => simple(:italic))       {"'"}
-	rule(:bold => simple(:bold))           {"!!"}
-	rule(:line_break => simple(:break))    {"\n"}
-	rule(:ttype => simple(:ttype))         {"$"}
-	rule(:para => simple(:para))           {"\n\n"}
-	rule(:eol => simple(:eol))             { eol }
+	rule(:lthan => simple(:lthan))           {'&lt;'}
+	rule(:gthan => simple(:gthan))           {'&gt;'}
+	rule(:asterisk => simple(:asterisk))     {'&times;'}
+	rule(:center => simple(:center))         {}
+	rule(:italic => simple(:italic))         {"'"}
+	rule(:bold => simple(:bold))             {"!!"}
+	rule(:line_break => simple(:break))      {"\n"}
+	rule(:ttype => simple(:ttype))           {"$"}
+	rule(:para => simple(:para))             {"\n\n"}
+	rule(:eol => simple(:eol))               { eol }
 	rule(:content_f => sequence(:content_f)) {"!!" + content_f.join + "!!"}
-	rule(:font => simple(:font))           { font }
+	rule(:font => simple(:font))             { font }
 	rule(:content_p => sequence(:content_p)) {"$$" + content_p.join + "$$"}
-	rule(:pre => simple(:pre))             { pre }
-	rule(:content => sequence(:content))   { content.join}
-	rule(:span => simple(:span))           { span }
-	rule(:div => simple(:div))             { div }
-	rule(:phi => simple(:phi))             {"\\phi"}
-	rule(:pi => simple(:pi))               {"\\pi"}
-	rule(:omega => simple(:omega))         {"\\omega"}
-	rule(:fnof => simple(:fnof))           {"f"}
-	rule(:con => simple(:con))             { con }
-	rule(:sub => simple(:sub))             {"_{" + sub + "}"}
-	rule(:sup => sequence(:sup))           {"^{" + sup.join + "}"}
-	rule(:letters => simple(:letters))     { letters }
-	rule(:any => simple(:any))             { any }
-	rule(:image => sequence(:image))       { "MISSING IMAGE: #{image[0].to_s}"}
-	rule(:filename => simple(:filename))   { filename.str.gsub(/[\n\t]/, "").strip }
-	rule(:text => sequence(:entries))      { entries.join }
+	rule(:pre => simple(:pre))               { pre }
+	rule(:content => sequence(:content))     { content.join}
+	rule(:span => simple(:span))             { span }
+	rule(:div => simple(:div))               { div }
+	rule(:phi => simple(:phi))               {"\\phi"}
+	rule(:pi => simple(:pi))                 {"\\pi"}
+	rule(:omega => simple(:omega))           {"\\omega"}
+	rule(:fnof => simple(:fnof))             {"f"}
+	rule(:con => simple(:con))               { con }
+	rule(:sub => simple(:sub))               {"_{" + sub + "}"}
+	rule(:sup => sequence(:sup))             {"^{" + sup.join + "}"}
+	rule(:letters => simple(:letters))       { letters }
+	rule(:any => simple(:any))               { any }
+	rule(:image => sequence(:image))         { "MISSING IMAGE: #{image[0].to_s}"}
+	rule(:filename => simple(:filename))     { filename.str.gsub(/[\n\t]/, "").strip }
+	rule(:text => sequence(:entries))        { entries.join }
 end
