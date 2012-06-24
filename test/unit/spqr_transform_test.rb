@@ -120,6 +120,14 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 	assert_equal expected, output1
 	 end
 
+	 test "delta" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('\xCE\xB4')
+	 	expected = "\\delta"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
+
 	 test "phi" do
 	 	parser = SPQRParser.new
 	 	a = parser.parse('&phi;')

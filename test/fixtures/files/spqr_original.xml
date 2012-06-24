@@ -6422,7 +6422,7 @@ On the ECE2025 WebCT homepage.
 tan(90);
 z = 8 + 7j;  w = -5-9j;
 conj(z+w);
-pp = cos(5*pi);  gg = sqrt(99+pp);</PRE></B>(Note: it is possible to cut and paste from WebCT to MATLAB.)<BR><BR>At the end of these commands, what is the variable <B><TT>ans</TT></B> equal to? ]]></mattext>
+pp = cos(5*pi);  gg = sqrt(99+pp);</PRE>(Note: it is possible to cut and paste from WebCT to MATLAB.)<BR><BR>At the end of these commands, what is the variable <B><TT>ans</TT></B> equal to? ]]></mattext>
 </material>
 <response_lid ident="QUE_155_RL" rcardinality="Multiple" rtiming="No">
 <render_choice>

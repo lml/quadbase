@@ -63,10 +63,11 @@ class SPQRParser < Parslet::Parser
 	rule(:div)       { ( div_open >>  content >> div_close ).as(:div)}
 
 	#Greek letters
+	rule(:delta) { str("\\xCE\\xB4").as(:delta) }
 	rule(:phi)   { str("&phi;").as(:phi) }
-	rule(:pi)    { ( str("&pi;") ).as(:pi) }
-	rule(:omega) { str("&omega;").as(:omega) }
-	rule(:greek) { phi | pi | omega }
+	rule(:pi)    { ( str("&pi;") | str("\\xCF\\x80") ).as(:pi) }
+	rule(:omega) { ( str("&omega;") | str("\\xCF\\x89") ).as(:omega) }
+	rule(:greek) { delta | phi | pi | omega }
 
 	#Superscripts and Subscripts
 	rule(:sub1) { str("<sub>") | str("<SUB>") }
@@ -113,7 +114,7 @@ class SPQRTransform < Parslet::Transform
 	rule(:line_break => simple(:break))      {"\n"}
 	rule(:ttype => simple(:ttype))           {"$"}
 	rule(:para => simple(:para))             {"\n\n"}
-	rule(:eol => simple(:eol))               { eol }
+	rule(:eol => simple(:eol))               {}
 	rule(:content_f => sequence(:content_f)) {"!!" + content_f.join + "!!"}
 	rule(:font => simple(:font))             { font }
 	rule(:content_p => sequence(:content_p)) {"$$" + content_p.join + "$$"}
@@ -121,6 +122,7 @@ class SPQRTransform < Parslet::Transform
 	rule(:content => sequence(:content))     { content.join}
 	rule(:span => simple(:span))             { span }
 	rule(:div => simple(:div))               { div }
+	rule(:delta => simple(:delta))           {"\\delta"}
 	rule(:phi => simple(:phi))               {"\\phi"}
 	rule(:pi => simple(:pi))                 {"\\pi"}
 	rule(:omega => simple(:omega))           {"\\omega"}

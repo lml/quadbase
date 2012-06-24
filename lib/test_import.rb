@@ -38,21 +38,16 @@ class TestImport
 	end
 
 	def self.get_answers(ans_content,credit_content,parser,transformer)
-		answers = Array.new
+		answers = Hash.new
 		for z in 0..(ans_content.length-1)
 			label = ans_content[z].attributes["ident"].value
-			credit, credit_content = self.get_credit(credit_content,label)
-			extra_info_start = label.index("A")
-			ques_id = label[0..extra_info_start-2]
+			credit = self.get_credit(credit_content,label)
 			y = ans_content[z].children.children.children
 			text = y[0].content
-			text.gsub("\xCE\xB4","\\delta")
-			text.gsub("\xCF\x89","\\omega")
-			text.gsub("\xCF\x80","\\pi")
 			x = parser.parse(text)
 			ans = transformer.apply(x)
-			choice = [ques_id,ans,credit]
-			answers << choice
+			choice = [ans,credit]
+			answers[label] = choice
 		end
 		answers
 	end
@@ -68,13 +63,12 @@ class TestImport
 				if credit < 0
 					credit = 0
 				end
-				content.delete(content[a])
 			end
 			unless c == nil
 				break
 			end
 		end
-		return credit, content
+		return credit
 	end
 
 	def self.get_questions(project, content, parser, transformer,current_user)
@@ -86,10 +80,7 @@ class TestImport
 			b = content[a]
 			ques_id = b.attributes["ident"].value
 			c = ques_nodes[a].children.children.children
-			text = c[0].content			
-			text.gsub("\xCE\xB4","\\delta")
-			text.gsub("\xCF\x89","\\omega")
-			text.gsub("\xCF\x80","\\pi")
+			text = c[0].content
 			d = parser.parse(text)
 			ques = transformer.apply(d)
 			q = SimpleQuestion.new(:content => ques)
@@ -99,29 +90,29 @@ class TestImport
 			e.creator = current_user
 			e.save!
 			temp_ans = Array.new
-			for f in 0..(answers.length-1)
-				if ques_id == answers[f][0]
-					temp_ans << answers[f]
-					answers.delete_at(f)
+			for f in 0..(answers.keys.length-1)
+				k = answers.keys[f]
+				if k.match(ques_id) != nil
+					temp_ans << answers[k]
 				end
 			end
 			if temp_ans.length == 0
-				temp_ans << [ques_id,'fake',0]
-				temp_ans << [ques_id,'not real',1]
+				temp_ans << ['fake',0]
+				temp_ans << ['not real',1]
 			elsif temp_ans.length == 1
-				temp_ans << [ques_id,'fake',0]
+				temp_ans << ['fake',0]
 			end
 			temp_credit = Array.new
 			for g in 0..(temp_ans.length-1)
-				temp_credit << temp_ans[g][2]
+				temp_credit << temp_ans[g][1]
 			end
 			points = self.normalize(temp_credit)
 			if points.max == 0
-				temp_ans << [ques_id,'fake',1]
+				temp_ans << ['fake',1]
 				points << 1.0
 			end
 			for i in 0..(temp_ans.length-1)
-				q.answer_choices << AnswerChoice.new(:content => temp_ans[i][1], :credit => temp_credit[i])
+				q.answer_choices << AnswerChoice.new(:content => temp_ans[i][0], :credit => temp_credit[i])
 			end
 			q.save!
 			project.add_question!(q)
