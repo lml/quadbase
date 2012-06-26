@@ -5,7 +5,7 @@ require 'test_helper'
 
 class ProjectsControllerTest < ActionController::TestCase
   setup do
-    @user = Factory.create(:user)
+    @user = FactoryGirl.create(:user)
     @project = Project.default_for_user!(@user)
   end
 
@@ -49,15 +49,19 @@ class ProjectsControllerTest < ActionController::TestCase
   
   test "auto default if no other default" do
     sign_in @user
-    @user.projects.destroy
+    assert_difference('Project.count', -1) do
+      delete :destroy, :id => @project.to_param
+    end
     assert @user.projects.empty?
-    post :create, :project => @project.attributes
-    assert_equal @user.projects.count, 1
+    assert_difference('Project.count') do
+      post :create, :project => @project.attributes
+    end
+    assert @user.projects.last.is_default_for_user?(@user)
     assert_redirected_to project_path(assigns(:project))
-    post :create, :project => @project.attributes
-    assert !@user.projects.last.is_default_for_user
-    assert @user.projects.first.is_default_for_user
-    assert_equal @user.projects.count, 2
+    assert_difference('Project.count') do
+      post :create, :project => @project.attributes
+    end
+    assert !@user.projects.last.is_default_for_user?(@user)
     assert_redirected_to project_path(assigns(:project))
   end
 
