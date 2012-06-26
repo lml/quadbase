@@ -6,7 +6,7 @@ require 'test_helper'
 class QuestionDependencyPairTest < ActiveSupport::TestCase
 
   test "basic" do
-    qdp = Factory.build(:question_dependency_pair)
+    qdp = FactoryGirl.build(:question_dependency_pair)
     assert_not_nil qdp.independent_question
     assert_not_nil qdp.dependent_question
     
@@ -19,29 +19,29 @@ class QuestionDependencyPairTest < ActiveSupport::TestCase
     sq_unpub = make_simple_question({:published => false, :method => :create})
     
     assert_nothing_raised{
-      Factory.create(:question_dependency_pair,
+      FactoryGirl.create(:question_dependency_pair,
                      :independent_question => sq_pub,                    
                      :dependent_question => sq_unpub)}
 
     assert_raise(ActiveRecord::RecordInvalid) {
-      Factory.create(:question_dependency_pair,
+      FactoryGirl.create(:question_dependency_pair,
                      :independent_question => sq_unpub, 
                      :dependent_question => sq_pub)
     }                                
   end
   
   test "no duplicate pairs" do
-    qdp = Factory.create(:question_dependency_pair, :kind => "requirement")
+    qdp = FactoryGirl.create(:question_dependency_pair, :kind => "requirement")
     
     assert_raise(ActiveRecord::RecordInvalid) {
-      Factory.create(:question_dependency_pair,
+      FactoryGirl.create(:question_dependency_pair,
                      :independent_question => qdp.independent_question, 
                      :dependent_question => qdp.dependent_question,
                      :kind => "requirement")
     }
     
     assert_nothing_raised {
-      Factory.create(:question_dependency_pair,
+      FactoryGirl.create(:question_dependency_pair,
                      :independent_question => qdp.independent_question, 
                      :dependent_question => qdp.dependent_question,
                      :kind => "support")
@@ -49,12 +49,12 @@ class QuestionDependencyPairTest < ActiveSupport::TestCase
   end
   
   test "is_requirement" do
-    qdp = Factory.create(:question_dependency_pair, :kind => "requirement")
+    qdp = FactoryGirl.create(:question_dependency_pair, :kind => "requirement")
     assert qdp.is_requirement?
   end
   
   test "is_support" do
-    qdp = Factory.create(:question_dependency_pair, :kind => "support")
+    qdp = FactoryGirl.create(:question_dependency_pair, :kind => "support")
     assert qdp.is_support?
   end
 end
