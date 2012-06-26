@@ -9,14 +9,14 @@ class QuestionCollaboratorTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   
   setup do
-    @question = Factory.create(:simple_question)
-    @first_question_collaborator = Factory.create(:question_collaborator, :question => @question)
+    @question = FactoryGirl.create(:simple_question)
+    @first_question_collaborator = FactoryGirl.create(:question_collaborator, :question => @question)
     # Since there are no other role holders yet, creating this request will grant the role
-    Factory.create(:question_role_request, :question_collaborator => @first_question_collaborator, :toggle_is_author => true)
+    FactoryGirl.create(:question_role_request, :question_collaborator => @first_question_collaborator, :toggle_is_author => true)
   end
   
   test "delete doesn't propagate" do
-    c = Factory.create(:question_collaborator)
+    c = FactoryGirl.create(:question_collaborator)
     c.destroy
     
     assert_nothing_raised {User.find(c.user.id)}
@@ -27,19 +27,19 @@ class QuestionCollaboratorTest < ActiveSupport::TestCase
     sq = make_simple_question({:published => true,
                                :method => :create})
     
-    assert_raise(ActiveRecord::RecordInvalid) {Factory.create(:question_collaborator, :question => sq)}
+    assert_raise(ActiveRecord::RecordInvalid) {FactoryGirl.create(:question_collaborator, :question => sq)}
   end
 
   test "can't modify collaborator for published question" do
-    q = Factory.create(:simple_question)
+    q = FactoryGirl.create(:simple_question)
     pq = make_simple_question({:published => true,
                                :method => :create})
-    c0 = Factory.create(:question_collaborator, :question => q)
+    c0 = FactoryGirl.create(:question_collaborator, :question => q)
 
     c0.is_author = true
     c0.save!
     
-    c1 = Factory.create(:question_collaborator, :question => q)
+    c1 = FactoryGirl.create(:question_collaborator, :question => q)
     c1.is_copyright_holder = true
     c1.save!
 
@@ -51,10 +51,10 @@ class QuestionCollaboratorTest < ActiveSupport::TestCase
   end
 
   test "can't destroy collaborator with roles" do
-    q = Factory.create(:simple_question)
-    qc0 = Factory.create(:question_collaborator, :question => q)
-    qc1 = Factory.create(:question_collaborator, :question => q, :is_author => true)
-    qc2 = Factory.create(:question_collaborator, :question => q, :is_copyright_holder => true)
+    q = FactoryGirl.create(:simple_question)
+    qc0 = FactoryGirl.create(:question_collaborator, :question => q)
+    qc1 = FactoryGirl.create(:question_collaborator, :question => q, :is_author => true)
+    qc2 = FactoryGirl.create(:question_collaborator, :question => q, :is_copyright_holder => true)
     qc0.destroy
     qc1.destroy
     qc2.destroy
@@ -64,15 +64,15 @@ class QuestionCollaboratorTest < ActiveSupport::TestCase
   end
 
   test "can't add collaborator twice" do
-    user = Factory.create(:user)
-    sq = Factory.create(:simple_question)
-    assert_nothing_raised {Factory.create(:question_collaborator, :question => sq, :user => user)}
-    assert_raise(ActiveRecord::RecordInvalid) {Factory.create(:question_collaborator, :question => sq, :user => user)}
+    user = FactoryGirl.create(:user)
+    sq = FactoryGirl.create(:simple_question)
+    assert_nothing_raised {FactoryGirl.create(:question_collaborator, :question => sq, :user => user)}
+    assert_raise(ActiveRecord::RecordInvalid) {FactoryGirl.create(:question_collaborator, :question => sq, :user => user)}
   end
   
   test "delete destroys dependent assocs" do
-    qc = Factory.create(:question_collaborator, :question => @question)
-    qrr = Factory.create(:question_role_request, :question_collaborator => qc, :toggle_is_author => true)
+    qc = FactoryGirl.create(:question_collaborator, :question => @question)
+    qrr = FactoryGirl.create(:question_role_request, :question_collaborator => qc, :toggle_is_author => true)
 
     assert QuestionRoleRequest.find_by_question_collaborator_id(qc.id), "a"
     assert qc.destroy
@@ -83,7 +83,7 @@ class QuestionCollaboratorTest < ActiveSupport::TestCase
     # roles should only be set when role requests are accepted
     # we don't want folks submitting web requests to change roles
 
-    c = Factory.create(:question_collaborator)
+    c = FactoryGirl.create(:question_collaborator)
     
     c.update_attributes({:is_author => true, :is_copyright_holder => true})
     
@@ -92,24 +92,24 @@ class QuestionCollaboratorTest < ActiveSupport::TestCase
   end
   
   test "new collaborators get next position number" do
-    q = Factory.create(:simple_question)
-    c0 = Factory.create(:question_collaborator, :question => q)
-    c1 = Factory.create(:question_collaborator, :question => q)
+    q = FactoryGirl.create(:simple_question)
+    c0 = FactoryGirl.create(:question_collaborator, :question => q)
+    c1 = FactoryGirl.create(:question_collaborator, :question => q)
     
     assert_equal c0.position, 0
     assert_equal c1.position, 1
     
-    Factory.create(:question_collaborator)
+    FactoryGirl.create(:question_collaborator)
     
-    c2 = Factory.create(:question_collaborator, :question => q)
+    c2 = FactoryGirl.create(:question_collaborator, :question => q)
 
     assert_equal c2.position, 2
   end
   
   test "copy roles" do
-    q0 = Factory.create(:simple_question)
-    q1 = Factory.create(:simple_question)
-    c0 = Factory.create(:question_collaborator, :question => q0, :is_author => true)
+    q0 = FactoryGirl.create(:simple_question)
+    q1 = FactoryGirl.create(:simple_question)
+    c0 = FactoryGirl.create(:question_collaborator, :question => q0, :is_author => true)
     QuestionCollaborator.copy_roles(q0, q1)
     c1 = q1.question_collaborators.first
     assert_equal c0.is_author, c1.is_author
@@ -118,13 +118,13 @@ class QuestionCollaboratorTest < ActiveSupport::TestCase
   end
 
   test "has request" do
-    qc = Factory.create(:question_collaborator, :question => @question)
+    qc = FactoryGirl.create(:question_collaborator, :question => @question)
     assert !qc.has_request?(:author)
     assert !qc.has_request?(:copyright)
-    qrr0 = Factory.create(:question_role_request, :question_collaborator => qc, :toggle_is_author => true)
+    qrr0 = FactoryGirl.create(:question_role_request, :question_collaborator => qc, :toggle_is_author => true)
     assert qc.has_request?(:author)
     assert !qc.has_request?(:copyright)
-    qrr1 = Factory.create(:question_role_request, :question_collaborator => qc, :toggle_is_copyright_holder => true)
+    qrr1 = FactoryGirl.create(:question_role_request, :question_collaborator => qc, :toggle_is_copyright_holder => true)
     assert qc.has_request?(:author)
     assert qc.has_request?(:copyright)
     qrr0.destroy
@@ -133,7 +133,7 @@ class QuestionCollaboratorTest < ActiveSupport::TestCase
   end
 
   test "has role" do
-    qr = Factory.create(:question_collaborator)
+    qr = FactoryGirl.create(:question_collaborator)
     assert !qr.has_role?(:author)
     assert !qr.has_role?(:copyright)
     assert !qr.has_role?(:any)

@@ -5,7 +5,7 @@ require 'test_helper'
 
 class UsersControllerTest < ActionController::TestCase
   setup do
-    @user = Factory.create(:user)
+    @user = FactoryGirl.create(:user)
   end
 
   test "should not get index not logged in" do

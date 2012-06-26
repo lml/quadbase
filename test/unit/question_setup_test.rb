@@ -15,20 +15,20 @@ class QuestionSetupTest < ActiveSupport::TestCase
   end
   
   test "content copy" do
-    qs0 = Factory.create(:question_setup)
+    qs0 = FactoryGirl.create(:question_setup)
     qs1 = qs0.content_copy
     assert_equal qs0.content, qs1.content
     assert_not_equal qs0, qs1
   end
 
   test "merge" do
-    qs = Factory.create(:question_setup)
+    qs = FactoryGirl.create(:question_setup)
     qs.content = "Something"
-    qs_blank = Factory.create(:question_setup)
+    qs_blank = FactoryGirl.create(:question_setup)
     qs_blank.content = ""
-    qs2 = Factory.create(:question_setup)
+    qs2 = FactoryGirl.create(:question_setup)
     qs2.content = "Something"
-    qs_different = Factory.create(:question_setup)
+    qs_different = FactoryGirl.create(:question_setup)
     qs_different.content = "Something else"
 
     qs.save!
