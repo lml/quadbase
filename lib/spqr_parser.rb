@@ -18,6 +18,16 @@ class SPQRParser < Parslet::Parser
 	rule(:attribute)       { attribute_con >> quote >> attribute_con >> quote }
 	rule(:image)           { (image_start_tag >> space? >> (( file | attribute ).repeat(1)) >> space? >> image_end_tag.maybe ).as(:image) }
 
+	#Check for any external links
+	rule(:link1)     { str("<a") | str("<A") }
+	rule(:link2)     { str(">") }
+	rule(:address)   { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\_|\{|\}|=|]/).repeat(1).as(:address) }
+	rule(:link_info) { space? >> str("href=") >> quote.maybe >> address >> quote.maybe }
+	rule(:link)      { (link1 >> space? >> (( link_info | attribute).repeat(1)) >> space? >> link2.maybe ) }
+	rule(:link_name) { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\_|\{|\}|=|\"]/).repeat(1).as(:link_name) }
+	rule(:link_end)  { str("</a>") | str("</A>") }
+	rule(:link_full) { ( link >> link_name.maybe >> link_end ).as(:link_info)}
+
 	#Check for formatting
 	rule(:italic_tag) { (str("<i>") | str("</i>") | str("<I>") | str("</I>")).as(:italic) }
 	rule(:bold_tag)   { (str("<b>") | str("</b>") | str("<B>") | str("</B>")).as(:bold) }
@@ -30,7 +40,9 @@ class SPQRParser < Parslet::Parser
 	rule(:asterisk)   { str("*").as(:asterisk)}
 	rule(:lthan)      { str("<").as(:lthan) }
 	rule(:gthan)      { str(">").as(:gthan) }
-	rule(:entities)   { asterisk | lthan | gthan }
+	rule(:apos)       { str("'").as(:apos) }
+	rule(:quote1)     { str('"').as(:quote1)}
+	rule(:entities)   { asterisk | lthan | gthan | apos | quote1 }
 
 	#Check for any font changes
 	rule(:font1)      { str("<font") | str("<FONT") }
@@ -93,8 +105,8 @@ class SPQRParser < Parslet::Parser
 
 	#Grammar parts
 	rule(:punc)   { match(/[^<]/) }
-	rule(:tags)   { font | pre | span | div | image }
-	rule(:format) { italic_tag | bold_tag | line_break | tt_tag | fnof | sub | sup | center | asterisk }
+	rule(:tags)   { font | pre | span | div | image | link_full }
+	rule(:format) { italic_tag | bold_tag | line_break | tt_tag | fnof | sub | sup | center | asterisk | apos | quote1 }
 	rule(:text)   { ( tags | format | letters | eol | new_p | greek | entities | (any.as(:any)) ).repeat(1) }
 	rule(:ques)   { text.repeat.as(:text) }
 
@@ -105,9 +117,11 @@ end
 #class UnavailableImage < StandardError; end
 
 class SPQRTransform < Parslet::Transform
+	rule(:quote1 => simple(:quote1))         {'&quot;'}
 	rule(:lthan => simple(:lthan))           {'&lt;'}
 	rule(:gthan => simple(:gthan))           {'&gt;'}
 	rule(:asterisk => simple(:asterisk))     {'&times;'}
+	rule(:apos => simple(:apos))             {'&apos;'}
 	rule(:center => simple(:center))         {}
 	rule(:italic => simple(:italic))         {"'"}
 	rule(:bold => simple(:bold))             {"!!"}
@@ -115,7 +129,7 @@ class SPQRTransform < Parslet::Transform
 	rule(:ttype => simple(:ttype))           {"$"}
 	rule(:para => simple(:para))             {"\n\n"}
 	rule(:eol => simple(:eol))               {}
-	rule(:content_f => sequence(:content_f)) {"!!" + content_f.join + "!!"}
+	rule(:content_f => sequence(:content_f)) {"'" + content_f.join + "'"}
 	rule(:font => simple(:font))             { font }
 	rule(:content_p => sequence(:content_p)) {"$$" + content_p.join + "$$"}
 	rule(:pre => simple(:pre))               { pre }
@@ -132,7 +146,11 @@ class SPQRTransform < Parslet::Transform
 	rule(:sup => sequence(:sup))             {"^{" + sup.join + "}"}
 	rule(:letters => simple(:letters))       { letters }
 	rule(:any => simple(:any))               { any }
-	rule(:image => sequence(:image))         { "MISSING IMAGE: #{image[0].to_s}"}
+	rule(:image => sequence(:image))         { "\[MISSING IMAGE: #{image[0].to_s}\]"}
 	rule(:filename => simple(:filename))     { filename.str.gsub(/[\n\t]/, "").strip }
+	rule(:address => simple(:address))       { "\[LINK TO: #{address.to_s}\] "}
+	rule(:link_name => simple(:link_name))   { link_name }
+	rule(:link_info => simple(:link_info))   { link_info }
+	rule(:link_info => sequence(:info))      { info.join }
 	rule(:text => sequence(:entries))        { entries.join }
 end

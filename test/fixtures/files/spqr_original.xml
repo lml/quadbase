@@ -7561,7 +7561,7 @@ wc = 0.2*pi;
 sincwc = sin(wc*(nn-M/2))./(pi*(nn-M/2)); <span class="ML_comment">%-- sinc function</span>
 sincwc(M/2 + 1) = wc/pi;                  <span class="ML_comment">%-- fix divide by zero</span>
 bb = hamm.*sincwc;                        <span class="ML_comment">%-- Filter Coefficients</span>
-</pre></b>
+</pre>
 
 Choose <font color="red"><b>all</b></font> correct answers from followings, which will evaluate the <b>frequency response of <tt>bb</tt> at frequency π</b>.
 
@@ -10690,7 +10690,7 @@ One sinusoidal shape centered at <B> 400 Hz </B>  that varies between <B> 365 Hz
 <response_label ident="QUE_241_A5">
 <material>
 <mattext texttype="text/html"><![CDATA[
-A straight line at 2000 Hz </B>  plus two sinusoidal shapes: one centered at
+A straight line at <B> 2000 Hz </B>  plus two sinusoidal shapes: one centered at
 <B> 2750 Hz </B>  varying <B> plus or
 minus 10 Hz; </B>  the other centered at <B> 1250 Hz </B>  varying <B> plus or
 minus 10 Hz. </B>

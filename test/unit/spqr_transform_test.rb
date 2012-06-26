@@ -38,7 +38,7 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 test "text_w_images" do
 	 	parser = SPQRParser.new
 	 	a = parser.parse(samples[0])
-	 	expected = "iejfeiMISSING IMAGE: /ece2025/cgi-bin/mimetex.exe?\\hat\\omega blue"
+	 	expected = "iejfei[MISSING IMAGE: /ece2025/cgi-bin/mimetex.exe?\\hat\\omega] blue"
 	 	output1 = SPQRTransform.new.apply(a)
 	 	assert_equal expected, output1
 	 end
@@ -116,7 +116,7 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 	parser = SPQRParser.new
 	 	a = parser.parse(samples[1])
 	 	output1 = SPQRTransform.new.apply(a)
-	 	expected = "Determine the smallest !!integer!! value of the sampling rate"
+	 	expected = "Determine the smallest 'integer' value of the sampling rate"
 	 	assert_equal expected, output1
 	 end
 
@@ -236,26 +236,6 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 	assert_equal expected, output1
 	 end
 
-	 #Test for question that has answer choices that contain a formatting error.
-	 # test "answer_choices" do
-	 # 	parser = SPQRParser.new
-	 # 	a = parser.parse('omega-hat = 600 and -600')
-	 # 	b = parser.parse('omega-hat = 6/5 and -6/5')
-	 # 	c = parser.parse('omega-hat = 1.2*pi and -1.2*pi')
-	 # 	d = parser.parse('omega-hat = 0.4*pi and -0.4*pi')
-	 # 	e = parser.parse('omega-hat = pi/5 and -pi/5')
-	 # 	output1 = SPQRTransform.new.apply(a)
-	 # 	output2 = SPQRTransform.new.apply(b)
-	 # 	output3 = SPQRTransform.new.apply(c)
-	 # 	output4 = SPQRTransform.new.apply(d)
-	 # 	output5 = SPQRTransform.new.apply(e)
-	 # 	p output1
-	 # 	p output2
-	 # 	p output3
-	 # 	p output4
-	 # 	p output5
-	 # end
-
 	 test "asterisk" do
 	 	parser = SPQRParser.new
 	 	a = parser.parse('3*4')
@@ -278,5 +258,34 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 	expected = "4&gt;3"
 	 	output1 = SPQRTransform.new.apply(a)
 	 	assert_equal expected, output1
+	 end
+
+	 test "apostrophe" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse("bb'")
+	 	expected = "bb&apos;"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
+
+	 test "one_quote" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('bb"')
+	 	expected = "bb&quot;"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
+
+	 test "link" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('<a href=myblog.com/photos></a>')
+	 	expected1 = "[LINK TO: myblog.com/photos] "
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected1, output1
+	 	b = parser.parse('each<a href="myblog.com/photos">set of pictures</A>')
+	 	p b
+	 	expected2 = "each[LINK TO: myblog.com/photos] set of pictures"
+	 	output2 = SPQRTransform.new.apply(b)
+	 	assert_equal expected2, output2
 	 end
 end
