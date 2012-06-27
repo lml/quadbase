@@ -6,9 +6,9 @@ require 'test_helper'
 class CommentThreadTest < ActiveSupport::TestCase
 
   test 'cannot mass-assign commentable, comments and comment_thread_subscriptions' do
-    sq = Factory.create(:simple_question)
-    c = [Factory.create(:comment)]
-    cts = [Factory.create(:comment_thread_subscription)]
+    sq = FactoryGirl.create(:simple_question)
+    c = [FactoryGirl.create(:comment)]
+    cts = [FactoryGirl.create(:comment_thread_subscription)]
     ct = CommentThread.new(:commentable => sq,
                            :comments => c,
                            :comment_thread_subscriptions => cts)
@@ -18,8 +18,8 @@ class CommentThreadTest < ActiveSupport::TestCase
   end
 
   test 'clear' do
-    u = Factory.create(:user)
-    q = Factory.create(:simple_question)
+    u = FactoryGirl.create(:user)
+    q = FactoryGirl.create(:simple_question)
     ct = q.comment_thread
     c = Comment.new
     c.comment_thread = ct
@@ -37,8 +37,8 @@ class CommentThreadTest < ActiveSupport::TestCase
   end
 
   test 'subscribe' do
-    u = Factory.create(:user)
-    ct = Factory.create(:comment_thread)
+    u = FactoryGirl.create(:user)
+    ct = FactoryGirl.create(:comment_thread)
 
     assert !ct.subscription_for(u)
     assert ct.subscribe!(u)
@@ -47,8 +47,8 @@ class CommentThreadTest < ActiveSupport::TestCase
   end
 
   test 'unsubscribe' do
-    u = Factory.create(:user)
-    ct = Factory.create(:comment_thread)
+    u = FactoryGirl.create(:user)
+    ct = FactoryGirl.create(:comment_thread)
 
     assert !ct.unsubscribe!(u)
     assert ct.subscribe!(u)
