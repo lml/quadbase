@@ -198,9 +198,6 @@ class MultipartQuestion < Question
     end
   end
 
-  def is_multipart?
-    true
-  end
 
 protected
 
