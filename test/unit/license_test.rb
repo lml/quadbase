@@ -10,8 +10,8 @@ class LicenseTest < ActiveSupport::TestCase
   test "destroyable?" do
     lic = licenses(:cc_by_3_0)
     assert lic.destroy
-    lic = Factory.create(:license)
-    assert Factory.create(:simple_question, :license => lic)
+    lic = FactoryGirl.create(:license)
+    assert FactoryGirl.create(:simple_question, :license => lic)
     lic.reload
     assert !lic.destroy
   end
@@ -20,7 +20,7 @@ class LicenseTest < ActiveSupport::TestCase
     lic = licenses(:cc_by_3_0)
     lic.short_name = "Some Name"
     lic.save!
-    assert Factory.create(:simple_question, :license => lic)
+    assert FactoryGirl.create(:simple_question, :license => lic)
     lic.reload
     lic.agreement_partial_name = "some_partial"
     assert lic.save
@@ -30,7 +30,7 @@ class LicenseTest < ActiveSupport::TestCase
 
   test "only allow one license" do
     lic0 = licenses(:cc_by_3_0)
-    lic1 = Factory.build(:license)
+    lic1 = FactoryGirl.build(:license)
     assert !lic1.save
   end
 

@@ -11,28 +11,28 @@ class ProjectQuestionTest < ActiveSupport::TestCase
   test "drafts can only be in one project" do
     q = make_simple_question
     
-    Factory.create(:project_question, :question => q)
+    FactoryGirl.create(:project_question, :question => q)
     assert_raise(ActiveRecord::RecordInvalid) { 
-      Factory.create(:project_question, :question => q)
+      FactoryGirl.create(:project_question, :question => q)
     }
   end
   
   test "published questions can be in any projects" do
     q = make_simple_question(:published => true)
     
-    Factory.create(:project_question, :question => q)
+    FactoryGirl.create(:project_question, :question => q)
     assert_nothing_raised(ActiveRecord::RecordInvalid) { 
-      Factory.create(:project_question, :question => q)
+      FactoryGirl.create(:project_question, :question => q)
     }    
   end
 
   test "move!" do
     q = make_simple_question
     
-    old_project = Factory.create(:project)
-    new_project = Factory.create(:project)
+    old_project = FactoryGirl.create(:project)
+    new_project = FactoryGirl.create(:project)
             
-    wq = Factory.create(:project_question, 
+    wq = FactoryGirl.create(:project_question, 
                         :question => q,
                         :project => old_project)
     
@@ -43,18 +43,18 @@ class ProjectQuestionTest < ActiveSupport::TestCase
   end
   
   test "move multipart" do
-    mpq = Factory.create(:multipart_question)
-    sq1 = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    mpq = FactoryGirl.create(:multipart_question)
+    sq1 = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
 
     mpq.add_parts([sq1])
     
-    old_project = Factory.create(:project)
-    new_project = Factory.create(:project)
+    old_project = FactoryGirl.create(:project)
+    new_project = FactoryGirl.create(:project)
     
-    mpq_pq = Factory.create(:project_question, 
+    mpq_pq = FactoryGirl.create(:project_question, 
                             :question => mpq,
                             :project => old_project)
-    sq1_pq = Factory.create(:project_question, 
+    sq1_pq = FactoryGirl.create(:project_question, 
                             :question => sq1,
                             :project => old_project)
 
@@ -65,15 +65,15 @@ class ProjectQuestionTest < ActiveSupport::TestCase
   end
   
   test "copy!" do
-    u = Factory.create(:user)
+    u = FactoryGirl.create(:user)
     q = make_simple_question
     q.content = 'Unpublished'
     q.save!
     
-    old_project = Factory.create(:project)
-    new_project = Factory.create(:project)
+    old_project = FactoryGirl.create(:project)
+    new_project = FactoryGirl.create(:project)
             
-    wq = Factory.create(:project_question, 
+    wq = FactoryGirl.create(:project_question, 
                         :question => q,
                         :project => old_project)
     
@@ -88,7 +88,7 @@ class ProjectQuestionTest < ActiveSupport::TestCase
     pq.save!
     pq.publish!(u)
 
-    pwq = Factory.create(:project_question, 
+    pwq = FactoryGirl.create(:project_question, 
                          :question => pq,
                          :project => old_project)
 

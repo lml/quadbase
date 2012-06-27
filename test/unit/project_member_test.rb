@@ -14,15 +14,15 @@ class ProjectMemberTest < ActiveSupport::TestCase
   end
 
   test "default for user" do 
-    wm1 = Factory.create(:project_member, :is_default => true)
-    wm2 = Factory.create(:project_member, :user => wm1.user)
+    wm1 = FactoryGirl.create(:project_member, :is_default => true)
+    wm2 = FactoryGirl.create(:project_member, :user => wm1.user)
 
     assert_equal wm1, ProjectMember.default_for_user(wm1.user)
   end
 
   test "make default" do
-    wm1 = Factory.create(:project_member, :is_default => true)
-    wm2 = Factory.create(:project_member, :user => wm1.user)
+    wm1 = FactoryGirl.create(:project_member, :is_default => true)
+    wm2 = FactoryGirl.create(:project_member, :user => wm1.user)
     
     assert wm1.is_default, "a"
     assert !wm2.is_default,  "b"
@@ -37,24 +37,24 @@ class ProjectMemberTest < ActiveSupport::TestCase
   end
   
   test "can't have more than 1 default" do 
-    wm1 = Factory.create(:project_member, :is_default => true)
+    wm1 = FactoryGirl.create(:project_member, :is_default => true)
     
     assert_raise(ActiveRecord::RecordInvalid) { 
-      Factory.create(:project_member, :user => wm1.user, :is_default => true)
+      FactoryGirl.create(:project_member, :user => wm1.user, :is_default => true)
     }
   end
 
   test "can't add member twice" do
-    user = Factory.create(:user)
-    project = Factory.create(:project)
-    assert_nothing_raised {Factory.create(:project_member, :project => project, :user => user)}
-    assert_raise(ActiveRecord::RecordInvalid) {Factory.create(:project_member, :project => project, :user => user)}
+    user = FactoryGirl.create(:user)
+    project = FactoryGirl.create(:project)
+    assert_nothing_raised {FactoryGirl.create(:project_member, :project => project, :user => user)}
+    assert_raise(ActiveRecord::RecordInvalid) {FactoryGirl.create(:project_member, :project => project, :user => user)}
   end
 
   test "removing last member destroys project" do
-    wm0 = Factory.create(:project_member)
+    wm0 = FactoryGirl.create(:project_member)
     w = wm0.project
-    wm1 = Factory.create(:project_member, :project => w)
+    wm1 = FactoryGirl.create(:project_member, :project => w)
     wm0.destroy
     assert_nothing_raised { Project.find(w.id) }
     wm1.destroy

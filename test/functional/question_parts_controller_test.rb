@@ -6,10 +6,10 @@ require 'test_helper'
 class QuestionPartsControllerTest < ActionController::TestCase
 
   setup do
-    @user = Factory.create(:user)
-    @qp1 = Factory.create(:question_part, :order => 1)
+    @user = FactoryGirl.create(:user)
+    @qp1 = FactoryGirl.create(:question_part, :order => 1)
     @multipart_question = @qp1.multipart_question
-    @qp2 = Factory.create(:question_part, :order => 2,
+    @qp2 = FactoryGirl.create(:question_part, :order => 2,
                                           :multipart_question => @multipart_question)
     ProjectQuestion.create(:question => @multipart_question,
                            :project => Project.default_for_user!(@user))
@@ -36,14 +36,14 @@ class QuestionPartsControllerTest < ActionController::TestCase
   test "should unlock question part" do
     sign_in @user
 
-    qs = Factory.create(:question_setup, :content => "Something")
+    qs = FactoryGirl.create(:question_setup, :content => "Something")
     pq1 = make_simple_question(:published => true, :question_setup => qs)
-    pqp1 = Factory.create(:question_part, :order => 1, :child_question => pq1)
+    pqp1 = FactoryGirl.create(:question_part, :order => 1, :child_question => pq1)
     multipart_question2 = pqp1.multipart_question
     multipart_question2.question_setup = qs
     multipart_question2.save!
     pq2 = make_simple_question(:published => true, :question_setup => qs)
-    pqp2 = Factory.create(:question_part, :order => 2, :child_question => pq2,
+    pqp2 = FactoryGirl.create(:question_part, :order => 2, :child_question => pq2,
                                           :multipart_question => multipart_question2)
     ProjectQuestion.create(:question => multipart_question2,
                            :project => Project.default_for_user!(@user))

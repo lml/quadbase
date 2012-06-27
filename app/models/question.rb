@@ -93,6 +93,11 @@ class Question < ActiveRecord::Base
 
   has_many :solutions, :dependent => :destroy
 
+  has_many :questions_same_number,
+           :class_name => "Question",
+           :primary_key => "number",
+           :foreign_key => "number"
+
   attr_writer :variated_content_html
   
   def variated_content_html
@@ -473,7 +478,7 @@ class Question < ActiveRecord::Base
     end
 
     type_query = typify(type)
-    wtscope = wscope.where{question_type =~ type_query}
+    wtscope = wscope.includes{question_setup}.where{question_type =~ type_query}
 
     if !exclude_type.blank?
       exclude_type_query = typify(exclude_type)
@@ -481,62 +486,67 @@ class Question < ActiveRecord::Base
     end
 
     latest_only = true
-    case part
-    when 'ID/Number'
-      # Search by question ID or number (more relaxed than to_param)
-      if text.blank?
-        q = wtscope
-      elsif (text =~ /^\s?(\d+)\s?$/) # Format: (id or number)
-        id_query = $1
-        num_query = $1
-        q = wtscope.where{(id == id_query) | (number == num_query)}
-      elsif (text =~ /^\s?d\.?\s?(\d+)\s?$/) # Format: d(id)
-        id_query = $1
-        q = wtscope.where{id == id_query}
-        latest_only = false
-      elsif (text =~ /^\s?q\.?\s?(\d+)(,?\s?v\.?\s?(\d+))?\s?$/)
-        # Format: q(number) or q(number)v(version)
-        num_query = $1
-        if $2.nil?
-          q = wtscope.where{number == num_query}
-        elsif !$3.nil?
-          ver_query = $3
-          q = wtscope.where{(number == num_query) & (version == ver_query)}
+    if !text.blank?
+      case part
+      when 'ID/Number'
+        # Search by question ID or number (more relaxed than to_param)
+        if (text =~ /^\s?(\d+)\s?$/) # Format: (id or number)
+          id_query = $1
+          num_query = $1
+          q = wtscope.where{(id == id_query) | (number == num_query)}
+        elsif (text =~ /^\s?d\.?\s?(\d+)\s?$/) # Format: d(id)
+          id_query = $1
+          q = wtscope.where{id == id_query}
           latest_only = false
-        else # Invalid version
+        elsif (text =~ /^\s?q\.?\s?(\d+)(,?\s?v\.?\s?(\d+))?\s?$/)
+          # Format: q(number) or q(number)v(version)
+          num_query = $1
+          if $2.nil?
+            q = wtscope.where{number == num_query}
+          elsif !$3.nil?
+            ver_query = $3
+            q = wtscope.where{(number == num_query) & (version == ver_query)}
+            latest_only = false
+          else # Invalid version
+            return Question.where{id == nil}.where{id != nil} # Empty
+          end
+        else # Invalid ID/Number
           return Question.where{id == nil}.where{id != nil} # Empty
         end
-      else # Invalid ID/Number
-        return Question.where{id == nil}.where{id != nil} # Empty
+      when 'Author/Copyright Holder'
+        # Search by author (or copyright holder)
+        q = wtscope.joins{question_collaborators.user}
+        text.gsub(",", "").split.each do |t|
+          query = t.blank? ? '%' : '%' + t + '%'
+          q = q.where{(question_collaborators.user.first_name =~ query) |\
+                      (question_collaborators.user.last_name =~ query)}
+        end
+      when 'Tags'
+        # Search by tags
+        q = wtscope.joins{taggings.tag}
+        text.split(",").each do |t|
+          query = t.blank? ? '%' : '%' + t + '%'
+          q = q.where{tags.name =~ query}
+        end
+      else # Content
+        query = '%' + text + '%'
+        q = wtscope.where{(content =~ query) | (question_setups.content =~ query)}
       end
-    when 'Author/Copyright Holder'
-      # Search by author (or copyright holder)
-      q = wtscope.joins{question_collaborators.user}
-      text.gsub(",", "").split.each do |t|
-        query = t.blank? ? '%' : '%' + t + '%'
-        q = q.where{(question_collaborators.user.first_name =~ query) |\
-                                    (question_collaborators.user.last_name =~ query)}
-      end
-    when 'Tags'
-      # Search by tags
-      q = wtscope.joins{taggings.tag}
-      text.split(",").each do |t|
-        query = t.blank? ? '%' : '%' + t + '%'
-        q = q.where{tags.name =~ query}
-      end
-    else # Content
-      query = text.blank? ? '%' : '%' + text + '%'
-      q = wtscope.joins{question_setup.outer}.where{(content =~ query) | (question_setup.content =~ query)}
+    else
+      q = wtscope
     end
     
     # Remove (in SQL) questions the user can't read
     q = q.which_can_be_read_by(user)
 
+    # Remove duplicates and allow the use of max()
+    q = q.group{questions.id}
+
     if latest_only # Remove old published versions
-      q = q.where{questions.id.in(Question.draft_questions) |\
-                  questions.id.in(Question.published_questions.group{number}.having{version == max(version)})}
+      q = q.joins{questions_same_number}\
+           .having{(version == nil) | (version == max(questions_same_number.version))}
     end
-    q.group{questions.id}.order{number}
+    q.order{number}
   end
 
   def roleless_collaborators
@@ -558,6 +568,11 @@ class Question < ActiveRecord::Base
   
   def base_class
     Question
+  end
+
+  def project
+    raise IllegalState if is_published?
+    project_questions.first.project
   end
   
   # In some cases, there could be some outstanding role requests on this question
@@ -595,9 +610,7 @@ class Question < ActiveRecord::Base
     # Othewise, returns false.
     return true if @@lock_timeout <= 0
     # Transaction to make testing and setting the lock atomic
-    # In rails 3.2, replace self.transaction and self.lock! with self.with_lock block
-    self.transaction do
-      self.lock! # Database-based locking (on MySQL, requires InnoDB engine)
+    self.with_lock do
       return already_locked_error if (self.is_locked? && !self.has_lock?(user))
       self.locked_by = user.id
       self.locked_at = Time.now
@@ -610,9 +623,7 @@ class Question < ActiveRecord::Base
     # Othewise, returns false.
     return true if @@lock_timeout <= 0
     # Transaction to make releasing the lock atomic
-    # In rails 3.2, replace self.transaction and self.lock! with self.with_lock block
-    self.transaction do
-      self.lock! # Database-based locking (on MySQL, requires InnoDB engine)
+    self.with_lock do
       return not_locked_error if !self.is_locked?
       return already_locked_error if (self.is_locked? && !self.has_lock?(user))
       self.locked_by = -1
@@ -703,7 +714,7 @@ protected
     errors.add(:base, "Changes cannot be made to a published question.#{self.changes}")
     false
   end
-  
+
   def clear_empty_logic
     if !logic.nil? && logic.empty?
       logic.destroy 

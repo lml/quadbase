@@ -34,8 +34,8 @@ class ProjectTest < ActiveSupport::TestCase
   
   test "default for user" do
     ww = make_project(:num_questions => 3, :num_members => 1, :method => :create)
-    ws = Factory.create(:project)
-    wm = Factory.create(:project_member, :user => ww.members.first, :project => ws)
+    ws = FactoryGirl.create(:project)
+    wm = FactoryGirl.create(:project_member, :user => ww.members.first, :project => ws)
     
     assert_not_equal ww, Project.default_for_user(ww.members.first)
     wm.make_default!
@@ -45,7 +45,7 @@ class ProjectTest < ActiveSupport::TestCase
   test "default for user new user" do 
     orig_num_projects = Project.count
     
-    new_user = Factory.create(:user)
+    new_user = FactoryGirl.create(:user)
     
     new_user_default_ws = Project.default_for_user!(new_user)
     
@@ -65,7 +65,7 @@ class ProjectTest < ActiveSupport::TestCase
   
   test "add member" do
     ww = make_project(:num_questions => 3, :num_members => 1, :method => :create)
-    user = Factory.create(:user)
+    user = FactoryGirl.create(:user)
     assert_equal ww.members.length, 1
     assert_raise(ActiveRecord::RecordNotFound) {ProjectMember.find(user.id)}
     ww.add_member!(user)
@@ -77,7 +77,7 @@ class ProjectTest < ActiveSupport::TestCase
     ww0 = make_project(:num_questions => 3, :num_members => 1, :method => :create)
     ww1 = make_project(:num_questions => 4, :num_members => 2, :method => :create)
     ww2 = make_project(:num_questions => 5, :num_members => 3, :method => :create)
-    user = Factory.create(:user)
+    user = FactoryGirl.create(:user)
     assert Project.all_for_user(user).empty?
     ww0.add_member!(user)
     ww0.save!
@@ -95,7 +95,7 @@ class ProjectTest < ActiveSupport::TestCase
 
   test "is default for user?" do
     ww0 = make_project(:num_questions => 3, :num_members => 1, :method => :create)
-    user = Factory.create(:user)
+    user = FactoryGirl.create(:user)
     assert !ww0.is_default_for_user?(user)
     assert Project.default_for_user(user).nil?
     ww1 = Project.default_for_user!(user)
