@@ -4,12 +4,12 @@
 <% attachable = @attachable_asset.attachable %>
 
 $('.active_selection_window').append("<%= escape_javascript(
-  render :partial => 'attachable_assets/selectable_image.html.erb',
+  render :partial => 'attachable_assets/selectable_image',
          :locals => { :attachable_asset => @attachable_asset }) %>");
 
 $("#<%= "#{attachable.class.to_s.tableize.singularize}_#{attachable.id.to_s}_assets"
   %>").append("<%= escape_javascript(
-                     render :partial => 'attachable_assets/single_asset.html.erb',
+                     render :partial => 'attachable_assets/single_asset',
                             :locals => {:attachable_asset => @attachable_asset}) %>");
 
 <%= hide_none %>
