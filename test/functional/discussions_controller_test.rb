@@ -6,8 +6,8 @@ require 'test_helper'
 class DiscussionsControllerTest < ActionController::TestCase
 
   setup do
-    @user = Factory.create(:user)
-    @discussion = Factory.create(:discussion)
+    @user = FactoryGirl.create(:user)
+    @discussion = FactoryGirl.create(:discussion)
     @discussion.comment_thread.subscribe!(@user)
   end
 

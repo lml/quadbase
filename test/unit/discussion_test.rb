@@ -6,7 +6,7 @@ require 'test_helper'
 class DiscussionTest < ActiveSupport::TestCase
 
   test "cannot mass-assign comment_thread, subject, body" do
-    ct = Factory.create(:comment_thread)
+    ct = FactoryGirl.create(:comment_thread)
     d = Discussion.new(:comment_thread => ct, :subject => 'head', :body => 'bod')
     assert d.comment_thread != ct
     assert d.subject != 'head'
@@ -14,15 +14,15 @@ class DiscussionTest < ActiveSupport::TestCase
   end
   
   test "should have a recipient when subscribed" do
-    discussion = Factory.create(:discussion)
-    user = Factory.create(:user)
+    discussion = FactoryGirl.create(:discussion)
+    user = FactoryGirl.create(:user)
     discussion.comment_thread.subscribe!(user)
     assert discussion.has_recipient?(user)
   end
   
   test "should delete discussion when no recipients are left" do
-    discussion = Factory.create(:discussion)
-    user = Factory.create(:user)
+    discussion = FactoryGirl.create(:discussion)
+    user = FactoryGirl.create(:user)
     ct = discussion.comment_thread
     ct.subscribe!(user)
     assert discussion.has_recipient?(user)
