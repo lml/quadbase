@@ -1,0 +1,16 @@
+<!-- # Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+# License version 3 or later.  See the COPYRIGHT file for details. -->
+
+<%= form_tag("/import/qti", :multipart => true) do %>
+  <%= label_tag("File") %>
+  <br>
+  <%= file_field_tag(:file) %>
+  <br>
+  <br>
+  <%= label_tag("Content Type") %>
+  <br>
+  <%= select_tag(:content_type, options_for_select(@content_types).html_safe ) %>
+  <br>
+  <br>
+  <%= submit_tag("Import") %>
+<% end %>

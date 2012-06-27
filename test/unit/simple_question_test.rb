@@ -95,6 +95,8 @@ class SimpleQuestionTest < ActiveSupport::TestCase
     sq.variate!(qv)
     ContentParseAndCache.enable_test_parser = false
   end
+
+
   
   # TODO implement the following tests
   # 
