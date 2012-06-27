@@ -9,7 +9,7 @@ class QuestionDerivationTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = true
 
   test "must have source_question_id, derived_question_id, deriver_id" do
-    qd = Factory.create(:question_derivation)
+    qd = FactoryGirl.create(:question_derivation)
     qd.reload
     qd.save!
     qd.source_question_id = nil
@@ -26,9 +26,9 @@ class QuestionDerivationTest < ActiveSupport::TestCase
     # test the attributes, validations
     qd = QuestionDerivation.new
     assert !qd.save
-    qd = Factory.build(:question_derivation)
+    qd = FactoryGirl.build(:question_derivation)
     assert qd.save
-    qd2 = Factory.build(:question_derivation)
+    qd2 = FactoryGirl.build(:question_derivation)
     qd2.derived_question = qd.derived_question
     assert !qd2.save
   end

@@ -60,42 +60,42 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test "username cannot be changed" do
-    user = Factory.create(:user)
+    user = FactoryGirl.create(:user)
     assert user.save
     user.username = "NewName"
     assert !user.save
   end
   
   test "cannot have two usernames only differ by case" do
-    user0 = Factory.build(:user)
-    user1 = Factory.build(:user, :username => user0.username.swapcase)
+    user0 = FactoryGirl.build(:user)
+    user1 = FactoryGirl.build(:user, :username => user0.username.swapcase)
     assert_not_equal user0.username, user1.username
     assert user0.save
     assert !user1.save
   end
 
   test "disable user" do
-    user = Factory.create(:user)
+    user = FactoryGirl.create(:user)
     assert !user.is_disabled?
     user.disable!
     assert user.is_disabled?
   end
 
   test "at least one admin" do
-    admin0 = Factory.create(:user, :is_administrator => true)
+    admin0 = FactoryGirl.create(:user, :is_administrator => true)
     admin0.is_administrator = false
     assert !admin0.save
     assert !admin0.disable!
-    admin1 = Factory.create(:user, :is_administrator => true)
+    admin1 = FactoryGirl.create(:user, :is_administrator => true)
     assert admin0.save
     assert admin0.disable!
   end
 
   test "search" do
-    user0 = Factory.create(:user, :first_name => "Some", :last_name => "User", :username => "SomeUser0", :email => "su0@example.com")
-    user1 = Factory.create(:user, :first_name => "Another", :last_name => "User", :username => "AnotherUser1", :email => "au1@example.com")
-    user2 = Factory.create(:user, :first_name => "John", :last_name => "Doe", :username => "JohnDoe2000", :email => "jd2000@example.com")
-    user3 = Factory.create(:user, :first_name => "Jane", :last_name => "Doe", :username => "JaneDoe3000", :email => "jd3000@example.com")
+    user0 = FactoryGirl.create(:user, :first_name => "Some", :last_name => "User", :username => "SomeUser0", :email => "su0@example.com")
+    user1 = FactoryGirl.create(:user, :first_name => "Another", :last_name => "User", :username => "AnotherUser1", :email => "au1@example.com")
+    user2 = FactoryGirl.create(:user, :first_name => "John", :last_name => "Doe", :username => "JohnDoe2000", :email => "jd2000@example.com")
+    user3 = FactoryGirl.create(:user, :first_name => "Jane", :last_name => "Doe", :username => "JaneDoe3000", :email => "jd3000@example.com")
 
     search0 = User.search('All', '')
     search1 = User.search('All', 'Some')
@@ -154,10 +154,10 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test "deputies" do
-    u1 = Factory.create(:user)
-    u2 = Factory.create(:user)
+    u1 = FactoryGirl.create(:user)
+    u2 = FactoryGirl.create(:user)
 
-    dd = Factory.create(:deputization, :deputizer => u1, :deputy => u2)
+    dd = FactoryGirl.create(:deputization, :deputizer => u1, :deputy => u2)
 
     assert_equal u1.owned_deputizations.size, 1
     assert_equal u1.deputies.size, 1

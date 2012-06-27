@@ -6,12 +6,12 @@ require 'test_helper'
 class CommentsControllerTest < ActionController::TestCase
 
   setup do
-    @comment = Factory.create(:comment)
+    @comment = FactoryGirl.create(:comment)
     @question = @comment.comment_thread.commentable
     @user = @comment.creator
-    Factory.create(:project_question, :question => @question, :project => Project.default_for_user!(@user))
+    FactoryGirl.create(:project_question, :question => @question, :project => Project.default_for_user!(@user))
     @published_question = make_simple_question(:method => :create, :published => true)
-    @published_comment = Factory.create(:comment,
+    @published_comment = FactoryGirl.create(:comment,
                                         :comment_thread => @published_question.comment_thread)
   end
 

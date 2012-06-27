@@ -8,7 +8,7 @@ class LicensesControllerTest < ActionController::TestCase
   setup do
     License.delete_all
     assert_equal 0, License.count
-    @license = Factory.build(:license)
+    @license = FactoryGirl.build(:license)
   end
 
   test "should not get index not logged in" do
@@ -70,7 +70,7 @@ class LicensesControllerTest < ActionController::TestCase
       post :create, :license => @license.attributes
     end
     assert_redirected_to license_path(assigns(:license))
-    @license2 = Factory.build(:license)
+    @license2 = FactoryGirl.build(:license)
     assert_difference('License.count', 0) do
       post :create, :license => @license2.attributes
     end
