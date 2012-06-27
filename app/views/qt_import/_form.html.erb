@@ -6,7 +6,7 @@
   <br>
   <%= label_tag("Content Type") %>
   <br>
-  <%= select_tag(:content_type, options_for_select(@content_types).html_safe, :include_blank => true) %>
+  <%= select_tag(:content_type, options_for_select(@content_types).html_safe ) %>
   <br>
   <br>
   <%= submit_tag("Import") %>

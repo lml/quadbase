@@ -8,8 +8,9 @@ require 'test_helper'
 class QtImportControllerTest < ActionController::TestCase
   
 	setup do 
-		@user = Factory.create(:user)
+		@user = FactoryGirl.create(:user)
 		@file1 = fixture_file_upload("/files/spqr3.xml", 'xml')	
+		@file2 = fixture_file_upload("/files/check_icon_v1.png", 'png')
 		@content = 'SPQR'
 	end
 
@@ -26,9 +27,15 @@ class QtImportControllerTest < ActionController::TestCase
 
 	test "should import" do
 		sign_in @user
-		post :create, :file => @file1, :content_types => @content
+		post :create, :file => @file1, :content_type => @content
 		@project = Project.find_by_name("Import")
 		assert(@project.is_member?(@user), "user is member of project")
 		assert_response :success
+	end
+
+	test "should fail" do
+		sign_in @user
+		post :create, :file => @file2, :content_type => @content
+		assert_redirected_to import_qti_new_path
 	end
 end

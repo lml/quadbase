@@ -9,20 +9,13 @@ require 'spqr_parser.rb'
 
 class QTImport 
 
-	@@content_types = [['SPQR','SPQR']]
+	@@content_types = [['SPQR']]
 
 	attr_reader :filename, :content_type, :parser, :transformer
 
 	def self.content_types
 		@@content_types
 	end
-
-	# def self.add_questions(project,questions)
-	# 	for a in 0..(questions.length-1)
-	# 		project.add_question!(questions[a])
-	# 	end
-	# 	return project
-	# end
 
 	def self.choose_import(content_type)
 		if (content_type == 'SPQR')
@@ -37,21 +30,6 @@ class QTImport
 		a.add_member!(current_user)
 		a
 	end
-
-	# def self.get_answers(ans_content,credit_content,parser,transformer)
-	# 	answers = Hash.new
-	# 	for z in 0..(ans_content.length-1)
-	# 		label = ans_content[z].attributes["ident"].value
-	# 		credit = self.get_credit(credit_content,label)
-	# 		y = ans_content[z].children.children.children
-	# 		text = y[0].content
-	# 		x = parser.parse(text)
-	# 		ans = transformer.apply(x)
-	# 		choice = [ans,credit]
-	# 		answers[label] = choice
-	# 	end
-	# 	answers
-	# end
 
 	def self.get_credit(content)
 		credit = Hash.new
@@ -71,9 +49,7 @@ class QTImport
 	def self.get_questions(project, content, parser, transformer,current_user)
 		coder = HTMLEntities.new
 		ques_nodes = content.xpath('//presentation')
-		# ans_nodes = content.xpath('//presentation//response_lid//response_label')
 		credit_nodes = content.xpath('//resprocessing//respcondition')
-		# answers = self.get_answers(ans_nodes,credit_nodes,parser,transformer)
 		credit = get_credit(credit_nodes)
 		for a in 0..(content.length-1)
 			b = content[a]
@@ -91,7 +67,6 @@ class QTImport
 			e.save!
 			temp_ans = Array.new
 			temp_credit = Array.new
-			# debugger
 			f = content[a].xpath('.//response_lid//response_label')
 			for g in 0..(f.length-1)
 				label = f[g].attributes["ident"].value
@@ -103,7 +78,6 @@ class QTImport
 				ans = transformer.apply(i)
 				temp_ans << ans
 			end
-			# answers.each_key {|j| if j.match(ques_id) then answers.delete(j) end }
 			if temp_ans.length == 0
 				temp_ans << 'fake'
 				temp_credit << 0
@@ -132,6 +106,8 @@ class QTImport
 #content within each tag and "discard" the rest.
 	def self.iterate_items(document)
 		items = document.xpath('//item')
+		raise StandardError if items.blank?
+		items
 	end
 
 	def self.normalize(array)
@@ -149,5 +125,7 @@ class QTImport
 	def self.openfile(filename)
 		f = File.open(filename)
 		doc = Nokogiri::XML(f)
+		f.close
+		doc
 	end
 end

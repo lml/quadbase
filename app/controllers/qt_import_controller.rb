@@ -9,19 +9,18 @@ class QtImportController < ApplicationController
 	end
 
 	def create
-		f = params[:file]
-		document = QTImport.openfile(f.path)
-		project = QTImport.createproject(current_user)
-		parser, transformer = QTImport.choose_import(params[:content_type])
-		content = QTImport.iterate_items(document)
-		# debugger
-		QTImport.get_questions(project,content,parser,transformer,current_user)
-		# project = QTImport.createproject(current_user)
-		# QTImport.add_questions(project,questions)
-
-	# rescue
-	# 	render :text => "Sorry, there was a problem with importing your questions."
-	# 	redirect_to :new
-	# end
+		begin
+			f = params[:file]
+			document = QTImport.openfile(f.path)
+			project = QTImport.createproject(current_user)
+			parser, transformer = QTImport.choose_import(params[:content_type])
+			content = QTImport.iterate_items(document)
+			QTImport.get_questions(project,content,parser,transformer,current_user)
+		
+		rescue			
+			flash[:alert] = 'Unfortunately we could not import all of your questions.  This may be due to formatting errors in your questions, such as HTML.
+However, we were most likely able to import some of your questions.  They are listed under a new project called Import, and are now unpublished questions.'
+			redirect_to :action => :new		
+		end
     end
 end
