@@ -14,10 +14,6 @@ gem 'jquery-rails', '~> 2.0.2'
 
 gem 'nokogiri'
 
-gem 'carrierwave'
-
-gem 'upmark'
-
 gem 'htmlentities'
 
 # Deploy with Capistrano
