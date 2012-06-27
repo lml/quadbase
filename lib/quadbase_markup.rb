@@ -40,10 +40,10 @@ class QuadbaseParser < Parslet::Parser
                 ).repeat(1).as(:text) }
   
   rule(:bold_tag) { str("!!") }
-  rule(:bold) { bold_tag >> content.as(:bold) >> bold_tag }
+  rule(:bold) { bold_tag >> ( ( content | eol ).repeat(1) ).as(:bold) >> bold_tag }
     
   rule(:italic_tag) { str("''") }
-  rule(:italic) { italic_tag >> content.as(:italic) >> italic_tag }
+  rule(:italic) { italic_tag >> ( ( content | eol ).repeat(1) ).as(:italic) >> italic_tag }
 
   rule(:bullet_tag) { str("*") }
   rule(:bullet) { bullet_tag >> spaces >> content.as(:bullet) }

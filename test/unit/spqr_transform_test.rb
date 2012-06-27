@@ -46,7 +46,7 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 test "italics" do
 	 	parser = SPQRParser.new
 	 	a = parser.parse('a<i>This is italics.</i>')
-	 	expected = "a'This is italics.'"
+	 	expected = "a''This is italics.''"
 	 	output1 = SPQRTransform.new.apply(a)
 	 	assert_equal expected, output1
 	 	b = parser.parse('a<I>This is italics.</I>')
@@ -116,7 +116,7 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 	parser = SPQRParser.new
 	 	a = parser.parse(samples[1])
 	 	output1 = SPQRTransform.new.apply(a)
-	 	expected = "Determine the smallest 'integer' value of the sampling rate"
+	 	expected = "Determine the smallest ''integer'' value of the sampling rate"
 	 	assert_equal expected, output1
 	 end
 
@@ -287,5 +287,37 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 	expected2 = "each[LINK TO: myblog.com/photos] set of pictures"
 	 	output2 = SPQRTransform.new.apply(b)
 	 	assert_equal expected2, output2
+	 end
+
+	 test "dollar" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('$3')
+	 	expected = "&dollar;3"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
+
+	 test "pound" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('#1')
+	 	expected = "&pound;1"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
+	 end
+
+	 test "exclamation" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('!!')
+	 	expected1 = "!"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected1, output1
+	 end
+
+	 test "code" do
+	 	parser = SPQRParser.new
+	 	a = parser.parse('<code>something</code>')
+	 	expected = "something"
+	 	output1 = SPQRTransform.new.apply(a)
+	 	assert_equal expected, output1
 	 end
 end

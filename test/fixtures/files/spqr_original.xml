@@ -13138,7 +13138,7 @@ Which one of the following Matlab statements will <B><I>not</I></B> work?
 	<presentation>
 	<material>
 <mattext texttype="text/html"><![CDATA[A student wishes to generate a 2 kHz tone in Matlab and listen to it . The following lines of code have already been written:<PRE class=MATLAB>  tt = (0:8000)/8000;
-  xx = cos(2*pi*2000*tt);</PRE></B>Which of the following lines will correctly play the sound? ]]></mattext>
+  xx = cos(2*pi*2000*tt);</PRE>Which of the following lines will correctly play the sound? ]]></mattext>
 </material>
 <response_lid ident="QUE_305_RL" rcardinality="Multiple" rtiming="No">
 <render_choice>
@@ -26972,7 +26972,7 @@ Note: this operation is called "CONCATENATION."
 <response_label ident="QUE_658_A1">
 <material>
 <mattext texttype="text/html"><![CDATA[
-<tt>sig = [xx, zeros(1, 2*11025), yy];
+<tt>sig = [xx, zeros(1, 2*11025), yy];</tt>
 ]]></mattext>
 </material>
 </response_label>
@@ -26980,28 +26980,28 @@ Note: this operation is called "CONCATENATION."
 <material>
 <mattext texttype="text/html"><![CDATA[
 <tt>silence = 0*[0:1/11025:2];
-<br>sig = [xx, zeros(1, silence), yy];
+<br>sig = [xx, zeros(1, silence), yy];</tt>
 ]]></mattext>
 </material>
 </response_label>
 <response_label ident="QUE_658_A3">
 <material>
 <mattext texttype="text/html"><![CDATA[
-<tt>sig = [xx, zeros(1, 2), yy];
+<tt>sig = [xx, zeros(1, 2), yy];</tt>
 ]]></mattext>
 </material>
 </response_label>
 <response_label ident="QUE_658_A4">
 <material>
 <mattext texttype="text/html"><![CDATA[
-<tt>sig = [xx, zeros(1, round(2/11025)), yy];
+<tt>sig = [xx, zeros(1, round(2/11025)), yy];</tt>
 ]]></mattext>
 </material>
 </response_label>
 <response_label ident="QUE_658_A5">
 <material>
 <mattext texttype="text/html"><![CDATA[
-<tt>sig = [xx, zeros(1, round(11025/2)), yy];
+<tt>sig = [xx, zeros(1, round(11025/2)), yy];</tt>
 ]]></mattext>
 </material>
 </response_label>
@@ -27608,7 +27608,7 @@ Given the parameters <tt>fc = 900 Hz</tt> and <tt>delf = 20 Hz</tt>, the beatcon
 <item title="Lab" ident="QUE_686">
 	<presentation>
 	<material>
-<mattext texttype="text/html"><![CDATA[Given: <pre class="MATLAB">fs = 11025;<BR>nn = (0:round(0.25*fs));</TT></pre>Which MATLAB code would you use to generate the appropriate DTMF signal to represent telephone key number <B>1</B>? ]]></mattext>
+<mattext texttype="text/html"><![CDATA[Given: <pre class="MATLAB">fs = 11025;<BR>nn = (0:round(0.25*fs));</pre>Which MATLAB code would you use to generate the appropriate DTMF signal to represent telephone key number <B>1</B>? ]]></mattext>
 </material>
 <response_lid ident="QUE_686_RL" rcardinality="Multiple" rtiming="No">
 <render_choice>
@@ -28324,7 +28324,7 @@ Place a zero at radius = 1.0  with an angle of 0 degrees.
 	<material>
 <mattext texttype="text/html"><![CDATA[Given:
 <pre class="MATLAB">fs = 11025;
-tt = (0:round(0.25*fs))/fs;</tt></pre>
+tt = (0:round(0.25*fs))/fs;</pre>
 Which MATLAB code would you use to generate the appropriate DTMF signal to represent telephone key number <b>0</b>?
 ]]></mattext>
 </material>
@@ -29917,7 +29917,7 @@ Which MATLAB code would you use to generate the appropriate DTMF signal to repre
 <mattext texttype="text/html"><![CDATA[Given:
 <br>
 <pre class="MATLAB">fs = 11025;
-tt = (0:round(0.25*fs))/fs;</tt></pre>
+tt = (0:round(0.25*fs))/fs;</pre>
 <br><br>
 Which MATLAB code would you use to generate the appropriate DTMF signal to represent telephone key number <b>A</b>?
 ]]></mattext>
@@ -30374,7 +30374,7 @@ Which MATLAB code would you use to generate the appropriate DTMF signal to repre
 <mattext texttype="text/html"><![CDATA[Given:
 <br>
 <pre class="MATLAB">fs = 11025;
-nn = (0:round(0.25*fs));</tt></pre>
+nn = (0:round(0.25*fs));</pre>
 Which MATLAB code would you use to generate the appropriate DTMF signal to represent telephone key number <b>7</b>?
 ]]></mattext>
 </material>
@@ -37331,18 +37331,18 @@ Suppose that a <font color="red"><B>complex</B></font> vector <B>zz</B>   has be
 <response_label ident="QUE_945_A2">
 <material>
 <mattext texttype="text/html"><![CDATA[<tt><B> zz .* conj(zz)
-</tt></B>]]></mattext>
+</B></tt>]]></mattext>
 </material>
 </response_label>
 <response_label ident="QUE_945_A3">
 <material>
 <mattext texttype="text/html"><![CDATA[<tt><B>real(zz).^2 + imag(zz).^2 
-</tt></B>]]></mattext>
+</B></tt>]]></mattext>
 </material>
 </response_label>
 <response_label ident="QUE_945_A4">
 <material>
-<mattext texttype="text/html"><![CDATA[<tt><B> zz .* zz </tt></B>]]></mattext>
+<mattext texttype="text/html"><![CDATA[<tt><B> zz .* zz </B></tt>]]></mattext>
 </material>
 </response_label>
 </render_choice>
@@ -41814,12 +41814,12 @@ It is the result of the <b>concatenation</b> of two sinusoids, but I cannot tell
 <render_choice>
 <response_label ident="QUE_1027_A1">
 <material>
-<mattext texttype="text/html"><![CDATA[<tt>H(z) = 0.9 (2 + 2z<sup>-1</sup> + z<sup>-2</sup>)<tt>]]></mattext>
+<mattext texttype="text/html"><![CDATA[<tt>H(z) = 0.9 (2 + 2z<sup>-1</sup> + z<sup>-2</sup>)</tt>]]></mattext>
 </material>
 </response_label>
 <response_label ident="QUE_1027_A2">
 <material>
-<mattext texttype="text/html"><![CDATA[<tt>H(z) = 0.2 (1 + 2z<sup>-1</sup> + 2z<sup>-2</sup> + z<sup>-3</sup>)]]></mattext>
+<mattext texttype="text/html"><![CDATA[<tt>H(z) = 0.2 (1 + 2z<sup>-1</sup> + 2z<sup>-2</sup> + z<sup>-3</sup>)</tt>]]></mattext>
 </material>
 </response_label>
 <response_label ident="QUE_1027_A3">
@@ -46508,13 +46508,13 @@ with <TT>&alpha; = 0.4</TT>
 <P><TT>x[n] = 2</TT> for <TT>n = 1, 2</TT> 
 <P><TT>x[n] = 4</TT> for <TT>n = 3</tt>
 <p><tt>x[n] = 0</TT> otherwise 
-<P>What is the z-transform of this sequence? </P></TT></TT>]]></mattext>
+<P>What is the z-transform of this sequence? </P>]]></mattext>
 </material>
 <response_lid ident="QUE_1175_RL" rcardinality="Multiple" rtiming="No">
 <render_choice>
 <response_label ident="QUE_1175_A1">
 <material>
-<mattext texttype="text/html"><![CDATA[<tt>X(z) = 2z<SUP>-1</SUP> + 2z<SUP>-2</SUP> + 4z<SUP>-3</SUP><tt>]]></mattext>
+<mattext texttype="text/html"><![CDATA[<tt>X(z) = 2z<SUP>-1</SUP> + 2z<SUP>-2</SUP> + 4z<SUP>-3</SUP></tt>]]></mattext>
 </material>
 </response_label>
 <response_label ident="QUE_1175_A2">
@@ -50015,7 +50015,7 @@ What is the impulse response of this system?]]></mattext>
 <item title="AppendixA" ident="QUE_2119">
 	<presentation>
 	<material>
-<mattext texttype="text/html"><![CDATA[Find the conjugate of <tt><b>i(1-i)</tt></b>? ]]></mattext>
+<mattext texttype="text/html"><![CDATA[Find the conjugate of <tt><b>i(1-i)</b></tt>? ]]></mattext>
 </material>
 <response_lid ident="QUE_2119_RL" rcardinality="Multiple" rtiming="No">
 <render_choice>
@@ -50204,22 +50204,22 @@ What is the impulse response of this system?]]></mattext>
 <render_choice>
 <response_label ident="QUE_2122_A1">
 <material>
-<mattext texttype="text/html"><![CDATA[]]></mattext>
+<mattext texttype="text/html"><![CDATA[a]]></mattext>
 </material>
 </response_label>
 <response_label ident="QUE_2122_A2">
 <material>
-<mattext texttype="text/html"><![CDATA[]]></mattext>
+<mattext texttype="text/html"><![CDATA[b]]></mattext>
 </material>
 </response_label>
 <response_label ident="QUE_2122_A3">
 <material>
-<mattext texttype="text/html"><![CDATA[]]></mattext>
+<mattext texttype="text/html"><![CDATA[c]]></mattext>
 </material>
 </response_label>
 <response_label ident="QUE_2122_A4">
 <material>
-<mattext texttype="text/html"><![CDATA[]]></mattext>
+<mattext texttype="text/html"><![CDATA[d]]></mattext>
 </material>
 </response_label>
 </render_choice>

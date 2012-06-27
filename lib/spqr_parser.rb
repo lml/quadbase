@@ -35,6 +35,10 @@ class SPQRParser < Parslet::Parser
 	rule(:tt_tag)     { (str("<tt>") | str("</tt>") | str("<TT>") | str("</TT>")).as(:ttype)}
 	rule(:new_p)      { (str("<p>") | str("</p>") | str("<P>") | str("</P>")).as(:para)}
 	rule(:center)     { (str("<center>") | str("</center>") | str("<CENTER>") | str("</CENTER>")).as(:center)}
+	rule(:code)       { (str("<code>") | str("<CODE>") | str("</code>") | str("</CODE>")).as(:code)}
+
+	#Two exclamation points in a row signifiy a bold tag, so those should be changed to avoid confusion.
+	rule(:exclamation) { str("!!").repeat(1).as(:exclamation) }
 
 	#Things to be changed to HTML entities
 	rule(:asterisk)   { str("*").as(:asterisk)}
@@ -42,7 +46,9 @@ class SPQRParser < Parslet::Parser
 	rule(:gthan)      { str(">").as(:gthan) }
 	rule(:apos)       { str("'").as(:apos) }
 	rule(:quote1)     { str('"').as(:quote1)}
-	rule(:entities)   { asterisk | lthan | gthan | apos | quote1 }
+	rule(:dollar)     { str("$").as(:dollar) }
+	rule(:pound)      { str("\#").as(:pound) }
+	rule(:entities)   { asterisk | apos | quote1 | dollar | pound }
 
 	#Check for any font changes
 	rule(:font1)      { str("<font") | str("<FONT") }
@@ -101,13 +107,12 @@ class SPQRParser < Parslet::Parser
 	rule(:lf)      { match("\n") >> space? }
 	rule(:tab)     { match("\t") >> space? }
 	rule(:eol)     { (crlf | lf | tab).as(:eol) }
-	rule(:fnof)    { str("&fnof;").as(:fnof) }
 
 	#Grammar parts
 	rule(:punc)   { match(/[^<]/) }
 	rule(:tags)   { font | pre | span | div | image | link_full }
-	rule(:format) { italic_tag | bold_tag | line_break | tt_tag | fnof | sub | sup | center | asterisk | apos | quote1 }
-	rule(:text)   { ( tags | format | letters | eol | new_p | greek | entities | (any.as(:any)) ).repeat(1) }
+	rule(:format) { italic_tag | bold_tag | line_break | tt_tag | sub | sup | center | entities | exclamation | code }
+	rule(:text)   { ( tags | format | letters | eol | new_p | greek | entities | lthan | gthan | (any.as(:any)) ).repeat(1) }
 	rule(:ques)   { text.repeat.as(:text) }
 
 	rule(:expression) { ques }
@@ -117,40 +122,44 @@ end
 #class UnavailableImage < StandardError; end
 
 class SPQRTransform < Parslet::Transform
-	rule(:quote1 => simple(:quote1))         {'&quot;'}
-	rule(:lthan => simple(:lthan))           {'&lt;'}
-	rule(:gthan => simple(:gthan))           {'&gt;'}
-	rule(:asterisk => simple(:asterisk))     {'&times;'}
-	rule(:apos => simple(:apos))             {'&apos;'}
-	rule(:center => simple(:center))         {}
-	rule(:italic => simple(:italic))         {"'"}
-	rule(:bold => simple(:bold))             {"!!"}
-	rule(:line_break => simple(:break))      {"\n"}
-	rule(:ttype => simple(:ttype))           {"$"}
-	rule(:para => simple(:para))             {"\n\n"}
-	rule(:eol => simple(:eol))               {}
-	rule(:content_f => sequence(:content_f)) {"'" + content_f.join + "'"}
-	rule(:font => simple(:font))             { font }
-	rule(:content_p => sequence(:content_p)) {"$$" + content_p.join + "$$"}
-	rule(:pre => simple(:pre))               { pre }
-	rule(:content => sequence(:content))     { content.join}
-	rule(:span => simple(:span))             { span }
-	rule(:div => simple(:div))               { div }
-	rule(:delta => simple(:delta))           {"\\delta"}
-	rule(:phi => simple(:phi))               {"\\phi"}
-	rule(:pi => simple(:pi))                 {"\\pi"}
-	rule(:omega => simple(:omega))           {"\\omega"}
-	rule(:fnof => simple(:fnof))             {"f"}
-	rule(:con => simple(:con))               { con }
-	rule(:sub => simple(:sub))               {"_{" + sub + "}"}
-	rule(:sup => sequence(:sup))             {"^{" + sup.join + "}"}
-	rule(:letters => simple(:letters))       { letters }
-	rule(:any => simple(:any))               { any }
-	rule(:image => sequence(:image))         { "\[MISSING IMAGE: #{image[0].to_s}\]"}
-	rule(:filename => simple(:filename))     { filename.str.gsub(/[\n\t]/, "").strip }
-	rule(:address => simple(:address))       { "\[LINK TO: #{address.to_s}\] "}
-	rule(:link_name => simple(:link_name))   { link_name }
-	rule(:link_info => simple(:link_info))   { link_info }
-	rule(:link_info => sequence(:info))      { info.join }
-	rule(:text => sequence(:entries))        { entries.join }
+	rule(:code => simple(:code))               {}
+	rule(:exclamation => simple(:exclamation)) {"!"}
+	rule(:pound => simple(:pound))             {'&pound;'}
+	rule(:dollar => simple(:dollar))           {'&dollar;'}
+	rule(:quote1 => simple(:quote1))           {'&quot;'}
+	rule(:lthan => simple(:lthan))             {'&lt;'}
+	rule(:gthan => simple(:gthan))             {'&gt;'}
+	rule(:asterisk => simple(:asterisk))       {'&times;'}
+	rule(:apos => simple(:apos))               {'&apos;'}
+	rule(:center => simple(:center))           {}
+	rule(:italic => simple(:italic))           {"''"}
+	rule(:bold => simple(:bold))               {"!!"}
+	rule(:line_break => simple(:break))        {"\n"}
+	rule(:ttype => simple(:ttype))             {"$"}
+	rule(:para => simple(:para))               {"\n\n"}
+	rule(:eol => simple(:eol))                 {}
+	rule(:content_f => sequence(:content_f))   {"''" + content_f.join + "''"}
+	rule(:font => simple(:font))               { font }
+	rule(:content_p => sequence(:content_p))   {"$$" + content_p.join + "$$"}
+	rule(:pre => simple(:pre))                 { pre }
+	rule(:content => sequence(:content))       { content.join}
+	rule(:span => simple(:span))               { span }
+	rule(:div => simple(:div))                 { div }
+	rule(:delta => simple(:delta))             {"\\delta"}
+	rule(:phi => simple(:phi))                 {"\\phi"}
+	rule(:pi => simple(:pi))                   {"\\pi"}
+	rule(:omega => simple(:omega))             {"\\omega"}
+	rule(:fnof => simple(:fnof))               {"f"}
+	rule(:con => simple(:con))                 { con }
+	rule(:sub => simple(:sub))                 {"_{" + sub + "}"}
+	rule(:sup => sequence(:sup))               {"^{" + sup.join + "}"}
+	rule(:letters => simple(:letters))         { letters }
+	rule(:any => simple(:any))                 { any }
+	rule(:image => sequence(:image))           { "\[MISSING IMAGE: #{image[0].to_s}\]"}
+	rule(:filename => simple(:filename))       { filename.str.gsub(/[\n\t]/, "").strip }
+	rule(:address => simple(:address))         { "\[LINK TO: #{address.to_s}\] "}
+	rule(:link_name => simple(:link_name))     { link_name }
+	rule(:link_info => simple(:link_info))     { link_info }
+	rule(:link_info => sequence(:info))        { info.join }
+	rule(:text => sequence(:entries))          { entries.join }
 end
