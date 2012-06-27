@@ -122,22 +122,27 @@ end
 #class UnavailableImage < StandardError; end
 
 class SPQRTransform < Parslet::Transform
-	rule(:code => simple(:code))               {}
-	rule(:exclamation => simple(:exclamation)) {"!"}
-	rule(:pound => simple(:pound))             {'&pound;'}
-	rule(:dollar => simple(:dollar))           {'&dollar;'}
-	rule(:quote1 => simple(:quote1))           {'&quot;'}
-	rule(:lthan => simple(:lthan))             {'&lt;'}
-	rule(:gthan => simple(:gthan))             {'&gt;'}
-	rule(:asterisk => simple(:asterisk))       {'&times;'}
-	rule(:apos => simple(:apos))               {'&apos;'}
-	rule(:center => simple(:center))           {}
+	rule(:image => sequence(:image))           { "\[MISSING IMAGE: #{image[0].to_s}\]"}
+	rule(:filename => simple(:filename))       { filename.str.gsub(/[\n\t]/, "").strip }
+	rule(:address => simple(:address))         { "\[LINK TO: #{address.to_s}\] "}
+	rule(:link_name => simple(:link_name))     { link_name }
+	rule(:link_info => simple(:link_info))     { link_info }
+	rule(:link_info => sequence(:info))        { info.join }
 	rule(:italic => simple(:italic))           {"''"}
 	rule(:bold => simple(:bold))               {"!!"}
 	rule(:line_break => simple(:break))        {"\n"}
 	rule(:ttype => simple(:ttype))             {"$"}
 	rule(:para => simple(:para))               {"\n\n"}
-	rule(:eol => simple(:eol))                 {}
+	rule(:center => simple(:center))           {}
+	rule(:code => simple(:code))               {}
+	rule(:exclamation => simple(:exclamation)) {"!"}
+	rule(:asterisk => simple(:asterisk))       {'&times;'}
+	rule(:lthan => simple(:lthan))             {'&lt;'}
+	rule(:gthan => simple(:gthan))             {'&gt;'}
+	rule(:apos => simple(:apos))               {'&apos;'}
+	rule(:quote1 => simple(:quote1))           {'&quot;'}
+	rule(:dollar => simple(:dollar))           {'&dollar;'}
+	rule(:pound => simple(:pound))             {'&pound;'}
 	rule(:content_f => sequence(:content_f))   {"''" + content_f.join + "''"}
 	rule(:font => simple(:font))               { font }
 	rule(:content_p => sequence(:content_p))   {"$$" + content_p.join + "$$"}
@@ -149,17 +154,11 @@ class SPQRTransform < Parslet::Transform
 	rule(:phi => simple(:phi))                 {"\\phi"}
 	rule(:pi => simple(:pi))                   {"\\pi"}
 	rule(:omega => simple(:omega))             {"\\omega"}
-	rule(:fnof => simple(:fnof))               {"f"}
 	rule(:con => simple(:con))                 { con }
 	rule(:sub => simple(:sub))                 {"_{" + sub + "}"}
 	rule(:sup => sequence(:sup))               {"^{" + sup.join + "}"}
 	rule(:letters => simple(:letters))         { letters }
+	rule(:eol => simple(:eol))                 {}
 	rule(:any => simple(:any))                 { any }
-	rule(:image => sequence(:image))           { "\[MISSING IMAGE: #{image[0].to_s}\]"}
-	rule(:filename => simple(:filename))       { filename.str.gsub(/[\n\t]/, "").strip }
-	rule(:address => simple(:address))         { "\[LINK TO: #{address.to_s}\] "}
-	rule(:link_name => simple(:link_name))     { link_name }
-	rule(:link_info => simple(:link_info))     { link_info }
-	rule(:link_info => sequence(:info))        { info.join }
 	rule(:text => sequence(:entries))          { entries.join }
 end
