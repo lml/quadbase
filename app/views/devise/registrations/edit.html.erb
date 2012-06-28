@@ -58,7 +58,7 @@
     <div class="regForm">
       <%= f.fields_for :user_profile do |profile| %>
        <table>
-         
+
          <tr>
            <td>Receive all notifications in a daily digest?</td>
            <td><%= profile.check_box :digest_email, :id => 'profile_check_box' %></td>
