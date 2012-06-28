@@ -1,5 +1,5 @@
-# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
-# License version 3 or later.  See the COPYRIGHT file for details.
+# Copyright 2011-2012 Rice University. Licensed under the Affero General Public
+# License version 3 or later. See the COPYRIGHT file for details.
 
 require 'test_helper'
 
@@ -9,8 +9,6 @@ class CommentsControllerTest < ActionController::TestCase
     @comment = FactoryGirl.create(:comment)
     @question = @comment.comment_thread.commentable
     @user = @comment.creator
-    User.digest_subscribers_for(@digest).active_users << @user
-    
     FactoryGirl.create(:project_question, :question => @question, :project => Project.default_for_user!(@user))
     @published_question = make_simple_question(:method => :create, :published => true)
     @published_comment = FactoryGirl.create(:comment,
@@ -20,25 +18,7 @@ class CommentsControllerTest < ActionController::TestCase
   test "should not get index not logged in" do
     get :index, :question_id => @question.to_param
     assert_redirected_to login_path
-  end 
-  
-  test "comment sent to digest email if user subscribed" do
-    user_login
-    assert_not_nil :comment
-    assert_difference('Comment.count') do
-      post :senddigest, :question_id => @question.to_param, :comment => @comment.attributes
-    end
-
-    assert_redirected_to question_comments_path(@question.to_param)
   end
-  
-  #test "comment not sent to digest if user not subscribed" do
-    #user_login
-    #User.digest_subscribers_for(@digest).active_users.delete_at(array.length)
-    #assert !DigestNotifier.digest_email(@comment).invalid?
-    
-  #end
-
 
   test "should not get index not authorized" do
     user_login
@@ -117,7 +97,7 @@ class CommentsControllerTest < ActionController::TestCase
 
     assert_redirected_to question_comments_path(@published_question.to_param)
   end
-  
+
   test "should not show comment not logged in" do
     get :show, :id => @comment.to_param
     assert_redirected_to login_path

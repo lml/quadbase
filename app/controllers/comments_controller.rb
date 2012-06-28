@@ -1,5 +1,5 @@
-# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
-# License version 3 or later.  See the COPYRIGHT file for details.
+# Copyright 2011-2012 Rice University. Licensed under the Affero General Public
+# License version 3 or later. See the COPYRIGHT file for details.
 
 class CommentsController < ApplicationController
 
@@ -67,12 +67,12 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
-          @comment_thread.subscribe!(present_user)
-          @comment_thread.add_unread_except_for(present_user)
-          flash[:notice] = @comment_notice
-          SubscriptionNotifier.comment_created_email(@comment)
-          format.html { redirect_to(polymorphic_path([@commentable, :comments])) }
-          format.js
+        @comment_thread.subscribe!(present_user)
+        @comment_thread.add_unread_except_for(present_user)
+        flash[:notice] = @comment_notice
+        SubscriptionNotifier.comment_created_email(@comment)
+        format.html { redirect_to(polymorphic_path([@commentable, :comments])) }
+        format.js
       else
         @errors = @comment.errors
         format.html { render :action => 'new' }
@@ -80,7 +80,7 @@ class CommentsController < ApplicationController
       end
     end
   end
-  
+
   # GET /comments/1
   def show
     raise SecurityTransgression unless present_user.can_read?(@comment)
@@ -137,24 +137,6 @@ class CommentsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to polymorphic_path([@commentable, :comments]) }
       format.js
-    end
-  end
-  
-  # sends comment to the digest_notifier
-  def senddigest
-    raise SecurityTransgression unless @digest.subscribe!(present_user)
-
-    respond_to do |format|
-      if @comment.save
-        flash[:notice] = @comment_thread
-        DigestNotifier.digest_email(@comment)
-        format.html { redirect_to(polymorphic_path([@commentable, :comments])) }
-        format.js
-      else
-        @errors = @comment.errors
-        format.html { render :action => 'new' }
-        format.js { render :action => 'shared/display_flash' }
-      end
     end
   end
 
