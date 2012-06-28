@@ -26,7 +26,10 @@ class WebsiteConfigurationsController < AdminController
     begin
       WebsiteConfiguration.transaction do
         @website_configurations.each do |configuration|
-          configuration.update_attribute(:value, params[configuration.name.to_sym])
+        pp configuration
+pp params
+pp params[configuration.name]
+          configuration.update_attribute("value", params[configuration.name])
         end
       end
     rescue ActiveRecord::RecordInvalid => invalid
