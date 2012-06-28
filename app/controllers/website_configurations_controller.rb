@@ -30,6 +30,8 @@ class WebsiteConfigurationsController < AdminController
 pp params
 pp params[configuration.name]
           configuration.update_attribute("value", params[configuration.name])
+          pp configuration
+          pp configuration.reload
         end
       end
     rescue ActiveRecord::RecordInvalid => invalid
