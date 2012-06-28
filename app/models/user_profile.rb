@@ -1,11 +1,11 @@
-# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
-# License version 3 or later.  See the COPYRIGHT file for details.
+# Copyright 2011-2012 Rice University. Licensed under the Affero General Public
+# License version 3 or later. See the COPYRIGHT file for details.
 
 class UserProfile < ActiveRecord::Base
 
   belongs_to :user
 
-  attr_accessible :project_member_email, :role_request_email, 
+  attr_accessible :project_member_email, :role_request_email,
                   :announcement_email, :auto_author_subscribe, :user
 
   #############################################################################
@@ -21,3 +21,6 @@ class UserProfile < ActiveRecord::Base
   end
 
 end
+
+
+

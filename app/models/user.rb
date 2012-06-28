@@ -55,6 +55,7 @@ class User < ActiveRecord::Base
   scope :subscribers_for, lambda { |comment_thread|
     joins{comment_thread_subscriptions}.where{comment_thread_subscriptions.comment_thread_id == comment_thread.id}
   }
+  scope :digest_subscribers_for, lambda { | digest_subscribers | joins{digest_subscribers}}
   
   def full_name
     first_name + " " + last_name

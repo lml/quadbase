@@ -13,8 +13,11 @@ class SubscriptionNotifier < QuadbaseMailer
                        (@is_message ? " sent you a message: " + @commentable.subject :
                        " has commented on a thread to which you subscribe")).deliver
   end
+  
+
 
 private
+
 
   def setup_variables(comment)
     @comment = comment
@@ -26,4 +29,5 @@ private
     @is_message = @comment_thread.commentable_type == 'Message'
   end
 
+  
 end

@@ -3,6 +3,7 @@
 
 <% @selected_tab = :account %>
 <% @include_jquery = true %>
+<% javascript_include_tag = :defaults %>
 
 <style type="text/css">
   div.regForm {
@@ -57,13 +58,20 @@
     <div class="regForm">
       <%= f.fields_for :user_profile do |profile| %>
        <table>
+
          <tr>
+           <td>Receive all notifications in a daily digest?</td>
+           <td><%= profile.check_box :digest_email, :id => 'profile_check_box' %></td>
+          
+         </tr>
+         <tr>         
            <td>Receive administrative announcements?</td>
            <td><%= profile.check_box :announcement_email %></td>
+
          </tr>
          <tr>
            <td>Receive notifications of your project membership changes?</td>
-           <td><%= profile.check_box :project_member_email %></td>
+           <td><%= profile.check_box :project_member_email%></td>
          </tr>
          <tr>
            <td>Receive notifications of role change requests?</td>
@@ -71,7 +79,7 @@
          </tr>
          <tr>
            <td>Auto subscribe to comments on content you author?</td>
-           <td><%= profile.check_box :auto_author_subscribe %></td>
+           <td><%= profile.check_box :auto_author_subscribe, :id => 'profile_auto_author'%></td>
          </tr>
        </table>
       <% end %>
@@ -137,3 +145,15 @@
         :class => "button_link big" %>
             <% end %></p>
 </center>
+
+<script type 'text/javascript'>
+
+   $('#profile_check_box').bind('click', function(){
+    var satisfied = $('#profile_check_box:checked').val();
+    if (satisfied == undefined) $('#profile_auto_author').removeAttr('disabled');
+    else $('#profile_auto_author').attr('checked',false).attr('disabled','disabled');
+    });
+
+ 
+</script>
+
