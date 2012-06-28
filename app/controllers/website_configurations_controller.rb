@@ -31,7 +31,8 @@ pp params
 pp params[configuration.name]
           configuration.update_attribute("value", params[configuration.name])
           pp configuration
-          pp configuration.reload
+          configuration.reload
+          pp configuration
         end
       end
     rescue ActiveRecord::RecordInvalid => invalid
