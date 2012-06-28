@@ -59,9 +59,15 @@ class WebsiteConfigurationsControllerTest < ActionController::TestCase
     admin_login
     assert !WebsiteConfiguration.get_value("in_maintenance")
     put :update, "in_maintenance" => "1"
+    WebsiteConfiguration.all.each do |wc|
+      wc.reload
+    end
     assert WebsiteConfiguration.get_value("in_maintenance")
     assert_redirected_to website_configurations_path(assigns(:website_configuration))
     put :update, "in_maintenance" => nil
+    WebsiteConfiguration.all.each do |wc|
+      wc.reload
+    end
     assert !WebsiteConfiguration.get_value("in_maintenance")
     assert_redirected_to website_configurations_path(assigns(:website_configuration))
   end
