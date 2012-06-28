@@ -17,6 +17,10 @@
   
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
+
+  <% if Rails.env.development? %>
+    <%= javascript_include_tag "jquery-ui-timepicker-addon" %>
+  <% end %>
  
   <% if content_for?(:stylesheets) %>
   <style type="text/css"><%= yield :stylesheets %></style>
