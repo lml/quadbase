@@ -28,7 +28,6 @@ class WebsiteConfigurationsController < AdminController
         @website_configurations.each do |configuration|
         pp configuration
 pp params
-pp params[configuration.name]
           configuration.update_attribute("value", params[configuration.name])
           pp configuration
           configuration.reload
