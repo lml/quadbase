@@ -65,13 +65,7 @@ class QuestionsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should not get new not logged in" do
-    get :new
-    assert_redirected_to login_path
-  end
-
   test "should get new" do
-    user_login
     get :new
     assert_response :success
   end
