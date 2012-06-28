@@ -68,7 +68,7 @@ class ApplicationController < ActionController::Base
     end
     
     render_error_page(error_page)
-    DeveloperErrorNotifier.exception_email(exception, present_user) if send_email
+    DeveloperErrorNotifier.exception_email(exception, request, present_user) if send_email
   end
 
   # A user can be logged in but later be deauthorized for any number of reasons
