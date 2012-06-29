@@ -16,6 +16,7 @@ mySettings = {
 	markupSet:  [ 	
 		{name:'Bold', key:'B', openWith:'(!(<strong>|!|<b>)!)', closeWith:'(!(</strong>|!|</b>)!)' },
 		{name:'Italic', key:'I', openWith:'(!(<em>|!|<i>)!)', closeWith:'(!(</em>|!|</i>)!)'  },
+		{name:'Underline', key:'U', openWith:'(!(<strong>|!|<u>)!)', closeWith:'(!(</strong>|!|</u>)!)' },
 		{name:'Stroke through', key:'S', openWith:'<del>', closeWith:'</del>' },
 		{separator:'---------------' },
 		{name:'Picture', key:'P', replaceWith:'<img src="[![Source:!:http://]!]" alt="[![Alternative text]!]" />' },
