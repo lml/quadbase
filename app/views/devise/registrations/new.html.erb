@@ -58,11 +58,10 @@ var len = false;
 var letter = false;
 var number = false;
 $('#agreement_checkbox').live('click', function() {
-   if ($('#agreement_checkbox').is(':checked')) {
-      if((len == true)& (letter == true) & (number == true)){
-          $('#register_submit').removeAttr('disabled');
-          $('#register_submit').removeClass('ui-state-disabled');
-        }
+   if ($('#agreement_checkbox').is(':checked') & (len == true)& (letter == true) & (number == true)){
+        $('#register_submit').removeAttr('disabled');
+        $('#register_submit').removeClass('ui-state-disabled');
+        
    }
    else {
       $('#register_submit').attr('disabled', 'disabled');
