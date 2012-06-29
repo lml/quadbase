@@ -6,6 +6,6 @@ class RenameMessagesToDiscussions < ActiveRecord::Migration
 
   def down
     rename_table :discussions, :messages
-    rename_comlumn :users, :unread_discussion_count, :unread_message_count
+    rename_column :users, :unread_discussion_count, :unread_message_count
   end
 end
