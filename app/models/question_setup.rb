@@ -4,6 +4,7 @@
 class QuestionSetup < ActiveRecord::Base
   include ContentParseAndCache
   include AssetMethods
+  include VariatedContentHtml
   
   has_many :questions
 
@@ -11,12 +12,6 @@ class QuestionSetup < ActiveRecord::Base
   has_many :assets, :through => :attachable_assets
   
   has_one :logic, :as => :logicable, :dependent => :destroy
-  
-  attr_writer :variated_content_html
-  
-  def variated_content_html
-    @variated_content_html || self.content_html
-  end
   
   validate :validate_content_change_allowed
 
