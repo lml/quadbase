@@ -24,6 +24,7 @@ class WebsiteConfiguration < ActiveRecord::Base
     
     # Check if we need to lazily instantiate this parameter
     if configuration.nil?
+    pp WebsiteConfiguration.all
       default = @@defaults[name]
       raise IllegalArgument if default.nil?
       configuration = WebsiteConfiguration.new
@@ -31,6 +32,8 @@ class WebsiteConfiguration < ActiveRecord::Base
       configuration.value = default[0]
       configuration.value_type = default[1]
       configuration.save!
+      pp configuration.id
+      pp WebsiteConfiguration.all
     end
     
     case configuration.value_type

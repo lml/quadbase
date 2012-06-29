@@ -29,8 +29,7 @@ class WebsiteConfigurationsController < AdminController
         puts configuration.name
         puts configuration.id
         puts configuration.value
-          configuration.update_attribute("value", params[configuration.name]) \
-            if !params[configuration.name].nil?
+          configuration.update_attribute("value", params[configuration.name])
         end
       end
     rescue ActiveRecord::RecordInvalid => invalid
