@@ -35,7 +35,7 @@ class WebsiteConfiguration < ActiveRecord::Base
     
     case configuration.value_type
     when "boolean"
-      !configuration.value.blank? && configuration.value != "f" && configuration.value != "0"
+      !configuration.value.blank? && configuration.value != "f" && configuration.value != "false" && configuration.value != "0"
     else
       configuration.value
     end
