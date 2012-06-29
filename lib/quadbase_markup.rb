@@ -19,7 +19,7 @@ class QuadbaseParser < Parslet::Parser
   rule(:paragraph) { (( line | bulleted_list | numbered_list ).repeat(1) >> spaces >> eol).as(:paragraph) }
   
   rule(:line) { (content >> eol).as(:line) }
-  rule(:content) { (math | image | bold | italic | text).repeat(1) }
+  rule(:content) { (math | image | bold | italic | underline | text).repeat(1) }
 
   rule(:text) { (
                   ( # Escape characters
@@ -32,6 +32,7 @@ class QuadbaseParser < Parslet::Parser
                     image_start_tag.absent? >> 
                     bold_tag.absent? >> 
                     italic_tag.absent? >> 
+                    underline_tag.absent? >>
                     eol.absent? >> 
                     any
                   )
@@ -42,7 +43,10 @@ class QuadbaseParser < Parslet::Parser
     
   rule(:italic_tag) { str("''") }
   rule(:italic) { italic_tag >> content.as(:italic) >> italic_tag }
-
+  
+  rule(:underline_tag) {str("__") }
+  rule(:underline) {underline_tag >> content.as(:underline) >> underline_tag }
+  
   rule(:bullet_tag) { str("*") }
   rule(:bullet) { bullet_tag >> spaces >> content.as(:bullet) }
   rule(:bulleted_list) { (bullet >> eol).repeat(1).as(:bulleted_list) }
@@ -108,6 +112,7 @@ end
 class QuadbaseHtmlTransformer < Parslet::Transform
   rule(:italic => sequence(:entries)) { "<i>#{entries.join(' ')}</i>"}
   rule(:bold => sequence(:entries)) { "<b>#{entries.join(' ')}</b>"}
+  rule(:underline => sequence(:entries)) { "<u>#{entries.join(' ')}</u>"}
   rule(:text => simple(:text)) { "#{text}" }
   rule(:line => sequence(:entries)) { entries.join }
   rule(:paragraph => sequence(:entries)) { "<p>#{entries.join}</p>" }
@@ -124,6 +129,7 @@ end
 # class QuadbaseTextOnlyTransformer < Parslet::Transform
 #   rule(:italic => sequence(:entries)) { "#{entries.join(' ')}"}
 #   rule(:bold => sequence(:entries)) { "#{entries.join(' ')}"}
+#   rule(:underline => sequence(:entries)) { "#{entries.join(' ')}"}
 #   rule(:text => simple(:text)) { "#{text}" }
 #   rule(:line => sequence(:entries)) { entries.join }
 #   rule(:paragraph => sequence(:entries)) { "#{entries.join}\n\n" }
