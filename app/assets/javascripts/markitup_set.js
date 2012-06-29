@@ -13,6 +13,8 @@ markupSet:  [
                return false;
            }
    },
+   
+  
 	{name:'Bullets', key:'Bl', openWith:'\n\*'},
 	
 	{name:'Number List', key:'N_L', openWith:'\n\#'},
