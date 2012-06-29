@@ -363,6 +363,5 @@ class QuestionsControllerTest < ActionController::TestCase
     @user.reload                        
     assert_equal @user.projects.count, 1
     assert_equal @user.projects.first, Project.default_for_user(@user)
-    assert_equal @user.projects.first.name, @user.full_name + "'s Project"
   end
 end
