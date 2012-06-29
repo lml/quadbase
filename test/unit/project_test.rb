@@ -37,7 +37,7 @@ class ProjectTest < ActiveSupport::TestCase
     ws = FactoryGirl.create(:project)
     wm = FactoryGirl.create(:project_member, :user => ww.members.first, :project => ws)
     
-    assert_not_equal ww, Project.default_for_user(ww.members.first)
+    assert_equal ww, Project.default_for_user(ww.members.first)
     wm.make_default!
     assert_equal ws, Project.default_for_user(ww.members.first)
   end

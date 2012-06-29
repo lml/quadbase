@@ -324,6 +324,7 @@ class QuestionsControllerTest < ActionController::TestCase
                          :edit => "now"
     assert_redirected_to edit_question_path(Project.default_for_user!(@user).project_questions.last.question)
     assert_not_nil assigns(:question)
+    assert @published_question == Project.default_for_user!(@user).project_questions.last.question.source_question
   end
   
   test "should derive question and redirect to original question" do
@@ -333,6 +334,8 @@ class QuestionsControllerTest < ActionController::TestCase
                          :edit => "later"
     assert_redirected_to question_path(@published_question)
     assert_not_nil assigns(:question)
+    assert @published_question == Project.default_for_user!(@user).project_questions.last.question.source_question
+
   end
   
   test "should not derive question not authorized" do

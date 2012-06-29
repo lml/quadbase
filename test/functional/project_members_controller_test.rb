@@ -35,7 +35,7 @@ class ProjectMembersControllerTest < ActionController::TestCase
 
   test "should not destroy project_member not logged in" do
     assert_difference('ProjectMember.count', 0) do
-      delete :destroy, :id => @project_member.to_param
+      delete :destroy, :id => @project_member.id
     end
     assert_redirected_to login_path
   end
@@ -43,7 +43,7 @@ class ProjectMembersControllerTest < ActionController::TestCase
   test "should not destroy project_member not authorized" do
     sign_in @user
     assert_difference('ProjectMember.count', 0) do
-      delete :destroy, :id => @project_member.to_param
+      delete :destroy, :id => @project_member.id
     end
     assert_response(403)
   end
@@ -53,30 +53,30 @@ class ProjectMembersControllerTest < ActionController::TestCase
     @project_member2 = FactoryGirl.create(:project_member, :project => @project_member.project)
 
     assert_difference('ProjectMember.count', -1) do
-      delete :destroy, :id => @project_member2.to_param
+      delete :destroy, :id => @project_member2.id
     end
     assert_redirected_to project_path(@project_member.project)
 
     assert_difference('ProjectMember.count', -1) do
-      delete :destroy, :id => @project_member.to_param
+      delete :destroy, :id => @project_member.id
     end
     assert_redirected_to projects_path
   end
 
   test "should not make_default project_member not logged in" do
-    put :make_default, :project_member_id => @project_member.to_param
+    put :make_default, :project_member_id => @project_member.id
     assert_redirected_to login_path
   end
 
   test "should not make_default project_member not authorized" do
     sign_in @user
-    put :make_default, :project_member_id => @project_member.to_param
+    put :make_default, :project_member_id => @project_member.id
     assert_response(403)
   end
 
   test "should make_default project_member" do
     sign_in @member
-    put :make_default, :project_member_id => @project_member.to_param
+    put :make_default, :project_member_id => @project_member.id
     assert_redirected_to projects_path
   end
 end
