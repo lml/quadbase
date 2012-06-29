@@ -24,7 +24,7 @@ class WebsiteConfiguration < ActiveRecord::Base
     
     # Check if we need to lazily instantiate this parameter
     if configuration.nil?
-    pp WebsiteConfiguration.all
+      pp WebsiteConfiguration.all
       default = @@defaults[name]
       raise IllegalArgument if default.nil?
       configuration = WebsiteConfiguration.new
