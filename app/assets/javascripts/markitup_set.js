@@ -8,7 +8,7 @@ onTab:    		{keepDefault:false, replaceWith:'    '},
 markupSet:  [ 	
 	{name:'Bold', key:'B', openWith:'\!\!', closeWith:'\!\!' },
 	{name:'Italic', key:'I', openWith:'\'\'', closeWith:'\'\''  },
-	{name:'Undlerline', key:'U', openWith:'\_\_', closeWith:'\_\_'},
+	{name:'Underline', key:'U', openWith:'\_\_', closeWith:'\_\_'},
 	{name:'Picture', key:'P', replaceWith:function (markItUp) {
                open_add_image_dialog(markItUp);
                return false;
