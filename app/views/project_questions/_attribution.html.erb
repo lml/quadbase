@@ -32,6 +32,11 @@
     <%= collaborator_names(source_collaborators.select{|c| c.is_author}) %>.
   <% end %>
 
+  <% if question.is_published? %>
+    <%= link_to "Version History", 
+          question_history_path(question) %>.
+  <% end %>
+
   <% if question.is_multipart? && first_call %>
     <% question.child_question_parts.each do |cq| %>
       <br/>--> <%= render :partial => 'project_questions/attribution',
@@ -40,9 +45,5 @@
     <% end %>
   <% end %>
   
-  <% if question.is_published? %>
-    <%= link_to "Version History", 
-          question_history_path(question) %>.
-  <% end %>
   <% if first_call %><br></br><% end %>
 <% end %>
