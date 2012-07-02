@@ -42,7 +42,7 @@ class WebsiteConfigurationsControllerTest < ActionController::TestCase
 
   test "should not update website_configuration not logged in" do
     assert !WebsiteConfiguration.get_value("in_maintenance")
-    put :update, :in_maintenance => "1"
+    put :update, "in_maintenance" => "1"
     assert !WebsiteConfiguration.get_value("in_maintenance")
     assert_redirected_to login_path
   end
@@ -50,7 +50,7 @@ class WebsiteConfigurationsControllerTest < ActionController::TestCase
   test "should not update website_configuration not admin" do
     user_login
     assert !WebsiteConfiguration.get_value("in_maintenance")
-    put :update, :in_maintenance => "1"
+    put :update, "in_maintenance" => "1"
     assert !WebsiteConfiguration.get_value("in_maintenance")
     assert_redirected_to home_path
   end
@@ -58,10 +58,10 @@ class WebsiteConfigurationsControllerTest < ActionController::TestCase
   test "should update website_configuration" do
     admin_login
     assert !WebsiteConfiguration.get_value("in_maintenance")
-    put :update, :in_maintenance => "1"
+    put :update, "in_maintenance" => "1"
     assert WebsiteConfiguration.get_value("in_maintenance")
     assert_redirected_to website_configurations_path(assigns(:website_configuration))
-    put :update, :in_maintenance => nil
+    put :update, "in_maintenance" => nil
     assert !WebsiteConfiguration.get_value("in_maintenance")
     assert_redirected_to website_configurations_path(assigns(:website_configuration))
   end

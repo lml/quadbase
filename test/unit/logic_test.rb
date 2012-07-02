@@ -38,17 +38,17 @@ class LogicTest < ActiveSupport::TestCase
   end
 
   test 'pass in old outputs' do
-    Bullring.add_library("1", "(function() {Math.seedrandom = function(x){};})()")
+    Bullring.add_library("pioo", "(function() {Math.seedrandom = function(x){};})()")
     
     l1 = FactoryGirl.create(:logic, :code => 'x = 3;', :variables => 'x')
     
-    result_l1 = l1.run({:library_version_ids => ["1"]})
+    result_l1 = l1.run({:library_version_ids => ["pioo"]})
     assert_equal 3, result_l1.variables["x"]
     
     l2 = FactoryGirl.create(:logic, :code => 'y = 2*x;', :variables => 'y')
   
-    result_l2_1 = l2.run({:prior_output => result_l1, :library_version_ids => ["1"]})
-    result_l2_2 = l2.run({:prior_output => result_l1, :library_version_ids => ["1"]})
+    result_l2_1 = l2.run({:prior_output => result_l1, :library_version_ids => ["pioo"]})
+    result_l2_2 = l2.run({:prior_output => result_l1, :library_version_ids => ["pioo"]})
     
     assert_equal 6, result_l2_1.variables["y"], "alpha"
     assert_equal 6, result_l2_2.variables["y"], "beta"
