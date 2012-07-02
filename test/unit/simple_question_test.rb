@@ -13,13 +13,13 @@ class SimpleQuestionTest < ActiveSupport::TestCase
   end
   
   test "empty content is ok but can't publish" do
-    sq = Factory.build(:simple_question, :content => '')
+    sq = FactoryGirl.build(:simple_question, :content => '')
     assert !sq.invalid?
-    assert !sq.publish!(Factory.create(:user))
+    assert !sq.publish!(FactoryGirl.create(:user))
   end
   
   test "has at least one right answer" do
-    sq = Factory.create(:simple_question_with_choices)
+    sq = FactoryGirl.create(:simple_question_with_choices)
     assert sq.valid?
     
     sq.answer_choices.each{|ac| ac.credit = 0}
@@ -59,10 +59,12 @@ class SimpleQuestionTest < ActiveSupport::TestCase
   test "deleting unpub question deletes direct associations" do 
     sq = make_simple_question(:answer_credits => [1,0], :method => :create)
     sq.answer_choices.each { |ac| ac.save! }
+    first_id = sq.answer_choices.first.id
+    last_id = sq.answer_choices.last.id
     sq.destroy
     
-    assert_raise(ActiveRecord::RecordNotFound) { AnswerChoice.find(sq.answer_choices.first.id) }
-    assert_raise(ActiveRecord::RecordNotFound) { AnswerChoice.find(sq.answer_choices.last.id) }    
+    assert_raise(ActiveRecord::RecordNotFound) { AnswerChoice.find(first_id) }
+    assert_raise(ActiveRecord::RecordNotFound) { AnswerChoice.find(last_id) }    
   end
   
   test "content copy" do
@@ -84,8 +86,8 @@ class SimpleQuestionTest < ActiveSupport::TestCase
   
   test "basic logic" do
     ContentParseAndCache.enable_test_parser = true
-    ll = Factory.create(:logic, :code => 'x = 4;', :variables => 'x')
-    sq = Factory.build(:simple_question, :content => 'The magic variable is =x=')
+    ll = FactoryGirl.create(:logic, :code => 'x = 4;', :variables => 'x')
+    sq = FactoryGirl.build(:simple_question, :content => 'The magic variable is =x=')
     sq.logic = ll
     sq.save
     ll.save

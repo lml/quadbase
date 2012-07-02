@@ -10,15 +10,22 @@
       <% answer_letter_code = "a".ord-1 %>
       <table width="100%">
       <% question.answer_choices.each do |ac| %>
-         <tr>
-            <td class="quad-answer_choice_index" width="5%">
+        <tr>
+	<td class="part_cred_mark" style="<%= 'display:none' if !@show_credit %>">
+		<% if ac.credit != 0 %>
+		<div style="position:relative; height: 25">
+	    	<%= check_credit_icon(ac.credit) %>
+		</div>
+		<% end %>
+	</td>
+        <td class="quad-answer_choice_index" width="5%">
                <p><%= (answer_letter_code += 1).chr %>)</p>
-            </td>
-            <td class="quad-answer_choice" width="95%">
+        </td>
+        <td class="quad-answer_choice" width="95%">
                <%= ac.variated_content_html.html_safe %>
-            </td>
-         </tr>
-      <% end %>
+        </td>
+        </tr>
+      <% end %>	
       </table>  
    </div>
 <% end %>

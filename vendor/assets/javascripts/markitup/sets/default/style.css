@@ -7,16 +7,20 @@
 }
 .markItUp .markItUpButton2 a {
 	background-image:url(images/italic.png);
+
 }
 .markItUp .markItUpButton3 a {
-	background-image:url(images/picture.png); 
+  background-image:url(images/underline.png);
 }
 .markItUp .markItUpButton4 a {
-	background-image:url(images/bullets.png);
+	background-image:url(images/picture.png); 
 }
 .markItUp .markItUpButton5 a {
-	background-image:url(images/numbered_list.png);
+	background-image:url(images/bullets.png);
 }
 .markItUp .markItUpButton6 a {
+	background-image:url(images/numbered_list.png);
+}
+.markItUp .markItUpButton7 a {
 	background-image:url(images/math.png);
 }

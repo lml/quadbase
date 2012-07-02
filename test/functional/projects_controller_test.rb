@@ -5,7 +5,7 @@ require 'test_helper'
 
 class ProjectsControllerTest < ActionController::TestCase
   setup do
-    @user = Factory.create(:user)
+    @user = FactoryGirl.create(:user)
     @project = Project.default_for_user!(@user)
   end
 

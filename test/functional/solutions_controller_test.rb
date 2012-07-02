@@ -7,14 +7,14 @@ class SolutionsControllerTest < ActionController::TestCase
 
   setup do
     ContentParseAndCache.enable_test_parser = true
-    @user = Factory.create(:user)
-    @solution = Factory.create(:solution, :creator => @user)
+    @user = FactoryGirl.create(:user)
+    @solution = FactoryGirl.create(:solution, :creator => @user)
     @question = @solution.question
     @project = Project.default_for_user!(@user)
-    @project_question = Factory.create(:project_question, :project => @project, :question => @question)
+    @project_question = FactoryGirl.create(:project_question, :project => @project, :question => @question)
     @published_question = make_simple_question(:method => :create, :published => true)
-    @published_solution = Factory.create(:solution, :question => @published_question)
-    @visible_published_solution = Factory.create(:solution, :question => @published_question,
+    @published_solution = FactoryGirl.create(:solution, :question => @published_question)
+    @visible_published_solution = FactoryGirl.create(:solution, :question => @published_question,
                                                             :is_visible => true)
     ContentParseAndCache.enable_test_parser = false
   end

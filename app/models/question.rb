@@ -3,12 +3,13 @@
 
 class Question < ActiveRecord::Base
   include AssetMethods
+  include VariatedContentHtml
   
   acts_as_taggable
   
   @@lock_timeout = Quadbase::Application.config.question_lock_timeout
 
-  set_inheritance_column "question_type"
+  self.inheritance_column = "question_type"
   
   has_many :question_collaborators, 
            :order => :position, 
@@ -91,11 +92,10 @@ class Question < ActiveRecord::Base
 
   has_many :solutions, :dependent => :destroy
 
-  attr_writer :variated_content_html
-  
-  def variated_content_html
-    @variated_content_html || self.content_html
-  end
+  has_many :questions_same_number,
+           :class_name => "Question",
+           :primary_key => "number",
+           :foreign_key => "number"
   
   has_one :comment_thread, :as => :commentable, :dependent => :destroy
   before_validation :build_comment_thread, :on => :create
@@ -112,20 +112,39 @@ class Question < ActiveRecord::Base
   before_save :clear_empty_logic
 
   validate :not_published, :on => :update
+
   validates_presence_of :license
-  
-  after_initialize :set_default_license!, :unless => :license
+  before_validation :set_default_license!, :on => :create, :unless => :license
 
   before_create :assign_number
 
-  scope :draft_questions, where(:version => nil)
-  scope :published_questions, where(:version.not_eq => nil)
+  scope :draft_questions, where{version == nil}
+  scope :published_questions, where{version != nil}
   scope :questions_in_projects, lambda { |projects|
-    joins(:project_questions).where(:project_questions => {
-          :project_id => projects.collect { |p| p.id }})
+    joins{project_questions}.where{project_questions.project_id.in(projects.collect { |p| p.id })}
   }
-  scope :published_with_number, lambda { |number|
-    published_questions.where(:number => number).order("updated_at DESC")
+  scope :user_project_questions, lambda { |user|
+    joins{project_questions.project.project_members}\
+      .where{project_questions.project.project_members.user_id == user.id}
+  }
+  scope :published_with_number, lambda { |num|
+    published_questions.where{number == num}.order{updated_at.desc}
+  }
+  # Can read a question if any of those:
+  #   - Question is published
+  #   - User is a member or a project that contains the question
+  #   - User is a question collaborator with roles
+  #   - User is a deputy of a question collaborator with roles
+  scope :which_can_be_read_by, lambda { |user|
+    return published_questions if user.is_anonymous?
+    joins{project_questions.outer.project.outer.project_members.outer}\
+    .joins{question_collaborators.outer.user.outer.deputies.outer}\
+    .where{(version != nil) |\
+    (project_question.project.project_members.user_id == user.id) |\
+    (((question_collaborators.user_id == user.id) |\
+    (question_collaborators.user.deputies.id == user.id)) &\
+    ((question_collaborators.is_author == true) |\
+    (question_collaborators.is_copyright_holder == true)))}
   }
 
   # This type is passed in some questions params; we need an accessor for it 
@@ -155,13 +174,13 @@ class Question < ActiveRecord::Base
       return false
     end
   end
-  
+
   def self.from_param(param)
     if (param =~ /^d(\d+)$/)
       q = Question.find($1.to_i) # Rails escapes this
     elsif (param =~ /^q(\d+)(v(\d+))?$/)
       if ($3.nil?)
-        q = latest_published($1.to_i) # Somewhat dangerous but seems to be properly escaped
+        q = latest_published($1.to_i) # Rails escapes this
       else
         q = find_by_number_and_version($1.to_i, $3.to_i) # Rails escapes this
       end
@@ -172,10 +191,6 @@ class Question < ActiveRecord::Base
     raise ActiveRecord::RecordNotFound if q.nil?
     q
   end
-    
-  def self.find_by_number_and_version(number, version)
-    Question.first(:conditions => {:number => number, :version => version})
-  end
   
   def self.latest_published(number)
     Question.published_with_number(number).first
@@ -183,7 +198,7 @@ class Question < ActiveRecord::Base
   
   def prior_version
     has_earlier_versions? ? 
-      Question.first(:number.eq % number & :version.eq % version-1) :
+      Question.where{(number == my{number}) & (version == my{version - 1})}.first :
       nil
   end
     
@@ -437,63 +452,105 @@ class Question < ActiveRecord::Base
     !has_role?(user, :is_listed)
   end
   
-  def self.search(type, where, text, user, exclude_type = '')
+  def self.search(type, location, part, text, user, exclude_type = '')
+    # This should the most efficient way to do the search (I hope)
+    # It does not use tagged_with and instead searches the database directly
+    # I'm allowing partial tag searches for now (e.g. 'PEN' will match 2011 SPEN Sprint)
+    # If this is not desirable, replace tags.name =~ query with tags.name == text
+    # An ordering other than by id could also be used without any other modifications
 
-    query = text.blank? ? '%' : '%' + text + '%'
-    # Note: % is the wildcard. This allows the user to search for stuff that "begins with" and "ends with".
-
-    case where
+    case location
     when 'Published Questions'
       wscope = published_questions
     when 'My Drafts'
       wscope = draft_questions
     when 'My Projects'
       wscope = user_project_questions(user)
-    else
+    else #All Places
       wscope = Question
     end
 
-    wtscope = wscope.where(:question_type.matches % typify(type))
-    wtscope = wtscope.where(:question_type.not_matches % typify(exclude_type)) if !exclude_type.blank?
+    type_query = typify(type)
+    wtscope = wscope.includes{question_setup}.where{question_type =~ type_query}
 
-    # Search by question ID or number
-    id_query = ''
-    num_query = ''
-    if (text =~ /^(\d+)$/)
-      id_query = $1
-      num_query = $1
-    elsif (text =~ /^d(\d+)$/)
-      id_query = $1
-    elsif (text =~ /^q(\d+)(v(\d+))?$/)
-      # Note you cannot find old versions of published questions since
-      # those are automatically removed in the controller
-      num_query = $1
+    if !exclude_type.blank?
+      exclude_type_query = typify(exclude_type)
+      wtscope = wtscope.where{question_type !~ exclude_type_query}
     end
 
-    wtscope.joins(:question_setup.outer).joins({:taggings.outer => :tag.outer}).where((:id.eq % id_query) |\
-            (:number.eq % num_query) | (:content.matches % query) | {:question_setup => [:content.matches % query]} |\
-            {:tags => [:name.matches % query]}).group(:id).order(:id)
+    latest_only = true
+    if !text.blank?
+      case part
+      when 'ID/Number'
+        # Search by question ID or number (more relaxed than to_param)
+        if (text =~ /^\s?(\d+)\s?$/) # Format: (id or number)
+          id_query = $1
+          num_query = $1
+          q = wtscope.where{(id == id_query) | (number == num_query)}
+        elsif (text =~ /^\s?d\.?\s?(\d+)\s?$/) # Format: d(id)
+          id_query = $1
+          q = wtscope.where{id == id_query}
+          latest_only = false
+        elsif (text =~ /^\s?q\.?\s?(\d+)(,?\s?v\.?\s?(\d+))?\s?$/)
+          # Format: q(number) or q(number)v(version)
+          num_query = $1
+          if $2.nil?
+            q = wtscope.where{number == num_query}
+          elsif !$3.nil?
+            ver_query = $3
+            q = wtscope.where{(number == num_query) & (version == ver_query)}
+            latest_only = false
+          else # Invalid version
+            return Question.where{id == nil}.where{id != nil} # Empty
+          end
+        else # Invalid ID/Number
+          return Question.where{id == nil}.where{id != nil} # Empty
+        end
+      when 'Author/Copyright Holder'
+        # Search by author (or copyright holder)
+        q = wtscope.joins{question_collaborators.user}
+        text.gsub(",", "").split.each do |t|
+          query = t.blank? ? '%' : '%' + t + '%'
+          q = q.where{(question_collaborators.user.first_name =~ query) |\
+                      (question_collaborators.user.last_name =~ query)}
+        end
+      when 'Tags'
+        # Search by tags
+        q = wtscope.joins{taggings.tag}
+        text.split(",").each do |t|
+          query = t.blank? ? '%' : '%' + t + '%'
+          q = q.where{tags.name =~ query}
+        end
+      else # Content
+        query = '%' + text + '%'
+        q = wtscope.where{(content =~ query) | (question_setups.content =~ query)}
+      end
+    else
+      q = wtscope
+    end
+    
+    # Remove (in SQL) questions the user can't read
+    q = q.which_can_be_read_by(user)
 
-    # This should the most efficient way to do the search
-    # (Inner joins with UNION could maybe be faster,
-    # but it seems Rails has very limited support for unions)
-    # It does not use tagged_with and instead searches the database directly
-    # I'm allowing partial tag searches for now (e.g. 'PEN' will match 2011 SPEN Sprint)
-    # If this is not desirable, replace :name.matches % query with :name => text
-    # An ordering other than by id could also be used without any other modifications
-    # Note: There seems to be no MetaWhere alternative for using the distinct keyword
+    # Remove duplicates and allow the use of max()
+    q = q.group{questions.id}
+
+    if latest_only # Remove old published versions
+      q = q.joins{questions_same_number}\
+           .having{(version == nil) | (version == max(questions_same_number.version))}
+    end
+    q.order{number}
   end
 
   def roleless_collaborators
-    question_collaborators.where(:is_author => false,
-                                 :is_copyright_holder => false)
+    question_collaborators.where{(is_author == false) & (is_copyright_holder == false)}
   end
 
   def valid_solutions_visible_for(user)
     s = solutions.visible_for(user)
     return s if changes_solution
     previous_published_questions = Question.published_with_number(number)
-    previous_published_questions = previous_published_questions.where(:version.lt => version) \
+    previous_published_questions = previous_published_questions.where{version < my{version}} \
                                      if is_published?
     previous_published_questions.each do |pq|
       s |= pq.solutions.visible_for(user)
@@ -504,6 +561,11 @@ class Question < ActiveRecord::Base
   
   def base_class
     Question
+  end
+
+  def project
+    raise IllegalState if is_published?
+    project_questions.first.project
   end
   
   # In some cases, there could be some outstanding role requests on this question
@@ -540,25 +602,26 @@ class Question < ActiveRecord::Base
     # This method checks that the user can get the lock and, if so, gets it and returns true.
     # Othewise, returns false.
     return true if @@lock_timeout <= 0
-    if (!is_locked? || has_lock?(user))
-      return lock!(user)
+    # Transaction to make testing and setting the lock atomic
+    self.with_lock do
+      return already_locked_error if (self.is_locked? && !self.has_lock?(user))
+      self.locked_by = user.id
+      self.locked_at = Time.now
+      self.save!
     end
-    already_locked_error
   end
 
   def check_and_unlock!(user)
     # This method checks that the user has the lock and, if so, releases it and returns true.
     # Othewise, returns false.
     return true if @@lock_timeout <= 0
-    if (is_locked? && has_lock?(user))
-      return unlock!
-    elsif (!is_locked?)
-      errors.add(:base, "You do not currently have the lock on draft " + to_param +
-                        " (q. " + number.to_s + "). This is usually caused by long periods" +
-                        " of inactivity. Please try again.")
-      return false
+    # Transaction to make releasing the lock atomic
+    self.with_lock do
+      return not_locked_error if !self.is_locked?
+      return already_locked_error if (self.is_locked? && !self.has_lock?(user))
+      self.locked_by = -1
+      self.save!
     end
-    already_locked_error
   end
 
   def is_locked?
@@ -566,7 +629,7 @@ class Question < ActiveRecord::Base
   end
 
   def has_lock?(user)
-    # This method assumes is_locked == true
+    # This method's return value is only valid if is_locked? == true
     locked_by == user.id
   end
 
@@ -612,6 +675,11 @@ class Question < ActiveRecord::Base
   def role_requests_can_be_created_by?(user)
     user.can_update?(self)
   end
+
+  def is_project_member?(user)
+    project_questions.each { |wp| return true if wp.project.is_member?(user) }
+    false
+  end
   
 #############################################################################
 protected
@@ -621,7 +689,7 @@ protected
   # of an existing question is made, the number will already be set to the correct
   # value before this method is called.
   def assign_number
-    self.number ||= (Question.maximum(:number) || 1) + 1
+    self.number ||= (Question.maximum('number') || 1) + 1
   end
   
   def not_published
@@ -629,21 +697,12 @@ protected
     errors.add(:base, "Changes cannot be made to a published question.#{self.changes}")
     false
   end
-  
+
   def clear_empty_logic
     if !logic.nil? && logic.empty?
       logic.destroy 
       self.logic = nil
     end
-  end
-
-  def is_project_member?(user)
-    project_questions.each { |wp| return true if wp.project.is_member?(user) }
-    false
-  end
-
-  def self.user_project_questions(user)
-    questions_in_projects(Project.all_for_user(user))
   end
 
   def set_default_license!
@@ -655,17 +714,6 @@ protected
       question_setup.destroy_if_unattached
     end
   end
-  
-  def lock!(user)
-    self.locked_by = user.id
-    self.locked_at = Time.now
-    save
-  end
-
-  def unlock!
-    self.locked_by = -1
-    save
-  end
 
   def already_locked_error
     lock_minutes = ((locked_at + @@lock_timeout - Time.now)/60).ceil
@@ -674,6 +722,13 @@ protected
                       User.find(locked_by).full_name + " for at least " +
                       lock_minutes.to_s +
                       " more " + (lock_minutes == 1 ? "minute" : "minutes") + ".")
+    false
+  end
+
+  def not_locked_error
+    errors.add(:base, "You do not currently have the lock on draft " + to_param +
+                      " (q. " + number.to_s + "). This can be caused by long" +
+                      " periods of inactivity. Please try again.")
     false
   end
 

@@ -6,8 +6,8 @@ require 'test_helper'
 class MessagesControllerTest < ActionController::TestCase
 
   setup do
-    @user = Factory.create(:user)
-    @message = Factory.create(:message)
+    @user = FactoryGirl.create(:user)
+    @message = FactoryGirl.create(:message)
     @message.comment_thread.subscribe!(@user)
   end
 

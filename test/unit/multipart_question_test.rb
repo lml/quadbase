@@ -6,16 +6,16 @@ require 'test_helper'
 class MultipartQuestionTest < ActiveSupport::TestCase
 
   test "create" do
-    mpq = Factory.create(:multipart_question)
+    mpq = FactoryGirl.create(:multipart_question)
     assert_not_nil mpq.question_setup
   end
 
   test "child_questions" do
-    qp = Factory.create(:question_part)
+    qp = FactoryGirl.create(:question_part)
     assert !qp.multipart_question.child_questions.empty?, 'a'
     
-    mpq = Factory.create(:multipart_question)
-    sq = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    mpq = FactoryGirl.create(:multipart_question)
+    sq = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
 
     assert mpq.add_parts(sq)
     assert mpq.errors.empty?
@@ -23,12 +23,12 @@ class MultipartQuestionTest < ActiveSupport::TestCase
   end
 
   test "add_parts" do
-    mpq = Factory.create(:multipart_question)
+    mpq = FactoryGirl.create(:multipart_question)
     
     assert_equal 0, mpq.child_question_parts.size, "a"
     assert_equal 0, mpq.child_questions.size, "b"
     
-    sq = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    sq = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
     
     mpq.add_parts(sq)
     
@@ -38,7 +38,7 @@ class MultipartQuestionTest < ActiveSupport::TestCase
     assert_equal mpq.child_questions.first, sq, "e"
     assert_equal 1, mpq.child_question_parts.first.order
     
-    sq2 = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    sq2 = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
     
     mpq.add_parts(sq2)
     
@@ -47,31 +47,31 @@ class MultipartQuestionTest < ActiveSupport::TestCase
   
   test "can't add parts to a published question" do
     mpq = make_multipart_question(:publish => true)
-    sq = Factory.build(:simple_question, :question_setup_id => mpq.question_setup_id)
+    sq = FactoryGirl.build(:simple_question, :question_setup_id => mpq.question_setup_id)
 
     assert !mpq.add_parts(sq)    
     assert !mpq.errors.empty?
   end
   
   test "can't add duplicate questions at once" do
-    mpq = Factory.create(:multipart_question)
-    sq = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    mpq = FactoryGirl.create(:multipart_question)
+    sq = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
 
     assert !mpq.add_parts([sq, sq])
     assert !mpq.errors.empty?
   end
   
   test "can't add draft w/o setup" do
-    mpq = Factory.create(:multipart_question)
-    sq = Factory.create(:simple_question)
+    mpq = FactoryGirl.create(:multipart_question)
+    sq = FactoryGirl.create(:simple_question)
 
     assert !mpq.add_parts(sq)
     assert !mpq.errors.empty?    
   end
 
   test "can add a published part without an intro" do
-    mpq = Factory.create(:multipart_question)
-    sq1 = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    mpq = FactoryGirl.create(:multipart_question)
+    sq1 = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
     sq2 = make_simple_question(:published => true, :method => :create, :no_setup => true)
 
     assert mpq.add_parts([sq1, sq2])
@@ -79,8 +79,8 @@ class MultipartQuestionTest < ActiveSupport::TestCase
   end
   
   test "incoming parts must have the same intro" do
-    mpq = Factory.create(:multipart_question)
-    sq1 = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    mpq = FactoryGirl.create(:multipart_question)
+    sq1 = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
     sq2 = make_simple_question(:method => :create)    
     
     assert !mpq.add_parts([sq1, sq2])
@@ -88,16 +88,16 @@ class MultipartQuestionTest < ActiveSupport::TestCase
   end
   
   test "incoming parts must have the same intro as the multipart" do
-    mpq = Factory.create(:multipart_question)
-    sq1 = Factory.create(:simple_question)
+    mpq = FactoryGirl.create(:multipart_question)
+    sq1 = FactoryGirl.create(:simple_question)
 
     assert !mpq.add_parts(sq1)
     assert !mpq.errors.empty?
   end
   
   test "multipart without an intro takes on incoming intro" do
-    mpq = Factory.create(:multipart_question, :question_setup => Factory.create(:question_setup, :content => " "))
-    sq = Factory.create(:simple_question)
+    mpq = FactoryGirl.create(:multipart_question, :question_setup => FactoryGirl.create(:question_setup, :content => " "))
+    sq = FactoryGirl.create(:simple_question)
     
     old_mpq_setup_id = mpq.question_setup_id
     assert_nothing_raised(ActiveRecord::RecordNotFound) { QuestionSetup.find(old_mpq_setup_id)}
@@ -110,12 +110,12 @@ class MultipartQuestionTest < ActiveSupport::TestCase
   end
   
   test "add new part" do
-    mpq = Factory.create(:multipart_question)
+    mpq = FactoryGirl.create(:multipart_question)
   end
   
   test "cannot add part twice" do
-    mpq = Factory.create(:multipart_question)
-    sq = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    mpq = FactoryGirl.create(:multipart_question)
+    sq = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
     
     mpq.add_parts(sq)
     assert !mpq.add_parts(sq), 'b'
@@ -124,21 +124,21 @@ class MultipartQuestionTest < ActiveSupport::TestCase
   
   test "can modify setup in a part" do
     # This is allowed b/c the question setup doesn't belong to any published q's.
-    mpq = Factory.create(:multipart_question)
-    sq = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    mpq = FactoryGirl.create(:multipart_question)
+    sq = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
 
     sq.update_attributes(:question_setup_attributes => {:content => "test"})
     assert sq.valid?
   end
   
   test "normal publish" do
-    mpq = Factory.create(:multipart_question)
-    sq1 = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
-    sq2 = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    mpq = FactoryGirl.create(:multipart_question)
+    sq1 = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    sq2 = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
     sq3 = make_simple_question(:no_setup => true, :published => true)
     mpq.add_parts([sq1, sq2, sq3])
     
-    user = Factory.create(:user)
+    user = FactoryGirl.create(:user)
     [mpq, sq1, sq2].each{|q| q.set_initial_question_roles(user)}
     
     assert mpq.ready_to_be_published?
@@ -156,13 +156,13 @@ class MultipartQuestionTest < ActiveSupport::TestCase
   end
   
   test "bad publish" do
-    mpq = Factory.create(:multipart_question)
-    sq1 = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
-    sq2 = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    mpq = FactoryGirl.create(:multipart_question)
+    sq1 = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    sq2 = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
     sq3 = make_simple_question(:no_setup => true, :published => true)
     mpq.add_parts([sq1, sq2, sq3])
 
-    user = Factory.create(:user)
+    user = FactoryGirl.create(:user)
     [mpq, sq1].each{|q| q.set_initial_question_roles(user)} # leave sq2 out
 
     assert !mpq.ready_to_be_published?
@@ -176,13 +176,15 @@ class MultipartQuestionTest < ActiveSupport::TestCase
   end
   
   test "content copy" do
-    mpq = Factory.create(:multipart_question)
-    sq1 = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
-    sq2 = Factory.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    mpq = FactoryGirl.create(:multipart_question)
+    sq1 = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
+    sq2 = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)
     sq3 = make_simple_question(:no_setup => true, :published => true)
     mpq.add_parts([sq1, sq2, sq3])
     
     pre_copy_time = Time.now
+
+    sleep 1 # second
     
     kopy = mpq.content_copy
     
@@ -202,33 +204,33 @@ class MultipartQuestionTest < ActiveSupport::TestCase
   end
 
   test "merging question setups" do
-    mpq = Factory.create(:multipart_question)
+    mpq = FactoryGirl.create(:multipart_question)
     mpq.question_setup.content = "Something"
     mpq.question_setup.save!
 
-    mpq_blank = Factory.create(:multipart_question)
+    mpq_blank = FactoryGirl.create(:multipart_question)
     mpq_blank.question_setup.content = ""
     mpq_blank.question_setup.save!
 
-    sq = Factory.create(:simple_question)
+    sq = FactoryGirl.create(:simple_question)
     sq.question_setup.content = "Something"
     sq.question_setup.save!
 
-    sq_different = Factory.create(:simple_question)
+    sq_different = FactoryGirl.create(:simple_question)
     sq_different.question_setup.content = "Something else"
     sq_different.question_setup.save!
 
     sq_blank = make_simple_question(:no_setup => true)
 
-    psq = Factory.create(:simple_question)
+    psq = FactoryGirl.create(:simple_question)
     psq.question_setup.content = "Something"
     psq.question_setup.save!
-    psq.publish!(Factory.create(:user))
+    psq.publish!(FactoryGirl.create(:user))
 
-    psq_different = Factory.create(:simple_question)
+    psq_different = FactoryGirl.create(:simple_question)
     psq_different.question_setup.content = "Something else"
     psq_different.question_setup.save!
-    psq_different.publish!(Factory.create(:user))
+    psq_different.publish!(FactoryGirl.create(:user))
 
     psq_blank = make_simple_question(:no_setup => true, :published => true)
 

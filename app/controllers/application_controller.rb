@@ -59,7 +59,7 @@ class ApplicationController < ActionController::Base
     when ActiveRecord::RecordNotFound, 
          ActionController::RoutingError,
          ActionController::UnknownController,
-         ActionController::UnknownAction
+         AbstractController::ActionNotFound
       error_page = 404
       send_email = false
     # when ::ActionController::MissingTemplate,
@@ -68,7 +68,7 @@ class ApplicationController < ActionController::Base
     end
     
     render_error_page(error_page)
-    DeveloperErrorNotifier.exception_email(exception, present_user) if send_email
+    DeveloperErrorNotifier.exception_email(exception, request, present_user) if send_email
   end
 
   # A user can be logged in but later be deauthorized for any number of reasons
@@ -83,7 +83,7 @@ class ApplicationController < ActionController::Base
   end
 
   def site_in_maintenance?
-    WebsiteConfiguration.get_value(:in_maintenance)
+    WebsiteConfiguration.get_value('in_maintenance')
   end
 
   def site_not_in_maintenance!
@@ -104,6 +104,8 @@ class ApplicationController < ActionController::Base
   def authenticate_admin!
     user_is_admin? || redirect_not_admin
   end
+
+
 
   # Like current_user, but for users who aren't logged in returns an 
   # AnonymousUser instead of nil
@@ -194,8 +196,7 @@ class ApplicationController < ActionController::Base
   end
 
   def protect_beta
-    env = Rails.env
-    return if (env == "development" || env == "test")
+    return if Rails.env.development? || Rails.env.test?
     
     authenticate_or_request_with_http_basic do |username, password|
       username == "quadbase" && password == "beta"

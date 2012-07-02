@@ -4,11 +4,11 @@
 module VoteMethods
   
   def up_votes
-    votes.where(:thumbs_up => true)
+    votes.where{thumbs_up == true}
   end
   
   def down_votes
-    votes.where(:thumbs_up => false)
+    votes.where{thumbs_up == false}
   end
   
   def combined_vote_count

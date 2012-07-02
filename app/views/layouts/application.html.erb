@@ -15,18 +15,16 @@
   <link rel="icon" href="/favicon.ico" type="image/ico" />
   <link rel="shortcut icon" href="/favicon.ico" type="image/ico" />
   
-  <%= stylesheet_link_tag "jquery-ui-1.8.12.custom" %>
-  <%= stylesheet_link_tag "quadbase-embed" %>
-  <%= stylesheet_link_tag "quadbase" %>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
 
+  <% if Rails.env.development? %>
+    <%= javascript_include_tag "jquery-ui-timepicker-addon" %>
+  <% end %>
  
   <% if content_for?(:stylesheets) %>
   <style type="text/css"><%= yield :stylesheets %></style>
   <% end %>
-  
-  <% # Listing the JS explicitly, b/c order is important!! %>
-  
-  <%= javascript_include_tag 'quadbase.js' %>
   
   <% if @include_mathjax %>  
      <script type="text/x-mathjax-config">
@@ -38,7 +36,7 @@
        });
      </script>
      
-     <% if WebsiteConfiguration.get_value(:use_mathjax_cdn) %>
+     <% if WebsiteConfiguration.get_value('use_mathjax_cdn') %>
        <% mj_url_base = request.ssl? ? 
                         "https://d3eoax9i5htok0.cloudfront.net" : 
                         "http://cdn.mathjax.org" %>
@@ -49,47 +47,32 @@
        <%= javascript_include_tag 'MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML' %>
      <% end %>
   <% end %>
-  
-  <% if @include_jquery %>
-  <%= javascript_include_tag 'jquery-1.5.1.min' %>
-  <%= javascript_include_tag 'jquery-ui-1.8.12.custom.min' %>
-  <%= javascript_include_tag 'jquery_extensions' %>
-  <% if Rails.env.development? %>
-    <%= javascript_include_tag 'jquery-ui-timepicker-addon' %>
-  <% end %>
-  <%= javascript_include_tag 'rails' %>
-  <% end %>
+
   <% if @include_autocomplete %>
-  <%= javascript_include_tag "autocomplete-rails" %>
+    <%= javascript_include_tag "autocomplete-rails" %>
   <% end %>
-  <%= javascript_include_tag "application" %>
 
   <% if @include_jcarousellite %>
-    <%= javascript_include_tag 'jcarousellite_1.0.1.js'%>
+    <%= javascript_include_tag 'jcarousellite_1.0.1' %>
   <% end %>
 
   <% if @include_easing %>
-    <%= javascript_include_tag 'jquery.easing.1.1.1.js'%>
+    <%= javascript_include_tag 'jquery.easing.1.1.1' %>
   <% end %>
   
   <% if @include_codemirror %>
-    <%= javascript_include_tag 'codemirror-compressed.js' %>
-    <%= javascript_include_tag 'seedrandom-min.js' %>
-    <%= stylesheet_link_tag 'codemirror.css' %>
-    <%= javascript_include_tag 'codemirror_utils.js'%>
-    <%= javascript_include_tag 'jslint.js'%>
+    <%= javascript_include_tag 'codemirror' %>
+    <%= stylesheet_link_tag 'codemirror' %>
   <% end %>
   
   <% if @include_uploadify %>
-    <%= javascript_include_tag 'jquery.uploadify/jquery.uploadify.v2.1.4.min' %>
-    <%= javascript_include_tag 'jquery.uploadify/swfobject.js' %>
-    <%= stylesheet_link_tag '/javascripts/jquery.uploadify/uploadify.css' %>
+    <%= javascript_include_tag 'uploadify' %>
+    <%= stylesheet_link_tag 'uploadify' %>
   <% end %>
   
   <% if @include_markitup %>
-    <%= javascript_include_tag "markitup/jquery.markitup" %>
-    <%= stylesheet_link_tag "/javascripts/markitup/skins/simple/style" %>
-    <%= stylesheet_link_tag "/javascripts/markitup/sets/default/style" %>
+    <%= javascript_include_tag "markitup" %>
+    <%= stylesheet_link_tag "markitup" %>
   <% end %>
   
   <% if content_for?(:javascript_includes) %>

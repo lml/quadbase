@@ -1,11 +1,26 @@
 // Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
 // License version 3 or later.  See the COPYRIGHT file for details.
+//
+// This is a manifest file that'll be compiled into application.js, which will include all the files
+// listed below.
+//
+// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
+// or vendor/assets/javascripts of plugins, if any, can be referenced here using a relative path.
+//
+// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// the compiled file.
+//
+// WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
+// GO AFTER THE REQUIRES BELOW.
+//
+//= require quadbase
+//= require jquery
+//= require jquery_ujs
+//= require jquery-ui
+//= require jquery-ui-1.8.12.custom.min
+//= require jquery_extensions
 
-// Place your application-specific JavaScript functions and classes here
-// This file is automatically included by javascript_include_tag :defaults
 
-// Useful debugging code:
-//  window.alert("Your message here");
 
 function remove_fields(link) {
   $(link).prev("input[type=hidden]").val("1");
@@ -14,14 +29,13 @@ function remove_fields(link) {
 
 function add_fields(elem_to_append_to, association, content) {
   var new_id = new Date().getTime();
-  var regexp = new RegExp("new_" + association, "g");
+  var regexp = new RegExp("new_" + association + "|tid|rid", "g");
   $(elem_to_append_to).append(content.replace(regexp, new_id));
 }
 
 // Use this method when you want to do an AJAX "DELETE", which 
 // rails/jquery likes to achieve as a POST with an extra field
-// passed in.  See "handleMethod(link)" in rails.js for the 
-// prototype for this method.
+// passed in.
 function delete_as_post(action, serializedArray) {
    serializedArray.push({name: "_method", value: "delete"}); 
    return $.post(action, serializedArray);
