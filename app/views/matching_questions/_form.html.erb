@@ -1,0 +1,263 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Lines between Draggable and Droppable</title>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css"
+        rel="stylesheet" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/1.5.2/raphael-min.js"></script>
+    <!--[if IE]>
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+    <script src="/javascripts/dragdropline.js"></script>
+    <style>
+        article, aside, figure, footer, header, hgroup, menu, nav, section { display: block; }        
+        body { font-family: Arial; font-size: 11px; }
+        #svgbasics { position: absolute; left: 0px; top: 0px; border: solid 0px #484; z-index: -100; }
+        .draggable { }
+        .droppable { }
+    </style>
+</head>
+<% counter = 0 %>
+<body id="body">
+    <div id="svgbasics">
+    </div>
+    <p>
+        <strong>The objective is</strong> to MAP the persons from the left to the persons
+        to the right. Once the link is set, the same person canot have multiple sources
+        or targets. The target can only accept one person to be linked to.</p>
+    </p>
+
+
+
+<% new_object = f.object.class.reflect_on_association(:matchings).klass.new %>
+<% counter = 0 %>
+ <table cellspacing="5" cellpadding="40" style="width: 100%; text-align: center;">
+  <tbody>
+ 
+<%= f.fields_for :matchings do |g| %>
+               <tr>
+	<% if g.object.column == "left" %>
+	<td>
+	<div style='border: 2px solid gray; padding: 10px; width: 320px; margin-bottom: 10px;'
+                                class='ui-corner-all draggable ui-draggable' id='wrapper3'>
+                                <table cellspacing'0' cellpadding='0' style='width: 100%;'>
+                                    <tbody> 
+                                        <tr> 
+                                            <td style='width: 50px; text-align: center;' rowspan='2'>
+                                                <img alt='' src='icons/user-48x48.png' /> </td>
+                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'>
+                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
+                                                </span>
+                                            </td> 
+                                        </tr>
+                                        <tr>
+                                            <td style='font-size: 0.9em; text-align: left;'>
+	<%= g.text_area :content %>
+                         </td>
+                                        </tr> 
+                                    </tbody> 
+                                </table> 
+                                <input class='valSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_choice_id' name='question[matchings_attributes][" + counter + "][choice_id]' type='hidden' /> 
+                            <input class = 'matchedSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_matched_id' name='question[matchings_attributes][" + counter + "][matched_id]' type='hidden' >
+                           <input value ='right' id='question_matchings_attributes_" + counter + "_column' name='question[matchings_attributes][" + counter + "][column]' type='hidden' /> 
+                            </div>
+        </div>
+        </td>
+        <% end %>
+        <% if g.object.column == "right" %>
+	<td style="vertical-align: top;">
+        <div style='border: 2px solid gray; padding: 5px; width: 340px; margin-bottom: 10px; margin-left:100px;' 
+                                class='ui-corner-all droppable ui-droppable' id='wrapper3'> 
+                                <table cellspacing'0' cellpadding='0' style='width: 100%;'> 
+                                    <tbody> 
+                                        <tr> 
+                                            <td style='width: 50px; text-align: center;' rowspan='2'> 
+                                                <img alt='' src='icons/user-48x48.png' /> </td> 
+                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'> 
+                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
+                                                </span>
+                                            </td> 
+                                        </tr> 
+                                        <tr> 
+                                            <td style='font-size: 0.9em; text-align: left;'>
+	<%= g.text_area :content %>
+        </td>
+                                        </tr> 
+                                    </tbody> 
+                                </table> 
+                                <input class='valSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_choice_id' name='question[matchings_attributes][" + counter + "][choice_id]' type='hidden' /> 
+                            <input class = 'matchedSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_matched_id' name='question[matchings_attributes][" + counter + "][matched_id]' type='hidden' >
+                           <input value ='right' id='question_matchings_attributes_" + counter + "_column' name='question[matchings_attributes][" + counter + "][column]' type='hidden' /> 
+                            </div>
+        </div>
+        </td>
+        <% end %>
+	
+        <% counter = counter + 1 %>
+        <tr>
+<% end%>
+ </table>
+       <div>
+            <table cellspacing="5" cellpadding="40" style="width: 100%; text-align: center;">
+                <tbody>
+                    <tr>
+                        <td id = "leftCol" style="width: 50%; vertical-align: top;">
+ 
+                        </td>
+                        <td id = "rightCol" style="vertical-align: top;">
+                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    <div id="dialog" title="Reset persons mapping?" style="z-index: 10;">
+        <p>
+            <span class="ui-icon ui-icon-alert"></span>Do you wish to delete all connection
+            resetting the mapping to it's original positions?</p>
+    </div>
+    <div id="dialogMappingResult" title="Current Mapping" style="z-index: 10;">
+        <p>
+            Here is a list of the current mapping:
+        </p>
+        <ul style="list-style: none;">
+            <li>No mapping was done yet</li></ul>
+    </div>
+    <a id="popButton" href="#" style="z-index: 10;">reset mapping</a> <a id="getMappings"
+        href="#" style="z-index: 10;">show mapping</a><a id="addLeft"
+        href="#" style="z-index: 10;">add left</a><a id="addRight"
+        href="#" style="z-index: 10;">add right</a>
+</body>
+</html>
+
+<script type="text/javascript">
+  counter = <%= counter %>;
+  $('#addRight').bind('click', function() {
+    counter = counter + 1;
+    var s = "<div style='border: 2px solid gray; padding: 5px; width: 340px; margin-bottom: 10px; margin-left:100px;' \
+                                class='ui-corner-all droppable ui-droppable' id='wrapper3'> \
+                                <table cellspacing'0' cellpadding='0' style='width: 100%;'> \
+                                    <tbody> \
+                                        <tr> \
+                                            <td style='width: 50px; text-align: center;' rowspan='2'> \
+                                                <img alt='' src='icons/user-48x48.png' /> </td> \
+                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'> \
+                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'> \
+                                                </span> \
+                                            </td> \
+                                        </tr> \
+                                        <tr> \
+                                            <td style='font-size: 0.9em; text-align: left;'> \
+                                                <textarea id='question_matchings_attributes_" + counter +"_content' rows='20' name='question[matchings_attributes][" + counter + "][content]' cols='40'></textarea> \
+                                            </td> \
+                                        </tr> \
+                                    </tbody> \
+                                </table> \
+                                <input class='valSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_choice_id' name='question[matchings_attributes][" + counter + "][choice_id]' type='hidden' /> \
+                            <input class = 'matchedSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_matched_id' name='question[matchings_attributes][" + counter + "][matched_id]' type='hidden' /> \
+                           <input value ='right' id='question_matchings_attributes_" + counter + "_column' name='question[matchings_attributes][" + counter + "][column]' type='hidden' /> \
+                            </div>";
+    var t = document.createElement('div');
+    t.innerHTML = s;
+    document.getElementById('rightCol').appendChild(t);
+    $("div .droppable").droppable();
+    $("div .droppable").droppable({
+        hoverClass: "ui-state-hover",
+        helper: "clone",
+        cursor: "move",
+        drop: function (event, ui) {
+            // change class and image
+            $(this)
+				.addClass("ui-state-highlight")
+				.find("img")
+				.removeAttr("src")
+				.attr("src", ico_userChecked);
+
+            // disable it so it can"t be used anymore		
+            $(this).droppable("disable");
+
+            // change class and image of the source elemenet		
+            $(ui.draggable)
+				.addClass("ui-state-highlight")
+				.find("img")
+				.removeAttr("src")
+				.attr("src", ico_userChecked);
+
+            // change the icon of the source element				
+            $(ui.draggable)
+				.find(".ui-icon-shuffle")
+				.removeClass("ui-icon-shuffle")
+				.addClass("ui-icon-locked");
+
+            var sourceValue = $(ui.draggable).find("input:hidden").val();
+            var targetValue = $(this).find("input:hidden").val();
+
+            // remove mapping dialog box line if exists
+            if ($("#dialogMappingResult").find("ul > li:first").html() == "No mapping was done yet")
+                $("#dialogMappingResult").find("ul").empty();
+
+            // append the mapping to the dialog	
+            $("#dialogMappingResult")
+				.find("ul")
+				.append("<li>" + sourceValue + " >> " + targetValue + "</li>");
+        
+            // change the input element to contain the mapping target and source
+            $(ui.draggable)
+				.find(".valSelector")
+				.val(sourceValue);
+            $(ui.draggable)
+				.find(".matchedSelector")
+				.val(targetValue);
+
+            // disable it so it can"t be used anymore	
+            $(ui.draggable).draggable("disable");
+
+            svgDrawLine($(this), $(ui.draggable));
+        }
+    });
+  });
+  $('#addLeft').bind('click', function() {
+    counter = counter + 1;
+    var s = "<div style='border: 2px solid gray; padding: 10px; width: 320px; margin-bottom: 10px;' \
+                                class='ui-corner-all draggable ui-draggable' id='wrapper3'> \
+                                <table cellspacing'0' cellpadding='0' style='width: 100%;'> \
+                                    <tbody> \
+                                        <tr> \
+                                            <td style='width: 50px; text-align: center;' rowspan='2'> \
+                                                <img alt='' src='icons/user-48x48.png' /> </td> \
+                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'> \
+                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'> \
+                                                </span> \
+                                            </td> \
+                                        </tr> \
+                                        <tr> \
+                                            <td style='font-size: 0.9em; text-align: left;'> \
+                                                <textarea id='question_matchings_attributes_" + counter + "_content' rows='20' name='question[matchings_attributes][" + counter + "][content]' cols='40'></textarea> \
+                                            </td> \
+                                        </tr> \
+                                    </tbody> \
+                                </table> \
+                                <input class = 'valSelector' value =" + counter+ " id='question_matchings_attributes_" + counter + "_choice_id' name='question[matchings_attributes][" + counter + "][choice_id]' type='hidden' /> \
+                              <input class = 'matchedSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_matched_id' name='question[matchings_attributes][" + counter + "][matched_id]' type='hidden' /> \
+                             <input value ='left' id='question_matchings_attributes_" + counter + "_column' name='question[matchings_attributes][" + counter + "][column]' type='hidden' /> \
+                            </div>";
+    var t = document.createElement('div');
+    t.innerHTML = s;
+    document.getElementById('leftCol').appendChild(t);
+    $("div .draggable").draggable();
+        $("div .draggable").draggable({
+        revert: true,
+        snap: false
+        /*,helper: "clone"*/
+    });
+    
+
+  })
+  
+</script>

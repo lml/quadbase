@@ -166,6 +166,7 @@ Quadbase::Application.routes.draw do
   end
   post 'questions/simple', :to => 'questions#create_simple', :as => 'create_simple_question'
   post 'questions/multipart', :to => 'questions#create_multipart', :as => 'create_multipart_question'
+  post 'questions/matching', :to => 'questions#create_matching', :as => 'create_matching_question'
 
   resources :multipart_questions, :only => [] do
     put 'add_blank_part'

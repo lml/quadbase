@@ -64,6 +64,10 @@ class QuestionsController < ApplicationController
   def create_multipart
     create(MultipartQuestion.new)
   end
+
+  def create_matching
+    create(MatchingQuestion.new)
+  end
   
   def edit
     @question = Question.from_param(params[:id])
