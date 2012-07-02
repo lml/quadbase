@@ -22,16 +22,14 @@
        highlight = child_question == current_question %>
     <div class="multipartEntry <%= 'multipartSelected leftRoundedCorners5' if highlight %>">
       <%= link_to_if !highlight, 
-                     "Part #{part.order}", part_edit_or_show_path(part, on_edit_view) %>      
-
-
-      <div style="margin-left:18px">
-      <% if child_question.solutions.count!=0 %>
-          <%= link_to "Solutions: #{child_question.solutions.count}", question_solutions_path(child_question) %>
-        <% end %>
-      </div>
+                     "Part #{part.order}", part_edit_or_show_path(part, on_edit_view) %>
     </div>
 
+    <div style="margin-left:18px">
+      <% if child_question.solutions.count!=0 %>
+          <%= link_to "Solutions: #{child_question.solutions.count}", question_solutions_path(child_question) %>
+      <% end %>
+    </div>
   <% end %>
   
   </div>
