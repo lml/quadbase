@@ -4,6 +4,7 @@
 class AnswerChoice < ActiveRecord::Base
   include ContentParseAndCache
   include AssetMethods
+  include VariatedContentHtml
   
   belongs_to :question
   validates_presence_of :content, :credit
@@ -19,12 +20,6 @@ class AnswerChoice < ActiveRecord::Base
 
   attr_accessible :content, :credit, :updated_at
   
-  attr_writer :variated_content_html
-  
-  def variated_content_html
-    @variated_content_html || self.content_html
-  end
-
   def content_copy
     AnswerChoice.new(:content => content, :credit => credit)
   end
