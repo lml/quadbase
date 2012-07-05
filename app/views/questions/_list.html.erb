@@ -41,6 +41,7 @@
 <% num_cols = 4 %>
 
 <% if !entries.nil? %>
+  <% entries = entries.to_a %>
   <%= content_for :javascript do %>
     <%= javascript_tag do %>
       var tog = false;
@@ -56,7 +57,6 @@
       });
     <% end %>
   <% end %>
-  <% entries = entries.to_a %>
   <table class="list" width="100%">
      <tr>
         <% if show_checkboxes %>
