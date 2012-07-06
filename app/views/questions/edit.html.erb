@@ -45,9 +45,9 @@
       &nbsp;&nbsp;&nbsp;&nbsp;
 
       <%= f.submit "Save Draft", 
+                   'data-disable-with' => "Saving...",
                    :class => "#{submit_classes}",
-                   :id => "save_button",
-                   :disable_with => "Saving..." %>
+                   :id => "save_button" %>
 
       &nbsp;&nbsp;&nbsp;&nbsp;
 

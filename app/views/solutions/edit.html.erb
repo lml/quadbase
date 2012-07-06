@@ -6,8 +6,7 @@
 <%= pageHeading((@solution.has_content? ? "Editing" : "New") + " Solution") %>
 
 
-<%= link_to_function "Show the question", 
-                      "$('.hidden_content').toggle();", :class => "hidden_content", :style => "float:right" %>
+<%= link_to "Show the question", "#", :class=>"hidden_content", :style=>"float_right" %>
 <div class="hidden_content" style="display:none">
 
 <% @show_credit = true %>
@@ -16,3 +15,11 @@
 </div>
 
 <%= render :partial => 'solutions/form', :locals => {:solution => @solution} %>
+
+<% content_for :javascript do %>
+	<% javascript_tag do %>
+		$(document).on('click', '.hidden_content', function(){
+			$('.hidden_content').toggle();
+		});
+	<% end %>
+<% end %>

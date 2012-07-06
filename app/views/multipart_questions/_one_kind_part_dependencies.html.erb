@@ -8,8 +8,7 @@
   <div style="float:left">
     <%= text %> 
     <span class="<%= common_id_class %>">
-      (<%= link_to_function "Change", 
-                            "$('.#{common_id_class}').toggle();" %>)</span>:
+      (<%= link_to "Change", '#', :id=>'change' %>)</span>:
 
     <% used_question_ids = [] %>
 
@@ -48,5 +47,12 @@
       <% end %>
     </div>
   <% end %>
-  
 </div>
+
+<% content_for :javascript do %>
+  <% javascript_tag do %>
+    $(document).on('click', '#change', function(){
+      $('.<%= common_id_class %>').toggle();
+    })
+  <% end %>
+<% end %>
