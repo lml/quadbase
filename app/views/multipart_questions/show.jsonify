@@ -1,31 +1,5 @@
 # Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
 # License version 3 or later.  See the COPYRIGHT file for details.
 
-json.multipart_question do
-  json.ingest! (render :partial => 'questions/common',
-                       :locals => {:question => @question})
-  
-  json.introduction do
-    json.markup @question.question_setup.content
-    json.html @question.question_setup.content_html
-  end
-
-  json.parts(@question.child_question_parts) do |part|
-    child_question = part.child_question
-
-    json.prerequisites(child_question.prerequisite_questions) do |pq|
-      json.id pq.to_param
-    end
-
-    json.supported_by(child_question.supporting_questions) do |sq|
-      json.id sq.to_param
-    end
-
-    json.ingest! (render :partial => 'simple_questions/show',
-                         :locals => {:question => child_question,
-                                     :skip_question_setup => true,
-                                     :skip_attribution => true})
-  end
-
-  json.ingest! (render :partial => 'questions/attribution')
-end
+json.ingest! (render :partial => 'multipart_questions/show',
+                     :locals => {:question => question})
