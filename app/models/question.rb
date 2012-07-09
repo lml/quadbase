@@ -3,6 +3,7 @@
 
 class Question < ActiveRecord::Base
   include AssetMethods
+  include VariatedContentHtml
   
   acts_as_taggable
   
@@ -95,12 +96,6 @@ class Question < ActiveRecord::Base
            :class_name => "Question",
            :primary_key => "number",
            :foreign_key => "number"
-
-  attr_writer :variated_content_html
-  
-  def variated_content_html
-    @variated_content_html || self.content_html
-  end
   
   has_one :comment_thread, :as => :commentable, :dependent => :destroy
   before_validation :build_comment_thread, :on => :create
@@ -506,10 +501,10 @@ class Question < ActiveRecord::Base
             q = wtscope.where{(number == num_query) & (version == ver_query)}
             latest_only = false
           else # Invalid version
-            return Question.where{id == nil}.where{id != nil} # Empty
+            return Question.none # Empty
           end
         else # Invalid ID/Number
-          return Question.where{id == nil}.where{id != nil} # Empty
+          return Question.none # Empty
         end
       when 'Author/Copyright Holder'
         # Search by author (or copyright holder)

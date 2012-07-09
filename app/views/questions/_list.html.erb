@@ -40,19 +40,23 @@
 
 <% num_cols = 4 %>
 
-<%= content_for :javascript do %>
-  <%= javascript_tag do %>
-    var tog = false;
-    
-    $('#toggle_checkbox').live('click', function() {
-      $('.pq_checkbox').attr('checked',!tog); 
-      tog=!tog;
-    });
-  <% end %>
-<% end %>
-
 <% if !entries.nil? %>
   <% entries = entries.to_a %>
+  <%= content_for :javascript do %>
+    <%= javascript_tag do %>
+      var tog = false;
+      
+      $('#toggle_checkbox').live('click', function() {
+        $('.pq_checkbox').attr('checked',!tog); 
+        tog=!tog;
+      });
+      
+      $('.pq_checkbox').live('click',function() {
+        tog = $('.pq_checkbox:checked').length == <%= entries.size %>;
+        $('#toggle_checkbox').attr('checked', tog);
+      });
+    <% end %>
+  <% end %>
   <table class="list" width="100%">
      <tr>
         <% if show_checkboxes %>

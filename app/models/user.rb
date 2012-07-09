@@ -171,19 +171,34 @@ private
   end
 
   def self.search(type, text)
-    return Array.new if text.blank?
-    query = text.gsub('%', '') + '%'
-    # Note: % is the wildcard. This allows the user to search for stuff that "begins with" but not "ends with".
+    return User.none if text.blank?
+    
+    # Note: % is the wildcard. This allows the user to search
+    # for stuff that "begins with" but not "ends with".
     case type
     when 'Name'
-      return where{(first_name =~ query) | (last_name =~ query)} # TODO: make more general
+      u = User.scoped
+      text.gsub(/[%,]/, '').split.each do |t|
+        next if t.blank?
+        query = t + '%'
+        u = u.where{(first_name =~ query) | (last_name =~ query)}
+      end
+      return u
     when 'Username'
+      query = text.gsub('%', '') + '%'
       return where{username =~ query}
     when 'Email'
+      query = text.gsub('%', '') + '%'
       return where{email =~ query}
     else # All
-      return where{(first_name =~ query) | (last_name =~ query) |
-                   (username =~ query) | (email =~ query)}
+      u = User.scoped
+      text.gsub(/[%,]/, '').split.each do |t|
+        next if t.blank?
+        query = t + '%'
+        u = u.where{(first_name =~ query) | (last_name =~ query) |
+                    (username =~ query) | (email =~ query)}
+      end
+      return u
     end
   end
   
