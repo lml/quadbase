@@ -47,7 +47,7 @@ class ProjectsControllerTest < ActionController::TestCase
     assert_redirected_to project_path(assigns(:project))
   end
   
-  test "auto default if no other default" do
+  test "should auto default new project if no other default" do
     sign_in @user
     assert_difference('Project.count', -1) do
       delete :destroy, :id => @project.to_param

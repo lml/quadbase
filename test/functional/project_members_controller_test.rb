@@ -76,7 +76,8 @@ class ProjectMembersControllerTest < ActionController::TestCase
 
   test "should make_default project_member" do
     sign_in @member
-    put :make_default, :project_member_id => @project_member.id
+    project_member = FactoryGirl.create(:project_member, :user => @member)
+    put :make_default, :project_member_id => project_member.id
     assert_redirected_to projects_path
   end
 end
