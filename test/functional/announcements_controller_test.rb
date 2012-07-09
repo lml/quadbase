@@ -5,7 +5,7 @@ require 'test_helper'
 
 class AnnouncementsControllerTest < ActionController::TestCase
   setup do
-    @announcement = Factory.create(:announcement)
+    @announcement = FactoryGirl.create(:announcement)
   end
 
   test "should not get index not logged in" do

@@ -28,7 +28,7 @@ class AnswerChoiceTest < ActiveSupport::TestCase
   end
 
   test "can't mass-assign question and content_html" do
-    question = Factory.create(:simple_question)
+    question = FactoryGirl.create(:simple_question)
     cached = "Some cached content"
     ac = AnswerChoice.create(:question => question, :content_html => cached)
     assert !ac.save
@@ -37,7 +37,7 @@ class AnswerChoiceTest < ActiveSupport::TestCase
   end
   
   test "content copy" do
-    ac1 = Factory.build(:answer_choice)
+    ac1 = FactoryGirl.build(:answer_choice)
     ac2 = ac1.content_copy
     assert_equal(ac1.content, ac2.content)
     assert_equal(ac1.credit, ac2.credit)

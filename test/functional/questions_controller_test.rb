@@ -7,28 +7,28 @@ class QuestionsControllerTest < ActionController::TestCase
 
   setup do
     ContentParseAndCache.enable_test_parser = true
-    @user = Factory.create(:user)
-    @user2 = Factory.create(:user)
-    @question = Factory.create(:project_question,
+    @user = FactoryGirl.create(:user)
+    @user2 = FactoryGirl.create(:user)
+    @question = FactoryGirl.create(:project_question,
                                :project => Project.default_for_user!(@user)).question
-    @question_collaborator = Factory.create(:question_collaborator,
+    @question_collaborator = FactoryGirl.create(:question_collaborator,
                                             :question => @question,
                                             :user => @user,
                                             :is_author => true,
                                             :is_copyright_holder => true)
-    @question_collaborator1 = Factory.create(:question_collaborator,
+    @question_collaborator1 = FactoryGirl.create(:question_collaborator,
                                             :question => @question,
                                             :user => @user2,
                                             :is_author => true,
                                             :is_copyright_holder => true)
-    @question2 = Factory.create(:project_question,
+    @question2 = FactoryGirl.create(:project_question,
                               :project => Project.default_for_user!(@user)).question
-    @question_collaborator2 = Factory.create(:question_collaborator,
+    @question_collaborator2 = FactoryGirl.create(:question_collaborator,
                                             :question => @question2,
                                             :user => @user,
                                             :is_author => true,
                                             :is_copyright_holder => true)
-    @question_collaborator3 = Factory.create(:question_collaborator,
+    @question_collaborator3 = FactoryGirl.create(:question_collaborator,
                                             :question => @question2,
                                             :user => @user2,
                                             :is_author => true,
@@ -64,7 +64,7 @@ class QuestionsControllerTest < ActionController::TestCase
     get :get_started
     assert_response :success
   end
-
+  
   test "should not get new not logged in" do
     get :new
     assert_redirected_to login_path

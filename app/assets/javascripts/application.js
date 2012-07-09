@@ -19,19 +19,17 @@
 //= require jquery-ui
 //= require jquery-ui-1.8.12.custom.min
 //= require jquery_extensions
-<% if Rails.env.development? %>
-//= require jquery-ui-timepicker-addon
-<% end %>
+
+
 
 function remove_fields(link) {
   $(link).prev("input[type=hidden]").val("1");
   $(link).closest(".fields").hide();
 }
 
-
 function add_fields(elem_to_append_to, association, content) {
   var new_id = new Date().getTime();
-  var regexp = new RegExp("new_" + association + "|tid|fid", "g");
+  var regexp = new RegExp("new_" + association + "|tid|rid", "g");
   $(elem_to_append_to).append(content.replace(regexp, new_id));
 }
 
