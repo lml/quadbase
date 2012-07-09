@@ -503,10 +503,10 @@ class Question < ActiveRecord::Base
             q = wtscope.where{(number == num_query) & (version == ver_query)}
             latest_only = false
           else # Invalid version
-            return Question.where{id == nil}.where{id != nil} # Empty
+            return Question.none # Empty
           end
         else # Invalid ID/Number
-          return Question.where{id == nil}.where{id != nil} # Empty
+          return Question.none # Empty
         end
       when 'Author/Copyright Holder'
         # Search by author (or copyright holder)
