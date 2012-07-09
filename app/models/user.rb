@@ -171,7 +171,7 @@ private
   end
 
   def self.search(type, text)
-    return User.where{id == nil}.where{id != nil} if text.blank? # Empty
+    return User.none if text.blank?
     
     # Note: % is the wildcard. This allows the user to search
     # for stuff that "begins with" but not "ends with".
