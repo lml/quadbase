@@ -29,30 +29,3 @@
 
 <p><%= render :partial => "shared/comments",
            :locals => {:commentable => @question.becomes(Question)} %></p>
-
-<br/>
-<a href="#" class="show_solutions">Show/Hide Solutions</a>
-
-<p><%= render :partial => 'solutions/solution_list',
-           :locals => {:question => @question,
-                       :solutions => Vote.order_by_votes(@question.valid_solutions_visible_for(present_user))} %></p>
-
-
-<%= content_for :javascript do %>
-  <%= javascript_tag do %>
-    $('#solution_list').hide();
-    $('#write_solution').hide();
-    var show = false;
-    $('.show_solutions').click(function() {
-      if(!show){
-        $('#solution_list').show();
-        $('#write_solution').show();
-      }
-      else{
-        $('#solution_list').hide();
-        $('#write_solution').hide();
-      }
-      show = !show;
-    });
-  <% end %>
-<% end %>

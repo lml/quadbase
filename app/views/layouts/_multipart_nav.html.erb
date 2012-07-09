@@ -23,11 +23,9 @@
     <div class="multipartEntry <%= 'multipartSelected leftRoundedCorners5' if highlight %>">
       <%= link_to_if !highlight, 
                      "Part #{part.order}", part_edit_or_show_path(part, on_edit_view) %>
-    </div>
 
-    <div style="margin-left:18px">
       <% if child_question.solutions.count!=0 %>
-          <%= link_to "Solutions: #{child_question.solutions.count}", question_solutions_path(child_question) %>
+          <%= link_to image_tag('/assets/soln_badge_v1.jpeg'), question_solutions_path(child_question), {:title => "#{child_question.solutions.count} Solutions"} %>
       <% end %>
     </div>
   <% end %>
