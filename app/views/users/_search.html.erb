@@ -21,12 +21,13 @@
 
   <table width="550px" align="center">
     <tr>
-      <td><%= label_tag 'Search For:' %></td>
-      <td><%= text_field_tag 'text_query', @text_query %></td>
-      <td><%= label_tag 'in:' %></td>
+      <td><%= label_tag 'Search For:' %>&nbsp;</td>
+      <td><%= text_field_tag 'text_query', @text_query %>&nbsp;</td>
+      <td><%= label_tag 'in:' %>&nbsp;</td>
       <td>
         <%= select_tag 'selected_type', 
             options_for_select(['Any', 'Name', 'Username', 'Email'], @selected_type) %>
+        &nbsp;
       </td>
       <td>
         <%= hidden_field_tag 'add_path', add_path %>

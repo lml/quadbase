@@ -86,6 +86,21 @@
         width:600, 
         buttons: { "Close": function() { $(this).dialog("close"); }}
       });
+
+      $('#save_button').live('click', function() {
+        var count = 0;
+        $('input[id*="question_answer_choices_attributes"]').each(function() {
+          if($(this).attr('value')==1&&$(this).attr('checked')=='checked'){
+            count += 1;
+          }
+        });
+        if(count>1){
+          var confirmed = confirm('You have designated multiple answers as correct, Continue?');
+          if(!confirmed){
+            event.preventDefault();
+          }
+        }
+      });
    <% end %>
 <% end %>
 
