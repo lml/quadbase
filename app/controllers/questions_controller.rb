@@ -4,7 +4,7 @@
 class QuestionsController < ApplicationController
   include ActionView::Helpers::TextHelper
 
-  skip_before_filter :authenticate_user!, :only => [:index, :get_started, :show, :new, :search, :tagged, :quickview]
+  skip_before_filter :authenticate_user!, :only => [:index, :get_started, :show, :search, :tagged, :quickview]
 
   before_filter :include_mathjax, :only => [:index, :show, :edit, :search, :show_part, :update, :get_started]
   before_filter :include_jquery
