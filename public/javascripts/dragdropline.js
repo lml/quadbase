@@ -170,9 +170,13 @@ $(document).ready(function () {
         $("#dialogMappingResult").dialog("open");
     });
 
-    svg = Raphael("svgbasics", $("#svgbasics").width(), $("#svgbasics").height());
+    svg = Raphael("svgbasics", "100%", "100%");
 
 });
+
+function expandSvg(){
+   svg.setAttribute("height", "+=1000");
+}
 
 function svgClear() {
     svg.clear();
@@ -187,11 +191,11 @@ function svgDrawLine(eTarget, eSource) {
 
         // origin -> ending ... from left to right
         // 10 + 10 (padding left + padding right) + 2 + 2 (border left + border right)
-        var originX = $source.offset().left + $source.width() - 265 + 4;
-        var originY = $source.offset().top + (($source.height() - 250 + 4) / 2);
-
-        var endingX = $target.offset().left - 265;
-        var endingY = $target.offset().top + (($target.height() - 250 + 4) / 2);
+        var originX = 355;
+        var originY = $source.offset().top - 75;
+        
+        var endingX = 475;
+        var endingY = $target.offset().top - 75;
 
         var space = 20;
         var color = colours[random(9)];

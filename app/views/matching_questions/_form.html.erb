@@ -22,7 +22,7 @@
         .droppable { }
     </style>
 </head>
-<% counter = 0 %>
+
 <body id="body">
     <div id="svgbasics">
     </div>
@@ -32,47 +32,14 @@
         or targets. The target can only accept one person to be linked to.</p>
     </p>
 
-
-
-<% new_object = f.object.class.reflect_on_association(:matchings).klass.new %>
 <% counter = 0 %>
- <table cellspacing="5" cellpadding="40" style="width: 100%; text-align: center;">
-  <tbody>
- 
-<%= f.fields_for :matchings do |g| %>
-               <tr>
-	<% if g.object.column == "left" %>
-	<td>
-	<div style='border: 2px solid gray; padding: 10px; width: 320px; margin-bottom: 10px;'
-                                class='ui-corner-all draggable ui-draggable' id='wrapper3'>
-                                <table cellspacing'0' cellpadding='0' style='width: 100%;'>
-                                    <tbody> 
-                                        <tr> 
-                                            <td style='width: 50px; text-align: center;' rowspan='2'>
-                                                <img alt='' src='icons/user-48x48.png' /> </td>
-                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'>
-                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
-                                                </span>
-                                            </td> 
-                                        </tr>
-                                        <tr>
-                                            <td style='font-size: 0.9em; text-align: left;'>
-	<%= g.text_area :content %>
-                         </td>
-                                        </tr> 
-                                    </tbody> 
-                                </table> 
-                                <input class='valSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_choice_id' name='question[matchings_attributes][" + counter + "][choice_id]' type='hidden' /> 
-                            <input class = 'matchedSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_matched_id' name='question[matchings_attributes][" + counter + "][matched_id]' type='hidden' >
-                           <input value ='right' id='question_matchings_attributes_" + counter + "_column' name='question[matchings_attributes][" + counter + "][column]' type='hidden' /> 
-                            </div>
-        </div>
-        </td>
-        <% end %>
-        <% if g.object.column == "right" %>
+<table style='position:absolute; margin-left:300px'>
+<tbody>
+<%= f.fields_for :matchings do |g| %>    
+   <% if g.object.column == "right" %>
 	<td style="vertical-align: top;">
         <div style='border: 2px solid gray; padding: 5px; width: 340px; margin-bottom: 10px; margin-left:100px;' 
-                                class='ui-corner-all droppable ui-droppable' id='wrapper3'> 
+                                class='ui-corner-all droppable ui-droppable' id='wrapper1'> 
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'> 
                                     <tbody> 
                                         <tr> 
@@ -85,21 +52,57 @@
                                         </tr> 
                                         <tr> 
                                             <td style='font-size: 0.9em; text-align: left;'>
-	<%= g.text_area :content %>
+	<%= g.text_area :content, :style=>'height:60; width:300; resize:none' %>
         </td>
                                         </tr> 
                                     </tbody> 
                                 </table> 
-                                <input class='valSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_choice_id' name='question[matchings_attributes][" + counter + "][choice_id]' type='hidden' /> 
-                            <input class = 'matchedSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_matched_id' name='question[matchings_attributes][" + counter + "][matched_id]' type='hidden' >
-                           <input value ='right' id='question_matchings_attributes_" + counter + "_column' name='question[matchings_attributes][" + counter + "][column]' type='hidden' /> 
+                                <input class='valSelector' value ='<%= counter %>' id='question_matchings_attributes_<%= counter %>_choice_id' name='question[matchings_attributes][<%= counter %>][choice_id]' type='hidden' /> 
+                            <input class = 'matchedSelector' value ='<%= counter %>' id='question_matchings_attributes_<%= counter %>_matched_id' name='question[matchings_attributes][<%= counter %>][matched_id]' type='hidden' />
+                           <input class = 'temp' value ='right' id='question_matchings_attributes_<%= counter %>_column' name='question[matchings_attributes][<%= counter %>][column]' type='hidden' /> 
                             </div>
-        </div>
         </td>
+        </tr>
         <% end %>
-	
-        <% counter = counter + 1 %>
+	<% counter = counter + 1 %>
+<% end %>
+</tbody>
+</table>
+ <table cellspacing="5" cellpadding="40" style="width: 100%; text-align: center;">
+  <tbody>
+ 
+<%= f.fields_for :matchings do |g| %>    
+	<% if g.object.column == "left" %>
         <tr>
+	<td>
+	<div style='border: 2px solid gray; padding: 10px; width: 320px; margin-bottom: 10px;'
+                                class='ui-corner-all draggable ui-draggable' id='wrapper2'>
+                                <table cellspacing'0' cellpadding='0' style='width: 100%;'>
+                                    <tbody> 
+                                        <tr> 
+                                            <td style='width: 50px; text-align: center;' rowspan='2'>
+                                                <img alt='' src='icons/user-48x48.png' /> </td>
+                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'>
+                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
+                                                </span>
+                                            </td> 
+                                        </tr>
+                                        <tr>
+                                            <td style='font-size: 0.9em; text-align: left;'>
+	<%= g.text_area :content, :style=>'height:60; width:300; resize:none' %>
+                         </td>
+                                        </tr> 
+                                    </tbody> 
+                                </table> 
+                                <input class='valSelector' value ='<%= counter %>' id='question_matchings_attributes_<%= counter %>_choice_id' name='question[matchings_attributes][<%= counter %>][choice_id]' type='hidden' /> 
+                            <input class = 'matchedSelector' value ='<%= counter %>' id='question_matchings_attributes_<%= counter %>_matched_id' name='question[matchings_attributes][<%= counter %>][matched_id]' type='hidden' />
+                           <input class = 'temp1' value ='left' id='question_matchings_attributes_<%= counter %>_column' name='question[matchings_attributes][<%= counter %>][column]' type='hidden' /> 
+                            </div>
+        </td>
+        </tr>
+        <% end %>
+       
+        <% counter = counter + 1 %>
 <% end%>
  </table>
        <div>
@@ -154,7 +157,7 @@
                                         </tr> \
                                         <tr> \
                                             <td style='font-size: 0.9em; text-align: left;'> \
-                                                <textarea id='question_matchings_attributes_" + counter +"_content' rows='20' name='question[matchings_attributes][" + counter + "][content]' cols='40'></textarea> \
+                                                <textarea style='height:60; width:300; resize:none' id='question_matchings_attributes_" + counter +"_content' name='question[matchings_attributes][" + counter + "][content]' ></textarea> \
                                             </td> \
                                         </tr> \
                                     </tbody> \
@@ -238,7 +241,7 @@
                                         </tr> \
                                         <tr> \
                                             <td style='font-size: 0.9em; text-align: left;'> \
-                                                <textarea id='question_matchings_attributes_" + counter + "_content' rows='20' name='question[matchings_attributes][" + counter + "][content]' cols='40'></textarea> \
+                                                <textarea style='height:60; width:300; resize:none' id='question_matchings_attributes_" + counter + "_content' rows='20' name='question[matchings_attributes][" + counter + "][content]' cols='40'></textarea> \
                                             </td> \
                                         </tr> \
                                     </tbody> \
