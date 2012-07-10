@@ -8,8 +8,7 @@ module AssetMethods
   end
   
   def get_asset(local_name)
-    checknil = attachable_assets.select{|aa| aa.local_name == local_name}.first
-    checknil.nil? ? checknil : checknil.asset
+    attachable_assets.select{|aa| aa.local_name == local_name}.first.try(:asset)
   end
   
 end
