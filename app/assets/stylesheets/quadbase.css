@@ -1302,3 +1302,55 @@ a.tag_cloud_4 { font-size: 20px; line-height:4;}
    padding-top: 4px;
    width: 100%;
 }
+u1, li {
+        margin:0;
+        padding:0;
+        list-style-type:none;
+  }
+  .invalid {
+    
+        background:url('/assets/cross.png') no-repeat 0 50%;
+        padding-left:22px;
+        line-height:24px;
+        color:#ec3f41;
+  }
+  .valid{
+        background:url("/assets/accept.png") no-repeat 0 50%;
+        padding-left:22px;
+        line-height:24px;
+        color:#3a7d34;
+  }
+
+  #pswd_info {
+        position:absolute;
+        bottom:55px;
+        bottom: -115px\9;
+        left:330px;
+        width:250px;
+        padding:15px;
+        background:#fefefe;
+        font-size:.875em;
+        border-radius:5px;
+        box-shadow:0 1px 3px #ccc;
+        border:1px solid #ddd;
+  }
+  #pswd_info h4 {
+        margin: 0 0 10px 0;
+        padding:0;
+        font-weight:normal;
+  }
+  #pswd_info::before {
+        content: "\25C4";
+        position:absolute;
+        top:57px;
+        left:-4%;
+        font-size:16px;
+        line-height:14px;
+        color:#ddd;
+        text-shadow:none;
+        display:block;
+  }
+  #pswd_info {
+       display:none;
+  }
+  

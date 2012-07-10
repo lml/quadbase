@@ -19,6 +19,14 @@
   <%= f.email_field :email %></p>
   <p><b>Password</b><br/>
   <%= f.password_field :password %></p>
+      <div id="pswd_info" >
+      <h4>Password must meet the following requirements:</h4>
+      <u1>
+          <li id ="letter" class="invalid">At least <strong>one letter</strong></li>
+          <li id="number" class ="invalid">At least <strong>one number</strong></li>
+          <li id="length" class="invalid">At least <strong>8 characters</strong></li>
+       </u1>
+  </div>
   <p><b>Password Confirmation</b><br/>
   <%= f.password_field :password_confirmation %></p>
 
@@ -41,15 +49,53 @@
 <%# JS to enable/disable the submit button dependent on if the agree checkbox is checked %>
 <% content_for :javascript do %>
 <%= javascript_tag do %>
+var len = false;
+var letter = false;
+var number = false;
 $('#agreement_checkbox').live('click', function() {
-   if ($('#agreement_checkbox').is(':checked')) {
-      $('#register_submit').removeAttr('disabled');
-      $('#register_submit').removeClass('ui-state-disabled');
-   } 
+   if ($('#agreement_checkbox').is(':checked') & (len == true)& (letter == true) & (number == true)){
+        $('#register_submit').removeAttr('disabled');
+        $('#register_submit').removeClass('ui-state-disabled');
+        
+   }
    else {
       $('#register_submit').attr('disabled', 'disabled');
       $('#register_submit').addClass('ui-state-disabled');
    }
 });
+$('input[type=password]').keyup(function(){
+      //set password variable
+      var pswd = $(this).val();
+
+      //validate the length
+      if (pswd.length < 8) {
+          $('#length').removeClass('valid').addClass('invalid');
+          len = false;
+      } else {
+          $('#length').removeClass('invalid').addClass('valid');
+          len = true;
+       }
+      //validate letter
+      if (pswd.match(/[A-z]/)){
+          $('#letter').removeClass('invalid').addClass('valid');
+          letter = true;
+      } else {
+          $('#letter').removeClass('valid').addClass('invalid');
+          letter = false;
+      }
+      //validate number
+      if (pswd.match(/\d/)){
+          $('#number').removeClass('invalid').addClass('valid');
+          number = true;
+      } else {
+          $('#number').removeClass('valid').addClass('invalid');
+          number = false;
+      }
+}).focus(function(){
+    $('#pswd_info').show();
+}).blur(function(){
+    $('#pswd_info').hide();
+});
 <% end %>
 <% end %>
+
