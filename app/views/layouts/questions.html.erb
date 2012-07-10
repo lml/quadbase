@@ -66,7 +66,14 @@
          <% end %>
 
          <% if @question.can_be_read_by?(present_user) %>
-           <p><%= link_to "Solutions (#{@question.solutions.count})", question_solutions_path(@question) %>
+          <% published_solutions_count = 0 
+             @question.solutions.each do |solution|
+               if solution.is_visible
+                 published_solutions_count += 1
+               end
+             end
+          %>
+           <p><%= link_to "Solutions (#{published_solutions_count} published)", question_solutions_path(@question) %>
          <% end %>
 
          <% if @show_edit_license_link && present_user.can_update?(@question) %>

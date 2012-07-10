@@ -25,7 +25,14 @@
                      "Part #{part.order}", part_edit_or_show_path(part, on_edit_view) %>
 
       <% if child_question.solutions.count!=0 %>
-          <%= link_to image_tag('/assets/soln_badge_v1.jpeg'), question_solutions_path(child_question), {:title => "#{child_question.solutions.count} Solutions"} %>
+        <% published_solutions_count = 0 
+           child_question.solutions.each do |solution|
+             if solution.is_visible
+               published_solutions_count += 1
+             end
+           end
+        %>
+        <%= link_to image_tag('/assets/soln_badge_v1.jpeg'), question_solutions_path(child_question), {:title => "#{published_solutions_count} Published Solutions"} %>
       <% end %>
     </div>
   <% end %>
