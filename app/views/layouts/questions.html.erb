@@ -57,9 +57,10 @@
 
          <% if @show_credit_toggle_link %>
            <p>
-            <%= link_to 'Reveal Credit', "#", :id=>"reveal_cred" %>
+            <%= link_to 'Reveal Credit', nil, :remote=>true, :onclick=>"$('.part_cred_mark').show(); $(this).hide(); $(this).next().show();" %>
 
-            <%= link_to 'Hide Credit', '#', :id=>"hide_cred", :style=>'display:none' %>
+            <%= link_to 'Hide Credit', nil, :remote=>true, :style=>'display:none',
+              :onclick=>"$('.part_cred_mark').hide(); $(this).hide();  $(this).prev().show();" %>
            </p>
          <% end %>
 
@@ -141,18 +142,6 @@
         width:600, 
         buttons: { "Close": function() { $(this).dialog("close"); }},  
                    open: function(event, ui) { $("#text_query").val(''); $("#selected_type").val(''); }
-      });
-
-      $(document).on('click', '#reveal_cred', function(){
-        $('.part_cred_mark').show();
-        $(this).hide();
-        $(this).next().show();
-      });
-
-      $(document).on('click', '#hide_cred', function(){
-        $('.part_cred_mark').hide(); 
-        $(this).hide(); 
-        $(this).prev().show();
       });
    <% end %>
 <% end %>

@@ -8,7 +8,8 @@
   <div style="float:left">
     <%= text %> 
     <span class="<%= common_id_class %>">
-      (<%= link_to "Change", '#', :id=>'change' %>)</span>:
+      (<%= link_to "Change", nil, :remote=>true,
+                          :onclick => "$('.<%= common_id_class %>').toggle();" %>)</span>:
 
     <% used_question_ids = [] %>
 
@@ -48,11 +49,3 @@
     </div>
   <% end %>
 </div>
-
-<% content_for :javascript do %>
-  <% javascript_tag do %>
-    $(document).on('click', '#change', function(){
-      $('.<%= common_id_class %>').toggle();
-    })
-  <% end %>
-<% end %>

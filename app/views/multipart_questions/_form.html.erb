@@ -35,7 +35,8 @@
            <b><i>OR</i></b>
          </span>
 
-         <%= link_to "Add an existing question ...", '#', :id=>'add_exist_question' %>
+         <%= link_to "Add an existing question ...", nil, :remote=> true,
+                                        :onclick => "open_add_question_part_dialog();" %>
       </center>
     </div>
   </div>
@@ -98,9 +99,5 @@
          }).disableSelection();                     
       }
       $(document).ready(makeSortable());
-
-      $(document).on('click', '#add_exist_question', function(){
-        open_add_question_part_dialog();
-      });
    <% end %>
 <% end %>
