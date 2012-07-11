@@ -10,6 +10,8 @@ class ProjectMember < ActiveRecord::Base
                             :scope => :project_id,
                             :message => "This user is already a member of this project."
 
+  after_create :check_and_set_default_project
+
   after_destroy :destroy_memberless_project
 
   attr_accessible :user, :project, :user_id
@@ -37,6 +39,12 @@ class ProjectMember < ActiveRecord::Base
   
   def self.all_for_user(user)
     ProjectMember.where{user_id == user.id}.all
+  end
+
+  def check_and_set_default_project
+    if Project.default_for_user(self.user) == nil
+      self.user.project_members.last.make_default!
+    end
   end
 
   def destroy_memberless_project

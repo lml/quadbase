@@ -46,6 +46,24 @@ class ProjectsControllerTest < ActionController::TestCase
     end
     assert_redirected_to project_path(assigns(:project))
   end
+  
+  test "should auto default new project if no other default" do
+    sign_in @user
+    assert_difference('Project.count', -1) do
+      delete :destroy, :id => @project.to_param
+    end
+    assert @user.projects.empty?
+    assert_difference('Project.count') do
+      post :create, :project => @project.attributes
+    end
+    assert @user.projects.last.is_default_for_user?(@user)
+    assert_redirected_to project_path(assigns(:project))
+    assert_difference('Project.count') do
+      post :create, :project => @project.attributes
+    end
+    assert !@user.projects.last.is_default_for_user?(@user)
+    assert_redirected_to project_path(assigns(:project))
+  end
 
   test "should not show project not logged in" do
     get :show, :id => @project.to_param

@@ -295,7 +295,7 @@ class QuestionsController < ApplicationController
 
     raise SecurityTransgression unless @question.can_be_derived_by?(present_user)
 
-    @projects = current_user.projects
+    @projects = Project.all_for_user(current_user)
 
     respond_to do |format|
       format.js

@@ -316,5 +316,55 @@ class QuestionsControllerTest < ActionController::TestCase
                          :question => {:license_id => License.default.id}
     assert_redirected_to question_path(assigns(:question))
   end
+  
+  test "should derive question and redirect to question edit page" do
+    sign_in @user
+    put :new_derivation, :question_id => @published_question.to_param,
+                         :project => {Project.default_for_user!(@user).id => "blah"},
+                         :edit => "now"
+    assert_redirected_to edit_question_path(Project.default_for_user!(@user).project_questions.last.question)
+    assert_not_nil assigns(:question)
+    assert @published_question == Project.default_for_user!(@user).project_questions.last.question.source_question
+  end
+  
+  test "should derive question and redirect to original question" do
+    sign_in @user
+    put :new_derivation, :question_id => @published_question.to_param,
+                         :project => {Project.default_for_user!(@user).id => "blah"},
+                         :edit => "later"
+    assert_redirected_to question_path(@published_question)
+    assert_not_nil assigns(:question)
+    assert @published_question == Project.default_for_user!(@user).project_questions.last.question.source_question
 
+  end
+  
+  test "should not derive question not authorized" do
+    user_login
+    put :new_derivation, :question_id => @published_question.to_param,
+                         :project => {Project.default_for_user!(@user).id => "blah"}
+    assert_response(403)
+  end
+  
+  test "should not derive question not logged in" do
+    put :new_derivation, :question_id => @published_question.to_param,
+                         :project => {Project.default_for_user!(@user).id => "blah"}
+    assert_redirected_to login_path
+  end
+    
+  test "should not derive question not published" do
+    sign_in @user
+    put :new_derivation, :question_id => @question.to_param,
+                         :project => {Project.default_for_user!(@user).id => "blah"}
+    assert_response(403)
+  end
+  
+  test "should create new project via derivation_dialog if no projects" do
+    sign_in @user
+    @user.projects.delete_all
+    assert @user.projects.empty?
+    get :derivation_dialog, :question_id => @published_question.to_param
+    @user.reload                        
+    assert_equal @user.projects.count, 1
+    assert_equal @user.projects.first, Project.default_for_user(@user)
+  end
 end

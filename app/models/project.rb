@@ -36,8 +36,8 @@ class Project < ActiveRecord::Base
     default_member.project
   end
   
-  
   def self.all_for_user(user)
+    Project.default_for_user!(user) if ProjectMember.all_for_user(user).empty?
     ProjectMember.all_for_user(user).collect{|wm| wm.project}
   end
   
@@ -86,5 +86,4 @@ class Project < ActiveRecord::Base
   def can_be_destroyed_by?(user)
     !user.is_anonymous? && is_member?(user)
   end
-
 end
