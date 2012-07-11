@@ -63,6 +63,19 @@ $('#agreement_checkbox').live('click', function() {
       $('#register_submit').addClass('ui-state-disabled');
    }
 });
+
+$('#password_field').focus(function(){
+        if ($('#agreement_checkbox').is(':checked') & (len == true)& (letter == true) & (number == true)){
+         $('#register_submit').removeAttr('disabled');
+         $('#register_submit').removeClass('ui-state-disabled');
+        
+   }
+       else {
+         $('#register_submit').attr('disabled', 'disabled');
+         $('#register_submit').addClass('ui-state-disabled');
+   }
+});
+
 $('input[type=password]').keyup(function(){
       //set password variable
       var pswd = $(this).val();
