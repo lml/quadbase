@@ -17,8 +17,5 @@ $("#help_dialog").dialog({
 
 <%= reload_mathjax("help_dialog") if @options[:include_mathjax] %>
 
-$("#help_dialog").dialog('open');
-$('.ui-widget-overlay').live("click",function(){
-            $("#help_dialog").dialog("close");
-        });    
+$("#help_dialog").dialog('open').closeOnClickOutside();  
 $("#help_dialog").scrollTop(0);

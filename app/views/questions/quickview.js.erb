@@ -5,7 +5,4 @@ $("#quickview_dialog").html("<%= escape_javascript(render :partial => 'show',
                                                    :locals => {:question => @question}) %>");
 <%= reload_mathjax("quickview_dialog") %>
 
-$("#quickview_dialog").dialog('open');
-$('.ui-widget-overlay').live("click",function(){
-            $("#quickview_dialog").dialog("close");
-        });    
+$("#quickview_dialog").dialog('open').closeOnClickOutside();  
