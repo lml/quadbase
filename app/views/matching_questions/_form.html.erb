@@ -96,12 +96,17 @@
                                         </tr> 
                                     </tbody> 
                                 </table> 
-                                <%= g.hidden_field :choice_id %>
+                                <%= g.hidden_field :choice_id, :class => g.object.choice_id %>
                                 <%= g.hidden_field :matched_id %>
                                 <%= g.hidden_field :column %>
                             </div>
         </td>
         </tr>
+        <% if g.object.choice_id != g.object.matched_id %>
+        <script type="text/javascript">
+        svgDrawLine($(".<%=g.object.choice_id%>"), document.getElementById(rightMarked).parentDroppable);
+        </script>
+        <% end %>
         <% counter = counter + 1 %>
         <% end %>
        
