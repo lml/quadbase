@@ -33,12 +33,13 @@
     </p>
 
 <% counter = 0 %>
+<% rightCounter = 0 %>
 <table style='position:absolute; margin-left:300px'>
 <tbody>
 <%= f.fields_for :matchings do |g| %>    
    <% if g.object.column == "right" %>
 	<td style="vertical-align: top;">
-        <div style='border: 2px solid gray; padding: 5px; width: 340px; margin-bottom: 10px; margin-left:100px;' 
+        <div style='border: 2px solid gray; padding: 5px; width: 340px; margin-bottom: 10px; margin-left:145px;' 
                                 class='ui-corner-all droppable ui-droppable' id='wrapper1'> 
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'> 
                                     <tbody> 
@@ -56,21 +57,22 @@
         </td>
                                         </tr> 
                                     </tbody> 
-                                </table> 
-                                <input class='valSelector' value ='<%= counter %>' id='question_matchings_attributes_<%= counter %>_choice_id' name='question[matchings_attributes][<%= counter %>][choice_id]' type='hidden' /> 
-                            <input class = 'matchedSelector' value ='<%= counter %>' id='question_matchings_attributes_<%= counter %>_matched_id' name='question[matchings_attributes][<%= counter %>][matched_id]' type='hidden' />
-                           <input class = 'temp' value ='right' id='question_matchings_attributes_<%= counter %>_column' name='question[matchings_attributes][<%= counter %>][column]' type='hidden' /> 
+                                </table>
+                                <%= g.hidden_field :choice_id %>
+                                <%= g.hidden_field :matched_id %>
+                                <%= g.hidden_field :column %>
                             </div>
         </td>
         </tr>
+        <% counter = counter + 1 %>
         <% end %>
-	<% counter = counter + 1 %>
+	
 <% end %>
 </tbody>
 </table>
  <table cellspacing="5" cellpadding="40" style="width: 100%; text-align: center;">
   <tbody>
- 
+<% rightCounter = counter %>
 <%= f.fields_for :matchings do |g| %>    
 	<% if g.object.column == "left" %>
         <tr>
@@ -94,16 +96,44 @@
                                         </tr> 
                                     </tbody> 
                                 </table> 
-                                <input class='valSelector' value ='<%= counter %>' id='question_matchings_attributes_<%= counter %>_choice_id' name='question[matchings_attributes][<%= counter %>][choice_id]' type='hidden' /> 
-                            <input class = 'matchedSelector' value ='<%= counter %>' id='question_matchings_attributes_<%= counter %>_matched_id' name='question[matchings_attributes][<%= counter %>][matched_id]' type='hidden' />
-                           <input class = 'temp1' value ='left' id='question_matchings_attributes_<%= counter %>_column' name='question[matchings_attributes][<%= counter %>][column]' type='hidden' /> 
+                                <%= g.hidden_field :choice_id %>
+                                <%= g.hidden_field :matched_id %>
+                                <%= g.hidden_field :column %>
                             </div>
         </td>
         </tr>
+        <% counter = counter + 1 %>
         <% end %>
        
-        <% counter = counter + 1 %>
+        
 <% end%>
+<% while counter < 2 * (rightCounter - 1)%>
+<tr>
+<td>
+  <div style='border: 2px solid gray; padding: 10px; width: 320px; margin-bottom: 10px; visibility:hidden'
+                                class='ui-corner-all draggable ui-draggable' id='wrapper2'>
+                                <table cellspacing'0' cellpadding='0' style='width: 100%;'>
+                                    <tbody> 
+                                        <tr> 
+                                            <td style='width: 50px; text-align: center;' rowspan='2'>
+                                                <img alt='' src='icons/user-48x48.png' /> </td>
+                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'>
+                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
+                                                </span>
+                                            </td> 
+                                        </tr>
+                                        <tr>
+					  <textarea></textarea>
+                                        </tr> 
+                                    </tbody> 
+                                </table> 
+                            </div>
+        </td>
+        </tr>
+<% counter = counter + 1 %>
+      
+<% end %>
+</tbody>
  </table>
        <div>
             <table cellspacing="5" cellpadding="40" style="width: 100%; text-align: center;">
