@@ -178,6 +178,8 @@ class QuestionTest < ActiveSupport::TestCase
     q.create!(u)
     q.publish!(u)
     
+    ##:user.projects = nil ???
+    
     q_derived = q.new_derivation!(u)
     
     assert_equal q_derived.source_question.id, q.id
@@ -197,6 +199,8 @@ class QuestionTest < ActiveSupport::TestCase
     u = FactoryGirl.create(:user)
     q.create!(u)
     q.publish!(u)
+    
+    ##:user.projects = nil ???
     
     q_derived = q.new_derivation!(u)
 

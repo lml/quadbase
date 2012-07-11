@@ -66,9 +66,15 @@ class ProjectQuestionsController < ApplicationController
       present_user.can_update?(target_project) && 
       @project_questions.all?{|pq| pq.can_be_copied_by?(present_user)}
 
+    @copied_questions = Array.new
     ProjectQuestion.transaction do 
-      @project_questions.each do |pq|
-        pq.copy!(target_project, present_user)
+      if target_project == @project
+        @copied_questions = @project_questions.collect{ |pq|
+          pq.copy!(target_project, present_user)      }
+      else
+        @project_questions.each do |pq|
+          pq.copy!(target_project, present_user)
+        end
       end
     end
 

@@ -19,6 +19,7 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     raise SecurityTransgression unless present_user.can_read?(@project)
     @target_projects = current_user.projects.reject { |w| w == @project}
+    @all_projects = current_user.projects
     respond_with(@project)
   end
 

@@ -17,7 +17,8 @@
       
     :checkbox_options gives directions for how to implement checkboxes along
       to the left of each question row.  If specified, both of its child 
-      values must be provided.  
+      values must be provided. If no checkboxes are desired, then pass "nil" to
+      :checkbox_options because this partial will bark without a value (including nil)  
           :method_for_value gives the method name to call on each entry to 
             retrieve the checkbox value.  
           :name_base gives the base for the name of each checkbox element.
@@ -46,18 +47,18 @@
     <%= javascript_tag do %>
       var tog = false;
       
-      $('#toggle_checkbox').live('click', function() {
+      $('#toggle_checkbox').on('click', function() {
         $('.pq_checkbox').attr('checked',!tog); 
         tog=!tog;
       });
       
-      $('.pq_checkbox').live('click',function() {
+      $('.pq_checkbox').on('click',function() {
         tog = $('.pq_checkbox:checked').length == <%= entries.size %>;
         $('#toggle_checkbox').attr('checked', tog);
       });
     <% end %>
   <% end %>
-  <table class="list" width="100%">
+  <table class="list" width="100%" id="question_list">
      <tr>
         <% if show_checkboxes %>
           <% num_cols += 1 %>
@@ -71,20 +72,15 @@
      <tr id="none_row" style="<%= !entries.empty? ? 'display:none' : '' %>">
         <td colspan="<%= num_cols %>" style="text-align:center">[ No questions ]</td>
      </tr>
-   
      <% entries.each do |entry| %>
-       <% question = method_for_question.nil? ? entry : entry.method(method_for_question).call() %>
-   
-     <tr id="<%= row_id_base + question.id.to_s %>"%>
-       <% if show_checkboxes %>
-         <% checkbox_value = entry.call(checkbox_options[:method_for_value]) %>
-         <td><%= check_box_tag("#{checkbox_options[:name_base]}[]", checkbox_value, false, {:class => 'pq_checkbox'}) %></td>
-       <% end %>
-           <td><%= question_id_link(question) %></td>
-           <td style="text-align:center"><%= question_type_abbreviation(question) %></td>
-           <td style="text-align:center"><%= question.modified_at.strftime('%b %d %Y') %></td>
-           <td class="tex2jax_ignore"><%= question_preview_link(question) %></td>
-         </tr>
+     <% question = method_for_question.nil? ? entry : entry.method(method_for_question).call() %>
+     <%= render  :partial => 'questions/fill_row',
+                 :locals => { :entry => entry,
+                              :row_id_base => row_id_base,
+                              :show_checkboxes => show_checkboxes,
+                              :question => question,
+                              :checkbox_options => checkbox_options
+                            } %>
      <% end %>
   </table>
 <% end %>
