@@ -151,9 +151,12 @@ $(document).ready(function () {
 				.append("<li>" + sourceValue + " >> " + targetValue + "</li>");
         
             // change the input element to contain the mapping target and source
+             $(ui.draggable)
+				.find(".valSelector")
+				.val(sourceValue);
             $(ui.draggable)
-				.find("input:hidden")
-				.val(sourceValue + "_" + targetValue);
+				.find(".matchedSelector")
+				.val(targetValue);
 
             // disable it so it can"t be used anymore	
             $(ui.draggable).draggable("disable");
@@ -193,6 +196,7 @@ function svgDrawLine(eTarget, eSource) {
         // 10 + 10 (padding left + padding right) + 2 + 2 (border left + border right)
         var originX = 355;
         var originY = $source.offset().top - 75;
+
         
         var endingX = 475;
         var endingY = $target.offset().top - 75;

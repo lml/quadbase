@@ -31,16 +31,17 @@
         to the right. Once the link is set, the same person canot have multiple sources
         or targets. The target can only accept one person to be linked to.</p>
     </p>
-
+<% actcounter = 0 %>
 <% counter = 0 %>
 <% rightCounter = 0 %>
 <table style='position:absolute; margin-left:300px'>
 <tbody>
-<%= f.fields_for :matchings do |g| %>    
+<%= f.fields_for :matchings do |g| %>
+   <% actcounter = actcounter + 2 %>    
    <% if g.object.column == "right" %>
 	<td style="vertical-align: top;">
-        <div style='border: 2px solid gray; padding: 5px; width: 340px; margin-bottom: 10px; margin-left:145px;' 
-                                class='ui-corner-all droppable ui-droppable' id='wrapper1'> 
+        <div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px; margin-left:145px;' 
+                                class='ui-corner-all droppable ui-droppable' id='<%=g.object.choice_id%>'> 
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'> 
                                     <tbody> 
                                         <tr> 
@@ -58,8 +59,8 @@
                                         </tr> 
                                     </tbody> 
                                 </table>
-                                <%= g.hidden_field :choice_id %>
-                                <%= g.hidden_field :matched_id %>
+                                <%= g.hidden_field :choice_id, :class => "valSelector" %>
+                                <%= g.hidden_field :matched_id, :class => "matchedSelector" %>
                                 <%= g.hidden_field :column %>
                             </div>
         </td>
@@ -77,8 +78,8 @@
 	<% if g.object.column == "left" %>
         <tr>
 	<td>
-	<div style='border: 2px solid gray; padding: 10px; width: 320px; margin-bottom: 10px;'
-                                class='ui-corner-all draggable ui-draggable' id='wrapper2'>
+	<div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px;'
+                                class='ui-corner-all draggable ui-draggable' id='<%=g.object.choice_id%>'>
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'>
                                     <tbody> 
                                         <tr> 
@@ -96,15 +97,15 @@
                                         </tr> 
                                     </tbody> 
                                 </table> 
-                                <%= g.hidden_field :choice_id, :class => g.object.choice_id %>
-                                <%= g.hidden_field :matched_id %>
+                                <%= g.hidden_field :choice_id, :class => "valSelector" %>
+                                <%= g.hidden_field :matched_id, :class => "matchedSelector" %>
                                 <%= g.hidden_field :column %>
                             </div>
         </td>
         </tr>
         <% if g.object.choice_id != g.object.matched_id %>
         <script type="text/javascript">
-        svgDrawLine($(".<%=g.object.choice_id%>"), document.getElementById(rightMarked).parentDroppable);
+        svgDrawLine($("#<%=g.object.matched_id%>"), $("#<%=g.object.choice_id%>"));
         </script>
         <% end %>
         <% counter = counter + 1 %>
@@ -175,10 +176,10 @@
 </html>
 
 <script type="text/javascript">
-  counter = <%= counter %>;
+  counter = <%= actcounter %>;
   $('#addRight').bind('click', function() {
     counter = counter + 1;
-    var s = "<div style='border: 2px solid gray; padding: 5px; width: 340px; margin-bottom: 10px; margin-left:100px;' \
+    var s = "<div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px; margin-left:100px;' \
                                 class='ui-corner-all droppable ui-droppable' id='wrapper3'> \
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'> \
                                     <tbody> \
@@ -262,7 +263,7 @@
   });
   $('#addLeft').bind('click', function() {
     counter = counter + 1;
-    var s = "<div style='border: 2px solid gray; padding: 10px; width: 320px; margin-bottom: 10px;' \
+    var s = "<div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px;' \
                                 class='ui-corner-all draggable ui-draggable' id='wrapper3'> \
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'> \
                                     <tbody> \
