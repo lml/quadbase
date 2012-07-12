@@ -198,7 +198,6 @@ class MultipartQuestion < Question
     end
   end
 
-
 protected
 
   def set_question_setup!(qs)

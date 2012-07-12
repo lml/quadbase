@@ -20,7 +20,6 @@ json.simple_question do
 
   if !skip_attribution
     json.ingest! (render :partial => 'questions/attribution',
-                         :locals => {:question => question,
-                                      :first_call => true})
+                         :locals => {:question => question})
   end
 end
