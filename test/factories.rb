@@ -273,7 +273,6 @@ FactoryGirl.define do
     f.association :comment_thread
   end
 
-
   factory :deputization do |f|
     f.association :deputizer, :factory => :user
     f.association :deputy, :factory => :user
