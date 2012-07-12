@@ -1,16 +1,15 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<% # Clients of this partial must provide the following variables:
-   # votable
+<%# Clients of this partial must provide the following variables:
+    votable
 %>
-<% if votable.class == SimpleQuestion || votable.class == MultipartQuestion %>
-  <% votable = votable.becomes(votable.base_class)%>
-<% end %>
+
+<% votable = votable.becomes(votable.class.base_class)%>
 <% can_vote = present_user.can_vote_on?(votable) %>
 <% vote = get_vote_for(votable, present_user) if can_vote %>
 
-<div id="votes_for_<%= votable.class.base_class.to_s %>_<%= votable.id %>">
+<div id="votes_for_<%= votable.class.to_s %>_<%= votable.id %>">
 
 <%= form_tag polymorphic_path([:up, votable, :votes]),
              :remote => true do %>
