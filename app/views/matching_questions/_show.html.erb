@@ -1,4 +1,142 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Lines between Draggable and Droppable</title>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css"
+        rel="stylesheet" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/1.5.2/raphael-min.js"></script>
+    <!--[if IE]>
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+    <script src="/javascripts/dragdropline.js"></script>
+    <style>
+        article, aside, figure, footer, header, hgroup, menu, nav, section { display: block; }        
+        body { font-family: Arial; font-size: 11px; }
+        #svgbasics { position: absolute; left: 0px; top: 0px; border: solid 0px #484; z-index: -100; }
+        .draggable { }
+        .droppable { }
+    </style>
+</head>
 
-
+<body id="body">
+    <div id="svgbasics">
+    </div>
+    <p>
+        <strong>The objective is</strong> to MAP the persons from the left to the persons
+        to the right. Once the link is set, the same person canot have multiple sources
+        or targets. The target can only accept one person to be linked to.</p>
+    </p>
+<% actcounter = 0 %>
+<% counter = 0 %>
+<% rightCounter = 0 %>
+<table style='position:absolute; margin-left:300px'>
+<tbody>
+<%= question.matchings do |g| %>
+   <% actcounter = actcounter + 2 %>    
+   <% if g.object.column == "right" %>
+	<td style="vertical-align: top;">
+        <div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px; margin-left:145px;' 
+                                class='ui-corner-all droppable ui-droppable' id='<%=g.object.choice_id%>'> 
+                                <table cellspacing'0' cellpadding='0' style='width: 100%;'> 
+                                    <tbody> 
+                                        <tr> 
+                                            <td style='width: 50px; text-align: center;' rowspan='2'> 
+                                                <img alt='' src='icons/user-48x48.png' /> </td> 
+                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'> 
+                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
+                                                </span>
+                                            </td> 
+                                        </tr> 
+                                        <tr> 
+                                            <td style='font-size: 0.9em; text-align: left;'>
+	<%= g.text_area :content, :style=>'height:60; width:300; resize:none' %>
+        </td>
+                                        </tr> 
+                                    </tbody> 
+                                </table>
+                                <%= g.hidden_field :choice_id, :class => "valSelector" %>
+                                <%= g.hidden_field :matched_id, :class => "matchedSelector" %>
+                                <%= g.hidden_field :column %>
+                            </div>
+        </td>
+        </tr>
+        <% counter = counter + 1 %>
+        <% end %>
+	
+<% end %>
+</tbody>
+</table>
+ <table cellspacing="5" cellpadding="40" style="width: 100%; text-align: center;">
+  <tbody>
+<% rightCounter = counter %>
+<%= question.matchings do |g| %>    
+	<% if g.object.column == "left" %>
+        <tr>
+	<td>
+	<div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px;'
+                                class='ui-corner-all draggable ui-draggable' id='<%=g.object.choice_id%>'>
+                                <table cellspacing'0' cellpadding='0' style='width: 100%;'>
+                                    <tbody> 
+                                        <tr> 
+                                            <td style='width: 50px; text-align: center;' rowspan='2'>
+                                                <img alt='' src='icons/user-48x48.png' /> </td>
+                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'>
+                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
+                                                </span>
+                                            </td> 
+                                        </tr>
+                                        <tr>
+                                            <td style='font-size: 0.9em; text-align: left;'>
+	<%= g.text_area :content, :style=>'height:60; width:300; resize:none' %>
+                         </td>
+                                        </tr> 
+                                    </tbody> 
+                                </table> 
+                                <%= g.hidden_field :choice_id, :class => "valSelector" %>
+                                <%= g.hidden_field :matched_id, :class => "matchedSelector" %>
+                                <%= g.hidden_field :column %>
+                            </div>
+        </td>
+        </tr>
+        <% if g.object.choice_id != g.object.matched_id %>
+        <script type="text/javascript">
+        svgDrawLine($("#<%=g.object.matched_id%>"), $("#<%=g.object.choice_id%>"));
+        </script>
+        <% end %>
+        <% counter = counter + 1 %>
+        <% end %>
+       
+        
+<% end%>
+<% while counter < 2 * (rightCounter - 1)%>
+<tr>
+<td>
+  <div style='border: 2px solid gray; padding: 10px; width: 320px; margin-bottom: 10px; visibility:hidden'
+                                class='ui-corner-all draggable ui-draggable' id='wrapper2'>
+                                <table cellspacing'0' cellpadding='0' style='width: 100%;'>
+                                    <tbody> 
+                                        <tr> 
+                                            <td style='width: 50px; text-align: center;' rowspan='2'>
+                                                <img alt='' src='icons/user-48x48.png' /> </td>
+                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'>
+                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
+                                                </span>
+                                            </td> 
+                                        </tr>
+                                        <tr>
+					  <textarea></textarea>
+                                        </tr> 
+                                    </tbody> 
+                                </table> 
+                            </div>
+        </td>
+        </tr>
+<% counter = counter + 1 %>
+      
+<% end %>
+</tbody>
+ </table>
