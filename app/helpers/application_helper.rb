@@ -37,8 +37,9 @@ module ApplicationHelper
   end
   
   def link_to_remove_fields(name, f)
-    f.hidden_field(:_destroy) + link_to(name, nil, :onclick=>"remove_fields(this)",
-                                                                        :remote=>true)
+    f.hidden_field(:_destroy) + link_to(name, nil, :remote=>true,
+                                                    :onclick => "remove_fields(this)"
+                                                                        )
   end
 
   
@@ -51,10 +52,9 @@ module ApplicationHelper
       options[:partial_name] ||= association.to_s.singularize + "_fields"
       render(options[:partial_name], ({:f => builder}.merge(locals)))
     end
-    link_to(name, nil, :onclick=>"add_fields(\"#{elem_to_append_to}\", " + 
-                                      "\"#{association}\", " + 
-                                      "\"#{escape_javascript(fields)}\")",
-                                                            :remote=>true)
+    link_to(name, nil, :remote=>true, :onclick => "add_fields(\"#{elem_to_append_to}\", " + 
+                                                  "\"#{association}\", " + 
+                                                  "\"#{escape_javascript(fields)}\")")
   end
   
   def full_name_link(user)
