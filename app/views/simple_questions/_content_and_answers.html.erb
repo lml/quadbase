@@ -1,7 +1,7 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<div class="quad-question_content" id="question_content" style='display:none;'>
+<div class="quad-question_content" style='display:none;'>
   <%= question.variated_content_html.html_safe %>
 </div>
 
@@ -39,10 +39,10 @@
 
 <script>
 $(document).ready(function(){
-  $("#loading").click(function(){
-    $("#loading").fadeOut('slow');
-    $(".quad-question_content").fadeIn('slow');
-    $(".quad-answer_choices").fadeIn('slow');
+  MathJax.Hub.Register.StartupHook("End", function (){
+    $("#loading").hide();
+    $(".quad-question_content").fadeIn('1000');
+    $(".quad-answer_choices").fadeIn('1000');
   });
 });
 </script>
