@@ -13,6 +13,15 @@ class QTImport
 
 	attr_reader :filename, :content_type, :parser, :transformer
 
+	def self.add_images(content,text)
+		a = content.xpath('.//matimage')
+		for b in 0..(a.length-1)
+			c = a[b].attributes['uri'].value
+			d = text + '<img src="' + c + '">'
+		end
+		d
+	end
+
 	def self.content_types
 		@@content_types
 	end
@@ -54,8 +63,9 @@ class QTImport
 		for a in 0..(content.length-1)
 			b = content[a]
 			ques_id = b.attributes["ident"].value
-			c = ques_nodes[a].children.children.children
+			c = ques_nodes[a].children.children.children			
 			text = c[0].content
+			text = self.add_images(ques_nodes,text)
 			text = coder.decode(text)
 			d = parser.parse(text)
 			ques = transformer.apply(d)
@@ -119,7 +129,7 @@ class QTImport
 		for z in 0..(array.length-1)
 			array[z] = array[z]/a
 		end
-		return array
+		array
 	end
 
 	def self.openfile(filename)
