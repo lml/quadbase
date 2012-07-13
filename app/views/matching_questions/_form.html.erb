@@ -1,35 +1,124 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Lines between Draggable and Droppable</title>
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css"
-        rel="stylesheet" type="text/css" />
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/1.5.2/raphael-min.js"></script>
-    <!--[if IE]>
-	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-    <script src="/javascripts/dragdropline.js"></script>
-    <style>
-        article, aside, figure, footer, header, hgroup, menu, nav, section { display: block; }        
-        body { font-family: Arial; font-size: 11px; }
-        #svgbasics { position: absolute; left: 0px; top: 0px; border: solid 0px #484; z-index: -100; }
-        .draggable { }
-        .droppable { }
-    </style>
-</head>
 
-<body id="body">
+  <% content_for :javascript_includes do %>
+    <%= javascript_include_tag "matching" %>
+  <% end %>
+
+
+
     <div id="svgbasics">
     </div>
+    <% content_for :after_form do %>
+
+  <%= render :partial => 'shared/mark_it_up' %>
+
+  <% @errors = @question.errors %>
+
+  <% add_human_field_names({ :"answer_choices.content" => "Answer text", 
+                             :"answer_choices.credit" => "Answer right/wrong", 
+                             :"answer_choices" => "Answers",
+                             :"question_setup.content" => "Content"} ) %>
+
+  <%# For the question setup ... %>
+  <%= render :partial => "attachable_assets/add_image_dialog",
+             :locals => {:attachable => @question.question_setup,
+                         :dialog_div_id => "image_dialog_intro",
+                         :include_open_insert_close_js => false} %>
+
+  <%# For the question ... %>
+  <%= render :partial => "attachable_assets/add_image_dialog",
+             :locals => {:attachable => @question,
+                         :include_open_insert_close_js => false} %>
+
+  <%# Add the JS glue only once, not twice %>
+  <%= render :partial => 'attachable_assets/image_dialog_open_insert_close' %>
+
+<% end %>
+   
+ <%= f.hidden_field :type, :value => "SimpleQuestion"%>
+
+ <p>You are editing a 
+    <%= link_to_help "simple_questions", "simple question",
+                     {:height => 400, 
+                      :width => 700} %>. 
+    Need help <%= link_to_help "formatting", "formatting", 
+                                {:include_mathjax => true, 
+                                 :height => 400, 
+                                 :width =>900} %> your question?</p>
+
+  <% setup_blank = @question.question_setup.is_empty? %>
+
+  <% intro_options = {:style => "#{setup_blank ? 'display:none' : ''}", :id => 'intro_text_block'} %>
+
+  <%= question_edit_block "The Introduction", intro_options do %>
+
+    <% if @question.is_draft_in_multipart? %>
+      <%= @question.question_setup.content_html.html_safe %>
+    <% else %>
+
+      <%= f.fields_for :question_setup do |setup_form| %>
+      
+        <div class="question_edit_subblock" style="margin-top:0px">
+          <% class_to_reveal_on_logic_show = "reveal_on_logic_show_#{@logic_counter ||= (@logic_counter || -1) + 1}"%>
+          <%= render :partial => 'logics/form', 
+                     :locals => {:f => setup_form, 
+                                 :logicable => @question.question_setup,
+                                 :class_to_reveal_on_logic_show => class_to_reveal_on_logic_show} %>
+        </div>
+      
+      
+        <div class="question_edit_subblock">
+          <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
+               style="<%= @question.question_setup.logic.empty? ? 'display:none;' : '' %>">Introductory Text</div>
+      
+          <div class="field">
+             <%= setup_form.text_area :content, 
+                              :rows => 8, 
+                              :class => "mark_it_up", 
+                              :style => 'width:100%',
+                              'data-attachable_type'=>'intro' %>
+          </div>
+        </div>
+      <% end %>
+
+    <% end %>
+    
+  <% end %> 
+
+  <div style="<%= setup_blank ? '' : 'display:none' %>">
+    <%= link_to_function "Add a common introduction to this question.", 
+                         '$("#intro_text_block").show(); Quadbase.CodeMirrorUtils.refreshCodeMirrors(); $(this).parent().hide();'%> 
+    (optional)
+    <span style="float:right"><%= link_to_help "question_setup", "What is this?" %></span>
+  </div>
+
+  <%= question_edit_block "The Question" do %>
+
+
+    <div class="question_edit_subblock" style="margin-top:0px">
+      <% class_to_reveal_on_logic_show = "reveal_on_logic_show_#{@logic_counter ||= (@logic_counter || -1) + 1}"%>
+      <%= render :partial => 'logics/form', 
+                 :locals => {:f => f, 
+                             :logicable => @question,
+                             :class_to_reveal_on_logic_show => class_to_reveal_on_logic_show} %>
+    </div>
+    
+    <div class="question_edit_subblock">
+      <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
+           style="<%= @question.logic.empty? ? 'display:none;' : '' %>">Question Text</div>
+    
+      <div class="field">
+        <%= f.text_area :content, :rows => 8, :class => "mark_it_up", :style => 'width:100%' %>
+      </div>
+    </div>
+    
+  <% end %>
+
+    
     <p>
-        <strong>The objective is</strong> to MAP the persons from the left to the persons
-        to the right. Once the link is set, the same person canot have multiple sources
-        or targets. The target can only accept one person to be linked to.</p>
+        Drag and Drop the boxes on the left to their matching component on the right.
     </p>
 <% actcounter = 0 %>
 <% counter = 0 %>
@@ -172,8 +261,7 @@
         href="#" style="z-index: 10;">show mapping</a><a id="addLeft"
         href="#" style="z-index: 10;">add left</a><a id="addRight"
         href="#" style="z-index: 10;">add right</a>
-</body>
-</html>
+
 
 <script type="text/javascript">
   counter = <%= actcounter %>;

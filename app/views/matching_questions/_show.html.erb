@@ -25,22 +25,27 @@
 <body id="body">
     <div id="svgbasics">
     </div>
-    <p>
-        <strong>The objective is</strong> to MAP the persons from the left to the persons
-        to the right. Once the link is set, the same person canot have multiple sources
-        or targets. The target can only accept one person to be linked to.</p>
-    </p>
+
+<p>
+Content & Answers
+</p>
+<p>
+&nbsp
+</p>
+<div class="quad-question_content">
+  <%= question.variated_content_html.html_safe %>
+</div>
 <% actcounter = 0 %>
 <% counter = 0 %>
 <% rightCounter = 0 %>
 <table style='position:absolute; margin-left:300px'>
 <tbody>
-<%= question.matchings do |g| %>
+<% question.matchings.each do |g| %>
    <% actcounter = actcounter + 2 %>    
-   <% if g.object.column == "right" %>
+   <% if g.column == "right" %>
 	<td style="vertical-align: top;">
         <div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px; margin-left:145px;' 
-                                class='ui-corner-all droppable ui-droppable' id='<%=g.object.choice_id%>'> 
+                                 id='<%=g.choice_id%>'> 
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'> 
                                     <tbody> 
                                         <tr> 
@@ -53,14 +58,11 @@
                                         </tr> 
                                         <tr> 
                                             <td style='font-size: 0.9em; text-align: left;'>
-	<%= g.text_area :content, :style=>'height:60; width:300; resize:none' %>
+	<%= g.content %>
         </td>
                                         </tr> 
                                     </tbody> 
                                 </table>
-                                <%= g.hidden_field :choice_id, :class => "valSelector" %>
-                                <%= g.hidden_field :matched_id, :class => "matchedSelector" %>
-                                <%= g.hidden_field :column %>
                             </div>
         </td>
         </tr>
@@ -73,12 +75,12 @@
  <table cellspacing="5" cellpadding="40" style="width: 100%; text-align: center;">
   <tbody>
 <% rightCounter = counter %>
-<%= question.matchings do |g| %>    
-	<% if g.object.column == "left" %>
+<% question.matchings.each do |g| %>    
+	<% if g.column == "left" %>
         <tr>
 	<td>
 	<div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px;'
-                                class='ui-corner-all draggable ui-draggable' id='<%=g.object.choice_id%>'>
+                                 id='<%=g.choice_id%>'>
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'>
                                     <tbody> 
                                         <tr> 
@@ -91,20 +93,19 @@
                                         </tr>
                                         <tr>
                                             <td style='font-size: 0.9em; text-align: left;'>
-	<%= g.text_area :content, :style=>'height:60; width:300; resize:none' %>
+	                 <%= g.content %>
                          </td>
                                         </tr> 
                                     </tbody> 
                                 </table> 
-                                <%= g.hidden_field :choice_id, :class => "valSelector" %>
-                                <%= g.hidden_field :matched_id, :class => "matchedSelector" %>
-                                <%= g.hidden_field :column %>
                             </div>
         </td>
         </tr>
-        <% if g.object.choice_id != g.object.matched_id %>
+        <% if g.choice_id != g.matched_id %>
         <script type="text/javascript">
-        svgDrawLine($("#<%=g.object.matched_id%>"), $("#<%=g.object.choice_id%>"));
+        $(document).ready(function(){
+        svgDrawLine($("#<%=g.matched_id%>"), $("#<%=g.choice_id%>"));
+        });
         </script>
         <% end %>
         <% counter = counter + 1 %>
