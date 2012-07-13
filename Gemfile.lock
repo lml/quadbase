@@ -163,7 +163,10 @@ GEM
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
     sqlite3 (1.3.6)
+<<<<<<< HEAD
     sqlite3 (1.3.6-x86-mingw32)
+=======
+>>>>>>> 9e90518... Simple question partial uploads a loading icon, that when clicked, fades away while the question and answers fade in.
     squeel (1.0.6)
       activerecord (~> 3.0)
       activesupport (~> 3.0)
@@ -182,7 +185,11 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.33)
+<<<<<<< HEAD
     uglifier (1.2.6)
+=======
+    uglifier (1.2.5)
+>>>>>>> 9e90518... Simple question partial uploads a loading icon, that when clicked, fades away while the question and answers fade in.
       execjs (>= 0.3.0)
       multi_json (~> 1.3)
     warden (1.2.1)
