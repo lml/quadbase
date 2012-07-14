@@ -143,6 +143,7 @@ class QTImport
 	#This will unzip files and return the appropriate files.  We check
 	#the content type of each file to ensure that no "hidden" files (".","..")
 	#are
+
 	def self.unzip(zipfile,destination)
 		files = Array.new
 		Archive::Zip.extract(zipfile,destination)
