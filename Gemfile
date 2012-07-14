@@ -16,6 +16,10 @@ gem 'nokogiri'
 
 gem 'htmlentities'
 
+gem 'rubyzip'
+
+gem 'archive-zip'
+
 # Deploy with Capistrano
 gem 'capistrano', '~> 2.12.0'
 

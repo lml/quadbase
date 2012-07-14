@@ -6,6 +6,7 @@
 require 'htmlentities'
 require 'open-uri'
 require 'spqr_parser.rb'
+require 'archive/zip'
 
 class QTImport 
 
@@ -137,5 +138,12 @@ class QTImport
 		doc = Nokogiri::XML(f)
 		f.close
 		doc
+	end
+
+	def self.unzip(zipfile,destination)
+		files = Array.new
+		Archive::Zip.extract(zipfile,destination)
+		Dir.chdir(destination + "/content")
+		a = Dir.entries(Dir.pwd)
 	end
 end

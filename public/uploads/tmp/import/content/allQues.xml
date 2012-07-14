@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<questestinterop>
+	<assessment title="test1" ident="A1001">
+		<section title="" ident="S1002">
+			<item title="Specgram interpretation (1)" ident="QUE_MC" category="PreLab05">
+	<itemmetadata>
+						 <qmd_itemtype>MC</qmd_itemtype>
+					     </itemmetadata><presentation>
+	<material>
+	<mattext texttype="text/html"><![CDATA[
+You are given the following picture generated with
+the <tt>specgram</tt> function in MATLAB.  What can you say
+about the signal being represented?
+]]></mattext>
+	<matimage imagtype="jpg" uri="/media/853/LQuiz2-1.jpg"/>
+<mattext texttype="text/html"></mattext></material>
+	<response_lid ident="QUE__RL" rcardinality="Multiple" rtiming="No">
+<render_choice>
+<response_label ident="QUE_853_A1">
+<material>
+<mattext texttype="text/html"><![CDATA[
+It is approximately 2 seconds long  and the result of two sinusoids being
+<b>added</b> together.
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_853_A2">
+<material>
+<mattext texttype="text/html"><![CDATA[
+It is 1 second long and the result of the <b>addition</b> of two sinusoids.
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_853_A3">
+<material>
+<mattext texttype="text/html"><![CDATA[
+It is the result of two sinusoids being <B>concatenated,</B> but I cannot tell how long the original signal is.
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_853_A4">
+<material>
+<mattext texttype="text/html"><![CDATA[
+I cannot tell anything useful about the signal.
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_853_A5">
+<material>
+<mattext texttype="text/html"><![CDATA[
+It is the result of the <b>concatenation</b> of two sinusoids, and
+the total length is approximately 2 seconds.
+]]></mattext>
+</material>
+</response_label>
+</render_choice>
+</response_lid>
+</presentation>
+<resprocessing>
+<outcomes>
+<decvar vartype="Integer" defaultval="0" varname="que_score" maxvalue="100" minvalue="0"/>
+</outcomes>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_853_RL">QUE_853_A1</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">40</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_853_RL">QUE_853_A2</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_853_RL">QUE_853_A3</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">50</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_853_RL">QUE_853_A4</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_853_RL">QUE_853_A5</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">100</setvar>
+</respcondition>
+
+</resprocessing>
+</item>
+</section>
+</assessment>
+</questestinterop>
