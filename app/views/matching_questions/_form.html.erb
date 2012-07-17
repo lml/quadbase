@@ -10,13 +10,12 @@
 
     <div id="svgbasics">
     </div>
-    <%= redrawLine(f) %>
     <% content_for :after_form do %>
-  
+
   <%= render :partial => 'shared/mark_it_up' %>
 
   <% @errors = @question.errors %>
-  
+
   <% add_human_field_names({ :"answer_choices.content" => "Answer text", 
                              :"answer_choices.credit" => "Answer right/wrong", 
                              :"answer_choices" => "Answers",
@@ -133,7 +132,9 @@
         <div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px; margin-left:145px;' 
                                 class='ui-corner-all droppable ui-droppable' id='<%=g.object.choice_id%>'> 
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'>
-                                <a id="temp" href="#" style="z-index: 10;" onClick="$('#<%=g.object.choice_id%>').remove();">Remove</a>
+				    <span style="float:right">  
+      <%= link_to_remove_fields "Delete this answer", f %>
+    </span>
                                     <tbody> 
                                         <tr> 
                                             <td style='width: 50px; text-align: center;' rowspan='2'> 
@@ -171,11 +172,11 @@
 	<td>
 	<div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px;'
                                 class='ui-corner-all draggable ui-draggable' id='<%=g.object.choice_id%>'>
-                                <table cellspacing'0' cellpadding='0' style='width: 10%;'>
-                                <span style="float:right">  
-      <%= link_to_remove_fields "Delete this answer", g %>
-    </span>
-                                    <tbody> 
+                                <table cellspacing'0' cellpadding='0' style='width: 100%;'>
+                                  <span style="float:right">  
+      <%= link_to_remove_fields "Delete this answer", f %>
+    </span>  
+                                  <tbody> 
                                         <tr> 
                                             <td style='width: 50px; text-align: center;' rowspan='2'>
                                                  </td>
@@ -197,7 +198,6 @@
                             </div>
         </td>
         </tr>
-        
         <% if g.object.choice_id != g.object.matched_id %>
         <script type="text/javascript">
         svgDrawLine($("#<%=g.object.matched_id%>"), $("#<%=g.object.choice_id%>"));
