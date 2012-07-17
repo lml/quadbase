@@ -8,12 +8,20 @@
 <% @show_edit_license_link = true %>
 <% @show_question_link = true %>
 
-<%= link_to 'Write a New Solution', new_question_solution_path(@question), :style => "float:right" %>
+<% if @question.question_type != "MultipartQuestion" %>
+  <%= link_to 'Write a New Solution', new_question_solution_path(@question), :style => "float:right" %>
+<% end %>
 
 <%= pageHeading("Solutions", "Solutions for #{question_id_text(@question)}") %>
 
 <br/>
   
-<%= render :partial => 'solution_list',
-           :locals => {:question => @question,
-                       :solutions => @solutions} %>
+<% if @question.question_type == "MultipartQuestion" %>
+  <%= render :partial => 'multipart_solution_list',
+             :locals => {:question => @question,
+                         :solutions => @solutions} %>
+<% else %>
+  <%= render :partial => 'solution_list',
+             :locals => {:question => @question,
+                         :solutions => @solutions} %>
+<% end %>

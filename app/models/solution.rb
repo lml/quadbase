@@ -52,7 +52,7 @@ class Solution < ActiveRecord::Base
   end
 
   def can_be_created_by?(user)
-    !user.is_anonymous? && user.can_read?(question)
+    !user.is_anonymous? && user.can_read?(question) && question.question_type != "MultipartQuestion"
   end
 
   def can_be_updated_by?(user)

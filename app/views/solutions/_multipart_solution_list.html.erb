@@ -1,0 +1,29 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% # Clients of this partial must provide the following variables:
+   # question
+   # solutions
+%>
+
+
+<div>
+  <div id="solution_list">
+
+    <% QuestionPart.where(:multipart_question_id => @question.id).each do |multipart_question| %>
+      <% child_question = multipart_question.child_question %>
+      <% solution = child_question.solutions.first %>
+
+      <div style="border-bottom: 1px solid #aaa; margin: 15px 0px 30px 0px">
+
+      <% if solution != nil %>
+
+      <div id="PageHeading"><u>Part <%= multipart_question.order %>:</u></div>
+        <%= render :partial => 'solutions/single_solution', :locals => {:solution => solution,
+                                                                        :show_link => true} %>
+      <% end %>
+
+      </div>
+    <% end %>
+  </div>
+</div>
