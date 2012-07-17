@@ -140,10 +140,22 @@ class QTImport
 		doc
 	end
 
+	#This will unzip files and return the appropriate files.  We check
+	#the content type of each file to ensure that no "hidden" files (".","..")
+	#are
 	def self.unzip(zipfile,destination)
 		files = Array.new
 		Archive::Zip.extract(zipfile,destination)
 		Dir.chdir(destination + "/content")
 		a = Dir.entries(Dir.pwd)
+		a.each { |b| 
+			if File.directory?(b)
+				p b.to_s + ' is a directory'
+			elsif File.file?(b)
+				p b 
+				c = File.join(Dir.pwd,b.to_s)
+				files << c			
+			end }
+		files[0]
 	end
 end
