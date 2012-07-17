@@ -29,3 +29,7 @@
       </table>  
    </div>
 <% end %>
+
+<% if question.answer_is_image? && !question.is_published? %>
+<small>The answer to this question is a drawing.</small>
+<% end %>

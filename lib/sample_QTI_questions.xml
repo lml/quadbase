@@ -1,0 +1,24 @@
+# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+# License version 3 or later.  See the COPYRIGHT file for details.
+
+<![CDATA[Given:<BR><BR><B><TT>fs = 11025;<BR>tt = (0:round(0.25*fs
+	))/fs;</TT></B><BR><BR>Which MATLAB code would you use to gene
+rate the appropriate DTMF signal to represent telephone key number
+ <B>5</B>? And this is another way.]]>
+
+ <![CDATA[The meaning of "negative frequency" in a Fourier series 
+ 	is:]]>
+
+ <![CDATA[What is the Phase Angle (<TT>&phi;</TT>) for the followi
+ 	ng sinusoid where <PRE class=ITS_Equation>x(t) = cos(ωt + φ); 
+ 	</PRE>]]>
+
+ <![CDATA[
+Refer to the following function, which is similar to the one used in lab 4:<p><tt>function tone=note(keynum,dur)</tt><br><tt>% Returns a single sinusoid with the key and duration specified</tt><br><tt>fs = 11025;</tt><br><tt>tt = 0:1/fs:dur;</tt><br><tt>f0 = 440*2^((keynum-49)/12);</tt><br><tt>tone = cos(2*pi*f0*tt);</tt><p>A student wants to modify the function so that the tone created by this function has TWO frequency components. The new tone should be the sum of two sinusoids, one of which is the fundamental and the other of which has a frequency 2 times higher. The amplitudes (and phases) can be the same. Which one of the following is a correct modification that will accomplish this task?
+]]>
+
+<![CDATA[Below is the spectrum for the the signal <pre class="ITS_Equation">x(t) = e<sup>2</sup><b>cos(</b>5&pi;t<b>)cos(</b>2&pi;f<sub>c</sub>t<b>)</b></pre>Determine <tt>f<sub>c</sub></tt>.]]>
+
+<![CDATA[Set the input frequency to <tt>&fnof;<sub>0</sub> = 13.4</tt> Hz. Determine the smallest <font color="darkgreen">integer</font> value of the sampling rate <tt>&fnof;s</tt> so that no aliasing occurs.  The units of <tt>&fnof;<sub>s</sub></tt> are samples per second.  You must justify your response by citing a theorem or property about sampling.]]>
+
+<![CDATA[<i>Folded Alias:</i> Set the input frequency to <tt>&fnof;<sub>0</sub> = 13</tt> Hz, the input phase to <tt>&phi; = -1.3</tt> rads, and <tt>&fnof;<sub>s</sub> = 20</tt> Hz. Write down the formula for the output signal, and then write a justification consisting of three steps:<OL><LI>calculating the values of <img src="/ece2025/cgi-bin/mimetex.exe?\hat\omega"> for the blue spectral lines in the spectrum of the discrete-time signal <tt>x[n]</tt> shown in the middle plots,<LI>aliasing <img src="/ece2025/cgi-bin/mimetex.exe?\hat\omega"> (blue to red), and<LI>transforming <tt>x[n]</tt> into <tt>y(t)</tt> using an equation that describes the ideal D-to-C converter and uses the <i>principal aias</i>.</OL> ]]>

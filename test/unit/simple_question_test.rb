@@ -95,6 +95,17 @@ class SimpleQuestionTest < ActiveSupport::TestCase
     sq.variate!(qv)
     ContentParseAndCache.enable_test_parser = false
   end
+
+  test "image_answer" do
+    simple = FactoryGirl.build(:simple_question, :content => 'hi', :image_answer => true)
+    simple2 = FactoryGirl.build(:simple_question, :content => 'bye')
+    assert_nothing_raised {simple.save!}
+    assert_nothing_raised {simple2.save!}
+    assert_equal true, simple.answer_is_image?
+    assert_equal nil, simple2.answer_is_image?
+  end
+
+
   
   # TODO implement the following tests
   # 

@@ -39,4 +39,25 @@ class QuadbaseHtmlTransformerTest < ActiveSupport::TestCase
    # assert_equal_string_strip_whitespace expected1, output1.inspect()
     assert_equal expected2, output2.to_s()
   end
+
+  test "adjust_parser_output" do
+    parser = QuadbaseParser.new
+    transformer = QuadbaseHtmlTransformer.new
+    text = "A transmitted message must also have a preamble and a termination
+to mark the beginning and end of the message.
+If the  preamble bits are contained in the string row vector !!$ pre, $!!
+the message bits in string row vector !!$ tt, $!!
+and termination bits in string row vector !!$ mm. $!!
+
+
+Each string row vector is an array of characters ('0' or '1') in MATLAB, e.g., '0010110101110'.
+
+
+Which of the following is the correct way
+to form the bit string sent out from modem?
+
+"
+    a = parser.parse(text)
+    output = transformer.apply(a)
+  end
 end

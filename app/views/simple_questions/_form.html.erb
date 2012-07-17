@@ -107,6 +107,9 @@
     
   <% end %>
 
+  <%= f.check_box(:image_answer, :value => true) %>
+  <%= f.label :answer_is_image, "The answer to this question is a drawing." %>
+
   <div class="answer_choices">
     <%= f.fields_for :answer_choices do |ac_form| %>
       <%= render 'simple_questions/answer_choice_fields', :f => ac_form %>
