@@ -138,8 +138,8 @@ $(document).ready(function () {
 				.removeClass("ui-icon-shuffle")
 				.addClass("ui-icon-locked");
 
-            var sourceValue = $(ui.draggable).find("input:hidden").val();
-            var targetValue = $(this).find("input:hidden").val();
+            var sourceValue = $(ui.draggable).find(".valSelector").val();
+            var targetValue = $(this).find(".valSelector").val();
 
             // remove mapping dialog box line if exists
             if ($("#dialogMappingResult").find("ul > li:first").html() == "No mapping was done yet")

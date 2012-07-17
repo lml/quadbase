@@ -40,6 +40,10 @@ module ApplicationHelper
     f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)")
   end
 
+  def link_to_matching_remove_fields(name, f)
+    f.hidden_field(:_destroy) + link_to_function(name, "matching_remove_fields(this)")
+  end
+
   
   # Options:
   #    options[:partial_name] - way to override the partial name (e.g. to include

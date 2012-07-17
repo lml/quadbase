@@ -130,10 +130,10 @@
    <% if g.object.column == "right" %>
 	<td style="vertical-align: top;">
         <div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px; margin-left:145px;' 
-                                class='ui-corner-all droppable ui-droppable' id='<%=g.object.choice_id%>'> 
+                                class='ui-corner-all droppable ui-droppable fields' id='<%=g.object.choice_id%>'> 
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'>
 				    <span style="float:right">  
-      <%= link_to_remove_fields "Delete this answer", g %>
+      <%= link_to_matching_remove_fields "Delete this answer", g %>
     </span>
                                     <tbody> 
                                         <tr> 
@@ -171,10 +171,10 @@
         <tr>
 	<td>
 	<div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px;'
-                                class='ui-corner-all draggable ui-draggable' id='<%=g.object.choice_id%>'>
+                                class='ui-corner-all draggable ui-draggable fields' id='<%=g.object.choice_id%>'>
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'>
                                   <span style="float:right">  
-      <%= link_to_remove_fields "Delete this answer", g %>
+      <%= link_to_matching_remove_fields "Delete this answer", g %>
     </span>  
                                   <tbody> 
                                         <tr> 
