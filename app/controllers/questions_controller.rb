@@ -22,7 +22,8 @@ class QuestionsController < ApplicationController
 
   def show
     @question = Question.from_param(params[:id])
-    @unfinished_solutions = !@question.solutions.where{(is_visible == false) & (creator_id == my{present_user})}.first.nil?
+    #debugger
+    @unfinished_solutions = !@question.solutions.where{(is_visible == false) & (creator_id == my{present_user.id})}.first.nil?
     raise SecurityTransgression unless present_user.can_read?(@question)
     
     start_time = Time.now if logger.info?
