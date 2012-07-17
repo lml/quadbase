@@ -274,8 +274,12 @@
   $('#addRight').bind('click', function() {
     counter = counter + 1;
     var s = "<div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px; margin-left:100px;' \
-                                class='ui-corner-all droppable ui-droppable' id='wrapper3'> \
+                                class='ui-corner-all droppable ui-droppable fields' id='wrapper3'> \
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'> \
+                                <span style='float:right'> \
+                                   <input id='question_matchings_attributes_"+counter+"__destroy' type='hidden' value='false' name='question[matchings_attributes]["+counter+"][_destroy]' > \
+                                   <a onclick='matching_remove_fields(this); return false;' href='#'>Delete this answer</a> \
+                                  </span> \
                                     <tbody> \
                                         <tr> \
                                             <td style='width: 50px; text-align: center;' rowspan='2'> \
@@ -358,9 +362,13 @@
   $('#addLeft').bind('click', function() {
     counter = counter + 1;
     var s = "<div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px;' \
-                                class='ui-corner-all draggable ui-draggable' id='wrapper3'> \
+                                class='ui-corner-all draggable ui-draggable fields' id='wrapper3'> \
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'> \
-                                    <tbody> \
+                                     <span style='float:right'> \
+                                   <input id='question_matchings_attributes_"+counter+"__destroy' type='hidden' value='false' name='question[matchings_attributes]["+counter+"][_destroy]' > \
+                                   <a onclick='matching_remove_fields(this); return false;' href='#'>Delete this answer</a> \
+                                  </span> \
+                                     <tbody> \
                                         <tr> \
                                             <td style='width: 50px; text-align: center;' rowspan='2'> \
                                                  </td> \
