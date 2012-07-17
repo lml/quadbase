@@ -68,6 +68,27 @@ def make_multipart_question(options = {})
   qq
 end
 
+def make_matching_question(options = {})
+  options[:matchings] ||= []
+  mq = options[:question_setup].nil? ? 
+       FactoryGirl.create(:matching_question) :
+       FactoryGirl.create(:matching_question, :question_setup => options[:question_setup])
+  mq.matchings = 
+    options[:matchings].map!{|c| FactoryGirl.build(:matching, :content => c)}
+
+  mq.question_setup.content = "" if options[:no_setup] 
+  
+  user = FactoryGirl.create(:user)
+  
+  mq.create!(user) if (options[:method] == :create || options[:publish] || options[:published])
+
+  if (options[:publish] || options[:published])
+    mq.publish!(user)
+  end
+    
+  mq
+end
+
 def make_project(options = {})
   options[:num_questions] ||= 0
   options[:num_members] ||= 0
@@ -130,6 +151,14 @@ FactoryGirl.define do
     f.license_id { common_license.id }
     f.version nil
   end
+  
+  factory :matching_question do |f|
+    f.content { FactoryGirl.generate(:couple_of_words) }
+    f.association :question_setup
+    f.number { FactoryGirl.generate(:unique_number) }
+    f.license_id { common_license.id }
+    f.version nil
+  end
 
   factory :question_setup do |f|
     f.content {FactoryGirl.generate :content}
@@ -163,10 +192,25 @@ FactoryGirl.define do
                            FactoryGirl.build(:answer_choice)]
     end
   end
+  
+  factory :matching_question_with_matchings, :parent => :matching_question do |f|
+    f.after(:build) do |sq|
+      sq.matchings = [FactoryGirl.build(:matching, :question => sq), 
+                      FactoryGirl.build(:matching, :question => sq)]
+    end
+  end
 
   factory :answer_choice do |f|
     f.content {FactoryGirl.generate :content}
     f.credit 0
+  end
+  
+  factory :matching do |f|
+    f.association :question, :factory => :matching_question
+    f.content {FactoryGirl.generate :content}
+    f.choice_id 0
+    f.matched_id 0
+    f.column ""
   end
 
   factory :multipart_question do |f|

@@ -27,4 +27,11 @@ class MatchingQuestion < Question
     kopy.content = self.content
     kopy
   end
+  
+  def add_other_prepublish_errors
+    self.errors.add(:base,'Content must not be empty.') if content.blank?
+    matchings.each do |m|
+      self.errors.add(:matchings, 'Content must not be empty.') if m.content.blank?
+    end
+  end
 end

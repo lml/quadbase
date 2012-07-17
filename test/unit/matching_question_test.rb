@@ -11,14 +11,17 @@ class MatchingQuestionTest < ActiveSupport::TestCase
   end
 
   test "matchings" do
-    m = FactoryGirl.create(:matching)
+    mq = FactoryGirl.create(:matching_question_with_matchings)
+    m = mq.matchings.first
+    
     assert !m.question.matchings.empty?, 'a'
     
-    mq = FactoryGirl.create(:matching_question)
+    m2 = FactoryGirl.build(:matching)
 
-    mq.matchings << m
-    assert m.errors.empty?
-    assert !mq.matchings.empty?
+    assert_difference('mq.matchings.count') do
+      mq.matchings << m2
+      assert m2.errors.empty?
+    end
   end
 
   test "add_matchings" do
@@ -26,9 +29,7 @@ class MatchingQuestionTest < ActiveSupport::TestCase
     
     assert_equal 0, mq.matchings.size, "a"
     
-    m = FactoryGirl.create(:matching)
-    m.question = nil
-    m.save!
+    m = FactoryGirl.build(:matching)
     
     mq.matchings << m
     
@@ -36,13 +37,11 @@ class MatchingQuestionTest < ActiveSupport::TestCase
     
     assert_equal m, mq.matchings.first, "c"
     
-    m2 = FactoryGirl.create(:matching)
-    m2.question = nil
-    m2.save!
+    m2 = FactoryGirl.build(:matching)
     
     mq.matchings << m2
     
-    assert_equal 2, mpq.matchings.size
+    assert_equal 2, mq.matchings.size
     
     assert_equal m2, mq.matchings.last
   end
@@ -51,45 +50,20 @@ class MatchingQuestionTest < ActiveSupport::TestCase
     mq = make_matching_question(:publish => true)
     m = FactoryGirl.build(:matching)
     m.question = nil
-    m.save!
 
     m.question = mq
     assert !m.save
     assert !m.errors.empty?
     m.errors.clear
     
-    mq.matchings << m
-    
-    assert !m.errors.empty?
-  end
-  
-  test "can't remove matchings from a published question" do
-    mq = make_matching_question
-    m = FactoryGirl.build(:matching)
-    u = FactoryGirl.create(:user)
-    m.question = mq
-    m.save!
-    mq.publish!(u)
-
-    m.question = nil
-    assert !m.save
-    assert !m.errors.empty?
-    assert_equal mq, m.question
-    m.errors.clear
-    
-    mq2.matchings << m
-    
-    assert !m.errors.empty?
-    assert_equal mq, m.question
+    assert_difference('mq.matchings.count', 0) do
+      mq.matchings << m
+      assert !m.errors.empty?
+    end
   end
   
   test "normal publish" do
-    mq = FactoryGirl.create(:matching_question)
-    m = FactoryGirl.create(:matching)
-    m2 = FactoryGirl.create(:matching)
-    m3 = FactoryGirl.create(:matching)
-    
-    mq.matchings << m << m2 << m3
+    mq = FactoryGirl.create(:matching_question_with_matchings)
     
     user = FactoryGirl.create(:user)
     mq.set_initial_question_roles(user)
@@ -106,15 +80,11 @@ class MatchingQuestionTest < ActiveSupport::TestCase
   end
   
   test "bad publish" do
-    mq = FactoryGirl.create(:matching_question)
-    m = FactoryGirl.create(:matching)
-    m2 = FactoryGirl.create(:matching)
-    m3 = FactoryGirl.create(:matching)
+    mq = FactoryGirl.create(:matching_question_with_matchings)
     
-    m2.content = ""
-    m2.save!
-    
-    mq.matchings << m << m2 << m3
+    m = mq.matchings.last
+    m.content = ''
+    m.save!
     
     user = FactoryGirl.create(:user)
     mq.set_initial_question_roles(user)
@@ -123,18 +93,13 @@ class MatchingQuestionTest < ActiveSupport::TestCase
 
     assert !mq.is_published?
     
-    assert mq.publish!(user).nil?
+    mq.publish!(user)
 
     assert !mq.is_published?
   end
   
   test "content copy" do
-    mq = FactoryGirl.create(:matching_question)
-    m = FactoryGirl.create(:matching)
-    m2 = FactoryGirl.create(:matching)
-    m3 = FactoryGirl.create(:matching)
-    
-    mq.matchings << m << m2 << m3
+    mq = FactoryGirl.create(:matching_question_with_matchings)
     
     pre_copy_time = Time.now
 
