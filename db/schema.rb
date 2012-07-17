@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120424015013) do
+ActiveRecord::Schema.define(:version => 20120717033002) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -80,6 +80,11 @@ ActiveRecord::Schema.define(:version => 20120424015013) do
     t.integer  "deputy_id"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+  end
+
+  create_table "file_uploads", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "licenses", :force => true do |t|
@@ -219,6 +224,7 @@ ActiveRecord::Schema.define(:version => 20120424015013) do
     t.boolean  "changes_solution",                 :default => false
     t.text     "code"
     t.string   "variables"
+    t.boolean  "image_answer"
   end
 
   create_table "solutions", :force => true do |t|
