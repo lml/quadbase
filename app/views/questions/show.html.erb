@@ -17,11 +17,8 @@
 <div class="quad-question">
    
   <% if @question.errors.none? %>
-    <% @question.solutions.each do |solution| %>
-      <% if solution.is_visible == false && present_user == solution.creator %>
-        <div id="notice" class="notice" style="font-size:14px">This question has unfinished solutions</div>
-        <% break %>
-      <% end %>
+    <% if @unfinished_solutions %>
+      <div id="notice" class="notice" style="font-size:14px">This question has unfinished solutions</div>
     <% end %>
     <%= render :partial => "show", 
                :locals => {:question => @question} %>
