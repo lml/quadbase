@@ -4,9 +4,7 @@
 class MatchingQuestion < Question
   include ContentParseAndCache
   
-  belongs_to :question
   has_many :matchings, :dependent => :destroy, :foreign_key => :question_id
-
 
   accepts_nested_attributes_for :matchings, :allow_destroy => true
 
@@ -18,5 +16,15 @@ class MatchingQuestion < Question
       if (!question_setup.nil? && !question_setup.content.blank?)
     string << content if !content.blank?
   end
-
+  
+  def content_copy
+    kopy = MatchingQuestion.create
+    init_copy(kopy)
+    old_setup = kopy.question_setup
+    kopy.question_setup = self.question_setup.content_copy if !self.question_setup_id.nil?
+    old_setup.destroy_if_unattached
+    self.matchings.each {|m| kopy.matchings.push(m.content_copy) }
+    kopy.content = self.content
+    kopy
+  end
 end
