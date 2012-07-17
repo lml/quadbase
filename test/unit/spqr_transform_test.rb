@@ -152,14 +152,6 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 	assert_equal expected, output1
 	 end
 
-	 test "curly_f" do
-	 	parser = SPQRParser.new
-	 	a = parser.parse('&fnof;s')
-	 	expected = "fs"
-	 	output1 = SPQRTransform.new.apply(a)
-	 	assert_equal expected, output1
-	 end
-
 	 test "sub" do
 	 	parser = SPQRParser.new
 	 	a = parser.parse('a<sub>&phi;</sub>')
@@ -224,14 +216,14 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 	parser = SPQRParser.new
 	 	a = parser.parse('a<span class="comment"><img src="filename.jpg"></span>')
 	 	output1 = SPQRTransform.new.apply(a)
-	 	expected = "aMISSING IMAGE: filename.jpg"
+	 	expected = "a[MISSING IMAGE: filename.jpg]"
 	 	assert_equal expected, output1
 	 end
 
 	 test "3tags" do
 	 	parser = SPQRParser.new
 	 	a = parser.parse('a<div class="four"><pre class="MATLAB"><i>&pi;</i></PRE></div>')
-	 	expected = "a$$'\\pi'$$"
+	 	expected = "a$$''\\pi''$$"
 	 	output1 = SPQRTransform.new.apply(a)
 	 	assert_equal expected, output1
 	 end
@@ -283,7 +275,6 @@ class SPQRTransfromTest < ActiveSupport::TestCase
 	 	output1 = SPQRTransform.new.apply(a)
 	 	assert_equal expected1, output1
 	 	b = parser.parse('each<a href="myblog.com/photos">set of pictures</A>')
-	 	p b
 	 	expected2 = "each[LINK TO: myblog.com/photos] set of pictures"
 	 	output2 = SPQRTransform.new.apply(b)
 	 	assert_equal expected2, output2

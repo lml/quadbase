@@ -58,6 +58,6 @@ to form the bit string sent out from modem?
 
 "
     a = parser.parse(text)
-    p transformer.apply(a)
+    output = transformer.apply(a)
   end
 end
