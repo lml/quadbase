@@ -10,12 +10,13 @@
 
     <div id="svgbasics">
     </div>
+    <%= redrawLine(f) %>
     <% content_for :after_form do %>
-
+  
   <%= render :partial => 'shared/mark_it_up' %>
 
   <% @errors = @question.errors %>
-
+  
   <% add_human_field_names({ :"answer_choices.content" => "Answer text", 
                              :"answer_choices.credit" => "Answer right/wrong", 
                              :"answer_choices" => "Answers",
@@ -40,7 +41,7 @@
  <%= f.hidden_field :type, :value => "SimpleQuestion"%>
 
  <p>You are editing a 
-    <%= link_to_help "simple_questions", "simple question",
+    <%= link_to_help "simple_questions", "matching question",
                      {:height => 400, 
                       :width => 700} %>. 
     Need help <%= link_to_help "formatting", "formatting", 
@@ -131,11 +132,12 @@
 	<td style="vertical-align: top;">
         <div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px; margin-left:145px;' 
                                 class='ui-corner-all droppable ui-droppable' id='<%=g.object.choice_id%>'> 
-                                <table cellspacing'0' cellpadding='0' style='width: 100%;'> 
+                                <table cellspacing'0' cellpadding='0' style='width: 100%;'>
+                                <a id="temp" href="#" style="z-index: 10;" onClick="$('#<%=g.object.choice_id%>').remove();">Remove</a>
                                     <tbody> 
                                         <tr> 
                                             <td style='width: 50px; text-align: center;' rowspan='2'> 
-                                                <img alt='' src='icons/user-48x48.png' /> </td> 
+                                                 </td> 
                                             <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'> 
                                                 <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
                                                 </span>
@@ -169,11 +171,14 @@
 	<td>
 	<div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px;'
                                 class='ui-corner-all draggable ui-draggable' id='<%=g.object.choice_id%>'>
-                                <table cellspacing'0' cellpadding='0' style='width: 100%;'>
+                                <table cellspacing'0' cellpadding='0' style='width: 10%;'>
+                                <span style="float:right">  
+      <%= link_to_remove_fields "Delete this answer", g %>
+    </span>
                                     <tbody> 
                                         <tr> 
                                             <td style='width: 50px; text-align: center;' rowspan='2'>
-                                                <img alt='' src='icons/user-48x48.png' /> </td>
+                                                 </td>
                                             <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'>
                                                 <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
                                                 </span>
@@ -192,6 +197,7 @@
                             </div>
         </td>
         </tr>
+        
         <% if g.object.choice_id != g.object.matched_id %>
         <script type="text/javascript">
         svgDrawLine($("#<%=g.object.matched_id%>"), $("#<%=g.object.choice_id%>"));
@@ -202,7 +208,7 @@
        
         
 <% end%>
-<% while counter < 2 * (rightCounter - 1)%>
+<% while counter < 2 * (rightCounter)%>
 <tr>
 <td>
   <div style='border: 2px solid gray; padding: 10px; width: 320px; margin-bottom: 10px; visibility:hidden'
@@ -211,7 +217,7 @@
                                     <tbody> 
                                         <tr> 
                                             <td style='width: 50px; text-align: center;' rowspan='2'>
-                                                <img alt='' src='icons/user-48x48.png' /> </td>
+                                                 </td>
                                             <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'>
                                                 <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
                                                 </span>
@@ -273,7 +279,7 @@
                                     <tbody> \
                                         <tr> \
                                             <td style='width: 50px; text-align: center;' rowspan='2'> \
-                                                <img alt='' src='icons/user-48x48.png' /> </td> \
+                                                 </td> \
                                             <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'> \
                                                 <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'> \
                                                 </span> \
@@ -357,7 +363,7 @@
                                     <tbody> \
                                         <tr> \
                                             <td style='width: 50px; text-align: center;' rowspan='2'> \
-                                                <img alt='' src='icons/user-48x48.png' /> </td> \
+                                                 </td> \
                                             <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'> \
                                                 <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'> \
                                                 </span> \

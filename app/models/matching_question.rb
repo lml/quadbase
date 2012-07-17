@@ -12,4 +12,11 @@ class MatchingQuestion < Question
 
   attr_accessible :matchings_attributes
 
+  def content_summary_string
+    string = ""
+    string << question_setup.content[0..15] << " ... " \
+      if (!question_setup.nil? && !question_setup.content.blank?)
+    string << content if !content.blank?
+  end
+
 end

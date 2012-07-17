@@ -65,6 +65,16 @@
            </p>
          <% end %>
 
+         <% if @show_matching_credit_toggle_link %>
+              <p>
+             <%= link_to_function 'Reveal Credit', 
+                                  "$('#svgbasics').show(); $(this).hide(); $(this).next().show();" %>
+             <%= link_to_function 'Hide Credit', 
+                                  "$('#svgbasics').hide(); $(this).hide(); $(this).prev().show();", 
+                                  :style => 'display:none' %>
+           </p>
+         <% end %>
+
          <% if @question.can_be_read_by?(present_user) %>
            <p><%= link_to "Solutions", question_solutions_path(@question) %>
          <% end %>
