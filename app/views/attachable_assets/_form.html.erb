@@ -63,7 +63,11 @@
       sizeLimit     : <%= max_size %>,    
       multi         : <%= allow_multiple_files %>,
       onComplete    : function(event, queueID, fileObj, response, data) {  
-        eval(response);
+         $.ajax({
+          url: '/attachable_assets/' + response + '/finish_create',
+          dataType: 'script'
+        });
+        return true;
       },
       onAllComplete : function(event, data){
         $('#uploadify_file_cancel').hide('blind');
