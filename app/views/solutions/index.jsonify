@@ -1,17 +1,17 @@
 # Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
 # License version 3 or later.  See the COPYRIGHT file for details.
 
+if @question.question_type == "MultipartQuestion"
+  json.parts(@question.child_question_parts) do |part|
+      child_question = part.child_question
 
-#if @question.question_type == "MultipartQuestion"
-  #multipart_question = QuestionPart.where(:multipart_question_id => @question.id).first #do |multipart_question|
-    #json.solutions(multipart_question.child_question.solutions) do |solution|
-      #debugger
-      #json.ingest! (render :partial=>'show', :locals => {:solution => solution})
-    #end
-  #end
+      json.solutions(child_question.solutions) do |solution|
+        json.ingest! (render :partial=>'show', :locals => {:solution => solution})
+      end
+  end
 
-#else
+else
   json.solutions(@solutions) do |solution|
     json.ingest! (render :partial=>'show', :locals => {:solution => solution})
   end
-#end
+end
