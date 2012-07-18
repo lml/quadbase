@@ -58,10 +58,6 @@ module ApplicationHelper
                                       "\"#{association}\", " + 
                                       "\"#{escape_javascript(fields)}\")")
   end
-  
-  def redrawLine(f)
-    link_to "sdihoisd", "", :onclick => "return redraw_lines();"
-  end
 
   def full_name_link(user)
     text = (user_signed_in? && current_user.id == user.id) ? "Me" : user.full_name

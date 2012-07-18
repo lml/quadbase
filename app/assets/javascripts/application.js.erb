@@ -31,6 +31,11 @@ function remove_fields(link) {
 function matching_remove_fields(link) {
   $(link).prev("input[type=hidden]").val("1");
   $(link).closest(".fields").hide();
+  var thischoice = $(link).parent().siblings(".valSelector").attr('value');
+  var thismatched = $(link).parent().siblings(".matchedSelector").attr('value');
+  if (thischoice != thismatched)
+    $(link).parent().siblings(".matchedSelector").val(thischoice);
+  
 }
 
 
