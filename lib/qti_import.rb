@@ -56,7 +56,34 @@ class QTImport
 		return credit
 	end
 
-	def self.get_questions(project, content, parser, transformer,current_user)
+	def self.get_images(images)
+		pictures = Hash.new
+		key_name = "/media"
+		Dir.chdir(images)
+		z = Dir.entries(images)
+		z.each { |y| 
+			if !File.fnmatch('..',y) && !File.fnmatch('.',y)
+				if File.directory?(y)
+					x = File.join(key_name,y)
+					v = File.join(images,y)
+					u = Dir.entries(v)
+					u.each { |t| 
+						if !File.directory?(t)
+						 s = File.join(v,t)
+						 r = File.join(x,t)
+						 q = File.open(s)
+						 pictures[r] = q
+						 q.close
+						end }
+				end
+			end }
+		pictures
+	end
+
+	def self.get_questions(project, content, parser, transformer,current_user,*images)
+		if !images.blank?
+			pictures = self.get_images(images[0].to_s)
+		end
 		coder = HTMLEntities.new
 		ques_nodes = content.xpath('//presentation')
 		credit_nodes = content.xpath('//resprocessing//respcondition')
