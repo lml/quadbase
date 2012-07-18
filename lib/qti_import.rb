@@ -144,18 +144,21 @@ class QTImport
 	#the content type of each file to ensure that no "hidden" files (".","..")
 	#are
 	def self.unzip(zipfile,destination)
-		files = Array.new
+		info = Hash.new
 		Archive::Zip.extract(zipfile,destination)
 		Dir.chdir(destination + "/content")
 		a = Dir.entries(Dir.pwd)
 		a.each { |b| 
-			if File.directory?(b)
-				p b.to_s + ' is a directory'
-			else 
+			if File.file?(b)
 				c = File.open(b)
-				files << c
-				c.close	
+				info['file'] = c
+				c.close
+			else File.directory?(b)
+				if !File.fnmatch('..',b) && !File.fnmatch('.',b)
+					d = File.join(Dir.pwd,b)
+					info['images'] = d
+				end
 			end }
-		files[0]
+		return info['file'], info['images']
 	end
 end
