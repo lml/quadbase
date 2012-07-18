@@ -118,3 +118,14 @@ function refresh_datetime_pickers() {
      hour:9, 
      minute:0});
 }
+
+function load_ques() {
+  if (typeof MathJax != 'undefined') {
+    $(".hide-question").hide();
+    $("#loading").show();
+  };
+  MathJax.Hub.Register.MessageHook("End Process", function (){
+      $("#loading").hide();
+      $(".hide-question").fadeIn('1000');
+    });
+}

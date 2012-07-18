@@ -1,12 +1,12 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<div class="quad-question_content" style='display:none;'>
+<div class="quad-question_content">
   <%= question.variated_content_html.html_safe %>
 </div>
 
 <% if !question.answer_choices.empty? %>
-   <div class="quad-answer_choices" style="display:none;">
+   <div class="quad-answer_choices">
       <% answer_letter_code = "a".ord-1 %>
       <table width="100%">
       <% question.answer_choices.each do |ac| %>
@@ -30,15 +30,3 @@
    </div>
 <% end %>
 
-<%#Image used for loading icon %>
-<%= image_tag "ajax-loader.gif", :id => 'loading' %>
-
-<script>
-$(document).ready(function(){
-  MathJax.Hub.Register.StartupHook("End", function (){
-    $("#loading").hide();
-    $(".quad-question_content").fadeIn('1000');
-    $(".quad-answer_choices").fadeIn('1000');
-  });
-});
-</script>

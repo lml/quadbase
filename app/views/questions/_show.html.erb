@@ -1,13 +1,21 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
-
+<div class="quad-question">
+	<span class="hide-question">
    <%= render :partial => "#{view_dir(question)}/show", 
               :locals => {:question => question} %>
 
      <p></p>
 
-   
    <%= render :partial => 'questions/attribution', 
               :locals => {:question => question }%>
+    </span>
+  </div>
 
 
+<%#Image used for loading icon %>
+<%= image_tag "ajax-loader.gif", :id => 'loading', :style => 'display:none' %>
+
+<script type='text/javascript'>
+load_ques();
+</script>
