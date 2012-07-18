@@ -15,14 +15,16 @@
       <% solution = child_question.solutions.first %>
 
       <div style="border-bottom: 1px solid #aaa; margin: 15px 0px 30px 0px">
-
+      <div id="PageHeading"><u>Part <%= multipart_question.order %>:</u>
       <% if solution != nil %>
-
-      <div id="PageHeading"><u>Part <%= multipart_question.order %>:</u></div>
+      </div> <%# did weird thing with div tag to prevent line break here and below %>
         <%= render :partial => 'solutions/single_solution', :locals => {:solution => solution,
                                                                         :show_link => true} %>
+      <% else %>
+      <b style="font-size:14px">No current solutions</b></div> <%# did a weird thing with the div close tag here to prevent a line break %>
       <% end %>
 
+      
       </div>
     <% end %>
   </div>

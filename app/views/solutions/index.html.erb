@@ -18,8 +18,7 @@
   
 <% if @question.question_type == "MultipartQuestion" %>
   <%= render :partial => 'multipart_solution_list',
-             :locals => {:question => @question,
-                         :solutions => @solutions} %>
+             :locals => {:question => @question} %>
 <% else %>
   <%= render :partial => 'solution_list',
              :locals => {:question => @question,
