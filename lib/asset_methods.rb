@@ -8,7 +8,7 @@ module AssetMethods
   end
   
   def get_asset(local_name)
-    attachable_assets.select{|aa| aa.local_name == local_name}.first.asset
+    attachable_assets.select{|aa| aa.local_name == local_name}.first.try(:asset)
   end
   
 end

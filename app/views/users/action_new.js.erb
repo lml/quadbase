@@ -11,4 +11,4 @@ $("#user_action_dialog").dialog({
  width:600, 
  buttons: { "Close": function() { $(this).dialog("close"); }},  
             open: function(event, ui) { $("#text_query").val(''); $("#selected_type").val(''); }
-});
+}).closeOnClickOutside();
