@@ -129,7 +129,7 @@
    <% actcounter = actcounter + 2 %>    
    <% if g.object.column == "right" %>
 	<td style="vertical-align: top;">
-        <div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px; margin-left:145px;' 
+        <div style='border: 2px solid gray; padding: 10px; width: 225px; margin-bottom: 10px; margin-left:25px;' 
                                 class='ui-corner-all droppable ui-droppable fields' id='<%=g.object.choice_id%>'> 
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'>
 				    <span style="float:right">  
@@ -146,7 +146,7 @@
                                         </tr> 
                                         <tr> 
                                             <td style='font-size: 0.9em; text-align: left;'>
-	<%= g.text_area :content, :style=>'height:60; width:300; resize:none' %>
+	<%= g.text_area :content, :style=>'height:60; width:200; resize:none' %>
         </td>
                                         </tr> 
                                     </tbody> 
@@ -170,7 +170,7 @@
 	<% if g.object.column == "left" %>
         <tr>
 	<td>
-	<div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px;'
+	<div style='border: 2px solid gray; padding: 10px; width: 225px; margin-bottom: 10px;'
                                 class='ui-corner-all draggable ui-draggable fields' id='<%=g.object.choice_id%>'>
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'>
                                   <span style="float:right">  
@@ -187,7 +187,7 @@
                                         </tr>
                                         <tr>
                                             <td style='font-size: 0.9em; text-align: left;'>
-	<%= g.text_area :content, :style=>'height:60; width:300; resize:none' %>
+	<%= g.text_area :content, :style=>'height:60; width:200; resize:none' %>
                          </td>
                                         </tr> 
                                     </tbody> 
@@ -211,7 +211,7 @@
 <% while counter < 2 * (rightCounter)%>
 <tr>
 <td>
-  <div style='border: 2px solid gray; padding: 10px; width: 320px; margin-bottom: 10px; visibility:hidden'
+  <div style='border: 2px solid gray; padding: 10px; width: 100%; margin-bottom: 10px; visibility:hidden'
                                 class='ui-corner-all draggable ui-draggable' id='wrapper2'>
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'>
                                     <tbody> 
@@ -273,8 +273,8 @@
   counter = <%= actcounter %>;
   $('#addRight').bind('click', function() {
     counter = counter + 1;
-    var s = "<div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px; margin-left:100px;' \
-                                class='ui-corner-all droppable ui-droppable fields' id='wrapper3'> \
+    var s = "<div style='border: 2px solid gray; padding: 10px; width: 225px; margin-bottom: 10px; margin-left:75px;' \
+                                class='ui-corner-all droppable ui-droppable fields' id="+counter+"> \
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'> \
                                 <span style='float:right'> \
                                    <input id='question_matchings_attributes_"+counter+"__destroy' type='hidden' value='false' name='question[matchings_attributes]["+counter+"][_destroy]' > \
@@ -291,7 +291,7 @@
                                         </tr> \
                                         <tr> \
                                             <td style='font-size: 0.9em; text-align: left;'> \
-                                                <textarea style='height:60; width:300; resize:none' id='question_matchings_attributes_" + counter +"_content' name='question[matchings_attributes][" + counter + "][content]' ></textarea> \
+                                                <textarea style='height:60; width:200; resize:none' id='question_matchings_attributes_" + counter +"_content' name='question[matchings_attributes][" + counter + "][content]' ></textarea> \
                                             </td> \
                                         </tr> \
                                     </tbody> \
@@ -332,8 +332,8 @@
 				.removeClass("ui-icon-shuffle")
 				.addClass("ui-icon-locked");
 
-            var sourceValue = $(ui.draggable).find("input:hidden").val();
-            var targetValue = $(this).find("input:hidden").val();
+            var sourceValue = $(ui.draggable).find(".valSelector").val();
+            var targetValue = $(this).find(".valSelector").val();
 
             // remove mapping dialog box line if exists
             if ($("#dialogMappingResult").find("ul > li:first").html() == "No mapping was done yet")
@@ -361,8 +361,8 @@
   });
   $('#addLeft').bind('click', function() {
     counter = counter + 1;
-    var s = "<div style='border: 2px solid gray; padding: 10px; width: 340px; margin-bottom: 10px;' \
-                                class='ui-corner-all draggable ui-draggable fields' id='wrapper3'> \
+    var s = "<div style='border: 2px solid gray; padding: 10px; width: 225px; margin-bottom: 10px;' \
+                                class='ui-corner-all draggable ui-draggable fields' id="+counter+"> \
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'> \
                                      <span style='float:right'> \
                                    <input id='question_matchings_attributes_"+counter+"__destroy' type='hidden' value='false' name='question[matchings_attributes]["+counter+"][_destroy]' > \
@@ -379,7 +379,7 @@
                                         </tr> \
                                         <tr> \
                                             <td style='font-size: 0.9em; text-align: left;'> \
-                                                <textarea style='height:60; width:300; resize:none' id='question_matchings_attributes_" + counter + "_content' rows='20' name='question[matchings_attributes][" + counter + "][content]' cols='40'></textarea> \
+                                                <textarea style='height:60; width:200; resize:none' id='question_matchings_attributes_" + counter + "_content' rows='20' name='question[matchings_attributes][" + counter + "][content]' cols='40'></textarea> \
                                             </td> \
                                         </tr> \
                                     </tbody> \

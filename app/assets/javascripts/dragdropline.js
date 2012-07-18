@@ -194,11 +194,11 @@ function svgDrawLine(eTarget, eSource) {
 
         // origin -> ending ... from left to right
         // 10 + 10 (padding left + padding right) + 2 + 2 (border left + border right)
-        var originX = 355;
+        var originX = 255;
         var originY = $source.offset().top - 100;
 
         
-        var endingX = 475;
+        var endingX = 375;
         var endingY = $target.offset().top - 100;
 
         var space = 20;

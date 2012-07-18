@@ -40,8 +40,8 @@ module ApplicationHelper
     f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)")
   end
 
-  def link_to_matching_remove_fields(name, f)
-    f.hidden_field(:_destroy) + link_to_function(name, "matching_remove_fields(this)")
+  def link_to_matching_remove_fields(name, g)
+    g.hidden_field(:_destroy) + link_to_function(name, "matching_remove_fields(this)")
   end
 
   
