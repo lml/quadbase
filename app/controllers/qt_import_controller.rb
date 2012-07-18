@@ -19,7 +19,7 @@ class QtImportController < ApplicationController
 			project = QTImport.createproject(current_user)
 			parser, transformer = QTImport.choose_import(params[:content_type])
 			content = QTImport.iterate_items(document)
-			# debugger			
+			debugger			
 			QTImport.get_questions(project,content,parser,transformer,current_user) unless images
 			QTImport.get_questions(project,content,parser,transformer,current_user,images) unless !images
 		

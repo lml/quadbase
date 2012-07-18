@@ -14,6 +14,9 @@ class QTImport
 
 	attr_reader :filename, :content_type, :parser, :transformer
 
+	def self.add_assets(asset_names,asset_list)
+	end
+
 	def self.add_images(content,text)
 		a = content.xpath('.//matimage')
 		for b in 0..(a.length-1)
@@ -72,7 +75,9 @@ class QTImport
 						 s = File.join(v,t)
 						 r = File.join(x,t)
 						 q = File.open(s)
-						 pictures[r] = q
+						 p = Asset.new(:attachment => q)
+						 p.save!
+						 pictures[r] = p
 						 q.close
 						end }
 				end
@@ -96,13 +101,18 @@ class QTImport
 			text = self.add_images(ques_nodes,text)
 			text = coder.decode(text)
 			d = parser.parse(text)
+			transformer.clear_pictures
 			ques = transformer.apply(d)
+			pic_names1 = transformer.pictures
 			q = SimpleQuestion.new(:content => ques)
 			q.save!
 			e = Comment.new(:message => ques_id)
 			e.comment_thread = q.comment_thread
 			e.creator = current_user
 			e.save!
+			if !pic_names1.blank?
+				self.add_assets(pic_names1,pictures)
+			end
 			temp_ans = Array.new
 			temp_credit = Array.new
 			f = content[a].xpath('.//response_lid//response_label')
@@ -113,8 +123,10 @@ class QTImport
 				text = h[0].content
 				text = coder.decode(text)
 				i = parser.parse(text)
+				transformer.clear_pictures
 				ans = transformer.apply(i)
-				temp_ans << ans
+				pic_names2 = transformer.pictures
+				temp_ans << [ans,pic_names2]
 			end
 			if temp_ans.length == 0
 				temp_ans << 'fake'
@@ -131,7 +143,7 @@ class QTImport
 				points << 1.0
 			end
 			for j in 0..(temp_ans.length-1)
-				q.answer_choices << AnswerChoice.new(:content => temp_ans[j], :credit => temp_credit[j])
+				q.answer_choices << AnswerChoice.new(:content => temp_ans[j][0], :credit => temp_credit[j])
 			end
 			q.save!
 			project.add_question!(q)

@@ -120,7 +120,9 @@ end
 #class UnavailableImage < StandardError; end
 
 class SPQRTransform < Parslet::Transform
-	rule(:image => sequence(:image))           { "\[#{image[0].to_s}\]"}
+	cattr_accessor :pictures
+	self.pictures = Array.new
+	rule(:image => sequence(:image))           { |dictionary| self.pictures << dictionary[:image][0].to_s; "\[#{dictionary[:image][0].to_s}\]"}
 	rule(:filename => simple(:filename))       { filename.str.gsub(/[\n\t]/, "").strip }
 	rule(:address => simple(:address))         { "\[LINK TO: #{address.to_s}\] "}
 	rule(:link_name => simple(:link_name))     { link_name }
@@ -159,4 +161,8 @@ class SPQRTransform < Parslet::Transform
 	rule(:eol => simple(:eol))                 {}
 	rule(:any => simple(:any))                 { any }
 	rule(:text => sequence(:entries))          { entries.join }
+
+	def clear_pictures
+		self.pictures = Array.new
+	end
 end
