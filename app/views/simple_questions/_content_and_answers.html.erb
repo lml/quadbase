@@ -1,12 +1,12 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<div class="quad-question_content">
+<div class="quad-question_content" id="question_content" style='display:none;'>
   <%= question.variated_content_html.html_safe %>
 </div>
 
 <% if !question.answer_choices.empty? %>
-   <div class="quad-answer_choices">
+   <div class="quad-answer_choices" style="display:none;">
       <% answer_letter_code = "a".ord-1 %>
       <table width="100%">
       <% question.answer_choices.each do |ac| %>
@@ -29,3 +29,20 @@
       </table>  
    </div>
 <% end %>
+
+<% if question.answer_is_image? && !question.is_published? %>
+<small>The answer to this question is a drawing.</small>
+<% end %>
+
+<%#Image used for loading icon %>
+<%= image_tag "ajax-loader.gif", :id => 'loading' %>
+
+<script>
+$(document).ready(function(){
+  $("#loading").click(function(){
+    $("#loading").fadeOut('slow');
+    $(".quad-question_content").fadeIn('slow');
+    $(".quad-answer_choices").fadeIn('slow');
+  });
+});
+</script>
