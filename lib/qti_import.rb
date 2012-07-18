@@ -151,10 +151,10 @@ class QTImport
 		a.each { |b| 
 			if File.directory?(b)
 				p b.to_s + ' is a directory'
-			elsif File.file?(b)
-				p b 
-				c = File.join(Dir.pwd,b.to_s)
-				files << c			
+			else 
+				c = File.open(b)
+				files << c
+				c.close	
 			end }
 		files[0]
 	end

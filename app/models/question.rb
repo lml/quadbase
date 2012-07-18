@@ -491,26 +491,39 @@ class Question < ActiveRecord::Base
           id_query = $1
           q = wtscope.where{id == id_query}
           latest_only = false
-        else # Invalid version
-          return Question.none
+        elsif (text =~ /^\s?q\.?\s?(\d+)(,?\s?v\.?\s?(\d+))?\s?$/)
+          # Format: q(number) or q(number)v(version)
+          num_query = $1
+          if $2.nil?
+            q = wtscope.where{number == num_query}
+          elsif !$3.nil?
+            ver_query = $3
+            q = wtscope.where{(number == num_query) & (version == ver_query)}
+            latest_only = false
+          else # Invalid version
+            return Question.none # Empty
+          end
+        else # Invalid ID/Number
+          return Question.none # Empty
         end
-      else # Invalid ID/Number
-        return Question.none
-      end
-    when 'Author/Copyright Holder'
-      # Search by author (or copyright holder)
-      q = wtscope.joins{question_collaborators.user}
-      text.gsub(",", "").split.each do |t|
-        query = t.blank? ? '%' : '%' + t + '%'
-        q = q.where{(question_collaborators.user.first_name =~ query) |\
-                                    (question_collaborators.user.last_name =~ query)}
-      end
-    when 'Tags'
-      # Search by tags
-      q = wtscope.joins{taggings.tag}
-      text.split(",").each do |t|
-        query = t.blank? ? '%' : '%' + t + '%'
-        q = q.where{tags.name =~ query}
+      when 'Author/Copyright Holder'
+        # Search by author (or copyright holder)
+        q = wtscope.joins{question_collaborators.user}
+        text.gsub(",", "").split.each do |t|
+          query = t.blank? ? '%' : '%' + t + '%'
+          q = q.where{(question_collaborators.user.first_name =~ query) |\
+                      (question_collaborators.user.last_name =~ query)}
+        end
+      when 'Tags'
+        # Search by tags
+        q = wtscope.joins{taggings.tag}
+        text.split(",").each do |t|
+          query = t.blank? ? '%' : '%' + t + '%'
+          q = q.where{tags.name =~ query}
+        end
+      else # Content
+        query = '%' + text + '%'
+        q = wtscope.where{(content =~ query) | (question_setups.content =~ query)}
       end
     else
       q = wtscope

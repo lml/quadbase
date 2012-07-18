@@ -12,9 +12,9 @@ class QtImportController < ApplicationController
 
 	def create
 		begin
-			debugger
+			# debugger
 			a = params[:file]
-			a =  QTImport.unzip(a.path,"#{Rails.root}/public/uploads/tmp/import") if a.content_type == 'application/zip'
+			a =  QTImport.unzip(a.path,"#{Rails.root}/tmp/import") if a.content_type == 'application/zip'
 			document = QTImport.openfile(a.path)
 			project = QTImport.createproject(current_user)
 			parser, transformer = QTImport.choose_import(params[:content_type])
