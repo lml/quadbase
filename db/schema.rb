@@ -81,12 +81,7 @@ ActiveRecord::Schema.define(:version => 20120717033002) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
-
-  create_table "file_uploads", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
+  
   create_table "licenses", :force => true do |t|
     t.string   "short_name"
     t.string   "long_name"
