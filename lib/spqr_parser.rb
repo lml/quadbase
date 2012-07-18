@@ -5,9 +5,7 @@ require 'parslet'
 require 'parslet/convenience'
 
 class SPQRParser < Parslet::Parser
-	def parse(str)
-		a = super(str)
-	end
+
 	#Check for accompanying images
 	rule(:file)            { space? >> str('src="') >> name >> str('"') }
 	rule(:name)            { match(/[a-z|A-Z|0-9|\/|\-|\.|\?|\s|\\|\n|\t|\_|\{|\}|=]/).repeat(1).as(:filename) }
@@ -122,7 +120,7 @@ end
 #class UnavailableImage < StandardError; end
 
 class SPQRTransform < Parslet::Transform
-	rule(:image => sequence(:image))           { "\[MISSING IMAGE: #{image[0].to_s}\]"}
+	rule(:image => sequence(:image))           { "\[#{image[0].to_s}\]"}
 	rule(:filename => simple(:filename))       { filename.str.gsub(/[\n\t]/, "").strip }
 	rule(:address => simple(:address))         { "\[LINK TO: #{address.to_s}\] "}
 	rule(:link_name => simple(:link_name))     { link_name }
