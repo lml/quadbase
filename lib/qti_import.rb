@@ -14,14 +14,21 @@ class QTImport
 
 	attr_reader :filename, :content_type, :parser, :transformer
 
-	def self.add_assets(asset_names,asset_list)
+	def self.add_assets(asset_names,asset_list,question)
+		asset_names.each { |z|
+		y = AttachableAsset.new(:asset => asset_list[z])
+		y.local_name = File.basename(z)
+		y.save! 
+		question.attachable_assets << y 
+		question.save! }
+		question
 	end
 
 	def self.add_images(content,text)
 		a = content.xpath('.//matimage')
 		for b in 0..(a.length-1)
 			c = a[b].attributes['uri'].value
-			d = text + '<img src="' + c + '">'
+			d = text + ' <img src="' + c + '">'
 		end
 		d
 	end
@@ -105,13 +112,14 @@ class QTImport
 			ques = transformer.apply(d)
 			pic_names1 = transformer.pictures
 			q = SimpleQuestion.new(:content => ques)
+			pp q.content
 			q.save!
 			e = Comment.new(:message => ques_id)
 			e.comment_thread = q.comment_thread
 			e.creator = current_user
 			e.save!
 			if !pic_names1.blank?
-				self.add_assets(pic_names1,pictures)
+				q = self.add_assets(pic_names1,pictures,q)
 			end
 			temp_ans = Array.new
 			temp_credit = Array.new
@@ -123,27 +131,12 @@ class QTImport
 				text = h[0].content
 				text = coder.decode(text)
 				i = parser.parse(text)
-				transformer.clear_pictures
 				ans = transformer.apply(i)
-				pic_names2 = transformer.pictures
-				temp_ans << [ans,pic_names2]
-			end
-			if temp_ans.length == 0
-				temp_ans << 'fake'
-				temp_credit << 0
-				temp_ans << 'not real'
-				temp_credit << 1
-			elsif temp_ans.length == 1
-				temp_ans << 'fake'
-				temp_credit << 0
-			end			
+				temp_ans << ans
+			end		
 			points = self.normalize(temp_credit)
-			if points.max == 0
-				temp_ans << 'fake'
-				points << 1.0
-			end
 			for j in 0..(temp_ans.length-1)
-				q.answer_choices << AnswerChoice.new(:content => temp_ans[j][0], :credit => temp_credit[j])
+				q.answer_choices << AnswerChoice.new(:content => temp_ans[j], :credit => temp_credit[j])
 			end
 			q.save!
 			project.add_question!(q)

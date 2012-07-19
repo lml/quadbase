@@ -122,7 +122,7 @@ end
 class SPQRTransform < Parslet::Transform
 	cattr_accessor :pictures
 	self.pictures = Array.new
-	rule(:image => sequence(:image))           { |dictionary| self.pictures << dictionary[:image][0].to_s; "\[#{dictionary[:image][0].to_s}\]"}
+	rule(:image => sequence(:image))           { |dictionary| self.pictures << dictionary[:image][0].to_s; "\{img:#{File.basename(dictionary[:image][0])}\}" }
 	rule(:filename => simple(:filename))       { filename.str.gsub(/[\n\t]/, "").strip }
 	rule(:address => simple(:address))         { "\[LINK TO: #{address.to_s}\] "}
 	rule(:link_name => simple(:link_name))     { link_name }

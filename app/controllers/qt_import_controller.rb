@@ -14,7 +14,6 @@ class QtImportController < ApplicationController
 		begin
 			a = params[:file]
 			a,images =  QTImport.unzip(a.path,"#{Rails.root}/tmp/import") if a.content_type == 'application/zip'
-			p images
 			document = QTImport.openfile(a.path)
 			project = QTImport.createproject(current_user)
 			parser, transformer = QTImport.choose_import(params[:content_type])
