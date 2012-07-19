@@ -112,7 +112,6 @@ class QTImport
 			ques = transformer.apply(d)
 			pic_names1 = transformer.pictures
 			q = SimpleQuestion.new(:content => ques)
-			pp q.content
 			q.save!
 			e = Comment.new(:message => ques_id)
 			e.comment_thread = q.comment_thread
