@@ -64,13 +64,17 @@ $('#agreement_checkbox').live('click', function() {
    }
 });
 
-$('#password_field').focus(function(){
+$('input[type=password]').keyup(function(){
         if ($('#agreement_checkbox').is(':checked') & (len == true)& (letter == true) & (number == true)){
          $('#register_submit').removeAttr('disabled');
          $('#register_submit').removeClass('ui-state-disabled');
         
    }
-       else {
+        else if ($(len == false) | (letter == false) | (number == false)){
+         $('#register_submit').attr('disabled', 'disabled');
+         $('#register_submit').addClass('ui-state-disabled');
+        }
+        else {
          $('#register_submit').attr('disabled', 'disabled');
          $('#register_submit').addClass('ui-state-disabled');
    }
