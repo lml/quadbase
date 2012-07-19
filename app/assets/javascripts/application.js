@@ -120,12 +120,10 @@ function refresh_datetime_pickers() {
 }
 
 function load_ques() {
-  if (typeof MathJax != 'undefined') {
-    $(".hide-question").hide();
-    $("#loading").show();
-  };
+  $(".hide-question").hide();
+  $(".loading").show();
   MathJax.Hub.Register.MessageHook("End Process", function (){
-      $("#loading").hide();
+      $(".loading").hide();
       $(".hide-question").fadeIn('1000');
     });
 }
