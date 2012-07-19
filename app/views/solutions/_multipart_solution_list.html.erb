@@ -11,16 +11,16 @@
 
     <% QuestionPart.where(:multipart_question_id => @question.id).each do |multipart_question| %>
       <% child_question = multipart_question.child_question %>
-      <% solution = child_question.solutions.first %>
+      <% solution = child_question.solutions.visible_for(AnonymousUser.instance).first %>
 
       <div style="border-bottom: 1px solid #aaa; margin: 15px 0px 30px 0px">
-      <div id="PageHeading"><u>Part <%= multipart_question.order %>:</u>
+      <div id="PageHeading"><u>Part <%= multipart_question.order %>:</u></div>
       <% if solution != nil %>
-      </div> <%# did weird thing with div tag to prevent line break here and below %>
+
         <%= render :partial => 'solutions/single_solution', :locals => {:solution => solution,
                                                                         :show_link => true} %>
       <% else %>
-      <b style="font-size:14px">No current solutions</b></div> <%# did a weird thing with the div close tag here to prevent a line break %>
+      <b style="margin-left:15px; font-size:14px">No current published solutions</b>
       <% end %>
 
 
