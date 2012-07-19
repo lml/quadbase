@@ -35,7 +35,21 @@ function matching_remove_fields(link) {
   var thismatched = $(link).parent().siblings(".matchedSelector").attr('value');
   if (thischoice != thismatched)
     $(link).parent().siblings(".matchedSelector").val(thischoice);
-  
+  if (thischoice == thismatched)
+    $(".fields").each(function(index) {
+    	var choicetemp = $(this).children(".valSelector").attr('value');
+        var matchedtemp = $(this).children(".matchedSelector").attr('value');
+        if (matchedtemp == thismatched)
+		$(this).children(".matchedSelector").val(choicetemp);
+    });
+  svgClear();
+  $(".fields").each(function(index) {
+  	var choicetemp = $(this).children(".valSelector").attr('value');
+        var matchedtemp = $(this).children(".matchedSelector").attr('value');
+        if(matchedtemp != choicetemp)
+           svgDrawLine($("#" + matchedtemp), $("#" + choicetemp));
+  });
+  alert('6');
 }
 
 
