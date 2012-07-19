@@ -25,7 +25,7 @@
     <% end %>
   </div>
   <div>
-    <% if @question.question_type != "MultipartQuestion" %>
+    <% if !@question.is_multipart? %>
       <%= link_to 'Write a New Solution', new_question_solution_path(question) %>
     <% end %>
   </div>

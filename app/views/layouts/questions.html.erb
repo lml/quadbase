@@ -67,8 +67,8 @@
 
          <% if @question.can_be_read_by?(present_user) %>
           <% published_solutions_count = 0 %>
-          <% QuestionPart.where(:multipart_question_id => @question.id).each do |multipart_question| %>
-            <% published_solutions_count += multipart_question.child_question.solutions.visible_for(AnonymousUser.instance).count %>
+          <% QuestionPart.where(:multipart_question_id => @question.id).each do |question_part| %>
+            <% published_solutions_count += question_part.child_question.solutions.visible_for(AnonymousUser.instance).count %>
           <% end %>
           <% if published_solutions_count != 0 %>
             <p><%= link_to "Solutions (#{published_solutions_count} published)", question_solutions_path(@question) %>

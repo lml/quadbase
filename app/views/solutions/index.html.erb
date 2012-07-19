@@ -8,7 +8,7 @@
 <% @show_edit_license_link = true %>
 <% @show_question_link = true %>
 
-<% if @question.question_type != "MultipartQuestion" %>
+<% if !@question.is_multipart? %>
   <%= link_to 'Write a New Solution', new_question_solution_path(@question), :style => "float:right" %>
 <% end %>
 
@@ -16,7 +16,7 @@
 
 <br/>
   
-<% if @question.question_type == "MultipartQuestion" %>
+<% if @question.is_multipart? %>
   <%= render :partial => 'multipart_solution_list',
              :locals => {:question => @question} %>
 <% else %>
