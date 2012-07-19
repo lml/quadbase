@@ -18,6 +18,7 @@
 
         <%= render :partial => 'solutions/single_solution', :locals => {:solution => solution,
                                                                         :show_link => true} %>
+        <%= link_to "View all solutions for this part", question_solutions_path(question_part.child_question) %>
       <% else %>
       <b style="margin-left:15px; font-size:14px">No current published solutions</b>
       <% end %>
