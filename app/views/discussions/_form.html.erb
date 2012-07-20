@@ -1,7 +1,7 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<%= form_for(@message) do |f| %>
+<%= form_for(@discussion) do |f| %>
   <br/>
   <div class="field">
     <%= f.label :subject, "Subject:" %>
@@ -15,6 +15,6 @@
   <br/>
   <div class="actions">
     <%= f.submit :class => "#{submit_classes}",
-                 :value => "Send" %>
+                 :value => "Create New Discussion" %>
   </div>
 <% end %>

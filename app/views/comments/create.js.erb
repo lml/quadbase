@@ -3,7 +3,7 @@
 
 <%= display_flash(false) %>
 
-<% if @comment_thread.commentable_type == 'Message' %>
+<% if @comment_thread.commentable_type == 'Discussion' %>
 $(".edit_link").hide();
 $(".delete_link").hide();
 <% end %>

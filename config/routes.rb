@@ -94,7 +94,7 @@ Quadbase::Application.routes.draw do
   get 'help/images', :to => 'help#image_help', :as => 'images'
   get 'help/dialog', :to => 'help#dialog', :as => 'dialog'
   get 'help/comments', :to => 'help#comments', :as => 'comments'
-  get 'help/messages', :to => 'help#message_help', :as => "messages"
+  get 'help/discussions', :to => 'help#discussion_help', :as => "discussions"
   get 'help/roles', :to => 'help#roles_help', :as => 'roles'
   get 'help/topic/:topic_name', :to => 'help#topic', :as => 'topic_help'
   
@@ -212,7 +212,7 @@ Quadbase::Application.routes.draw do
     votable
   end
 
-  resources :messages, :only => [:new, :show, :update] do
+  resources :discussions, :only => [:new, :show, :update] do
     get 'new_recipient'
     post 'search_recipients'
     post 'add_recipient'

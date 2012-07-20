@@ -1,7 +1,7 @@
 # Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
 # License version 3 or later.  See the COPYRIGHT file for details.
 
-class Message < ActiveRecord::Base
+class Discussion < ActiveRecord::Base
 
   has_one :comment_thread, :as => :commentable, :dependent => :destroy
   before_validation :build_comment_thread, :on => :create
@@ -12,8 +12,8 @@ class Message < ActiveRecord::Base
 
   attr_accessible #none
 
-  def self.messages_for(user)
-    CommentThreadSubscription.message_subscriptions_for(user).collect { |cts| cts.comment_thread.commentable }
+  def self.discussions_for(user)
+    CommentThreadSubscription.discussion_subscriptions_for(user).collect { |cts| cts.comment_thread.commentable }
   end
 
   def subject
@@ -59,7 +59,7 @@ protected
 
   def subject_not_changed
     return if !subject_changed? || comment_thread.comments.blank?
-    errors.add(:base, "You can't change a message's subject after it is sent.")
+    errors.add(:base, "You can't change a discussion's subject after it is sent.")
     false
   end
 

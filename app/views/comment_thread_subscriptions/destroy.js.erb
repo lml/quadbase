@@ -1,7 +1,7 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<% if @comment_thread.commentable_type == 'Message' %>
+<% if @comment_thread.commentable_type == 'Discussion' %>
   window.location.replace("<%= escape_javascript(inbox_path) %>")
 <% else %>
   <%= display_flash %>

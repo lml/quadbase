@@ -1,0 +1,10 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+$("#discussion_<%= @discussion.id %>").remove();
+
+<% flash[:notice] = "You just left the discussion with subject '#{@discussion.subject}'" %>
+
+<%= display_flash %>
+
+show_none_row_if_needed("discussion_table");

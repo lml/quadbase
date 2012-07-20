@@ -266,9 +266,11 @@ FactoryGirl.define do
     f.association :comment_thread
     f.association :user
   end
-
-  factory :message do |f|
+  
+  factory :discussion do |f|
     f.subject {FactoryGirl.generate :content}
+    f.body {FactoryGirl.generate :content}
+    f.association :comment_thread
   end
 
   factory :deputization do |f|

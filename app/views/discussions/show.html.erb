@@ -1,34 +1,34 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<%= pageHeading("Viewing message") %>
+<%= pageHeading("Viewing Discussion") %>
 
 <table width="100%">
   <tr>
     <td>To:</td>
     <td id="recipient_list">
-      <% @message.recipients.each do |recipient| %>
+      <% @discussion.recipients.each do |recipient| %>
         <%= render :partial => 'recipient', :locals => {:recipient => recipient} %>
       <% end %>
     </td>
     <td align="right">
       <%= link_to "Add recipients ...", 
-                  message_new_recipient_path(@message), 
+                  discussion_new_recipient_path(@discussion), 
                   :remote => true %>
     </td>
   </tr>
 </table>
 
-<% if @message.comment_thread.comments.blank? %>
+<% if @discussion.comment_thread.comments.blank? %>
 <%= render 'form' %>
 <% else %>
-<%= render :partial => 'show', :locals => {:message => @message} %>
+<%= render :partial => 'show', :locals => {:discussion => @discussion} %>
 <% end %>
 
 <br/>
 
-<% if !@message.comment_thread.comments.blank? %>
-<%= render :partial => 'comments/index', :locals => {:commentable => @message,
+<% if !@discussion.comment_thread.comments.blank? %>
+<%= render :partial => 'comments/index', :locals => {:commentable => @discussion,
                                                      :hide_header => true,
                                                      :hide_link => true,
                                                      :hide_votes => true,

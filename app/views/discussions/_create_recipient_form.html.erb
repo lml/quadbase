@@ -3,7 +3,7 @@
 
 <%# Callers must supply a 'user' local variable %>
 
-<%= form_tag(message_add_recipient_path(@message), 
+<%= form_tag(discussion_add_recipient_path(@discussion), 
              :method => :post, 
              :remote => true) do %>
   <%= hidden_field_tag :username, user.username %>
