@@ -79,8 +79,8 @@
   <% end %> 
 
   <div style="<%= setup_blank ? '' : 'display:none' %>">
-    <%= link_to_function "Add a common introduction to this question.", 
-                         '$("#intro_text_block").show(); Quadbase.CodeMirrorUtils.refreshCodeMirrors(); $(this).parent().hide();'%> 
+    <%= link_to "Add a common introduction to this question.", nil, :remote=>true,
+                     :onclick => '$("#intro_text_block").show(); Quadbase.CodeMirrorUtils.refreshCodeMirrors(); $(this).parent().hide();'%> 
     (optional)
     <span style="float:right"><%= link_to_help "question_setup", "What is this?" %></span>
   </div>

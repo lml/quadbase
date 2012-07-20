@@ -14,7 +14,7 @@
   <% end %>
   
   <div class="library_block roundedCorners5" style="float:left; padding-top: 6px; border: none">
-    <%= link_to_function "Change...", "$('#library_list_#{logic_counter}').hide(); $('##{dialog_id}').show();" %>
+    <%= link_to "Change...", nil, :remote=>true, :onclick => "$('#library_list_#{logic_counter}').hide(); $('##{dialog_id}').show();" %>
   </div>
   
   <% content_for :javascript do %>
@@ -27,7 +27,7 @@
     <% end %>
   <% end %>
   
-  <%#= link_to_function "Change...", "$('#library_list_#{logic_counter}').hide(); $('##{dialog_id}').show();" %>
+  <%#= link_to "Change...", nil, :remote=>true, :onclick => "$('#library_list_#{logic_counter}').hide(); $('##{dialog_id}').show();" %>
 </div>
 
 <div id="<%= dialog_id %>" style="display:none">

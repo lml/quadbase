@@ -12,14 +12,10 @@
     <% end %>
     <%= title.html_safe %>
     <% if collapsible %>
-    <span style="font-size:11px; display:inline">&nbsp;&nbsp;[
-    <%= link_to_function "Collapse",
-                         "$(this).parent().parent().parent().children('.section_body').hide(); $(this).hide(); $(this).next().show();",
-                         :style => (collapsed ? "display:none" : "display:inline") %>
-    <%= link_to_function "Expand",
-                         "$(this).parent().parent().parent().children('.section_body').show(); $(this).hide(); $(this).prev().show();", 
-                         :style => (collapsed ? "display:inline" : "display:none") %>
-    ]</span>
+      <span style="font-size:11px; display:inline">&nbsp;&nbsp;[
+        <%= link_to "Collapse", nil, :remote=>true, :style=>(collapsed ? "display:none" : "display:inline"), :onclick => "$(this).parent().parent().parent().children('.section_body').hide(); $(this).hide(); $(this).next().show();" %>
+        <%= link_to "Expand", nil, :remote=>true, :style=>(collapsed ? "display:inline" : "display:none"), :onclick => "$(this).parent().parent().parent().children('.section_body').show(); $(this).hide(); $(this).prev().show();" %>
+      </span>
     <% end %>
   </div>
   

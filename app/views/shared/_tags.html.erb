@@ -1,3 +1,6 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
 <% show_remove_form ||= false %>
 
 
@@ -13,12 +16,8 @@
 <% if present_user.can_tag?(taggable) %>
 
   <div id="tag_actions" style="margin-top:10px; font-size: 11px; <%= 'display:none' if show_remove_form %>">
-    <%= link_to_function "Add Tag", 
-                         "$('#tag_entry_field').val(''); $('#add_tag_form').show(); $('#tag_entry_field').focus(); $('#tag_actions').hide();", 
-                         :style => "white-space: nowrap;" %> |
-    <%= link_to_function "Remove Tags...", 
-                         "$('#remove_tags_form').show(); $('#tag_actions').hide(); $('#tag_links').hide();", 
-                         :style => "white-space: nowrap;" %>
+    <%= link_to "Add Tag", nil, :remote=>true, :style => "white-space: nowrap;", :onclick => "$('#tag_entry_field').val(''); $('#add_tag_form').show(); $('#tag_entry_field').focus(); $('#tag_actions').hide(); " %>
+    <%= link_to "Remove Tags...", nil, :remote=>true, :style => "white-space: nowrap;", :onclick => "$('#remove_tags_form').show(); $('#tag_actions').hide(); $('#tag_links').hide();" %>
   </div>
 
   <div id="add_tag_form" style="display:none">
@@ -38,9 +37,8 @@
       <% end %>
     <% end %>
     <div style="margin-top:10px; font-size: 11px;">
-    <%= link_to_function "I'm finished removing tags.", 
-                         "$('#tag_links').show(); $('#tag_actions').show(); $('#remove_tags_form').hide();", 
-                         :style => "white-space: nowrap;" %>
+    <%= link_to "I'm finished removing tags.", nil, :remote=>true, :style => "white-space: nowrap;", :onclick => "$('#tag_links').show(); $('#tag_actions').show(); $('#remove_tags_form').hide();" %>
+      
     </div>
   </div>
   
@@ -52,4 +50,3 @@
   </div>
 
 <% end %>
-
