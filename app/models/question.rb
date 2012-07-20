@@ -685,12 +685,7 @@ class Question < ActiveRecord::Base
   
   def can_be_voted_on_by?(user)
     is_a_collaborator = !collaborators.where{id == user.id}.first.nil?
-    collaborators.each do |collaborator|
-      if collaborator == user
-        is_a_collaborator = true
-      end 
-    end
-    can_be_read_by?(user)  && !is_a_collaborator
+    can_be_read_by?(user) && !is_a_collaborator
   end
   
 #############################################################################
