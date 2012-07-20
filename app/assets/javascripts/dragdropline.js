@@ -21,9 +21,7 @@ $(document).ready(function () {
 
     // set up the drawing area from Body of the document
     //  -30px for the offset...
-    $("#svgbasics")
-        .css("height", $("body").height() - 30)
-        .css("width", $("body").width() - 30);
+
 
     // Mapping dialog box			
     $("#dialogMappingResult").dialog({
@@ -194,12 +192,12 @@ function svgDrawLine(eTarget, eSource) {
 
         // origin -> ending ... from left to right
         // 10 + 10 (padding left + padding right) + 2 + 2 (border left + border right)
-        var originX = 255;
-        var originY = $source.offset().top - 100;
+        var originX = 0;
+        var originY = $source.offset().top - 500;
 
         
-        var endingX = 375;
-        var endingY = $target.offset().top - 100;
+        var endingX = 80;
+        var endingY = $target.offset().top - 500;
 
         var space = 20;
         var color = colours[random(9)];

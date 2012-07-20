@@ -8,8 +8,7 @@
 
 
 
-    <div id="svgbasics">
-    </div>
+    
     <% content_for :after_form do %>
 
   <%= render :partial => 'shared/mark_it_up' %>
@@ -120,16 +119,18 @@
     <p>
         Drag and Drop the boxes on the left to their matching component on the right.
     </p>
+<div id="helpheight" style="overflow:hidden">
 <% actcounter = 0 %>
 <% counter = 0 %>
 <% rightCounter = 0 %>
-<table style='position:absolute; margin-left:300px'>
+<div style='float:right;'>
+<table>
 <tbody>
 <%= f.fields_for :matchings do |g| %>
    <% actcounter = actcounter + 2 %>    
    <% if g.object.column == "right" %>
 	<td style="vertical-align: top;">
-        <div style='border: 2px solid gray; padding: 10px; width: 225px; margin-bottom: 10px; margin-left:25px;' 
+        <div style='border: 2px solid gray; padding: 10px; width: 225px; margin-bottom: 10px;' 
                                 class='ui-corner-all droppable ui-droppable fields' id='<%=g.object.choice_id%>'> 
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'>
 				    <span style="float:right">  
@@ -163,8 +164,12 @@
 <% end %>
 </tbody>
 </table>
- <table cellspacing="5" cellpadding="40" style="width: 100%; text-align: center;">
+</div>
+
+<div style="float:left;">
+ <table>
   <tbody>
+
 <% rightCounter = counter %>
 <%= f.fields_for :matchings do |g| %>    
 	<% if g.object.column == "left" %>
@@ -234,8 +239,12 @@
 <% counter = counter + 1 %>
       
 <% end %>
+
 </tbody>
  </table>
+</div>
+<div id="svgbasics" style="float:left; width:70px; height:100%; position:relative">  
+</div>
        <div>
             <table cellspacing="5" cellpadding="40" style="width: 100%; text-align: center;">
                 <tbody>
@@ -250,7 +259,7 @@
                 </tbody>
             </table>
         </div>
-
+</div>
     <div id="dialog" title="Reset persons mapping?" style="z-index: 10;">
         <p>
             <span class="ui-icon ui-icon-alert"></span>Do you wish to delete all connection
@@ -263,11 +272,12 @@
         <ul style="list-style: none;">
             <li>No mapping was done yet</li></ul>
     </div>
+<div>
     <a id="popButton" href="#" style="z-index: 10;">reset mapping</a> <a id="getMappings"
         href="#" style="z-index: 10;">show mapping</a><a id="addLeft"
         href="#" style="z-index: 10;">add left</a><a id="addRight"
         href="#" style="z-index: 10;">add right</a>
-
+</div>
 
 <script type="text/javascript">
   counter = <%= actcounter %>;
