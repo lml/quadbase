@@ -163,6 +163,7 @@ Quadbase::Application.routes.draw do
     get :autocomplete_tag_name, :on => :collection
 
     commentable
+    votable
   end
   post 'questions/simple', :to => 'questions#create_simple', :as => 'create_simple_question'
   post 'questions/multipart', :to => 'questions#create_multipart', :as => 'create_multipart_question'

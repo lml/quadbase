@@ -1,9 +1,11 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<% # Clients of this partial must provide the following variables:
-   # votable
+<%# Clients of this partial must provide the following variables:
+    votable
 %>
+
+<% votable = votable.becomes(votable.class.base_class)%>
 <% can_vote = present_user.can_vote_on?(votable) %>
 <% vote = get_vote_for(votable, present_user) if can_vote %>
 
@@ -18,8 +20,8 @@
         <%= image_tag("thumbs_up_hover.png") %>
         <% else %>
         <%= image_submit_tag "thumbs_up.png",
-              :onmouseover => "this.src='/images/thumbs_up_hover.png'",
-              :onmouseout => "this.src='/images/thumbs_up.png'" %><br />
+              :onmouseover => "this.src='/assets/thumbs_up_hover.png'",
+              :onmouseout => "this.src='/assets/thumbs_up.png'" %><br />
         <% end %>
       </td>
       <td>
@@ -38,8 +40,8 @@
         <%= image_tag "thumbs_down_hover.png" %>
         <% else %>
         <%= image_submit_tag "thumbs_down.png",
-              :onmouseover => "this.src='/images/thumbs_down_hover.png'",
-              :onmouseout => "this.src='/images/thumbs_down.png'" %><br />
+              :onmouseover => "this.src='/assets/thumbs_down_hover.png'",
+              :onmouseout => "this.src='/assets/thumbs_down.png'" %><br />
         <% end %>
       </td>
       <td>
