@@ -17,6 +17,9 @@
 <div class="quad-question">
    
   <% if @question.errors.none? %>
+    <% if @unfinished_solutions %>
+      <div id="notice" class="notice" style="font-size:14px">This question has unfinished solutions</div>
+    <% end %>
     <%= render :partial => "show", 
                :locals => {:question => @question} %>
   <% else %>
