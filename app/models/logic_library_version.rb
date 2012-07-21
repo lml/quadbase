@@ -16,6 +16,7 @@ class LogicLibraryVersion < ActiveRecord::Base
   after_save :send_to_bullring
   
   scope :ordered, order{version.asc}
+  attr_accessible :code, :deprecated
 
   def name
     logic_library.name + " v." + version.to_s
