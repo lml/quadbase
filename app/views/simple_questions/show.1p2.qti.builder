@@ -1,20 +1,31 @@
-xml.instruct!
+require 'builder'
+xml = Builder::XmlMarkup.new
 
-xml.kml(:xmlns => "http://earth.google.com/kml/2.2") {
-xml.Document {
-  xml.name("Test")
-  xml.open(1)
-  xml.visible(1)
-  xml.NetworkLink {
-    xml.name("My rails app  being passed parameters")
-    xml.open(1)
-    xml.visibility(0)
-    xml.Link {
-      xml.href("hi")
-      xml.viewRefreshMode("onStop")
-      xml.viewRefreshTime(0.5)
-      xml.viewFormat("BBOX=[bboxWest],[bboxSouth],[bboxEast],[bboxNorth]&CENTRE=[lookatLon],[lookatLat]")
+xml.instruct!
+xml.Document{
+  xml.item{
+    xml.presentation{
+      xml.material{
+        xml.mattext(
+          @question.content_html,
+          "texttype" => "text/html"
+        )
       }
+      xml.response_lid{
+        xml.render_choice{
+          @question.answer_choices.each { |ac|
+            xml.response_label{
+              xml.material{
+                xml.mattext(
+                  ac.content_html,
+                  "texttype" => "text/html"
+                )
+              }              
+            }
+          }
+        }
+      }     
     }
+    xml.resprocessing{}
   }
 }
