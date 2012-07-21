@@ -11,6 +11,7 @@ class QtImportControllerTest < ActionController::TestCase
 		@user = FactoryGirl.create(:user)
 		@file1 = fixture_file_upload("/files/spqr3.xml", 'xml')	
 		@file2 = fixture_file_upload("/files/check_icon_v1.png", 'png')
+		@file3 = fixture_file_upload("/files/ITS_Q853.zip", 'application/zip')
 		@content = 'SPQR'
 	end
 
@@ -30,6 +31,12 @@ class QtImportControllerTest < ActionController::TestCase
 		post :create, :file => @file1, :content_type => @content
 		@project = Project.find_by_name("Import")
 		assert(@project.is_member?(@user), "user is member of project")
+		assert_response :success
+	end
+
+	test "should_import_again" do
+		sign_in @user
+		post :create, :file => @file3, :content_type => @content
 		assert_response :success
 	end
 
