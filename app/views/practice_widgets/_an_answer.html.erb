@@ -1,0 +1,12 @@
+<%# Clients must supply:
+      phrase
+      index
+      answer_choices
+%>
+
+<div>
+  <p><%= phrase %> <b>(<%= choice_letter(index) %>)</b></p>
+  <div class="question" style="margin-left:30px">
+    <%= answer_choices[index]["html"].html_safe %>
+  </div>
+</div>

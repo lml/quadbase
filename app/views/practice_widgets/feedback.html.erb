@@ -1,0 +1,69 @@
+<%= pageHeading("Feedback on Assignment #{@exercise_response.assignment.number}, " + 
+                "Exercise #{@exercise_response.assigned_exercise.number}", 
+                {:sub_heading_text => full_section_name(@exercise_response.assignment.section)})%>
+
+<% exercise_data = @exercise_response.assigned_exercise.exercise.content %>
+<% solutions_data = @exercise_response.assigned_exercise.exercise.solutions_content %>
+
+<%= section "The Answer" do %>
+
+  <% answer_choices = exercise_data["simple_question"]["answer_choices"] %>
+  <% correct_answer_index = answer_choices.index{|choice| choice["credit"].to_i == 1} %>
+  <% chosen_index = @exercise_response.response_choice %>
+
+  <%= render :partial => 'an_answer', :locals => {:phrase => "You chose answer",
+                                                  :answer_choices => answer_choices,
+                                                  :index => chosen_index} %>
+
+  <% if chosen_index == correct_answer_index %>
+    <span style="color:green"><p><b>Good job! That is the right answer!</b></p></span>
+    
+    <p>Check out the solutions below for other approaches to solving 
+      this problem.</p>
+  <% else %>
+    <span style="color:#b22222"><b>Unfortunately, that is not the right answer.</b></span>
+
+    <%= render :partial => 'an_answer', :locals => {:phrase => "The correct answer is",
+                                                    :answer_choices => answer_choices,
+                                                    :index => correct_answer_index} %>
+    
+    <p>Study the solutions below to see how to solve this problem.</p>
+  <% end %>
+  
+<% end %>
+
+<%= section "Solutions" do %>
+  
+  <% solutions_data.inspect %>
+
+  <% solutions_data["solutions"].each_with_index do |solution, ii| %>
+    <div>
+      <span style="float:left; padding-right:10px"><p><%= ii+1%>)</p></span>
+      <div style="float:left; width:600px"> 
+        <%= simple_format solution["explanation"] %>
+        <%= link_to_function "Show Details", 
+                             "$('#details_#{ii}').show(); $(this).hide(); reload_mathjax('details_#{ii}');", 
+                             :class => "activity_link",
+                             :'data-action' => "solution_details_#{ii}" %>
+        <div id="details_<%= ii %>" class="question" style="display:none">
+          <%= solution["details"]["html"].html_safe %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+<% end %>
+
+<%= render :partial => 'shared/response_times',
+           :locals => {:response_timeable => @exercise_response,
+                       :page => "feedback"}%>
+
+<% @show_assignment_link = true %>
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>
+  $(document).ready(function(){
+  	$('#accordion').accordion();
+  });
+  <% end %>
+<% end %>

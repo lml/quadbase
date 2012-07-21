@@ -1,0 +1,178 @@
+<%= pageHeading("Assignment #{@exercise_response.assignment.number}, Exercise #{@exercise_response.assigned_exercise.number}", 
+                {:sub_heading_text => full_section_name(@exercise_response.assignment.section)})%>
+
+<% content_for :javascript_includes do %>
+  <%= javascript_include_tag 'codecogs_editor.js' %>
+<% end %>
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>
+
+  <% end %>
+<% end %>
+
+<% if !@exercise_response.assignment.active? %>
+  <%= important("This assignment's due date has passed!", {:classes => "red" }) %>
+<% end %>
+<div id="exercise_response_show"> 
+
+  <% exercise_data = @exercise_response.assigned_exercise.exercise.content %>  
+  
+  <%= section "The Question" do %>
+  <br/>
+  <div id="question_text" 
+       style="visibility: visible; overflow: hidden; position: relative; z-index: 2; border: 1px solid gray; padding: 15px; width:570px">
+    <div class="question">
+
+      <% if !exercise_data["simple_question"]["introduction"].nil? %>
+        <%= exercise_data["simple_question"]["introduction"]["html"].html_safe %>  
+      <% end %>
+
+      <%= exercise_data["simple_question"]["content"]["html"].html_safe %>
+    </div>
+  </div>
+  <% end %>
+  
+  <%= section "Free-form Answer" do %>
+
+    <% if !@exercise_response.response_text_submitted? %>
+    <br/>   
+        <% @errors = @exercise_response.errors %>
+        <%= form_for(@exercise_response) do |f| %>
+          <div class="field">
+            Enter your free-form answer below.
+            <%= f.text_area :response_text, :rows => 5, :style => "width:100%", :id => 'free_response' %>
+            <span class="field_help" style="display:block">
+              <ul class="field_help">
+                <li>You can write math here in latex surrounded by dollar signs, e.g. \$x^2+1\$.</li>
+                <li>Click <%= link_to_function "preview", "preview_response();", :class => "field_help" %>
+              to test it.</li>
+                <li>Or <%= link_to_function "open a popup to generate the latex for you", "OpenLatexEditor('free_response','latex','en-us',true,'','full')", :class => "field_help" %>. Click the "Copy to Document" button when you've finished writing the equation in the popup.</li>
+                <li><i>Tip</i>: for less-than and greater-than, make sure to put spaces
+              around the "&lt;" and "&gt;" signs so the browser doesn't think you're writing
+              HTML.  Alternatively, use the "\lt" and "\gt" latex symbols.)</li>
+              </ul>
+            </span>
+          </div>
+          <div class="field">
+            <p>How confident are you in this answer?</p>
+            <p>This answer is...</p>
+            <table width="100%">
+              <tr>
+                <% confidence_labels.each_with_index do |cl, ii| %>
+                  <td width="16.67%">
+                    <center>
+                      <%= f.radio_button :response_confidence, ii %></br/>
+                      <%= cl.sub("-","<br/>").html_safe %>
+                    </center>
+                  </td>        
+                <% end %>        
+              </tr>
+            </table>
+          </div>
+          <center>
+          <div class="actions">
+            <%= f.submit "Save (but don't lock!)", 
+                    :name => "save" %>&nbsp;&nbsp;&nbsp;
+            <%= f.submit "Save (and lock!)", 
+                    :name => "save_and_lock",
+                    :confirm => "Are you sure you want to lock your answer?  If so " +
+                                "click OK, otherwise click cancel.\n\nAfter your " + 
+                                "answer is locked it CANNOT BE CHANGED."%>
+          </div>
+          </center>
+        <% end %>
+
+    <% else %>
+      <table class="">
+        <tr>
+          <th style="text-align:right">Answer Text:</th>
+          <td><%= simple_format @exercise_response.response_text %></td>
+        </tr>
+        <tr>
+          <th style="text-align:right">Confidence:</th>
+          <td><%= confidence_labels[@exercise_response.response_confidence].sub("-"," ") %></td>
+        </tr>
+      </table>
+    <% end %>
+  <% end %>
+  
+  <% if @exercise_response.response_text_submitted? && !@exercise_response.response_choice_submitted? %>
+    <%= section "Answer Verification" do %>
+      <p>Choose the multiple-choice answer below that corresponds to the answer you wrote above.</p>
+      <% @errors = @exercise_response.errors %>
+      <%= form_for(@exercise_response) do |f| %>
+        <table width="100%">
+
+        <% exercise_data["simple_question"]["answer_choices"].each_with_index do |answer_choice, ii| %>
+             <tr>
+                <td class="question" width="5%">
+                  <%= f.radio_button :response_choice, ii %>
+                </td>
+                <td class="question" width="5%">
+                   <p><%= choice_letter(ii) %>)</p>
+                </td>
+                <td class="question" width="90%">
+                   <%= answer_choice["html"].html_safe %>
+                </td>
+             </tr>
+        <% end %>
+
+        </table>
+        <center>
+          <div class="actions">
+            <%= f.submit "Save and lock!", 
+                    :confirm => "Are you sure you want to lock your answer?  If so " +
+                                "click OK, otherwise click cancel.\n\nAfter your " + 
+                                "answer is locked it CANNOT BE CHANGED."%>
+          </div>
+        </center>
+      <% end %>
+    <% end %>
+  <% end %>
+  
+  <% if @exercise_response.response_choice_submitted? %>
+    <%= section "Answer Verification" do %>
+    
+    
+    <%= render :partial => 'an_answer', :locals => {:phrase => "You chose answer",
+                                                    :answer_choices => exercise_data["simple_question"]["answer_choices"],
+                                                    :index => @exercise_response.response_choice} %>
+    
+    <% end %>
+    
+    <center>
+      <p>Navigate to any remaining incomplete questions<br/> using the links on the right side of the page.</p>
+    </center>
+  <% end %>
+  
+  
+</div>
+
+
+<% @show_assignment_link = true %>
+
+<div id="response_text_preview" style="display:none"></div>
+
+<%= render :partial => 'shared/response_times',
+           :locals => {:response_timeable => @exercise_response,
+                       :page => "work"}%>
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>
+    function preview_response() {
+      $.get('<%= exercise_response_preview_response_text_path(@exercise_response) %>', 
+            $('form.edit_exercise_response').serializeArray());
+    }
+    
+    $("#response_text_preview").dialog({ 
+        autoOpen: false, 
+        modal: true, 
+        height:250, 
+        width:300,
+        title: "Response Preview"
+    });
+  <% end %>
+<% end %>
+
+<%= protect_form %>

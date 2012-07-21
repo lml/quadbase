@@ -1,0 +1,5 @@
+$("#response_text_preview").html("<%= ej(simple_format @text) %>");
+
+$("#response_text_preview").dialog('open');
+
+<%= reload_mathjax("response_text_preview") %>
