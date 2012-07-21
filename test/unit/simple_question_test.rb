@@ -104,8 +104,6 @@ class SimpleQuestionTest < ActiveSupport::TestCase
     assert_equal true, simple.answer_is_image?
     assert_equal nil, simple2.answer_is_image?
   end
-
-
   
   # TODO implement the following tests
   # 
