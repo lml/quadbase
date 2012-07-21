@@ -14,6 +14,7 @@
 <% @show_edit_license_link = true %>
 <% @show_credit_toggle_link = true %>
 
+<div class="quad-question">
    
   <% if @question.errors.none? %>
     <% if @unfinished_solutions %>
@@ -24,6 +25,8 @@
   <% else %>
     This question cannot be shown because one or more errors occurred when retrieving it.
   <% end %>
+
+</div>
 
 <br/>
 
