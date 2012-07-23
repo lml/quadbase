@@ -78,14 +78,15 @@
         return put_as_post('<%= question_preview_path(@question) %>', 
                              $('form').serializeArray());
       });
-   
+      
       $("#preview_dialog").dialog({ 
         autoOpen: false, 
         modal: true, 
-        height:600, 
+        height:600,
         width:600, 
-        buttons: { "Close": function() { $(this).dialog("close"); }}
+        buttons: { "Close": function() { $(this).dialog("close"); $("#svgbasics").attr("style", "float: left; width: 70px; height: 100%; position: relative; display: block;");}}
       });
+      
    <% end %>
 <% end %>
 
