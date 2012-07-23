@@ -1,0 +1,14 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%= pageHeading("Question #{@question.to_param}")%>
+
+
+<%= render :partial => 'show', :locals => {:question => @question,
+                                          :answer_text => @answer_text,
+                                          :answer_confidence => @answer_confidence} %>
+
+<%= render :partial => 'answer_choices', :locals => {:question => @question,
+                                                    :answer_choice => @answer_choice} %>
+
+<%= render :partial => 'solutions', :locals => {:question => @question} %>

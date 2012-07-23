@@ -1,0 +1,21 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%= pageHeading("Question #{@question.to_param}")%>
+
+
+<%= render :partial => 'show', :locals => {:question => @question,
+                                          :answer_text => @answer_text,
+                                          :answer_confidence => @answer_confidence} %>
+
+<% if !@question.answer_choices.empty? %>
+  <%= render :partial => 'answer_choices', :locals => {:question => @question,
+                                                       :answer_text => @answer_text,
+                                                       :answer_confidence => @answer_confidence} %>
+  
+  <div id="solution_div"></div>
+<% else %>
+  <div id="answer_choices_div"></div>
+
+  <%= render :partial => 'solutions', :locals => {:question => @question} %>
+<% end %>

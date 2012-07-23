@@ -1,0 +1,50 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% # Clients of this partial must supply the following variable:
+   # question
+   # answer_text
+   # answer_confidence
+   # Additionally, they can override the following variable:
+   answer_choice ||= nil
+%>
+
+<div id="answer_choices_div">
+  <%= section "Answer Verification" do %>
+    <% if answer_choice.nil? %>
+      <p>Choose the multiple-choice answer below that corresponds to the answer you wrote above.</p>
+      <%= form_tag question_answer_choices_path(@question), :method => :get do %>
+        <%= hidden_field_tag :answer_text, answer_text %>
+        <%= hidden_field_tag :answer_confidence, answer_confidence %>
+        
+        <table width="100%">
+        <% question.answer_choices.each_with_index do |answer_choice, ii| %>
+             <tr>
+                <td class="question" width="5%">
+                  <%= radio_button_tag :answer_choice, ii %>
+                </td>
+                <td class="question" width="5%">
+                   <p><%= choice_letter(ii) %>)</p>
+                </td>
+                <td class="question" width="90%">
+                   <%= answer_choice.content_html.html_safe %>
+                </td>
+             </tr>
+        <% end %>
+        </table>
+        
+        <center>
+          <div class="actions">
+            <%= submit_tag :submit, 
+                    :confirm => "Are you sure you want to submit your answer?  If so " +
+                                "click OK, otherwise click cancel.\n\nAfter your " + 
+                                "answer is submitted it CANNOT BE CHANGED."%>
+          </div>
+        </center>
+      <% end %>
+    <% else %>
+      <%= render :partial => 'locked_answer_choice', :locals => {:question => question,
+                                                                 :answer_choice => answer_choice} %>
+    <% end %>
+  <% end %>
+</div>

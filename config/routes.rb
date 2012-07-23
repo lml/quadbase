@@ -161,6 +161,11 @@ Quadbase::Application.routes.draw do
     get 'tagged/:tags', :to => "questions#tagged", :as => 'tagged', :on => :collection
     
     get :autocomplete_tag_name, :on => :collection
+    
+    get 'answer', :to => "practice_widgets#show"
+    get 'answer/preview', :to => "practice_widgets#preview_answer"
+    get 'answer/text', :to => "practice_widgets#answer_text"
+    get 'answer/choices', :to => "practice_widgets#answer_choices"
 
     commentable
   end

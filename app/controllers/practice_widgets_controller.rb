@@ -2,4 +2,60 @@
 # License version 3 or later.  See the COPYRIGHT file for details.
 
 class PracticeWidgetsController < ApplicationController
+
+  before_filter :include_mathjax
+
+  def show
+    @question = Question.from_param(params[:question_id])
+    raise SecurityTransgression unless present_user.can_read?(@question)  
+  end
+
+  def answer_text
+    @question = Question.from_param(params[:question_id])
+    raise SecurityTransgression unless present_user.can_read?(@question)
+    @answer_text = params[:answer_text]
+    @answer_confidence = params[:answer_confidence].to_i
+    @preview = params[:preview]
+    @solutions = @question.solutions.visible_for(present_user) \
+      if @question.answer_choices.empty?
+   
+    respond_to do |format|
+      if @answer_text
+        if @preview
+          format.html { render 'preview_answer' }
+          format.js { render 'preview_answer' }
+        else
+          format.html
+          format.js
+        end
+      else
+        format.html { render :action => :show }
+      end
+    end
+  end
+  
+  def answer_choices
+    @question = Question.from_param(params[:question_id])
+    raise SecurityTransgression unless present_user.can_read?(@question) && !@question.answer_choices.empty?
+    @answer_text = params[:answer_text]
+    @answer_confidence = params[:answer_confidence].to_i
+    @answer_choice = params[:answer_choice].to_i
+    @solutions = @question.solutions.visible_for(present_user)
+    
+    respond_to do |format|
+      if @answer_choice
+        format.html
+        format.js
+      else
+        format.html { render :action => :text_answer }
+      end
+    end
+  end
+  
+  protected
+  
+  def include_mathjax
+    @include_mathjax = true
+  end
+
 end

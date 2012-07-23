@@ -1,0 +1,22 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% # Clients of this partial must supply the following variable:
+   # question
+%>
+
+<div id="solutions_div">
+  <% unless question.solutions.empty? %>
+    <%= section "Solutions" do %>
+      <ol>
+        <% question.solutions.each_with_index do |solution| %>
+          <li> 
+            <%= simple_format solution.explanation %>
+            <%= '<p>(not visible)</p>'.html_safe unless solution.is_visible %>
+            <%= link_to "Show Details", solution %>
+          </li>
+        <% end %>
+      </ol>
+    <% end %>
+  <% end %>
+</div>

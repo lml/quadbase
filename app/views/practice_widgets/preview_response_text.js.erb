@@ -1,8 +1,0 @@
-<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
-    License version 3 or later.  See the COPYRIGHT file for details. %>
-
-$("#response_text_preview").html("<%= ej(simple_format @text) %>");
-
-$("#response_text_preview").dialog('open');
-
-<%= reload_mathjax("response_text_preview") %>

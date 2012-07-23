@@ -1,11 +1,15 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
+    
+<%# Clients of this partial must supply the following variables:
+  question
+  hide_answers %>
 
 <div class="quad-question_content">
   <%= question.variated_content_html.html_safe %>
 </div>
 
-<% if !question.answer_choices.empty? %>
+<% unless hide_answers || question.answer_choices.empty? %>
    <div class="quad-answer_choices">
       <% answer_letter_code = "a".ord-1 %>
       <table width="100%">

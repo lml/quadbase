@@ -11,8 +11,6 @@ module QuestionsHelper
       "simple"
     when "MatchingQuestion"
       "matching"
-    when "MultistepQuestion"
-      "multistep"
     when "MultipartQuestion"
       "multipart"
     end
@@ -24,8 +22,6 @@ module QuestionsHelper
       !question.answer_choices.empty? ? "Choice" : "Free-form"
     when "MatchingQuestion"
       "Matching"
-    when "MultistepQuestion"
-      "Multi-step"
     when "MultipartQuestion"
       "Multi-part"
     end    

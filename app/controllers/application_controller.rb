@@ -134,6 +134,10 @@ class ApplicationController < ActionController::Base
       $(\'input[type="submit"][name="commit"]\').click(function() {
         window._isDirty = false;
       });
+      
+      $(\'input[type="submit"][name="preview"]\').click(function() {
+        window._isDirty = false;
+      });
 
       window.onbeforeunload = function () {
         if (window._isDirty) {
