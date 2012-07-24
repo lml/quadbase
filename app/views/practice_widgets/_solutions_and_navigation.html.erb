@@ -1,8 +1,11 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<% # Clients of this partial must supply the following variable:
+<% # Clients of this partial must supply the following variables:
    # question
+   # next_question
+   # Additionally, they can override the following variable:
+   next_part ||= nil
 %>
 
 <div id="solutions_div">
@@ -18,5 +21,11 @@
         <% end %>
       </ol>
     <% end %>
+  <% end %>
+</div>
+
+<div id="navigation_div">
+  <% if next_question %>
+    <%= link_to 'Next Question', question_answer_path(next_question, :part => next_part) %>
   <% end %>
 </div>

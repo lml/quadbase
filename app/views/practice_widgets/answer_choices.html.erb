@@ -4,11 +4,18 @@
 <%= pageHeading("Question #{@question.to_param}")%>
 
 
-<%= render :partial => 'show', :locals => {:question => @question,
-                                          :answer_text => @answer_text,
-                                          :answer_confidence => @answer_confidence} %>
+<%= render :partial => 'show', :locals => {:main_question => @main_question,
+                                           :question => @question,
+                                           :answer_text => @answer_text,
+                                           :answer_confidence => @answer_confidence,
+                                           :part => @part} %>
 
-<%= render :partial => 'answer_choices', :locals => {:question => @question,
-                                                    :answer_choice => @answer_choice} %>
+<%= render :partial => 'answer_choices', :locals => {:main_question => @main_question,
+                                                     :question => @question,
+                                                     :answer_choice => @answer_choice,
+                                                     :part => @part} %>
 
-<%= render :partial => 'solutions', :locals => {:question => @question} %>
+<%= render :partial => 'solutions_and_navigation',
+           :locals => {:question => @question,
+                       :next_question => @next_question,
+                       :next_part => @next_part} %>

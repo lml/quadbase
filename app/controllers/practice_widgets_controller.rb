@@ -3,16 +3,14 @@
 
 class PracticeWidgetsController < ApplicationController
 
+  skip_before_filter :authenticate_user!
+  before_filter :get_question
   before_filter :include_mathjax
 
-  def show
-    @question = Question.from_param(params[:question_id])
-    raise SecurityTransgression unless present_user.can_read?(@question)  
+  def show 
   end
 
   def answer_text
-    @question = Question.from_param(params[:question_id])
-    raise SecurityTransgression unless present_user.can_read?(@question)
     @answer_text = params[:answer_text]
     @answer_confidence = params[:answer_confidence].to_i
     @preview = params[:preview]
@@ -35,8 +33,7 @@ class PracticeWidgetsController < ApplicationController
   end
   
   def answer_choices
-    @question = Question.from_param(params[:question_id])
-    raise SecurityTransgression unless present_user.can_read?(@question) && !@question.answer_choices.empty?
+    raise SecurityTransgression if @question.answer_choices.empty?
     @answer_text = params[:answer_text]
     @answer_confidence = params[:answer_confidence].to_i
     @answer_choice = params[:answer_choice].to_i
@@ -53,6 +50,25 @@ class PracticeWidgetsController < ApplicationController
   end
   
   protected
+  
+  def get_question
+    @main_question = Question.from_param(params[:question_id])
+    raise SecurityTransgression unless present_user.can_read?(@main_question)
+    
+    if @main_question.is_multipart?
+      @part = params[:part].try(:to_i) || 1
+      parts = @main_question.child_question_parts
+      raise SecurityTransgression unless parts.length >= @part
+      if parts.length > @part
+        @next_question = @main_question
+        @next_part = @part + 1
+      end
+      @question = parts[@part-1].child_question
+      raise SecurityTransgression unless present_user.can_read?(@question)
+    else
+      @question = @main_question
+    end
+  end
   
   def include_mathjax
     @include_mathjax = true

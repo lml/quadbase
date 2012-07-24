@@ -1,19 +1,24 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<% # Clients of this partial must supply the following variable:
+<% # Clients of this partial must supply the following variables:
+   # main_question
    # question
    # answer_text
    # answer_confidence
-   # Additionally, they can override the following variable:
+   # Additionally, they can override the following variables:
    answer_choice ||= nil
+   part ||= nil
 %>
 
 <div id="answer_choices_div">
   <%= section "Answer Verification" do %>
     <% if answer_choice.nil? %>
       <p>Choose the multiple-choice answer below that corresponds to the answer you wrote above.</p>
-      <%= form_tag question_answer_choices_path(@question), :method => :get do %>
+      <%= form_tag question_answer_choices_path(main_question), :method => :get do %>
+        <% if main_question.is_multipart? %>
+          <%= hidden_field_tag :part, part %>
+        <% end %>
         <%= hidden_field_tag :answer_text, answer_text %>
         <%= hidden_field_tag :answer_confidence, answer_confidence %>
         
@@ -27,7 +32,7 @@
                    <p><%= choice_letter(ii) %>)</p>
                 </td>
                 <td class="question" width="90%">
-                   <%= answer_choice.content_html.html_safe %>
+                   <%= answer_choice.variated_content_html.html_safe %>
                 </td>
              </tr>
         <% end %>

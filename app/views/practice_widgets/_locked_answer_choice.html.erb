@@ -14,7 +14,7 @@
 <div class="answer_choice">
   <p>You chose answer <b>(<%= choice_letter(answer_choice) %>)</b></p>
   <div class="question" style="margin-left:30px">
-    <%= chosen_answer.content_html.html_safe %>
+    <%= chosen_answer.variated_content_html.html_safe %>
   </div>
 </div>
 
@@ -31,7 +31,7 @@
   <div class="answer_choice">
     <p>The correct answer is <b>(<%= choice_letter(correct_answer_choice) %>)</b></p>
     <div class="question" style="margin-left:30px">
-      <%= correct_answer.content_html.html_safe %>
+      <%= correct_answer.variated_content_html.html_safe %>
     </div>
   </div>
   

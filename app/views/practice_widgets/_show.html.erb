@@ -1,11 +1,13 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<% # Clients of this partial must supply the following variable:
+<% # Clients of this partial must supply the following variables:
+   # main_question
    # question
    # Additionally, they can override the following variables:
    answer_text ||= ''
    answer_confidence ||= (confidence_labels.size - 1)/2
+   part ||= nil
    preview ||= false
 %>
 
@@ -13,7 +15,7 @@
   <%= javascript_include_tag 'codecogs_editor.js' %>
 <% end %>
 
-<div id="quad-question">
+<div class="quad-question">
   <%= section "The Question" do %>
     <%= render :partial => 'questions/show', :locals => {:question => question,
                                                          :hide_answers => true} %>
@@ -30,7 +32,10 @@
                              :answer_confidence => answer_confidence} %>
     <% end %>
     <% if answer_text.blank? || preview %>
-      <%= form_tag question_answer_text_path(question), :method => :get do %>
+      <%= form_tag question_answer_text_path(main_question), :method => :get do %>
+        <% if main_question.is_multipart? %>
+          <%= hidden_field_tag :part, part %>
+        <% end %>
         <div class="field">
           Enter your free-form answer below.
           <%= text_area_tag :answer_text, answer_text, :rows => 5, :style => "width:100%", :id => 'answer_text' %>

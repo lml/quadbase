@@ -3,8 +3,10 @@
 
 <%= pageHeading("Question #{@question.to_param}")%>
 
-<%= render :partial => 'show', :locals => {:question => @question} %>
+<%= render :partial => 'show', :locals => {:main_question => @main_question,
+                                           :question => @question,
+                                           :part => @part} %>
 
 <div id="answer_choices_div"></div>
 
-<div id="solution_div"></div>
+<div id="solutions_and_navigation_div"></div>
