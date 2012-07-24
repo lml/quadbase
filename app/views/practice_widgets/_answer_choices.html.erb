@@ -8,6 +8,7 @@
    # answer_confidence
    # Additionally, they can override the following variables:
    answer_choice ||= nil
+   list ||= nil
    part ||= nil
 %>
 
@@ -16,7 +17,10 @@
     <% if answer_choice.nil? %>
       <p>Choose the multiple-choice answer below that corresponds to the answer you wrote above.</p>
       <%= form_tag question_answer_choices_path(main_question), :method => :get do %>
-        <% if main_question.is_multipart? %>
+        <% unless list.nil? %>
+          <%= hidden_field_tag :list_id, list.id %>
+        <% end %>
+        <% unless part.nil? %>
           <%= hidden_field_tag :part, part %>
         <% end %>
         <%= hidden_field_tag :answer_text, answer_text %>
@@ -40,7 +44,7 @@
         
         <center>
           <div class="actions">
-            <%= submit_tag :submit, 
+            <%= submit_tag "Submit", 
                     :confirm => "Are you sure you want to submit your answer?  If so " +
                                 "click OK, otherwise click cancel.\n\nAfter your " + 
                                 "answer is submitted it CANNOT BE CHANGED."%>

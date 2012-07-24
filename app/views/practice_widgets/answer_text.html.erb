@@ -8,6 +8,7 @@
                                            :question => @question,
                                            :answer_text => @answer_text,
                                            :answer_confidence => @answer_confidence,
+                                           :list => @list,
                                            :part => @part} %>
 
 <% if !@question.answer_choices.empty? %>
@@ -15,6 +16,7 @@
                                                        :question => @question,
                                                        :answer_text => @answer_text,
                                                        :answer_confidence => @answer_confidence,
+                                                       :list => @list,
                                                        :part => @part} %>
   
   <div id="solutions_and_navigation_div"></div>
@@ -22,7 +24,8 @@
   <div id="answer_choices_div"></div>
 
   <%= render :partial => 'solutions_and_navigation',
-             :locals => {:question => @question,
+             :locals => {:solutions => @solutions,
+                         :list => @list,
                          :next_question => @next_question,
                          :next_part => @next_part} %>
 <% end %>

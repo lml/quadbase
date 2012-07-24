@@ -104,6 +104,9 @@ Quadbase::Application.routes.draw do
         post 'search'
       end
     end
+    
+    get 'answer', :to => "practice_widgets#show"
+    
     commentable
   end
   

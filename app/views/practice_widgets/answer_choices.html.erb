@@ -8,14 +8,17 @@
                                            :question => @question,
                                            :answer_text => @answer_text,
                                            :answer_confidence => @answer_confidence,
+                                           :list => @list,
                                            :part => @part} %>
 
 <%= render :partial => 'answer_choices', :locals => {:main_question => @main_question,
                                                      :question => @question,
                                                      :answer_choice => @answer_choice,
+                                                     :list => @list,
                                                      :part => @part} %>
 
 <%= render :partial => 'solutions_and_navigation',
-           :locals => {:question => @question,
+           :locals => {:solutions => @solutions,
+                       :list => @list,
                        :next_question => @next_question,
                        :next_part => @next_part} %>

@@ -2,21 +2,54 @@
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
 <% # Clients of this partial must supply the following variables:
-   # question
-   # next_question
-   # Additionally, they can override the following variable:
+   # solutions
+   # Additionally, they can override the following variables:
+   list ||= nil
+   next_question ||= nil
    next_part ||= nil
 %>
 
 <div id="solutions_div">
-  <% unless question.solutions.empty? %>
+  <% unless solutions.empty? %>
     <%= section "Solutions" do %>
       <ol>
-        <% question.solutions.each_with_index do |solution| %>
+        <% solutions.each_with_index do |solution| %>
           <li> 
-            <%= simple_format solution.explanation %>
-            <%= '<p>(not visible)</p>'.html_safe unless solution.is_visible %>
-            <%= link_to "Show Details", solution %>
+           <div class="solution_div">
+            <div style="width: 250px; float:right; padding: 8px;">
+               <span  style="height:auto; float:left; padding-right:10px">
+                 <%= gravatar_image solution.creator, {:size => 35} %>
+               </span>
+               <span class="comment_creator" >
+                   <%= full_name(solution.creator) %>
+                 <br/>
+                 <span class="comment_timestamp"><%= modified_string(solution) %></span>
+               </span>
+             </div>
+             
+             <% if !solution.explanation.blank? %>
+               <div class="solutionPartHeading" style="margin-top:0px">High-Level Explanation</div>
+               <div id="solution_explanation_<%= solution.id.to_s %>" style="margin-left:20px">
+                 <%= simple_format solution.explanation %>
+               </div>
+             <% end %>
+             
+             <% if !solution.content_html.blank? %>   
+               <div class="solutionPartHeading" style="<%= solution.explanation.blank? ? 'margin-top:0px' : '' %>">Detailed Solution</div>
+               <div id="solution_content_<%= solution.id.to_s %>" style="margin-left:20px">
+                 <%= solution.content_html.html_safe %>
+               </div>
+             <% end %>
+             
+             <% if !solution.attachable_assets.blank? %>
+               <div>
+                 <%= render :partial => "shared/attachable_assets",
+                            :locals => {:attachable => solution,
+                                        :show_images => true} %>
+               </div>
+             <% end %>
+             <br/>
+           </div>
           </li>
         <% end %>
       </ol>
@@ -24,8 +57,10 @@
   <% end %>
 </div>
 
+<br/>
+
 <div id="navigation_div">
-  <% if next_question %>
-    <%= link_to 'Next Question', question_answer_path(next_question, :part => next_part) %>
+  <% unless next_question.nil? %>
+    <%= link_to 'Next Question', question_answer_path(next_question, :list_id => list.try(:id), :part => next_part) %>
   <% end %>
 </div>
