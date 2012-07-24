@@ -52,14 +52,15 @@
 var len = false;
 var letter = false;
 var number = false;
+var confirm = false;
 
-$.fn.check_password = function(){
-  if ($('#agreement_checkbox').is(':checked') & (len == true)& (letter == true) & (number == true)){
+jQuery.fn.check_password = function(){
+  if ($('#agreement_checkbox').is(':checked') &(len == true)& (letter == true) & (number == true)){
     $('#register_submit').removeAttr('disabled');
     $('#register_submit').removeClass('ui-state-disabled');
         
   }
-  // else if ($(len == false) | (letter == false) | (number == false)){
+   else if ($(len == false) | (letter == false) | (number == false)){
      $('#register_submit').attr('disabled', 'disabled');
      $('#register_submit').addClass('ui-state-disabled');
    }
@@ -69,7 +70,7 @@ $.fn.check_password = function(){
   }
 }
 
-$('#agreement_checkbox').click(function() {
+$('#agreement_checkbox').click(function(){
   $(this).check_password();
 });
 
@@ -105,6 +106,7 @@ $('input[type=password]').keyup(function(){
           $('#number').removeClass('valid').addClass('invalid');
           number = false;
       }
+      
 
       
 }).focus(function(){
