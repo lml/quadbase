@@ -16,7 +16,7 @@
   <%= section "Answer Verification" do %>
     <% if answer_choice.nil? %>
       <p>Choose the multiple-choice answer below that corresponds to the answer you wrote above.</p>
-      <%= form_tag question_answer_choices_path(main_question), :method => :get do %>
+      <%= form_tag question_answer_choices_path(main_question), :method => :get, :autocomplete => "off" do %>
         <% unless list.nil? %>
           <%= hidden_field_tag :list_id, list.id %>
         <% end %>
@@ -26,28 +26,32 @@
         <%= hidden_field_tag :answer_text, answer_text %>
         <%= hidden_field_tag :answer_confidence, answer_confidence %>
         
-        <table width="100%">
+        <ol type='none'>
         <% question.answer_choices.each_with_index do |answer_choice, ii| %>
-             <tr>
-                <td class="question" width="5%">
-                  <%= radio_button_tag :answer_choice, ii %>
-                </td>
-                <td class="question" width="5%">
-                   <p><%= choice_letter(ii) %>)</p>
-                </td>
-                <td class="question" width="90%">
-                   <%= answer_choice.variated_content_html.html_safe %>
-                </td>
-             </tr>
+           <div class="quad-answer_choice">
+             <%= radio_button_tag :answer_choice, ii %>
+             <%= label_tag "answer_choice_#{ii}", "<span class='quad-counter'>#{choice_letter(ii)})</span><li>#{answer_choice.variated_content_html}</li>".html_safe %>
+           </div>
+           <br clear="all"/>
+           <br clear="all"/>
         <% end %>
-        </table>
+        </ol>
         
         <center>
           <div class="actions">
-            <%= submit_tag "Submit", 
-                    :confirm => "Are you sure you want to submit your answer?  If so " +
-                                "click OK, otherwise click cancel.\n\nAfter your " + 
-                                "answer is submitted it CANNOT BE CHANGED."%>
+            <%= submit_tag "Submit",
+                  :id => "submit_button",
+                  :confirm => "Are you sure you want to submit your answer?  If so " +
+                              "click OK, otherwise click cancel.\n\nAfter your " + 
+                              "answer is submitted it CANNOT BE CHANGED."%>
+            <script type="text/javascript">
+              $('#submit_button').attr('disabled', 'disabled');
+              $('input[type="radio"]').on('click', function() {
+                $('#submit_button').removeAttr('disabled');
+                $('#submit_button').removeClass('ui-button-disabled');
+                $('#submit_button').removeClass('ui-state-disabled');
+              });
+            </script>
           </div>
         </center>
       <% end %>

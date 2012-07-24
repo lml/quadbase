@@ -74,9 +74,11 @@
         <br/>
         <center>
           <div class="actions">
-            <%= submit_tag "Submit", :confirm => "Are you sure you want to submit your answer?  If so " +
-                                                 "click OK, otherwise click cancel.\n\nAfter your " + 
-                                                 "answer is submitted, it CANNOT BE CHANGED."%>
+            <%= submit_tag "Submit",
+                  :id => "submit_button",
+                  :confirm => "Are you sure you want to submit your answer?  If so " +
+                              "click OK, otherwise click cancel.\n\nAfter your " + 
+                              "answer is submitted, it CANNOT BE CHANGED."%>
           </div>
         </center>
       <% end %>
