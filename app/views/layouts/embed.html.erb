@@ -1,0 +1,156 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <% if !@page_title_override.nil? %>
+    <title><%= @page_title_override %></title>
+  <% else %>
+    <title><%= @page_title + ' - ' if !@page_title.nil? %>Quadbase</title>  
+  <% end %>
+  
+  <meta name="Description" content="A bank of community-written homework and test questions where authors get credit and access is completely free.">
+  
+  <link rel="icon" href="/favicon.ico" type="image/ico" />
+  <link rel="shortcut icon" href="/favicon.ico" type="image/ico" />
+  
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+
+  <% if Rails.env.development? %>
+    <%= javascript_include_tag "jquery-ui-timepicker-addon" %>
+  <% end %>
+ 
+  <% if content_for?(:stylesheets) %>
+  <style type="text/css"><%= yield :stylesheets %></style>
+  <% end %>
+  
+  <% if @include_mathjax %>  
+     <script type="text/x-mathjax-config">
+       MathJax.Hub.Config({
+         tex2jax: {
+           inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+           processEscapes: true
+         }
+       });
+     </script>
+     
+     <% if WebsiteConfiguration.get_value('use_mathjax_cdn') %>
+       <% mj_url_base = request.ssl? ? 
+                        "https://d3eoax9i5htok0.cloudfront.net" : 
+                        "http://cdn.mathjax.org" %>
+       <script type="text/javascript"
+         src="<%= mj_url_base %>/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+       </script>
+     <% else %>
+       <%= javascript_include_tag 'MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML' %>
+     <% end %>
+  <% end %>
+
+  <% if @include_autocomplete %>
+    <%= javascript_include_tag "autocomplete-rails" %>
+  <% end %>
+
+  <% if @include_jcarousellite %>
+    <%= javascript_include_tag 'jcarousellite_1.0.1' %>
+  <% end %>
+
+  <% if @include_easing %>
+    <%= javascript_include_tag 'jquery.easing.1.1.1' %>
+  <% end %>
+  
+  <% if @include_codemirror %>
+    <%= javascript_include_tag 'codemirror' %>
+    <%= stylesheet_link_tag 'codemirror' %>
+  <% end %>
+  
+  <% if @include_uploadify %>
+    <%= javascript_include_tag 'uploadify' %>
+    <%= stylesheet_link_tag 'uploadify' %>
+  <% end %>
+  
+  <% if @include_markitup %>
+    <%= javascript_include_tag "markitup" %>
+    <%= stylesheet_link_tag "markitup" %>
+  <% end %>
+  
+  <% if content_for?(:javascript_includes) %>
+    <%= yield :javascript_includes %>
+  <% end %>
+  
+  <%= csrf_meta_tag %>
+</head>
+<body>
+   
+   <% if Rails.env.development? %>
+   <div id="dev_toolbox" style="position:absolute; top:0; left:0">
+     <%= link_to "Dev Toolbox", dev_toolbox_path, :remote => true %>
+     <div id="dev_toolbox_dialog" style="display:none" title="Dev Toolbox"></div>
+     <% content_for :javascript do %>
+       <%= javascript_tag do %>
+         $("#dev_toolbox_dialog").dialog({ 
+             autoOpen: false, 
+             modal: true, 
+             height:500, 
+             width:700
+         });
+       <% end %>
+     <% end %>
+
+   </div>
+   <% end %>
+   
+   
+   <div id="container">
+      
+      <div id="header">
+
+        <a href="/" class="<%= @home_page ? 'banner1' : 'logo' %>"></a>
+       
+      </div>
+
+      <div id="attention">
+        <%= render 'shared/attention' %>
+      </div>
+   
+      <div id="main">
+         <%#= button_to 'BETA!', 
+                       beta_path, 
+                       :id => "beta_button", 
+                       :class => 'rightRoundedCorners20', 
+                       :method => :get %>
+         
+         <%= yield %>
+      </div>
+   
+   </div>
+
+   <% if @include_help_dialog %>
+     <div id="help_dialog" style="display:none" title="Quadbase Help"></div>
+   <% end %>
+   
+   <%= yield :javascript %>	
+</body>
+<script type="text/javascript">
+  $('input:submit').button().css('font-size','12px');
+  $('a.submitButton').button().css('font-size','12px');
+</script>
+
+<% if Rails.env.production? %>
+<script type="text/javascript">
+ 
+   var _gaq = _gaq || [];
+   _gaq.push(['_setAccount', 'UA-23761609-3']);
+   _gaq.push(['_trackPageview']);
+ 
+   (function() {
+     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+   })();
+ 
+</script>
+<% end %>
+
+</html>

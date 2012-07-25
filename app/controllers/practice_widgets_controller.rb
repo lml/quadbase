@@ -4,10 +4,12 @@
 class PracticeWidgetsController < ApplicationController
 
   skip_before_filter :authenticate_user!
+  before_filter :embed
   before_filter :get_list_and_question
   before_filter :include_mathjax
 
-  def show 
+  def show
+    render :layout => @layout
   end
 
   def answer_text
@@ -17,12 +19,12 @@ class PracticeWidgetsController < ApplicationController
    
     respond_to do |format|
       if @preview
-        format.html { render 'preview_answer' }
-        format.js { render 'preview_answer' }
+        format.html { render 'preview_answer', :layout => @layout }
+        format.js { render 'preview_answer', :layout => @layout }
       else
         setup_solutions_and_nav if @question.answer_choices.empty?
-        format.html
-        format.js
+        format.html { render :layout => @layout }
+        format.js { render :layout => @layout }
       end
     end
   end
@@ -35,12 +37,16 @@ class PracticeWidgetsController < ApplicationController
     
     respond_to do |format|
       setup_solutions_and_nav
-      format.html
-      format.js
+      format.html { render :layout => @layout }
+      format.js { render :layout => @layout }
     end
   end
   
   protected
+  
+  def embed
+    @layout = params[:embed] ? 'embed' : nil
+  end
   
   def get_list_and_question
     unless params[:list_id].nil? && params[:project_id].nil?
@@ -69,6 +75,10 @@ class PracticeWidgetsController < ApplicationController
     @errors = @question.errors
   end
   
+  def include_mathjax
+    @include_mathjax = true
+  end
+  
   def setup_solutions_and_nav
     @solutions = @question.solutions.visible_for(present_user)
     if @main_question.is_multipart? && @main_question.child_question_parts.length > @part
@@ -77,10 +87,6 @@ class PracticeWidgetsController < ApplicationController
     elsif !@list.nil?
       @next_question = @list.questions.reject{|q| q == @main_question}.sample
     end
-  end
-  
-  def include_mathjax
-    @include_mathjax = true
   end
 
 end
