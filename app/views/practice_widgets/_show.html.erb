@@ -64,7 +64,7 @@
                 <td width="16.67%">
                   <center>
                     <%= radio_button_tag :answer_confidence, ii, ii == answer_confidence %></br/>
-                    <%= cl.gsub("_", "<br/>").html_safe %>
+                    <%= label_tag "answer_confidence_#{ii}", cl.gsub("_", "<br/>").html_safe %>
                   </center>
                 </td>        
               <% end %>        

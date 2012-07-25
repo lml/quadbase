@@ -16,19 +16,13 @@ class PracticeWidgetsController < ApplicationController
     @preview = params[:preview]
    
     respond_to do |format|
-      if @answer_text.blank?
-        @errors.add(:base, 'Please type your answer in the box below.')
-        format.html { render :action => :show }
-        format.js { render 'shared/display_flash' }
+      if @preview
+        format.html { render 'preview_answer' }
+        format.js { render 'preview_answer' }
       else
-        if @preview
-          format.html { render 'preview_answer' }
-          format.js { render 'preview_answer' }
-        else
-          setup_solutions_and_nav if @question.answer_choices.empty?
-          format.html
-          format.js
-        end
+        setup_solutions_and_nav if @question.answer_choices.empty?
+        format.html
+        format.js
       end
     end
   end
@@ -40,16 +34,9 @@ class PracticeWidgetsController < ApplicationController
     @answer_choice = params[:answer_choice].try(:to_i)
     
     respond_to do |format|
-    pp @answer_choice
-      if @answer_choice.blank?
-        @errors.add(:base, 'Please select one of the choices below.')
-        format.html { render :action => :answer_text }
-        format.js { render 'shared/display_flash' }
-      else
-        setup_solutions_and_nav
-        format.html
-        format.js
-      end
+      setup_solutions_and_nav
+      format.html
+      format.js
     end
   end
   
