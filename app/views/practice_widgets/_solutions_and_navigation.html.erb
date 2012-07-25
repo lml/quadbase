@@ -21,7 +21,7 @@
                  <%= gravatar_image solution.creator, {:size => 35} %>
                </span>
                <span class="comment_creator" >
-                   <%= full_name(solution.creator) %>
+                   <%= full_name_link(solution.creator) %>
                  <br/>
                  <span class="comment_timestamp"><%= modified_string(solution) %></span>
                </span>

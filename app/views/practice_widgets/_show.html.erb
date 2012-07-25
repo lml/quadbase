@@ -25,15 +25,15 @@
 
 <br/>
 
-<div id="answer_text_div">
-  <%= section "Free-form Answer" do %>
+<%= section "Free-form Answer" do %>
+  <div id="answer_text_div">
     <% if !answer_text.blank? %>
       <%= render :partial => 'locked_answer_text',
                  :locals => {:answer_text => answer_text,
                              :answer_confidence => answer_confidence} %>
     <% end %>
     <% if answer_text.blank? || preview %>
-      <%= form_tag question_answer_text_path(main_question), :method => :get do %>
+      <%= form_tag question_answer_text_path(main_question), :remote => true, :method => :get do %>
         <% unless list.nil? %>
           <%= hidden_field_tag :list_id, list.id %>
         <% end %>
@@ -83,8 +83,8 @@
         </center>
       <% end %>
     <% end %>
-  <% end %>
-</div>
+  </div>
+<% end %>
 
 <div id="preview_answer_div"></div>
 
@@ -93,8 +93,8 @@
     $("#preview_answer_div").dialog({ 
         autoOpen: false, 
         modal: true, 
-        height:250, 
-        width:300,
+        height:500, 
+        width:500,
         title: "Preview Answer"
     });
   <% end %>

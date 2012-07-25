@@ -21,7 +21,7 @@ Licensed under <%= question.license_id.nil? ? "[unspecified]" : link_to(question
 <% if question.is_derivation? %>
   <% source_question = question.source_question %>
   <% source_collaborators = source_question.question_collaborators %>
-  <br/>Derived from <%= question_id_link(source_question) %> by 
+  <br/>Derived from <%= hide_answers ? question_id_text(question) : question_id_link(source_question) %> by 
   <%= collaborator_names(source_collaborators.select{|c| c.is_author}) %>.
 <% end %>
 <% if question.is_published? && !hide_answers %>

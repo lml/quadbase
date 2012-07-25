@@ -11,21 +11,25 @@
                                            :list => @list,
                                            :part => @part} %>
 
-<% if !@question.answer_choices.empty? %>
-  <%= render :partial => 'answer_choices', :locals => {:main_question => @main_question,
-                                                       :question => @question,
-                                                       :answer_text => @answer_text,
-                                                       :answer_confidence => @answer_confidence,
-                                                       :list => @list,
-                                                       :part => @part} %>
+<% if @solutions.nil? %>
+  <div id="answer_choices_div">
+    <%= render :partial => 'answer_choices', :locals => {:main_question => @main_question,
+                                                         :question => @question,
+                                                         :answer_text => @answer_text,
+                                                         :answer_confidence => @answer_confidence,
+                                                         :list => @list,
+                                                         :part => @part} %>
+  </div>
   
   <div id="solutions_and_navigation_div"></div>
 <% else %>
   <div id="answer_choices_div"></div>
 
-  <%= render :partial => 'solutions_and_navigation',
-             :locals => {:solutions => @solutions,
-                         :list => @list,
-                         :next_question => @next_question,
-                         :next_part => @next_part} %>
+  <div id="solutions_and_navigation_div">
+    <%= render :partial => 'solutions_and_navigation',
+               :locals => {:solutions => @solutions,
+                           :list => @list,
+                           :next_question => @next_question,
+                           :next_part => @next_part} %>
+  </div>
 <% end %>

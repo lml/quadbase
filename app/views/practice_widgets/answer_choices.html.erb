@@ -11,14 +11,18 @@
                                            :list => @list,
                                            :part => @part} %>
 
-<%= render :partial => 'answer_choices', :locals => {:main_question => @main_question,
-                                                     :question => @question,
-                                                     :answer_choice => @answer_choice,
-                                                     :list => @list,
-                                                     :part => @part} %>
+<div id="answer_choices_div">
+  <%= render :partial => 'answer_choices', :locals => {:main_question => @main_question,
+                                                       :question => @question,
+                                                       :answer_choice => @answer_choice,
+                                                       :list => @list,
+                                                       :part => @part} %>
+</div>
 
-<%= render :partial => 'solutions_and_navigation',
-           :locals => {:solutions => @solutions,
-                       :list => @list,
-                       :next_question => @next_question,
-                       :next_part => @next_part} %>
+<div id="solutions_and_navigation_div">
+  <%= render :partial => 'solutions_and_navigation',
+             :locals => {:solutions => @solutions,
+                         :list => @list,
+                         :next_question => @next_question,
+                         :next_part => @next_part} %>
+</div>

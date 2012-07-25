@@ -12,52 +12,50 @@
    part ||= nil
 %>
 
-<div id="answer_choices_div">
-  <%= section "Answer Verification" do %>
-    <% if answer_choice.nil? %>
-      <p>Choose the multiple-choice answer below that corresponds to the answer you wrote above.</p>
-      <%= form_tag question_answer_choices_path(main_question), :method => :get, :autocomplete => "off" do %>
-        <% unless list.nil? %>
-          <%= hidden_field_tag :list_id, list.id %>
-        <% end %>
-        <% unless part.nil? %>
-          <%= hidden_field_tag :part, part %>
-        <% end %>
-        <%= hidden_field_tag :answer_text, answer_text %>
-        <%= hidden_field_tag :answer_confidence, answer_confidence %>
-        
-        <ol type='none'>
-        <% question.answer_choices.each_with_index do |answer_choice, ii| %>
-           <div class="quad-answer_choice">
-             <%= radio_button_tag :answer_choice, ii %>
-             <%= label_tag "answer_choice_#{ii}", "<span class='quad-counter'>#{choice_letter(ii)})</span><li>#{answer_choice.variated_content_html}</li>".html_safe %>
-           </div>
-           <br clear="all"/>
-           <br clear="all"/>
-        <% end %>
-        </ol>
-        
-        <center>
-          <div class="actions">
-            <%= submit_tag "Submit",
-                  :id => "submit_button",
-                  :confirm => "Are you sure you want to submit your answer?  If so " +
-                              "click OK, otherwise click cancel.\n\nAfter your " + 
-                              "answer is submitted it CANNOT BE CHANGED."%>
-            <script type="text/javascript">
-              $('#submit_button').attr('disabled', 'disabled');
-              $('input[type="radio"]').on('click', function() {
-                $('#submit_button').removeAttr('disabled');
-                $('#submit_button').removeClass('ui-button-disabled');
-                $('#submit_button').removeClass('ui-state-disabled');
-              });
-            </script>
-          </div>
-        </center>
+<%= section "Answer Verification" do %>
+  <% if answer_choice.nil? %>
+    <p>Choose the multiple-choice answer below that corresponds to the answer you wrote above.</p>
+    <%= form_tag question_answer_choices_path(main_question), :remote => true, :method => :get, :autocomplete => "off" do %>
+      <% unless list.nil? %>
+        <%= hidden_field_tag :list_id, list.id %>
       <% end %>
-    <% else %>
-      <%= render :partial => 'locked_answer_choice', :locals => {:question => question,
-                                                                 :answer_choice => answer_choice} %>
+      <% unless part.nil? %>
+        <%= hidden_field_tag :part, part %>
+      <% end %>
+      <%= hidden_field_tag :answer_text, answer_text %>
+      <%= hidden_field_tag :answer_confidence, answer_confidence %>
+      
+      <ol type='none'>
+      <% question.answer_choices.each_with_index do |answer_choice, ii| %>
+         <div class="quad-answer_choice">
+           <%= radio_button_tag :answer_choice, ii %>
+           <%= label_tag "answer_choice_#{ii}", "<span class='quad-counter'>#{choice_letter(ii)})</span><li>#{answer_choice.variated_content_html}</li>".html_safe %>
+         </div>
+         <br clear="all"/>
+         <br clear="all"/>
+      <% end %>
+      </ol>
+      
+      <center>
+        <div class="actions">
+          <%= submit_tag "Submit",
+                :id => "submit_button",
+                :confirm => "Are you sure you want to submit your answer?  If so " +
+                            "click OK, otherwise click cancel.\n\nAfter your " + 
+                            "answer is submitted it CANNOT BE CHANGED."%>
+          <script type="text/javascript">
+            $('#submit_button').attr('disabled', 'disabled');
+            $('input[type="radio"]').on('click', function() {
+              $('#submit_button').removeAttr('disabled');
+              $('#submit_button').removeClass('ui-button-disabled');
+              $('#submit_button').removeClass('ui-state-disabled');
+            });
+          </script>
+        </div>
+      </center>
     <% end %>
+  <% else %>
+    <%= render :partial => 'locked_answer_choice', :locals => {:question => question,
+                                                               :answer_choice => answer_choice} %>
   <% end %>
-</div>
+<% end %>
