@@ -45,7 +45,7 @@ class PracticeWidgetsController < ApplicationController
   protected
   
   def embed
-    @layout = params[:embed] ? 'embed' : nil
+    @layout = params[:embed] ? 'embed' : 'application'
   end
   
   def get_list_and_question
