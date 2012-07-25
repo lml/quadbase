@@ -18,7 +18,7 @@
   <p><b>Email</b><br/>
   <%= f.email_field :email %></p>
   <p><b>Password</b><br/>
-  <%= f.password_field :password %></p>
+  <%= f.password_field :password, :id => 'pswd' %></p>
       <div id="pswd_info" >
       <h4>Password must meet the following requirements:</h4>
       <u1>
@@ -28,7 +28,7 @@
        </u1>
   </div>
   <p><b>Password Confirmation</b><br/>
-  <%= f.password_field :password_confirmation %></p>
+  <%= f.password_field :password_confirmation, :id => 'confirm' %></p>
 
   <% if @enable_recaptcha %>
   <p><%= recaptcha_tags :ssl => true %></p>
@@ -55,7 +55,11 @@ var number = false;
 var confirm = false;
 
 jQuery.fn.check_password = function(){
-  if ($('#agreement_checkbox').is(':checked') &(len == true)& (letter == true) & (number == true)){
+  if($('#confirm').val().length == 0){
+    $('#register_submit').attr('disabled', 'disabled');
+    $('#register_submit').addClass('ui-state-disabled');    
+  }
+  else if ($('#agreement_checkbox').is(':checked') &(len == true)& (letter == true) & (number == true)){
     $('#register_submit').removeAttr('disabled');
     $('#register_submit').removeClass('ui-state-disabled');
         
@@ -70,20 +74,10 @@ jQuery.fn.check_password = function(){
   }
 }
 
-$('#agreement_checkbox').click(function(){
-  $(this).check_password();
-});
-
-$('input[type=password]').keyup(function(){
-  $(this).check_password();
-});
-
-$('input[type=password]').keyup(function(){
-      //set password variable
-      var pswd = $(this).val();
-
+jQuery.fn.validate_password = function(){
+        var password = $(this).val();
       //validate the length
-      if (pswd.length < 8) {
+      if (password.length < 8) {
           $('#length').removeClass('valid').addClass('invalid');
           len = false;
       } else {
@@ -91,7 +85,7 @@ $('input[type=password]').keyup(function(){
           len = true;
        }
       //validate letter
-      if (pswd.match(/[A-z]/)){
+      if (password.match(/[A-z]/)){
           $('#letter').removeClass('invalid').addClass('valid');
           letter = true;
       } else {
@@ -99,21 +93,37 @@ $('input[type=password]').keyup(function(){
           letter = false;
       }
       //validate number
-      if (pswd.match(/\d/)){
+      if (password.match(/\d/)){
           $('#number').removeClass('invalid').addClass('valid');
           number = true;
       } else {
           $('#number').removeClass('valid').addClass('invalid');
           number = false;
-      }
-      
+      }    
+}
 
-      
+$('#agreement_checkbox').click(function(){
+  $(this).check_password();
+});
+
+$('#pswd').keyup(function(){
+    $(this).validate_password();
+  $(this).check_password();
 }).focus(function(){
     $('#pswd_info').show();
 }).blur(function(){
     $('#pswd_info').hide();
 });
+$('#confirm').keyup(function(){
+  $(this).validate_password();
+  $(this).check_password();
+}).focus(function(){
+    $('#pswd_info').show();
+}).blur(function(){
+    $('#pswd_info').hide();
+});
+ 
+
 <% end %>
 <% end %>
 
