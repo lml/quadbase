@@ -141,7 +141,7 @@ module ApplicationHelper
     when 'Solution'
       comment_thread.commentable.creator.full_name + "'s solution to question " + \
       question_id_text(comment_thread.commentable.question)
-    when 'Project'
+    when 'List'
       comment_thread.commentable.name
     when 'Message'
       "message: " + comment_thread.commentable.subject

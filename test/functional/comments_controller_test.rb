@@ -9,7 +9,7 @@ class CommentsControllerTest < ActionController::TestCase
     @comment = FactoryGirl.create(:comment)
     @question = @comment.comment_thread.commentable
     @user = @comment.creator
-    FactoryGirl.create(:project_question, :question => @question, :project => Project.default_for_user!(@user))
+    FactoryGirl.create(:list_question, :question => @question, :list => List.default_for_user!(@user))
     @published_question = make_simple_question(:method => :create, :published => true)
     @published_comment = FactoryGirl.create(:comment,
                                         :comment_thread => @published_question.comment_thread)

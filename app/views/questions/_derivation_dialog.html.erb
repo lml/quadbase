@@ -3,7 +3,7 @@
 
 <% # Clients of this partial must supply the following variables:
    # question
-   # projects
+   # lists
 %>
 
 <%= form_tag question_new_derivation_path(question), :method => :put, :remote => true do %>
@@ -15,10 +15,10 @@
   <br/><br/>
   <%= label_tag "In:" %>
   <table>
-  <% projects.each do |w| %>
+  <% lists.each do |w| %>
     <tr>
       <td>
-        <%= submit_tag w.name, :name => "project[" + w.id.to_s + "]",
+        <%= submit_tag w.name, :name => "list[" + w.id.to_s + "]",
                                :class => "#{submit_classes}",
                                :style => "width: 100%; text-align: left;" %>
       </td>

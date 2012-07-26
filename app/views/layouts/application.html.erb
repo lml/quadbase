@@ -134,8 +134,8 @@
                	</li>
                	
                	<% if user_signed_in? %>
-               	<li <%= "class=selected" if is_tab_selected?(:projects) %>>
-               	   <%= link_to "Projects", projects_path %>
+               	<li <%= "class=selected" if is_tab_selected?(:lists) %>>
+               	   <%= link_to "Lists", lists_path %>
                	</li>
                	<li <%= "class=selected" if is_tab_selected?(:inbox) %>>
                    <%= render 'shared/inbox_tab' %>

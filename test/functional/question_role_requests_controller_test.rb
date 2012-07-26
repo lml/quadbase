@@ -8,11 +8,11 @@ class QuestionRoleRequestsControllerTest < ActionController::TestCase
     @member = FactoryGirl.create(:user)
     @collaborator = FactoryGirl.create(:user)
     @collaborator_member = FactoryGirl.create(:user)
-    wq = FactoryGirl.create(:project_question,
-                        :project => Project.default_for_user!(@member))
-    w = wq.project
+    wq = FactoryGirl.create(:list_question,
+                        :list => List.default_for_user!(@member))
+    w = wq.list
     @question = wq.question
-    FactoryGirl.create(:project_member, :project => w, :user => @collaborator_member)
+    FactoryGirl.create(:list_member, :list => w, :user => @collaborator_member)
     qc = FactoryGirl.create(:question_collaborator,
                          :user => @collaborator,
                          :question => @question)

@@ -3,6 +3,6 @@
 
 $("#derive_dialog").html("<%= escape_javascript(
   render :partial => "derivation_dialog", :locals => {:question => @question,
-                                                      :projects => @projects}) %>");
+                                                      :lists => @lists}) %>");
 
 $("#derive_dialog").dialog('open');

@@ -3,7 +3,7 @@
 
 <%=pageHeading("Roles and Role Requests")%>
 <div class="sectionHeading" id="roles"> Roles</div>
-<p>There are several roles that must be assigned to each question before a question can be published: author, copyright, project manager, and project member.The rights that come associated with each role are listed in the table below</p>
+<p>There are several roles that must be assigned to each question before a question can be published: author, copyright, list manager, and list member.The rights that come associated with each role are listed in the table below</p>
 <center>
 	<%=image_tag("roles_table.png", {:border => 0})%>
 </center>
@@ -13,20 +13,20 @@
 <div class= "sectionNoHeading" id= "copyright_holder"><b>Copyright Holder</b></div>
 <p> A copyright holder holds the copyrights on the question. The copyright holder may or may not be the same account as the author. Like the author, the copyright holder holds and can utilize all possible rights on a question.</p>
 <div class= "sectionNoHeading" id= "proxy"><b>Deputy</b></div>
-<p> A deputy is a role that can be assigned any time and can be permanently set by an account. A deputy is given "on behalf of rights" by the assigning account, meaning that the user inherits all of the rights of the account that gave him or her the role, and preforms actions on behalf of the assigning account, as if that account were making changes and not the project manager.</p>
-<p> When attributions for changes that the deputy made are necessary, those attributions would go to the account that gave the proxy his or her role. This implies that the role of proxy cannot be passed on. For example, if account1 holds authoring and copyrights and he assigns account2 the role of proxy, and then account2 assigned account3 the role of project manager, account3 would not have "on behalf rights" for account1, just for account2.</p>
-<div class="sectionNoHeading" id="workspace_member"><b>Project Member</b></div>
-<p>A project member is someone who contributes to a question, but does not have any roles on that question, so receives no attribution of any kind for any contribution the project member makes. The project member can however derive a copy of the question he or she is contributing to, and thereby become the author and copyright holder of said question and assuming all rights on that question</p>
+<p> A deputy is a role that can be assigned any time and can be permanently set by an account. A deputy is given "on behalf of rights" by the assigning account, meaning that the user inherits all of the rights of the account that gave him or her the role, and preforms actions on behalf of the assigning account, as if that account were making changes and not the list manager.</p>
+<p> When attributions for changes that the deputy made are necessary, those attributions would go to the account that gave the proxy his or her role. This implies that the role of proxy cannot be passed on. For example, if account1 holds authoring and copyrights and he assigns account2 the role of proxy, and then account2 assigned account3 the role of list manager, account3 would not have "on behalf rights" for account1, just for account2.</p>
+<div class="sectionNoHeading" id="workspace_member"><b>List Member</b></div>
+<p>A list member is someone who contributes to a question, but does not have any roles on that question, so receives no attribution of any kind for any contribution the list member makes. The list member can however derive a copy of the question he or she is contributing to, and thereby become the author and copyright holder of said question and assuming all rights on that question</p>
 <div class ="sectionHeading" id="role requests">Role Requests</div>
-<p>Once your question is published, you can find that question in your default project. The question can be moved from this project to any project of your choosing.</p>
+<p>Once your question is published, you can find that question in your default list. The question can be moved from this list to any list of your choosing.</p>
 <center>
 	<%=image_tag("workspace_selection.png", {:border => 1})%>
 </center>
-<p> You can add members to this project by clicking the add members button toward the bottom of the page, from here you can search for the members that you want to add to your project</p>
+<p> You can add members to this list by clicking the add members button toward the bottom of the page, from here you can search for the members that you want to add to your list</p>
 <center>
 	<%=image_tag("add_a_member.png", {:border => 1})%>
 </center>
-<p>Once you have added someone to your project, that user will assume the role of project member for any question that is added to the project. To manage the roles on any question in a project, click on the question whose roles you want to manage, and click on the edit roles link on the left side of the screen</p>
+<p>Once you have added someone to your list, that user will assume the role of list member for any question that is added to the list. To manage the roles on any question in a list, click on the question whose roles you want to manage, and click on the edit roles link on the left side of the screen</p>
 <center>
 	<%=image_tag("edit_roles_link.png",{:border => 1})%>
 </center>

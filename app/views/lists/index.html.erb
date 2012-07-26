@@ -1,0 +1,48 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% @links = [ link_to('New List', new_list_path) ] %>
+
+<%= pageHeading("My Lists") %>
+
+<table class="list" width="100%">
+   <tr>
+      <th width="50%">Name</th>
+      <th width="20%"></th>
+      <th width="15%" style="text-align:center"># Questions</th>
+      <th width="15%" style="text-align:center"># Members</th>
+      <th></th>
+      <th></th>
+      <th></th>
+   </tr>
+
+   <% @list_members.each do |member| %>
+      <% list = member.list %>
+     <tr>
+       <td><%= link_to list.name, list_path(list) %></td>
+       <td>
+         <% if member.is_default %>  
+            (DEFAULT)
+         <% else %>
+            <%= link_to "Set as default", 
+                        list_member_make_default_path(member),
+                        :method => :put %>
+         <% end %>
+       </td>
+       <td style="text-align:center"><%= list.list_questions.size %></td>
+       <td style="text-align:center"><%= list.list_members.size %></td>       
+       <td><%= link_to show_icon, list %></td>
+       <td><%= link_to edit_icon, edit_list_path(list) %></td>
+       <td><%= link_to x_icon, list, 
+                       :confirm => "Are you sure you want to leave #{list.name}?", 
+                       :method => :delete %></td>
+     </tr>
+   <% end %>
+   
+   <%# TODO give people a link to leave a list, differentiate clearly from deleting the list %>
+   
+</table>
+
+<br />
+
+

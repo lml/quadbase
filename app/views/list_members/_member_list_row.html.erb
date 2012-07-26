@@ -1,0 +1,17 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<tr id="list_member_<%= list_member.id.to_s %>">
+  <td><%= full_name_link(list_member.user) %></td>
+  <td><%= form_tag(list_member_path(list_member), 
+             :method => "delete",
+             :id => 'delete_member_form',
+             :remote => true) do %>
+<%= image_submit_tag 'black_x_v1.png',
+                     :id => "delete_member_#{list_member.id.to_s}",
+                     :onclick => 'return confirm("Are you sure you want to remove ' +
+                     escape_javascript(list_member.user.full_name) +
+                     ' from this list?")' %>
+      <% end %>
+  </td>
+</tr>

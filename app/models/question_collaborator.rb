@@ -86,22 +86,22 @@ class QuestionCollaborator < ActiveRecord::Base
 
   def can_be_read_by?(user)
     question.is_published? ||
-    (!user.is_anonymous? && question.is_project_member?(user))
+    (!user.is_anonymous? && question.is_list_member?(user))
   end
     
   def can_be_created_by?(user)
     !question.is_published? &&
-    (!user.is_anonymous? && question.is_project_member?(user))
+    (!user.is_anonymous? && question.is_list_member?(user))
   end
 
   def can_be_destroyed_by?(user)
     !question.is_published? &&
-    (!user.is_anonymous? && question.is_project_member?(user))
+    (!user.is_anonymous? && question.is_list_member?(user))
   end
   
   def can_be_sorted_by?(user)
     !question.is_published? &&
-    (!user.is_anonymous? && question.is_project_member?(user))
+    (!user.is_anonymous? && question.is_list_member?(user))
   end  
   
 protected

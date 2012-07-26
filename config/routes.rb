@@ -98,8 +98,8 @@ Quadbase::Application.routes.draw do
   get 'help/roles', :to => 'help#roles_help', :as => 'roles'
   get 'help/topic/:topic_name', :to => 'help#topic', :as => 'topic_help'
   
-  resources :projects do
-    resources :project_members, :only => [:create, :new] do
+  resources :lists do
+    resources :list_members, :only => [:create, :new] do
       collection do 
         post 'search'
       end
@@ -107,16 +107,16 @@ Quadbase::Application.routes.draw do
     commentable
   end
   
-  resources :project_members, :only => [:destroy] do
+  resources :list_members, :only => [:destroy] do
     put 'make_default'
   end
 
-  resources :project_questions, :only => [] do
+  resources :list_questions, :only => [] do
     collection do
       put 'update'
       put 'copy'
       put 'move'
-      put 'preview_publish', :to => 'project_questions#preview_publish'
+      put 'preview_publish', :to => 'list_questions#preview_publish'
       put 'attribution'
       delete 'destroy'
     end

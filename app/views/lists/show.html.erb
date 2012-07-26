@@ -1,0 +1,102 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% @links = [ link_to('Edit List', edit_list_path(@list)), 
+              link_to('My Lists', lists_path) ] %>
+
+<%= pageHeading("#{@list.name} Details") %>
+
+<span style="float:right">
+  <%= pluralize(@list.list_members.count, "Member")%> 
+  (<%= link_to "Change", edit_list_path(@list) %>)
+</span>
+
+<div class="sectionHeadingNoUnder">Questions</div>
+  <%= form_tag list_questions_path, :method => :put,
+      :id => "list_questions_form", :remote => true do %>
+    <%= hidden_field_tag 'list_id', @list.id %>
+    <%= render :partial => 'questions/list', 
+               :locals => {:entries => @list.list_questions,
+                           :method_for_question => "question",
+                           :checkbox_options => {:method_for_value => "id",
+                                                 :name_base => "list_question_ids"}
+                          } %>
+
+<%# Display the appropriate buttons for the listed questions and available lists %>
+
+<br/>
+  <% if !@list.list_questions.empty? %>
+    <table>
+      <tr>
+        <td>
+          <%= submit_tag "Publish...", :class => "ui-state-default ui-corner-all", :id => "publish_button", :name => "publish" %>
+        </td>
+    <% if !@target_lists.blank? %>
+        <td>
+          <%= render :partial => "lists_menu",
+                     :locals => {:lists => @target_lists,
+                                 :menu_action_name => "move",
+                                 :preposition => "to:",
+                                 :base_action_path => "/list_questions/"} %>
+        </td>
+        <td>
+          <%= render :partial => "lists_menu",
+                     :locals => {:lists => @target_lists,
+                                 :menu_action_name => "copy",
+                                 :preposition => "to:",
+                                 :base_action_path => "/list_questions/"} %>
+        </td>
+    <% end %>
+        <td>
+          <%= submit_tag "Show Attribution", :class => "ui-state-default ui-corner-all",
+                                        :id => "attribution_button", :name => "attribution" %>
+        </td>
+        <td>
+          <%= submit_tag "Remove", :class => "ui-state-default ui-corner-all",
+                                   :id => "remove_button", :name => "remove",
+                                   :onclick => "return confirm('Are you sure you want to remove" +
+                                               " the selected questions from this list?');" %>
+        </td>
+      </tr>
+    </table>
+    
+  <% end %>
+<% end %>
+
+<br/>
+
+
+<%= render :partial => "shared/comments",
+           :locals => {:commentable => @list} %>
+
+<div id="attribution_dialog" style="display:none" title="Attribution"></div>
+
+<% content_for :javascript do %>
+   <%= javascript_tag do %>
+      $("#publish_button").bind('click', function() {
+        $("#list_questions_form")
+        .attr("action", "<%= preview_publish_list_questions_path %>");
+        $("#list_questions_form").find("input[name=_method]").attr("value", "put");
+        return true;
+      });
+      $("#attribution_button").bind('click', function() {
+        $("#list_questions_form")
+        .attr("action", "<%= attribution_list_questions_path %>");
+        $("#list_questions_form").find("input[name=_method]").attr("value", "put");
+        return true;
+      });
+      $("#remove_button").bind('click', function() {
+        $("#list_questions_form")
+        .attr("action", "<%= list_questions_path %>");
+        $("#list_questions_form").find("input[name=_method]").attr("value", "delete");
+        return true;
+      });
+      $("#attribution_dialog").dialog({ 
+        autoOpen: false, 
+        modal: true, 
+        height:600, 
+        width:600, 
+        buttons: { "Close": function() { $(this).dialog("close"); }}
+      });
+   <% end %>
+<% end %>
