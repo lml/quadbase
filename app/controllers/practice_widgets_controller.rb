@@ -10,7 +10,8 @@ class PracticeWidgetsController < ApplicationController
   before_filter :include_mathjax
 
   def show
-    GoogleAnalyticsWrapper.new(cookies).event('Practice Widget', 'Answer (show)', @layout)
+    GoogleAnalyticsWrapper.new(cookies).event('Practice Widget', 'Answer Show Question', @question.to_param, @question.id)
+    GoogleAnalyticsWrapper.new(cookies).page_view("Practice Widget (#{@layout})", request.url)
     render :layout => @layout
   end
 
@@ -84,6 +85,7 @@ class PracticeWidgetsController < ApplicationController
     unless params[:list_id].nil? && params[:project_id].nil?
       @list = Project.find(params[:list_id] || params[:project_id])
       raise SecurityTransgression unless present_user.can_read?(@list)
+      GoogleAnalyticsWrapper.new(cookies).event('Practice Widget', 'Answer Show List', 'List', @list.id)
     end
     
     get_question
