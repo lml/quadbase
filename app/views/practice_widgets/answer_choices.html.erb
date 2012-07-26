@@ -7,16 +7,12 @@
 <%= render :partial => 'show', :locals => {:main_question => @main_question,
                                            :question => @question,
                                            :answer_text => @answer_text,
-                                           :answer_confidence => @answer_confidence,
-                                           :list => @list,
-                                           :part => @part} %>
+                                           :answer_confidence => @answer_confidence} %>
 
 <div id="answer_choices_div">
   <%= render :partial => 'answer_choices', :locals => {:main_question => @main_question,
                                                        :question => @question,
-                                                       :answer_choice => @answer_choice,
-                                                       :list => @list,
-                                                       :part => @part} %>
+                                                       :answer_choice => @answer_choice} %>
 </div>
 
 <div id="solutions_and_navigation_div">

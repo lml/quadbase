@@ -10,6 +10,7 @@
    answer_choice ||= nil
    list ||= nil
    part ||= nil
+   seed ||= nil
 %>
 
 <%= section "Answer Verification" do %>
@@ -21,6 +22,9 @@
       <% end %>
       <% unless part.nil? %>
         <%= hidden_field_tag :part, part %>
+      <% end %>
+      <% unless seed.nil? %>
+        <%= hidden_field_tag :seed, seed %>
       <% end %>
       <%= hidden_field_tag :answer_text, answer_text %>
       <%= hidden_field_tag :answer_confidence, answer_confidence %>

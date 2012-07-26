@@ -7,9 +7,7 @@
 <%= render :partial => 'show', :locals => {:main_question => @main_question,
                                            :question => @question,
                                            :answer_text => @answer_text,
-                                           :answer_confidence => @answer_confidence,
-                                           :list => @list,
-                                           :part => @part} %>
+                                           :answer_confidence => @answer_confidence} %>
 
 <% if @solutions.nil? %>
   <div id="answer_choices_div">
@@ -18,7 +16,8 @@
                                                          :answer_text => @answer_text,
                                                          :answer_confidence => @answer_confidence,
                                                          :list => @list,
-                                                         :part => @part} %>
+                                                         :part => @part,
+                                                         :seed => @seed} %>
   </div>
   
   <div id="solutions_and_navigation_div"></div>
