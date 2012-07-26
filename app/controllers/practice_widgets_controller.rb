@@ -5,7 +5,8 @@ class PracticeWidgetsController < ApplicationController
 
   skip_before_filter :authenticate_user!
   before_filter :embed
-  before_filter :get_list_and_question
+  before_filter :get_list_and_question, :only => :show
+  before_filter :get_question, :except => :show
   before_filter :include_mathjax
 
   def show
@@ -34,6 +35,7 @@ class PracticeWidgetsController < ApplicationController
     @answer_text = params[:answer_text]
     @answer_confidence = params[:answer_confidence].try(:to_i)
     @answer_choice = params[:answer_choice].try(:to_i)
+    raise SecurityTransgression unless @answer_choice < @question.answer_choices.length
     
     respond_to do |format|
       setup_solutions_and_nav
@@ -48,12 +50,7 @@ class PracticeWidgetsController < ApplicationController
     @layout = params[:embed] ? 'embed' : 'application'
   end
   
-  def get_list_and_question
-    unless params[:list_id].nil? && params[:project_id].nil?
-      @list = Project.find(params[:list_id] || params[:project_id])
-      raise SecurityTransgression unless present_user.can_read?(@list)
-    end
-    
+  def get_question
     if params[:question_id].nil?
       raise SecurityTransgression if @list.nil?
       @main_question = @list.questions.sample
@@ -73,6 +70,18 @@ class PracticeWidgetsController < ApplicationController
       @question = @main_question
     end
     @errors = @question.errors
+    
+    @seed = params[:seed] || rand(2e8)
+    @question.variate!(QuestionVariator.new(@seed))
+  end
+  
+  def get_list_and_question
+    unless params[:list_id].nil? && params[:project_id].nil?
+      @list = Project.find(params[:list_id] || params[:project_id])
+      raise SecurityTransgression unless present_user.can_read?(@list)
+    end
+    
+    get_question
   end
   
   def include_mathjax
