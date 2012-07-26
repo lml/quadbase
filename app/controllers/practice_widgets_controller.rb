@@ -10,6 +10,7 @@ class PracticeWidgetsController < ApplicationController
   before_filter :include_mathjax
 
   def show
+    GoogleAnalyticsWrapper.new(cookies).event('Practice Widget', 'Answer (show)', @layout)
     render :layout => @layout
   end
 
@@ -20,9 +21,11 @@ class PracticeWidgetsController < ApplicationController
    
     respond_to do |format|
       if @preview
+        GoogleAnalyticsWrapper.new(cookies).event('Practice Widget', 'Preview Answer', @answer_text, @answer_confidence)
         format.html { render 'preview_answer', :layout => @layout }
         format.js { render 'preview_answer', :layout => @layout }
       else
+        GoogleAnalyticsWrapper.new(cookies).event('Practice Widget', 'Answer (text)', @answer_text, @answer_confidence)
         setup_solutions_and_nav if @question.answer_choices.empty?
         format.html { render :layout => @layout }
         format.js { render :layout => @layout }
@@ -36,6 +39,8 @@ class PracticeWidgetsController < ApplicationController
     @answer_confidence = params[:answer_confidence].try(:to_i)
     @answer_choice = params[:answer_choice].try(:to_i)
     raise SecurityTransgression unless @answer_choice < @question.answer_choices.length
+    
+    GoogleAnalyticsWrapper.new(cookies).event('Practice Widget', 'Answer (choices)', @question.answer_choices[@answer_choice], @answer_choice)
     
     respond_to do |format|
       setup_solutions_and_nav
