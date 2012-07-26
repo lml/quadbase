@@ -8,23 +8,23 @@
    # answer_confidence
    # Additionally, they can override the following variables:
    answer_choice ||= nil
-   list ||= nil
-   part ||= nil
-   seed ||= nil
 %>
 
 <%= section "Answer Verification" do %>
   <% if answer_choice.nil? %>
     <p>Choose the multiple-choice answer below that corresponds to the answer you wrote above.</p>
     <%= form_tag question_answer_choices_path(main_question), :remote => true, :method => :get, :autocomplete => "off" do %>
-      <% unless list.nil? %>
-        <%= hidden_field_tag :list_id, list.id %>
+      <% unless @list.nil? %>
+        <%= hidden_field_tag :list_id, @list.id %>
       <% end %>
-      <% unless part.nil? %>
-        <%= hidden_field_tag :part, part %>
+      <% unless @part.nil? %>
+        <%= hidden_field_tag :part, @part %>
       <% end %>
-      <% unless seed.nil? %>
-        <%= hidden_field_tag :seed, seed %>
+      <% unless @seed.nil? %>
+        <%= hidden_field_tag :seed, @seed %>
+      <% end %>
+      <% if @layout == 'embed' %>
+        <%= hidden_field_tag :embed, true %>
       <% end %>
       <%= hidden_field_tag :answer_text, answer_text %>
       <%= hidden_field_tag :answer_confidence, answer_confidence %>

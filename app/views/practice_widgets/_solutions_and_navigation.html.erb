@@ -61,6 +61,6 @@
 
 <div id="navigation_div">
   <% unless next_question.nil? %>
-    <%= link_to 'Next Question', question_answer_path(next_question, :list_id => list.try(:id), :part => next_part) %>
+    <%= link_to 'Next Question', question_answer_path(next_question, :list_id => list.try(:id), :part => next_part, :embed => (@layout == 'embed' ? true : nil)) %>
   <% end %>
 </div>
