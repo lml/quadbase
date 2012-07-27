@@ -177,14 +177,6 @@ ActiveRecord::Schema.define(:version => 20120726211039) do
     t.datetime "updated_at"
   end
 
-  create_table "question_list_members", :force => true do |t|
-    t.integer  "question_list_id"
-    t.integer  "user_id"
-    t.boolean  "is_default"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
-  end
-
   create_table "question_parts", :force => true do |t|
     t.integer  "multipart_question_id"
     t.integer  "child_question_id"

@@ -3,7 +3,7 @@
 
 <%=pageHeading("Roles and Role Requests")%>
 <div class="sectionHeading" id="roles"> Roles</div>
-<p>There are several roles that must be assigned to each question before a question can be published: author, copyright, list manager, and list member.The rights that come associated with each role are listed in the table below</p>
+<p>There are several roles that must be assigned to each question before a question can be published: author, copyright, and list member.The rights that come associated with each role are listed in the table below</p>
 <center>
 	<%=image_tag("roles_table.png", {:border => 0})%>
 </center>
@@ -13,8 +13,8 @@
 <div class= "sectionNoHeading" id= "copyright_holder"><b>Copyright Holder</b></div>
 <p> A copyright holder holds the copyrights on the question. The copyright holder may or may not be the same account as the author. Like the author, the copyright holder holds and can utilize all possible rights on a question.</p>
 <div class= "sectionNoHeading" id= "proxy"><b>Deputy</b></div>
-<p> A deputy is a role that can be assigned any time and can be permanently set by an account. A deputy is given "on behalf of rights" by the assigning account, meaning that the user inherits all of the rights of the account that gave him or her the role, and preforms actions on behalf of the assigning account, as if that account were making changes and not the list manager.</p>
-<p> When attributions for changes that the deputy made are necessary, those attributions would go to the account that gave the proxy his or her role. This implies that the role of proxy cannot be passed on. For example, if account1 holds authoring and copyrights and he assigns account2 the role of proxy, and then account2 assigned account3 the role of list manager, account3 would not have "on behalf rights" for account1, just for account2.</p>
+<p> A deputy is a role that can be assigned any time and can be permanently set by an account. A deputy is given "on behalf of rights" by the assigning account, meaning that the user inherits all of the rights of the account that gave him or her the role, and preforms actions on behalf of the assigning account, as if that account were making changes and not a list member.</p>
+<p> When attributions for changes that the deputy made are necessary, those attributions would go to the account that gave the proxy his or her role. This implies that the role of proxy cannot be passed on. For example, if account1 holds authoring and copyrights and he assigns account2 the role of proxy, and then account2 assigned account3 the role of list member, account3 would not have "on behalf rights" for account1, just for account2.</p>
 <div class="sectionNoHeading" id="workspace_member"><b>List Member</b></div>
 <p>A list member is someone who contributes to a question, but does not have any roles on that question, so receives no attribution of any kind for any contribution the list member makes. The list member can however derive a copy of the question he or she is contributing to, and thereby become the author and copyright holder of said question and assuming all rights on that question</p>
 <div class ="sectionHeading" id="role requests">Role Requests</div>
