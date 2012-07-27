@@ -7,7 +7,7 @@ class ListQuestion < ActiveRecord::Base
 
   after_destroy :destroy_listless_draft_question
   
-  # A published question (which is immutable) can be in any number of workgroups.
+  # A published question (which is immutable) can be in any number of lists.
   # However, a draft question can be in only one.    
   validates_uniqueness_of :question_id, 
                           :unless => Proc.new { |wq| wq.question.is_published? }
