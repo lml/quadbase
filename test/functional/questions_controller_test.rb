@@ -9,8 +9,8 @@ class QuestionsControllerTest < ActionController::TestCase
     ContentParseAndCache.enable_test_parser = true
     @user = FactoryGirl.create(:user)
     @user2 = FactoryGirl.create(:user)
-    @question = FactoryGirl.create(:project_question,
-                               :project => Project.default_for_user!(@user)).question
+    @question = FactoryGirl.create(:list_question,
+                               :list => List.default_for_user!(@user)).question
     @question_collaborator = FactoryGirl.create(:question_collaborator,
                                             :question => @question,
                                             :user => @user,
@@ -21,8 +21,8 @@ class QuestionsControllerTest < ActionController::TestCase
                                             :user => @user2,
                                             :is_author => true,
                                             :is_copyright_holder => true)
-    @question2 = FactoryGirl.create(:project_question,
-                              :project => Project.default_for_user!(@user)).question
+    @question2 = FactoryGirl.create(:list_question,
+                              :list => List.default_for_user!(@user)).question
     @question_collaborator2 = FactoryGirl.create(:question_collaborator,
                                             :question => @question2,
                                             :user => @user,
@@ -90,7 +90,7 @@ class QuestionsControllerTest < ActionController::TestCase
     assert question.has_role?(@user, :author)
     assert question.has_role?(@user, :copyright_holder)
 
-    assert Project.default_for_user(@user).has_question?(question)
+    assert List.default_for_user(@user).has_question?(question)
 
     assert_redirected_to edit_question_path(assigns(:question))
   end

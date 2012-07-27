@@ -1,0 +1,10 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%= display_flash %>
+
+$("<%= "#list_member_" + @list_member.id.to_s %>").remove()
+
+<% if @list_member.user_id == present_user.id %>
+  window.location.replace("<%= escape_javascript(lists_path) %>")
+<% end %>

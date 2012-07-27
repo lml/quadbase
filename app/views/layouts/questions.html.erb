@@ -74,11 +74,11 @@
                           question_edit_license_path(@question) %></p>
          <% end %>
 
-         <% if @show_project_link && !@question.is_published? %>
-           <% project = @question.project %>
-           <% if present_user.can_read?(project) %>
-             <p><%= link_to "Open Project", 
-                            project_path(project) %></p>
+         <% if @show_list_link && !@question.is_published? %>
+           <% list = @question.list %>
+           <% if present_user.can_read?(list) %>
+             <p><%= link_to "Open List", 
+                            list_path(list) %></p>
            <% end %>         
          <% end %>
         

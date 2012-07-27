@@ -12,8 +12,8 @@ class AttachableAssetsControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
-    question = FactoryGirl.create(:project_question,
-                   :project => Project.default_for_user!(@user)).question
+    question = FactoryGirl.create(:list_question,
+                   :list => List.default_for_user!(@user)).question
     @attachable_asset = FactoryGirl.build(:attachable_asset, :attachable => question)
     attachment = @attachable_asset.asset.attachment
     fileHash = Hash[ :tempfile => attachment ]

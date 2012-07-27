@@ -17,7 +17,7 @@ class Question < ActiveRecord::Base
   has_many :collaborators, 
            :through => :question_collaborators,
            :source => :user
-  has_many :project_questions, :dependent => :destroy
+  has_many :list_questions, :dependent => :destroy
 
   belongs_to :license
   belongs_to :question_setup
@@ -120,27 +120,27 @@ class Question < ActiveRecord::Base
 
   scope :draft_questions, where{version == nil}
   scope :published_questions, where{version != nil}
-  scope :questions_in_projects, lambda { |projects|
-    joins{project_questions}.where{project_questions.project_id.in(projects.collect { |p| p.id })}
+  scope :questions_in_lists, lambda { |lists|
+    joins{list_questions}.where{list_questions.list_id.in(lists.collect { |p| p.id })}
   }
-  scope :user_project_questions, lambda { |user|
-    joins{project_questions.project.project_members}\
-      .where{project_questions.project.project_members.user_id == user.id}
+  scope :user_list_questions, lambda { |user|
+    joins{list_questions.list.list_members}\
+      .where{list_questions.list.list_members.user_id == user.id}
   }
   scope :published_with_number, lambda { |num|
     published_questions.where{number == num}.order{updated_at.desc}
   }
   # Can read a question if any of those:
   #   - Question is published
-  #   - User is a member or a project that contains the question
+  #   - User is a member or a list that contains the question
   #   - User is a question collaborator with roles
   #   - User is a deputy of a question collaborator with roles
   scope :which_can_be_read_by, lambda { |user|
     return published_questions if user.is_anonymous?
-    joins{project_questions.outer.project.outer.project_members.outer}\
+    joins{list_questions.outer.list.outer.list_members.outer}\
     .joins{question_collaborators.outer.user.outer.deputies.outer}\
     .where{(version != nil) |\
-    (project_question.project.project_members.user_id == user.id) |\
+    (list_question.list.list_members.user_id == user.id) |\
     (((question_collaborators.user_id == user.id) |\
     (question_collaborators.user.deputies.id == user.id)) &\
     ((question_collaborators.is_author == true) |\
@@ -380,16 +380,16 @@ class Question < ActiveRecord::Base
   end
   
   # Saves the question (for the first time), assigns roles to the given user,
-  # and puts the question in the user's default project.  Throws exceptions
+  # and puts the question in the user's default list.  Throws exceptions
   # on errors.
   def create!(user, options ={})
     options[:set_initial_roles] = true if options[:set_initial_roles].nil?
-    options[:project] = Project.default_for_user!(user) if options[:project].nil?
+    options[:list] = List.default_for_user!(user) if options[:list].nil?
 
     Question.transaction do
       self.save!
       self.set_initial_question_roles(user) if options[:set_initial_roles]
-      options[:project].add_question!(self)
+      options[:list].add_question!(self)
       QuestionDerivation.create(
         :source_question_id => options[:source_question].id,
         :deriver_id => options[:deriver_id],
@@ -398,12 +398,12 @@ class Question < ActiveRecord::Base
     end
   end
   
-  def new_derivation!(user, project = nil)
+  def new_derivation!(user, list = nil)
     return if !is_published?
     derived_question = self.content_copy
     
     Question.transaction do
-      derived_question.create!(user, :project => project)
+      derived_question.create!(user, :list => list)
       QuestionDerivation.create(:source_question_id => self.id, 
                                 :derived_question_id => derived_question.id,
                                 :deriver_id => user.id)
@@ -412,12 +412,12 @@ class Question < ActiveRecord::Base
     derived_question
   end
   
-  def new_version!(user, project = nil)
+  def new_version!(user, list = nil)
     new_version = self.content_copy
     new_version.number = self.number
     new_version.version = nil
     
-    new_version.create!(user, {:project => project, :set_initial_roles => false})
+    new_version.create!(user, {:list => list, :set_initial_roles => false})
     QuestionCollaborator.copy_roles(self, new_version)
     new_version
   end
@@ -464,8 +464,8 @@ class Question < ActiveRecord::Base
       wscope = published_questions
     when 'My Drafts'
       wscope = draft_questions
-    when 'My Projects'
-      wscope = user_project_questions(user)
+    when 'My Lists'
+      wscope = user_list_questions(user)
     else #All Places
       wscope = Question
     end
@@ -563,9 +563,9 @@ class Question < ActiveRecord::Base
     Question
   end
 
-  def project
+  def list
     raise IllegalState if is_published?
-    project_questions.first.project
+    list_questions.first.list
   end
   
   # In some cases, there could be some outstanding role requests on this question
@@ -636,7 +636,7 @@ class Question < ActiveRecord::Base
   def can_be_read_by?(user)
     is_published? || 
     ( !user.is_anonymous? && 
-      (is_project_member?(user) || has_role_permission?(user, :any)) )
+      (is_list_member?(user) || has_role_permission?(user, :any)) )
   end
     
   def can_be_created_by?(user)
@@ -645,12 +645,12 @@ class Question < ActiveRecord::Base
   
   def can_be_updated_by?(user)
     !is_published? && !user.is_anonymous? && 
-    (is_project_member?(user) || has_role_permission?(user, :any))
+    (is_list_member?(user) || has_role_permission?(user, :any))
   end
   
   def can_be_destroyed_by?(user)
     !is_published? && !user.is_anonymous? && 
-    (is_project_member?(user) || has_role_permission?(user, :any))
+    (is_list_member?(user) || has_role_permission?(user, :any))
   end
   
   def can_be_published_by?(user)
@@ -676,8 +676,8 @@ class Question < ActiveRecord::Base
     user.can_update?(self)
   end
 
-  def is_project_member?(user)
-    project_questions.each { |wp| return true if wp.project.is_member?(user) }
+  def is_list_member?(user)
+    list_questions.each { |wp| return true if wp.list.is_member?(user) }
     false
   end
   

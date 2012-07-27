@@ -8,7 +8,7 @@ class CommentThreadSubscriptionsControllerTest < ActionController::TestCase
   setup do
     @question = FactoryGirl.create(:simple_question)
     @user = FactoryGirl.create(:user)
-    FactoryGirl.create(:project_question, :question => @question, :project => Project.default_for_user!(@user))
+    FactoryGirl.create(:list_question, :question => @question, :list => List.default_for_user!(@user))
     @published_question = make_simple_question(:method => :create, :published => true)
     @user2 = FactoryGirl.create(:user)
   end

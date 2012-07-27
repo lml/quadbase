@@ -68,18 +68,18 @@ def make_multipart_question(options = {})
   qq
 end
 
-def make_project(options = {})
+def make_list(options = {})
   options[:num_questions] ||= 0
   options[:num_members] ||= 0
   
-  ww = FactoryGirl.build(:project)
+  ww = FactoryGirl.build(:list)
 
-  ww.project_questions = Array.new(options[:num_questions]) { |n| 
-    FactoryGirl.build(:project_question, :project => ww)
+  ww.list_questions = Array.new(options[:num_questions]) { |n| 
+    FactoryGirl.build(:list_question, :list => ww)
   }
 
-  ww.project_members = Array.new(options[:num_members]) { |n|
-    FactoryGirl.build(:project_member, :project => ww)
+  ww.list_members = Array.new(options[:num_members]) { |n|
+    FactoryGirl.build(:list_member, :list => ww)
   }
   
   ww.save! if (options[:method] == :create)
@@ -148,7 +148,7 @@ FactoryGirl.define do
 
   factory :user_profile do |f|
     f.association :user
-    f.project_member_email true
+    f.list_member_email true
     f.role_request_email true
   end
 
@@ -179,17 +179,17 @@ FactoryGirl.define do
     f.association :child_question, :factory => :simple_question
   end
 
-  factory :project do |f|
+  factory :list do |f|
     f.name {FactoryGirl.generate :couple_of_words}
   end
 
-  factory :project_question do |f|
-    f.association :project
+  factory :list_question do |f|
+    f.association :list
     f.association :question, :factory => :simple_question
   end
 
-  factory :project_member do |f|
-    f.association :project
+  factory :list_member do |f|
+    f.association :list
     f.association :user
     f.is_default false
   end
