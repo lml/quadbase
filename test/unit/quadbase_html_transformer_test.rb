@@ -39,4 +39,6 @@ class QuadbaseHtmlTransformerTest < ActiveSupport::TestCase
    # assert_equal_string_strip_whitespace expected1, output1.inspect()
     assert_equal expected2, output2.to_s()
   end
+
+ 
 end
