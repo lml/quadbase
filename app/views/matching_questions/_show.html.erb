@@ -2,7 +2,7 @@
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
 <% @show_credit_toggle_link = false %>
-<% @show_matching_credit_toggle_link = true %>
+<% @show_match_credit_toggle_link = true %>
 
 <% if !question.question_setup_id.nil? %>
    <div class="quad-question_setup">
@@ -29,7 +29,7 @@ Content & Answers
 <% rightCounter = 0 %>
 <table style='position:absolute; margin-left:300px'>
 <tbody>
-<% question.matchings.each do |g| %>
+<% question.match_items.each do |g| %>
    <% actcounter = actcounter + 2 %>    
    <% if g.column == "right" %>
 	<td style="vertical-align: top;">
@@ -64,7 +64,7 @@ Content & Answers
  <table cellspacing="5" cellpadding="40" style="width: 100%; text-align: center;">
   <tbody>
 <% rightCounter = counter %>
-<% question.matchings.each do |g| %>    
+<% question.match_items.each do |g| %>    
 	<% if g.column == "left" %>
         <tr>
 	<td>

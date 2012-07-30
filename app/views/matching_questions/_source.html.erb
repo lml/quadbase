@@ -13,16 +13,15 @@
   <%= simple_format question.content %>
 </div>
 
-<% if !question.matchings.empty? %>
-     <div class="sectionHeading">Answer Choices</div>
+<% if !question.match_items.empty? %>
+     <div class="sectionHeading">Matchings</div>
    <div style="margin-bottom:10px"></div>
-   <div class="quad-answer_choices">
-      <% answer_letter_code = "a".ord-1 %>
+   <div class="quad-match_items">
       <table width="100%">
-      <% question.matchings.each do |ac| %>
-         <tr class="quad-answer_choice">
+      <% question.match_items.each do |m| %>
+         <tr class="quad-match_items">
             <td class="code-box" width="90%">
-               <%= simple_format ac.choice_id.to_s + " w/content | " + ac.content + " | is matched to " + ac.matched_id.to_s %>
+               <%= simple_format m.match_id.to_s + " w/content | " + m.content + " | is matched to " + m.match_id.to_s %>
             </td>
          </tr>
       <% end %>

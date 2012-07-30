@@ -15,10 +15,7 @@
 
   <% @errors = @question.errors %>
 
-  <% add_human_field_names({ :"answer_choices.content" => "Answer text", 
-                             :"answer_choices.credit" => "Answer right/wrong", 
-                             :"answer_choices" => "Answers",
-                             :"question_setup.content" => "Content"} ) %>
+  <% add_human_field_names({:"question_setup.content" => "Content"} ) %>
 
   <%# For the question setup ... %>
   <%= render :partial => "attachable_assets/add_image_dialog",
@@ -126,15 +123,15 @@
 <div style='float:right;'>
 <table>
 <tbody>
-<%= f.fields_for :matchings do |g| %>
+<%= f.fields_for :match_items do |g| %>
    <% actcounter = actcounter + 2 %>    
    <% if g.object.column == "right" %>
 	<td style="vertical-align: top;">
         <div style='border: 2px solid gray; padding: 10px; width: 225px; margin-bottom: 10px;' 
-                                class='ui-corner-all droppable ui-droppable fields' id='<%=g.object.choice_id%>'> 
+                                class='ui-corner-all droppable ui-droppable fields' id='<%=g.object.match_id%>'> 
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'>
 				    <span style="float:right">  
-      <%= link_to_matching_remove_fields "Delete this answer", g %>
+      <%= link_to_match_item_remove_fields "Delete this item", g %>
     </span>
                                     <tbody> 
                                         <tr> 
@@ -152,9 +149,8 @@
                                         </tr> 
                                     </tbody> 
                                 </table>
-                                <%= g.hidden_field :choice_id, :class => "valSelector" %>
-                                <%= g.hidden_field :matched_id, :class => "matchedSelector" %>
-                                <%= g.hidden_field :column %>
+                                <%= g.hidden_field :match_id %>
+                                <%= g.hidden_field :right_column %>
                             </div>
         </td>
         </tr>
@@ -171,7 +167,7 @@
   <tbody>
 
 <% rightCounter = counter %>
-<%= f.fields_for :matchings do |g| %>    
+<%= f.fields_for :match_items do |g| %>    
 	<% if g.object.column == "left" %>
         <tr>
 	<td>
@@ -179,7 +175,7 @@
                                 class='ui-corner-all draggable ui-draggable fields' id='<%=g.object.choice_id%>'>
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'>
                                   <span style="float:right">  
-      <%= link_to_matching_remove_fields "Delete this answer", g %>
+      <%= link_to_match_item_remove_fields "Delete this item", g %>
     </span>  
                                   <tbody> 
                                         <tr> 
@@ -287,8 +283,8 @@
                                 class='ui-corner-all droppable ui-droppable fields' id="+counter+"> \
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'> \
                                 <span style='float:right'> \
-                                   <input id='question_matchings_attributes_"+counter+"__destroy' type='hidden' value='false' name='question[matchings_attributes]["+counter+"][_destroy]' > \
-                                   <a onclick='matching_remove_fields(this); return false;' href='#'>Delete this answer</a> \
+                                   <input id='question_match_items_attributes_"+counter+"__destroy' type='hidden' value='false' name='question[match_items_attributes]["+counter+"][_destroy]' > \
+                                   <a onclick='match_item_remove_fields(this); return false;' href='#'>Delete this item</a> \
                                   </span> \
                                     <tbody> \
                                         <tr> \
@@ -301,14 +297,14 @@
                                         </tr> \
                                         <tr> \
                                             <td style='font-size: 0.9em; text-align: left;'> \
-                                                <textarea style='height:60; width:200; resize:none' id='question_matchings_attributes_" + counter +"_content' name='question[matchings_attributes][" + counter + "][content]' ></textarea> \
+                                                <textarea style='height:60; width:200; resize:none' id='question_match_items_attributes_" + counter +"_content' name='question[match_items_attributes][" + counter + "][content]' ></textarea> \
                                             </td> \
                                         </tr> \
                                     </tbody> \
                                 </table> \
-                                <input class='valSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_choice_id' name='question[matchings_attributes][" + counter + "][choice_id]' type='hidden' /> \
-                            <input class = 'matchedSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_matched_id' name='question[matchings_attributes][" + counter + "][matched_id]' type='hidden' /> \
-                           <input value ='right' id='question_matchings_attributes_" + counter + "_column' name='question[matchings_attributes][" + counter + "][column]' type='hidden' /> \
+                                <input class='valSelector' value ="+counter+" id='question_match_items_attributes_" + counter + "_choice_id' name='question[match_items_attributes][" + counter + "][choice_id]' type='hidden' /> \
+                            <input class = 'matchedSelector' value ="+counter+" id='question_match_items_attributes_" + counter + "_matched_id' name='question[match_items_attributes][" + counter + "][matched_id]' type='hidden' /> \
+                           <input value ='right' id='question_match_items_attributes_" + counter + "_column' name='question[match_items_attributes][" + counter + "][column]' type='hidden' /> \
                             </div>";
     var t = document.createElement('div');
     t.innerHTML = s;
@@ -375,8 +371,8 @@
                                 class='ui-corner-all draggable ui-draggable fields' id="+counter+"> \
                                 <table cellspacing'0' cellpadding='0' style='width: 100%;'> \
                                      <span style='float:right'> \
-                                   <input id='question_matchings_attributes_"+counter+"__destroy' type='hidden' value='false' name='question[matchings_attributes]["+counter+"][_destroy]' > \
-                                   <a onclick='matching_remove_fields(this); return false;' href='#'>Delete this answer</a> \
+                                   <input id='question_match_items_attributes_"+counter+"__destroy' type='hidden' value='false' name='question[match_items_attributes]["+counter+"][_destroy]' > \
+                                   <a onclick='match_item_remove_fields(this); return false;' href='#'>Delete this item</a> \
                                   </span> \
                                      <tbody> \
                                         <tr> \
@@ -389,14 +385,14 @@
                                         </tr> \
                                         <tr> \
                                             <td style='font-size: 0.9em; text-align: left;'> \
-                                                <textarea style='height:60; width:200; resize:none' id='question_matchings_attributes_" + counter + "_content' rows='20' name='question[matchings_attributes][" + counter + "][content]' cols='40'></textarea> \
+                                                <textarea style='height:60; width:200; resize:none' id='question_match_items_attributes_" + counter + "_content' rows='20' name='question[match_items_attributes][" + counter + "][content]' cols='40'></textarea> \
                                             </td> \
                                         </tr> \
                                     </tbody> \
                                 </table> \
-                                <input class = 'valSelector' value =" + counter+ " id='question_matchings_attributes_" + counter + "_choice_id' name='question[matchings_attributes][" + counter + "][choice_id]' type='hidden' /> \
-                              <input class = 'matchedSelector' value ="+counter+" id='question_matchings_attributes_" + counter + "_matched_id' name='question[matchings_attributes][" + counter + "][matched_id]' type='hidden' /> \
-                             <input value ='left' id='question_matchings_attributes_" + counter + "_column' name='question[matchings_attributes][" + counter + "][column]' type='hidden' /> \
+                                <input class = 'valSelector' value =" + counter+ " id='question_match_items_attributes_" + counter + "_choice_id' name='question[match_items_attributes][" + counter + "][choice_id]' type='hidden' /> \
+                              <input class = 'matchedSelector' value ="+counter+" id='question_match_items_attributes_" + counter + "_matched_id' name='question[match_items_attributes][" + counter + "][matched_id]' type='hidden' /> \
+                             <input value ='left' id='question_match_items_attributes_" + counter + "_column' name='question[match_items_attributes][" + counter + "][column]' type='hidden' /> \
                             </div>";
     var t = document.createElement('div');
     t.innerHTML = s;

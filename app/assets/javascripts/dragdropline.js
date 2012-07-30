@@ -1,11 +1,13 @@
 /*
 **
 ** Part of StackOverflow Answer 
-**	http://stackoverflow.com/questions/536676/how-to-draw-a-line-between-draggable-and-droppable
+**  http://stackoverflow.com/questions/536676/how-to-draw-a-line-between-draggable-and-droppable
 **
 ** Created and Maintained by Bruno Alexandre (balexandre.com) 
 **
-** Last Edit: 29 September 2011
+** Last Edit by Author: 29 September 2011
+**
+** Modified for use in Quadbase
 **
 */
 
