@@ -10,8 +10,9 @@ class PracticeWidgetsController < ApplicationController
   before_filter :include_mathjax
 
   def show
-    GoogleAnalyticsWrapper.new(cookies).event('Practice Widget', 'Answer Show Question', @question.to_param, @question.id)
-    GoogleAnalyticsWrapper.new(cookies).page_view("Practice Widget (#{@layout})", request.url)
+    gaw = GoogleAnalyticsWrapper.new(cookies)
+    gaw.event('Practice Widget', 'Answer Show Question', @question.to_param, @question.id)
+    gaw.page_view("Practice Widget (#{@layout})", request.url)
     render :layout => @layout
   end
 
