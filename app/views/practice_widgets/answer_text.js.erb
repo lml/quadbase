@@ -1,0 +1,22 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+$("#answer_text_div").html("<%= ej(render :partial => 'locked_answer_text',
+                                             :locals => {:answer_text => @answer_text,
+                                                         :answer_confidence => @answer_confidence}) %>");
+
+<% if @solutions.nil? %>
+  $("#answer_choices_div").html("<%= ej(render :partial => 'answer_choices',
+                                            :locals => {:main_question => @main_question,
+                                                        :question => @question,
+                                                        :answer_text => @answer_text,
+                                                        :answer_confidence => @answer_confidence}) %>");
+  refresh_buttons();
+<% else %>
+  $("#solutions_and_navigation_div").html("<%= ej(
+    render :partial => 'solutions_and_navigation',
+           :locals => {:solutions => @solutions,
+                       :list => @list,
+                       :next_question => @next_question,
+                       :next_part => @next_part}) %>");
+<% end %>

@@ -1,0 +1,14 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+$("#answer_choices_div").html("<%= ej(
+  render :partial => 'locked_answer_choice',
+         :locals => {:question => @question,
+                     :answer_choice => @answer_choice}) %>");
+
+$("#solutions_and_navigation_div").html("<%= ej(
+  render :partial => 'solutions_and_navigation',
+         :locals => {:solutions => @solutions,
+                     :list => @list,
+                     :next_question => @next_question,
+                     :next_part => @next_part}) %>");

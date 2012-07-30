@@ -55,9 +55,12 @@ module ApplicationHelper
                                       "\"#{escape_javascript(fields)}\")")
   end
   
+  def full_name(user)
+    (user_signed_in? && current_user.id == user.id) ? "Me" : user.full_name
+  end
+  
   def full_name_link(user)
-    text = (user_signed_in? && current_user.id == user.id) ? "Me" : user.full_name
-    link_to text, user
+    link_to full_name(user), user
   end
   
   

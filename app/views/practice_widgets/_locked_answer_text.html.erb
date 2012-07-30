@@ -1,0 +1,16 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% # Clients of this partial must supply the following variables:
+   answer_text
+   answer_confidence %>
+
+<p>Answer Text:</p>
+<%= simple_format answer_text %>
+
+<br/>
+
+<p>Confidence:</p>
+<p><%= confidence_labels[answer_confidence].gsub("_", " ") %></p>
+
+<br/>

@@ -1,0 +1,107 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% # Clients of this partial must supply the following variables:
+   # main_question
+   # question
+   # Additionally, they can override the following variables:
+   answer_text ||= nil
+   answer_confidence ||= (confidence_labels.size - 1)/2
+   preview ||= false
+%>
+
+<% content_for :javascript_includes do %>
+  <%= javascript_include_tag 'codecogs_editor.js' %>
+<% end %>
+
+<div class="quad-question">
+  <%= section "The Question" do %>
+    <%= render :partial => 'questions/show', :locals => {:question => question,
+                                                         :hide_answers => true} %>
+  <% end %>
+</div>
+
+<br/>
+
+<%= section "Free-form Answer" do %>
+  <div id="answer_text_div">
+    <% if !answer_text.blank? %>
+      <%= render :partial => 'locked_answer_text',
+                 :locals => {:answer_text => answer_text,
+                             :answer_confidence => answer_confidence} %>
+    <% end %>
+    <% if answer_text.nil? || preview %>
+      <%= form_tag question_answer_text_path(main_question), :remote => true, :method => :get do %>
+        <% unless @list.nil? %>
+          <%= hidden_field_tag :list_id, @list.id %>
+        <% end %>
+        <% unless @part.nil? %>
+          <%= hidden_field_tag :part, @part %>
+        <% end %>
+        <% unless @seed.nil? %>
+          <%= hidden_field_tag :seed, @seed %>
+        <% end %>
+      <% if @layout == 'embed' %>
+        <%= hidden_field_tag :embed, true %>
+      <% end %>
+        <div class="field">
+          Enter your free-form answer below.
+          <%= text_area_tag :answer_text, answer_text, :rows => 5, :style => "width:100%", :id => 'answer_text' %>
+          <span class="field_help" style="display:block">
+            <ul class="field_help">
+              <li>You can write math here in latex surrounded by dollar signs, e.g. \$x^2+1\$.</li>
+              <li>Click <%= submit_tag "preview", :name => "preview", :class => "field_help button_link" %>
+            to test it.</li>
+              <li>Or <%= link_to_function "open a popup to generate the latex for you", "OpenLatexEditor('answer_text','latex','en-us',true,'','full')", :class => "field_help" %>. Click the "Copy to Document" button when you've finished writing the equation in the popup.</li>
+              <li><i>Tip</i>: for less-than and greater-than, make sure to put spaces
+            around the "&lt;" and "&gt;" signs so the browser doesn't think you're writing
+            HTML.  Alternatively, use the "\lt" and "\gt" latex symbols.</li>
+            </ul>
+          </span>
+        </div>
+        <div class="field">
+          <p>How confident are you in this answer?</p>
+          <p>This answer is...</p>
+          <table width="100%">
+            <tr>
+              <% confidence_labels.each_with_index do |cl, ii| %>
+                <td width="16.67%">
+                  <center>
+                    <%= radio_button_tag :answer_confidence, ii, ii == answer_confidence %></br/>
+                    <%= label_tag "answer_confidence_#{ii}", cl.gsub("_", "<br/>").html_safe %>
+                  </center>
+                </td>        
+              <% end %>        
+            </tr>
+          </table>
+        </div>
+        <br/>
+        <center>
+          <div class="actions">
+            <%= submit_tag "Submit",
+                  :id => "submit_button",
+                  :confirm => "Are you sure you want to submit your answer?  If so " +
+                              "click OK, otherwise click cancel.\n\nAfter your " + 
+                              "answer is submitted, it CANNOT BE CHANGED."%>
+          </div>
+        </center>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
+
+<div id="preview_answer_div"></div>
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>
+    $("#preview_answer_div").dialog({ 
+        autoOpen: false, 
+        modal: true, 
+        height:500, 
+        width:500,
+        title: "Preview Answer"
+    });
+  <% end %>
+<% end %>
+
+<%= protect_form %>

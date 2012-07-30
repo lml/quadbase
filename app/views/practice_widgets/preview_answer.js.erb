@@ -1,0 +1,10 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+$("#preview_answer_div").html("<%= ej(render :partial => 'locked_answer_text',
+                                             :locals => {:answer_text => @answer_text,
+                                                         :answer_confidence => @answer_confidence}) %>");
+
+$("#preview_answer_div").dialog('open');
+
+<%= reload_mathjax("preview_answer_div") %>
