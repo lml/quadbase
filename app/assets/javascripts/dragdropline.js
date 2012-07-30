@@ -19,10 +19,6 @@ var ico_userNormal  = 'icons/user-48x48.png',
 
 $(document).ready(function () {
 
-    // set up the drawing area from Body of the document
-    //  -30px for the offset...
-
-
     // Mapping dialog box			
     $("#dialogMappingResult").dialog({
         autoOpen: false,
@@ -184,7 +180,7 @@ function svgClear() {
 }
 function svgDrawLine(eTarget, eSource) {
 
-    // wait 1 sec before draw the lines, so we can get the position of the draggable
+    // wait 1 sec before drawing the lines, so we can get the position of the draggable
     setTimeout(function () {
 
         var $source = eSource;
