@@ -1,17 +1,13 @@
-# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
-# License version 3 or later.  See the COPYRIGHT file for details.
-
 require 'test_helper'
 
-class MatchingTest < ActiveSupport::TestCase
-
+class MatchItemTest < ActiveSupport::TestCase
   fixtures
   self.use_transactional_fixtures = true
 
-  test 'cannot modify matchings for published question' do
-    mq = FactoryGirl.create(:matching_question_with_matchings)
-    m = mq.matchings.first
-    m2 = mq.matchings.last
+  test 'cannot modify match_items for published question' do
+    mq = FactoryGirl.create(:matching_question_with_match_items)
+    m = mq.match_items.first
+    m2 = mq.match_items.last
     
     assert !mq.is_published?
     assert m.save
@@ -27,11 +23,11 @@ class MatchingTest < ActiveSupport::TestCase
     assert !m2.save
   end
   
-  test 'cannot move matchings to another question' do
-    mq = FactoryGirl.create(:matching_question_with_matchings)
+  test 'cannot move match_items to another question' do
+    mq = FactoryGirl.create(:matching_question_with_match_items)
     mq2 = FactoryGirl.create(:matching_question)
-    m = mq.matchings.first
-    m2 = mq.matchings.last
+    m = mq.match_items.first
+    m2 = mq.match_items.last
     
     assert m.save
     assert m2.save

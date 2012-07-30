@@ -4,11 +4,11 @@
 class MatchingQuestion < Question
   include ContentParseAndCache
   
-  has_many :matchings, :dependent => :destroy, :foreign_key => :question_id
+  has_many :match_items, :dependent => :destroy, :foreign_key => :question_id
 
-  accepts_nested_attributes_for :matchings, :allow_destroy => true
+  accepts_nested_attributes_for :match_items, :allow_destroy => true
 
-  attr_accessible :matchings_attributes
+  attr_accessible :match_items_attributes
 
   def content_summary_string
     string = ""
@@ -23,15 +23,16 @@ class MatchingQuestion < Question
     old_setup = kopy.question_setup
     kopy.question_setup = self.question_setup.content_copy if !self.question_setup_id.nil?
     old_setup.destroy_if_unattached
-    self.matchings.each {|m| kopy.matchings.push(m.content_copy) }
+    self.match_items.where{(right_column == false) | (match_id == nil)} \
+                    .each {|m| kopy.match_items.push(m.content_copy) }
     kopy.content = self.content
     kopy
   end
   
   def add_other_prepublish_errors
     self.errors.add(:base,'Content must not be empty.') if content.blank?
-    matchings.each do |m|
-      self.errors.add(:matchings, 'Content must not be empty.') if m.content.blank?
+    match_items.each do |m|
+      self.errors.add(:match_items, 'Content must not be empty.') if m.content.blank?
     end
   end
 end

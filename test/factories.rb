@@ -69,12 +69,12 @@ def make_multipart_question(options = {})
 end
 
 def make_matching_question(options = {})
-  options[:matchings] ||= []
+  options[:match_items] ||= []
   mq = options[:question_setup].nil? ? 
        FactoryGirl.create(:matching_question) :
        FactoryGirl.create(:matching_question, :question_setup => options[:question_setup])
-  mq.matchings = 
-    options[:matchings].map!{|c| FactoryGirl.build(:matching, :content => c)}
+  mq.match_items = 
+    options[:match_items].map!{|c| FactoryGirl.build(:match_items, :content => c)}
 
   mq.question_setup.content = "" if options[:no_setup] 
   
@@ -193,10 +193,11 @@ FactoryGirl.define do
     end
   end
   
-  factory :matching_question_with_matchings, :parent => :matching_question do |f|
+  factory :matching_question_with_match_items, :parent => :matching_question do |f|
     f.after(:build) do |sq|
-      sq.matchings = [FactoryGirl.build(:matching, :question => sq), 
-                      FactoryGirl.build(:matching, :question => sq)]
+      left = FactoryGirl.build(:left_match_item, :question => sq)
+      right = FactoryGirl.build(:right_match_item, :question => sq)
+      sq.match_items = [left, right]
     end
   end
 
@@ -205,14 +206,6 @@ FactoryGirl.define do
     f.credit 0
   end
   
-  factory :matching do |f|
-    f.association :question, :factory => :matching_question
-    f.content {FactoryGirl.generate :content}
-    f.choice_id 0
-    f.matched_id 0
-    f.column ""
-  end
-
   factory :multipart_question do |f|
     f.association :question_setup
     f.license_id { common_license.id }
@@ -221,6 +214,23 @@ FactoryGirl.define do
   factory :question_part do |f|
     f.association :multipart_question
     f.association :child_question, :factory => :simple_question
+  end
+
+  factory :left_match_item do |f|
+    f.association :question, :factory => :matching_question
+    f.content {FactoryGirl.generate :content}
+    f.right_column false
+  end
+  
+  factory :right_match_item do |f|
+    f.association :question, :factory => :matching_question
+    f.content {FactoryGirl.generate :content}
+    f.right_column true
+  end
+  
+  factory :matching do |f|
+    f.association :left_match_item
+    f.association :right_match_item
   end
 
   factory :project do |f|
