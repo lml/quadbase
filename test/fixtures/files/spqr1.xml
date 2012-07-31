@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--<?xml-stylesheet href="ITS.css"?>-->
+<questestinterop>
+	<assessment title="test1" ident="A1001">
+<section title="section" ident="S1002">
+	<item title="Lab" ident="QUE_1">
+	<presentation>
+	<material>
+<mattext texttype="text/html"><![CDATA[Given:<BR><BR><B><TT>fs = 11025;<BR>tt = (0:round(0.25*fs))/fs;</TT></B><BR><BR>Which MATLAB code would you use to generate the appropriate DTMF signal to represent telephone key number <B>5</B>? And this is another way.]]></mattext>
+</material>
+<response_lid ident="QUE_1_RL" rcardinality="Multiple" rtiming="No">
+<render_choice>
+<response_label ident="QUE_1_A1">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*1336*tt) * cos(2*&pi;*770*tt); </TT>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_1_A2">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*1336*tt) + cos(2*&pi;*770*tt); </TT>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_1_A3">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*1336*770*tt); </TT>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_1_A4">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*(1336+770)*tt); </TT>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_1_A5">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*(1336/fs)*tt) * cos(2*&pi;*(770/fs)*tt);</TT>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_1_A6">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*(1336/fs)*tt) + cos(2*&pi;*(770/fs)*tt); </TT>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_1_A7">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*((1336+770)/fs)*tt);</TT>]]></mattext>
+</material>
+</response_label>
+</render_choice>
+</response_lid>
+</presentation>
+<resprocessing>
+<outcomes>
+<decvar vartype="Integer" defaultval="0" varname="que_score" maxvalue="100" minvalue="0"/>
+</outcomes>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A1</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A2</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">100</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A3</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A4</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A5</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A6</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">50</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A7</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+
+</resprocessing>
+</item>
+</section>
+</assessment>
+</questestinterop>

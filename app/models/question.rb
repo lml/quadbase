@@ -156,7 +156,7 @@ class Question < ActiveRecord::Base
   # but we don't want them deciding which questions share setups, etc)
   # Using whitelisting instead of blacklisting here.
   attr_accessible :content, :changes_solution, :question_setup_attributes, 
-                  :logic_attributes
+                  :logic_attributes, :image_answer
 
   def to_param
     if is_published?
@@ -377,6 +377,10 @@ class Question < ActiveRecord::Base
 
   def question_role_requests
     QuestionRoleRequest.for_question(self)
+  end
+
+  def answer_is_image?
+    self.image_answer
   end
   
   # Saves the question (for the first time), assigns roles to the given user,

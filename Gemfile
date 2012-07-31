@@ -12,6 +12,10 @@ end
 
 gem 'jquery-rails', '~> 2.0.2'
 
+gem 'nokogiri'
+
+gem 'htmlentities'
+
 # Deploy with Capistrano
 gem 'capistrano', '~> 2.12.0'
 

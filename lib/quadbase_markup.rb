@@ -9,6 +9,8 @@ class QuadbaseParser < Parslet::Parser
   def parse(str)
     # Always make sure we have one 'paragraph'
     super(str.strip + "\n\n")
+
+    
   end
 
   # TODO add \# and \* as allowed in text
@@ -16,7 +18,7 @@ class QuadbaseParser < Parslet::Parser
   root(:paragraphs)
 
   rule(:paragraphs) { paragraph.repeat.as(:paragraphs) }
-  rule(:paragraph) { (( line | bulleted_list | numbered_list ).repeat(1) >> spaces >> eol).as(:paragraph) }
+  rule(:paragraph) { (( line | bulleted_list | numbered_list ).repeat >> spaces >> eol).as(:paragraph) }
   
   rule(:line) { (content >> eol).as(:line) }
   rule(:content) { (math | image | bold | italic | underline | text).repeat(1) }
@@ -39,14 +41,14 @@ class QuadbaseParser < Parslet::Parser
                 ).repeat(1).as(:text) }
   
   rule(:bold_tag) { str("!!") }
-  rule(:bold) { bold_tag >> content.as(:bold) >> bold_tag }
+  rule(:bold) { bold_tag >> ( ( content | eol ).repeat(1) ).as(:bold) >> bold_tag }
     
   rule(:italic_tag) { str("''") }
-  rule(:italic) { italic_tag >> content.as(:italic) >> italic_tag }
+  rule(:italic) { italic_tag >> ( ( content | eol ).repeat(1) ).as(:italic) >> italic_tag }
   
   rule(:underline_tag) {str("__") }
   rule(:underline) {underline_tag >> content.as(:underline) >> underline_tag }
-  
+
   rule(:bullet_tag) { str("*") }
   rule(:bullet) { bullet_tag >> spaces >> content.as(:bullet) }
   rule(:bulleted_list) { (bullet >> eol).repeat(1).as(:bulleted_list) }
@@ -116,6 +118,7 @@ class QuadbaseHtmlTransformer < Parslet::Transform
   rule(:text => simple(:text)) { "#{text}" }
   rule(:line => sequence(:entries)) { entries.join }
   rule(:paragraph => sequence(:entries)) { "<p>#{entries.join}</p>" }
+  rule(:paragraph => simple(:paragraph)) { "\n" }
   rule(:paragraphs => sequence(:entries)) { entries.join("\n") }
   rule(:filename => simple(:filename)) { "#{filename}" }
   rule(:image => simple(:filename)) { "<center>" + TagHelper.make_image_tag(filename) + "</center>" }

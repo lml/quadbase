@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--<?xml-stylesheet href="ITS.css"?>-->
+<questestinterop>
+	<assessment title="test1" ident="A1001">
+<section title="section" ident="S1002">
+	<item title="Lab" ident="QUE_1">
+	<presentation>
+	<material>
+<mattext texttype="text/html"><![CDATA[Given:<BR><BR><B><TT>fs = 11025;<BR>tt = (0:round(0.25*fs))/fs;</TT></B><BR><BR>Which MATLAB code would you use to generate the appropriate DTMF signal to represent telephone key number <B>5</B>? And this is another way.]]></mattext>
+</material>
+<response_lid ident="QUE_1_RL" rcardinality="Multiple" rtiming="No">
+<render_choice>
+<response_label ident="QUE_1_A1">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*1336*tt) * cos(2*&pi;*770*tt); </TT>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_1_A2">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*1336*tt) + cos(2*&pi;*770*tt); </TT>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_1_A3">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*1336*770*tt); </TT>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_1_A4">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*(1336+770)*tt); </TT>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_1_A5">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*(1336/fs)*tt) * cos(2*&pi;*(770/fs)*tt);</TT>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_1_A6">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*(1336/fs)*tt) + cos(2*&pi;*(770/fs)*tt); </TT>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_1_A7">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>yy = cos(2*&pi;*((1336+770)/fs)*tt);</TT>]]></mattext>
+</material>
+</response_label>
+</render_choice>
+</response_lid>
+</presentation>
+<resprocessing>
+<outcomes>
+<decvar vartype="Integer" defaultval="0" varname="que_score" maxvalue="100" minvalue="0"/>
+</outcomes>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A1</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A2</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">100</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A3</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A4</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A5</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A6</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">50</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_1_RL">QUE_1_A7</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+
+</resprocessing>
+</item>
+<item title="Lab" ident="QUE_3">
+	<presentation>
+	<material>
+<mattext texttype="text/html"><![CDATA[The meaning of "negative frequency" in a Fourier series is:]]></mattext>
+</material>
+<response_lid ident="QUE_3_RL" rcardinality="Multiple" rtiming="No">
+<render_choice>
+<response_label ident="QUE_3_A1">
+<material>
+<mattext texttype="text/html"><![CDATA[Negative frequencies represent those frequencies that, when measured from a plot, look like they are below &frac12;fs.]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_3_A2">
+<material>
+<mattext texttype="text/html"><![CDATA[
+A negative Fourier series component of a signal represents the imaginary part of the signal.
+
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_3_A3">
+<material>
+<mattext texttype="text/html"><![CDATA[
+A negative Fourier series component represents a term in the Fourier series sum that has a negative value of	frequency in the complex exponential.   When it is added to a positive (absolute value) frequency component with	the same amplitude, a real signal will result.
+
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_3_A4">
+<material>
+<mattext texttype="text/html"><![CDATA[
+A negative frequency in the Fourier series represents the same signal component as the positive (absolute value)	frequency, but with a negative amplitude.
+]]></mattext>
+</material>
+</response_label>
+</render_choice>
+</response_lid>
+</presentation>
+<resprocessing>
+<outcomes>
+<decvar vartype="Integer" defaultval="0" varname="que_score" maxvalue="100" minvalue="0"/>
+</outcomes>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_3_RL">QUE_3_A1</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_3_RL">QUE_3_A2</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_3_RL">QUE_3_A3</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">100</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_3_RL">QUE_3_A4</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+
+</resprocessing>
+</item>
+<item title="PreLab05" ident="QUE_4">
+	<presentation>
+	<material>
+<mattext texttype="text/html"><![CDATA[We are given the following MATLAB code: <pre class="MATLAB">tt = 0:1/8000:1.0;
+xx1 = cos(2*π*440*tt);
+xx2 = cos(2*π*660*tt);
+</pre>We want to create a new vector called <b><tt>zz</tt></b> that when played though the speaker with <b><tt>soundsc(zz,8000)</tt></b> will be two sequential tones with the <b>FIRST tone being LOWER in frequency</b>. <br>In other words, the vectors need to be "concatenated." Which of the following pieces of MATLAB code will do this: ]]></mattext>
+</material>
+<response_lid ident="QUE_4_RL" rcardinality="Multiple" rtiming="No">
+<render_choice>
+<response_label ident="QUE_4_A1">
+<material>
+<mattext texttype="text/html"><![CDATA[
+<B><tt>zz = xx1+xx2;</tt></B>
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_4_A2">
+<material>
+<mattext texttype="text/html"><![CDATA[
+<B><tt>zz = xx1.*xx2;</tt></B>
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_4_A3">
+<material>
+<mattext texttype="text/html"><![CDATA[
+<B><tt>zz = [xx1, xx2];</tt></B>
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_4_A4">
+<material>
+<mattext texttype="text/html"><![CDATA[
+<B><tt>zz = [xx2, xx1];</tt></B>
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_4_A5">
+<material>
+<mattext texttype="text/html"><![CDATA[
+<B><tt>zz = xx1, zeros(1,1000), xx2;</tt></B>
+]]></mattext>
+</material>
+</response_label>
+</render_choice>
+</response_lid>
+</presentation>
+<resprocessing>
+<outcomes>
+<decvar vartype="Integer" defaultval="0" varname="que_score" maxvalue="100" minvalue="0"/>
+</outcomes>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_4_RL">QUE_4_A1</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_4_RL">QUE_4_A2</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_4_RL">QUE_4_A3</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">100</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_4_RL">QUE_4_A4</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">25</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_4_RL">QUE_4_A5</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+
+</resprocessing>
+</item>
+<item title="chapter7DM" ident="QUE_6">
+	<presentation>
+	<material>
+<mattext texttype="text/html"><![CDATA[The system <tt>y[n] = 3<SUP> -x[n+3]</SUP></tt> is ... ]]></mattext>
+</material>
+<response_lid ident="QUE_6_RL" rcardinality="Multiple" rtiming="No">
+<render_choice>
+<response_label ident="QUE_6_A1">
+<material>
+<mattext texttype="text/html"><![CDATA[Linear and time-invariant jjj]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_6_A2">
+<material>
+<mattext texttype="text/html"><![CDATA[
+Linear, but time-variant
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_6_A3">
+<material>
+<mattext texttype="text/html"><![CDATA[
+Non-linear and time-invariant
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_6_A4">
+<material>
+<mattext texttype="text/html"><![CDATA[
+Non-linear and time-invariant
+]]></mattext>
+</material>
+</response_label>
+</render_choice>
+</response_lid>
+</presentation>
+<resprocessing>
+<outcomes>
+<decvar vartype="Integer" defaultval="0" varname="que_score" maxvalue="100" minvalue="0"/>
+</outcomes>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_6_RL">QUE_6_A1</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_6_RL">QUE_6_A2</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_6_RL">QUE_6_A3</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">100</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_6_RL">QUE_6_A4</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+
+</resprocessing>
+</item>
+<item title="PreLab04" ident="QUE_7">
+	<presentation>
+	<material>
+<mattext texttype="text/html"><![CDATA[A student wishes to generate a 3 kHz tone in Matlab and listen to it. The following lines of code have already been written:<PRE class="MATLAB">tt = 0:(1/10000):1;
+xx = cos(2*pi*3000*tt);
+</PRE>Which of the following lines will correctly play the sound? ]]></mattext>
+</material>
+<response_lid ident="QUE_7_RL" rcardinality="Multiple" rtiming="No">
+<render_choice>
+<response_label ident="QUE_7_A1">
+<material>
+<mattext texttype="text/html"><![CDATA[
+<tt> soundsc(10000,xx) </tt>
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_7_A2">
+<material>
+<mattext texttype="text/html"><![CDATA[
+<tt> soundsc(xx, tt) </tt>
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_7_A3">
+<material>
+<mattext texttype="text/html"><![CDATA[
+<tt> soundsc(xx,10000) </tt>
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_7_A4">
+<material>
+<mattext texttype="text/html"><![CDATA[
+<tt> soundsc(xx,8000) </tt>
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_7_A5">
+<material>
+<mattext texttype="text/html"><![CDATA[<TT>soundsc(xx,3000) </TT>]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_7_A6">
+<material>
+<mattext texttype="text/html"><![CDATA[
+<tt> soundsc(0.0001,xx) </tt>
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_7_A7">
+<material>
+<mattext texttype="text/html"><![CDATA[
+<tt> soundsc(xx,0.0001) </tt>
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_7_A8">
+<material>
+<mattext texttype="text/html"><![CDATA[
+<tt> soundsc(3000,xx) </tt>
+]]></mattext>
+</material>
+</response_label>
+<response_label ident="QUE_7_A9">
+<material>
+<mattext texttype="text/html"><![CDATA[
+<tt> soundsc(8000,xx) </tt>
+]]></mattext>
+</material>
+</response_label>
+</render_choice>
+</response_lid>
+</presentation>
+<resprocessing>
+<outcomes>
+<decvar vartype="Integer" defaultval="0" varname="que_score" maxvalue="100" minvalue="0"/>
+</outcomes>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_7_RL">QUE_7_A1</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">25</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_7_RL">QUE_7_A2</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_7_RL">QUE_7_A3</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">100</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_7_RL">QUE_7_A4</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">25</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_7_RL">QUE_7_A5</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">25</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_7_RL">QUE_7_A6</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_7_RL">QUE_7_A7</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">25</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_7_RL">QUE_7_A8</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+<respcondition>
+<conditionvar>
+<varequal respident="QUE_7_RL">QUE_7_A9</varequal>
+</conditionvar>
+<setvar varname="que_score" action="Add">0</setvar>
+</respcondition>
+
+</resprocessing>
+</item>
+</section>
+</assessment>
+</questestinterop>
