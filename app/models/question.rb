@@ -147,7 +147,8 @@ class Question < ActiveRecord::Base
     (question_collaborators.is_copyright_holder == true)))}
   }
   
-  scope :latest_only, where{id.not_in(Question.joins{questions_same_number}.where{questions_same_number.version > questions.version})}
+  scope :superseded, joins{questions_same_number}.where{version < questions_same_number.version}.group{id}
+  scope :not_superseded, where{id.not_in(Question.superseded)}
 
   # This type is passed in some questions params; we need an accessor for it 
   # even though we don't explicitly save it.
@@ -538,7 +539,7 @@ class Question < ActiveRecord::Base
     q = q.group{questions.id}
 
     # Remove old published versions
-    q = q.latest_only if latest_only
+    q = q.not_superseded if latest_only
     
     q.order{number}
   end
