@@ -46,7 +46,7 @@ set :use_sudo, false
 
 # Use this so we don't have to put sensitive data in the git repository (for security)
 
-after "deploy:create_symlink","custom:finishing_touches"
+after "deploy:finalize_update","custom:finishing_touches"
 
 namespace :deploy do
   task :start do ; end
