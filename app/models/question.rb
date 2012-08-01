@@ -132,7 +132,7 @@ class Question < ActiveRecord::Base
   }
   # Can read a question if any of those:
   #   - Question is published
-  #   - User is a member or a project that contains the question
+  #   - User is a member of a project that contains the question
   #   - User is a question collaborator with roles
   #   - User is a deputy of a question collaborator with roles
   scope :which_can_be_read_by, lambda { |user|
@@ -146,6 +146,9 @@ class Question < ActiveRecord::Base
     ((question_collaborators.is_author == true) |\
     (question_collaborators.is_copyright_holder == true)))}
   }
+  
+  scope :superseded, joins{questions_same_number}.where{version < questions_same_number.version}.group{id}
+  scope :not_superseded, where{id.not_in(Question.superseded)}
 
   # This type is passed in some questions params; we need an accessor for it 
   # even though we don't explicitly save it.
@@ -532,13 +535,12 @@ class Question < ActiveRecord::Base
     # Remove (in SQL) questions the user can't read
     q = q.which_can_be_read_by(user)
 
-    # Remove duplicates and allow the use of max()
+    # Remove duplicates
     q = q.group{questions.id}
 
-    if latest_only # Remove old published versions
-      q = q.joins{questions_same_number}\
-           .having{(version == nil) | (version == max(questions_same_number.version))}
-    end
+    # Remove old published versions
+    q = q.not_superseded if latest_only
+    
     q.order{number}
   end
 
