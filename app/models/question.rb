@@ -144,7 +144,7 @@ class Question < ActiveRecord::Base
     (question_collaborators.is_copyright_holder == true)))}
   }
   
-  scope :not_superseded, where{-exists(Question.select{1}.from('`questions` `q`')
+  scope :not_superseded, where{-exists(Question.select(1).from('`questions` `q`')
     .where{(q.number == ~number) & (q.version > ~version)}.limit(1))}
 
   # This type is passed in some questions params; we need an accessor for it 
