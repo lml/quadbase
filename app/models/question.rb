@@ -91,11 +91,6 @@ class Question < ActiveRecord::Base
            
 
   has_many :solutions, :dependent => :destroy
-
-  has_many :questions_same_number,
-           :class_name => "Question",
-           :primary_key => "number",
-           :foreign_key => "number"
   
   has_one :comment_thread, :as => :commentable, :dependent => :destroy
   before_validation :build_comment_thread, :on => :create
@@ -147,8 +142,8 @@ class Question < ActiveRecord::Base
     (question_collaborators.is_copyright_holder == true)))}
   }
   
-  scope :superseded, joins{questions_same_number}.where{version < questions_same_number.version}.group{id}
-  scope :not_superseded, where{id.not_in(Question.superseded)}
+  scope :not_superseded, where{-exists(Question.select{1}.from('"questions" "q"')
+    .where{(q.number == ~number) & (q.version > ~version)})}
 
   # This type is passed in some questions params; we need an accessor for it 
   # even though we don't explicitly save it.
