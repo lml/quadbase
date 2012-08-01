@@ -22,7 +22,6 @@
 //= require jcarousellite_1.0.1
 //= require jquery.easing.1.1.1
 //= require markitup
-//= require markitup_set
 //= require uploadify
 //= require autocomplete-rails
 
