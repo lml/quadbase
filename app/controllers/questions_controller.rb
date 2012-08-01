@@ -12,7 +12,7 @@ class QuestionsController < ApplicationController
   before_filter {select_tab(:write)}
   before_filter :except => [:index, :new, :get_started, :search] do @use_columns = true end
 
-  before_filter {@include_autocomplete=true}
+  # before_filter {@include_autocomplete=true}
     
   autocomplete :tag, :name, :class_name => 'ActsAsTaggableOn::Tag'
   

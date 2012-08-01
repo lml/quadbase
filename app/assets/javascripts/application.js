@@ -21,13 +21,9 @@
 //= require jquery_extensions
 //= require jcarousellite_1.0.1
 //= require jquery.easing.1.1.1
-//= require codemirror
-//= require codemirror_utils
 //= require markitup
 //= require markitup_set
 //= require uploadify
-//= require jslint
-//= require seedrandom
 //= require autocomplete-rails
 
 
