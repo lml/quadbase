@@ -65,13 +65,13 @@ namespace :custom do
   end
 end
 
-namespace :rake do  
-  desc "Run a task on a remote server."  
-  # run like: cap staging rake:invoke task=a_certain_task  
-  task :bullring do  
-    run("cd #{deploy_to}/current; /usr/bin/env bundle exec rake bullring:discard RAILS_ENV=#{rails_env}")  
-  end  
-end
+# namespace :rake do  
+#   desc "Run a task on a remote server."  
+#   # run like: cap staging rake:invoke task=a_certain_task  
+#   task :bullring do  
+#     run("cd #{deploy_to}/current; /usr/bin/env bundle exec rake bullring:discard RAILS_ENV=#{rails_env}")  
+#   end  
+# end
 
 
 
