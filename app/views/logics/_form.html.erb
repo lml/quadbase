@@ -23,7 +23,7 @@
 
 <% if !logic %>
   <span style="float:right">
-    <%= link_to_function "Add computer-generated variations", 
+    <%= link_to_function "Make this question dynamic", 
                          "$('.#{class_to_reveal_on_logic_show}').show(); Quadbase.CodeMirrorUtils.refreshCodeMirrors(); $(this).parent().hide();" %>
   </span>
 <% end %>
