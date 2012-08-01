@@ -36,8 +36,8 @@ class List < ActiveRecord::Base
     default_member.list
   end
   
-  
   def self.all_for_user(user)
+    List.default_for_user!(user) if ListMember.all_for_user(user).empty?
     ListMember.all_for_user(user).collect{|wm| wm.list}
   end
   
