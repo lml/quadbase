@@ -15,4 +15,7 @@
  *= require jquery-ui-1.8.12.custom
  *= require quadbase-embed
  *= require quadbase
+ *= require uploadify
+ *= require markitup
+ *= require codemirror
  */
