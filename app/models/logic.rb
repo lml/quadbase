@@ -59,8 +59,8 @@ class Logic < ActiveRecord::Base
     end
     
     def store!(results_hash)
-      @variables = results_hash["result"]
-      @console.push(results_hash["console"])
+      @variables = results_hash["result"] || {}
+      @console.push(results_hash["console"]) if !results_hash["console"].nil?
       self
     end
   end
