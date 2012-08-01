@@ -78,6 +78,7 @@ class Logic < ActiveRecord::Base
 protected
 
   def code_compiles
+    return true if code.blank?
     code_errors = Bullring.check(code)
     code_errors.each do |code_error|
       next if code_error.nil?
