@@ -145,7 +145,7 @@ class Question < ActiveRecord::Base
   }
   
   scope :not_superseded, where{-exists(Question.select{1}.from('"questions" "q"')
-    .where{(q.number == ~number) & (q.version > ~version)})}
+    .where{(q.number == ~number) & (q.version > ~version)}.limit(1))}
 
   # This type is passed in some questions params; we need an accessor for it 
   # even though we don't explicitly save it.
