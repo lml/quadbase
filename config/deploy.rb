@@ -6,9 +6,13 @@ DEPLOY_SETTINGS = YAML::load_file(File.join(File.dirname(__FILE__), '/deploy_set
 $:.unshift(File.expand_path('./lib', ENV['rvm_path'])) # Add RVM's lib directory to the load path.
 require "rvm/capistrano"                  # Load RVM's capistrano plugin.
 
-set :rvm_ruby_string, 'ruby-1.9.2-p290@quadbase'        # Or whatever env you want it to run in.
+set :rvm_ruby_string, 'ruby-1.9.3-p194@quadbase'        # Or whatever env you want it to run in.
+
+set :normalize_asset_timestamps, false # get rid of public/[images, javascripts, ...] warnings
 
 require "bundler/capistrano"
+
+load 'deploy/assets'  # to precompile assets
 
 set :user, DEPLOY_SETTINGS["deploy_server_username"]   # Your server account's username
 set :domain, DEPLOY_SETTINGS["domain"]                 # Servername where your account is located 
