@@ -101,8 +101,10 @@ $(document).ready(function () {
     // all draggable elements
     $("div .draggable").draggable({
         revert: true,
-        snap: false
-        /*,helper: "clone"*/
+        containment: '#container',
+        helper: 'clone',
+        start: function(event, ui) { $(this).css('visibility', 'hidden'); },
+        stop: function(event, ui) { $(this).css('visibility', ''); }
     });
 
     // all droppable elements
@@ -113,46 +115,44 @@ $(document).ready(function () {
         drop: function (event, ui) {
             // change class and image
             $(this)
-				.addClass("ui-state-highlight")
-				.find("img")
-				.removeAttr("src")
-				.attr("src", ico_userChecked);
+				      .addClass("ui-state-highlight")
+				      .find("img")
+				      .removeAttr("src")
+				      .attr("src", ico_userChecked);
 
-            // disable it so it can"t be used anymore		
+            // disable it so it can't be used anymore		
             $(this).droppable("disable");
+            
+            // change the icon
+            $(this)
+				      .find(".ui-icon-shuffle")
+				      .removeClass("ui-icon-shuffle")
+				      .addClass("ui-icon-locked");
 
-            // change class and image of the source elemenet		
+            // change class and image of the source element		
             $(ui.draggable)
-				.addClass("ui-state-highlight")
-				.find("img")
-				.removeAttr("src")
-				.attr("src", ico_userChecked);
+				      .addClass("ui-state-highlight")
+				      .find("img")
+				      .removeAttr("src")
+				      .attr("src", ico_userChecked);
 
             // change the icon of the source element				
             $(ui.draggable)
-				.find(".ui-icon-shuffle")
-				.removeClass("ui-icon-shuffle")
-				.addClass("ui-icon-locked");
+				      .find(".ui-icon-shuffle")
+				      .removeClass("ui-icon-shuffle")
+				      .addClass("ui-icon-locked");
 
-            var sourceValue = $(ui.draggable).find(".valSelector").val();
-            var targetValue = $(this).find(".valSelector").val();
-
-            // remove mapping dialog box line if exists
-            if ($("#dialogMappingResult").find("ul > li:first").html() == "No mapping was done yet")
-                $("#dialogMappingResult").find("ul").empty();
-
-            // append the mapping to the dialog	
-            $("#dialogMappingResult")
-				.find("ul")
-				.append("<li>" + sourceValue + " >> " + targetValue + "</li>");
+            var regexp = /question_match_items_attributes_(\d+)_match_id/
+            var sourceId = $(ui.draggable).find(".match_item_match_id").attr('id').match(regexp)[1];
+            var targetId = $(this).find(".match_item_match_id").attr('id').match(regexp)[1];
         
             // change the input element to contain the mapping target and source
+             $(this)
+				      .find(".match_item_match_id")
+				      .val(sourceId);
              $(ui.draggable)
-				.find(".valSelector")
-				.val(sourceValue);
-            $(ui.draggable)
-				.find(".matchedSelector")
-				.val(targetValue);
+				      .find(".match_item_match_id")
+				      .val(targetId);
 
             // disable it so it can"t be used anymore	
             $(ui.draggable).draggable("disable");
@@ -161,25 +161,14 @@ $(document).ready(function () {
         }
     });
 
-    $("#popButton").click(function () {
-        $("#dialog").dialog("open");
-    });
-
-    $("#getMappings").click(function () {
-        $("#dialogMappingResult").dialog("open");
-    });
-
-    svg = Raphael("svgbasics", "100%", "100%");
+    svg = Raphael("svg_div", "100%", "100%");
 
 });
-
-function expandSvg(){
-   svg.setAttribute("height", "+=1000");
-}
 
 function svgClear() {
     svg.clear();
 }
+
 function svgDrawLine(eTarget, eSource) {
 
     // wait 1 sec before drawing the lines, so we can get the position of the draggable
@@ -191,13 +180,13 @@ function svgDrawLine(eTarget, eSource) {
         // origin -> ending ... from left to right
         // 10 + 10 (padding left + padding right) + 2 + 2 (border left + border right)
         var originX = 0;
-        var originY = $source.offset().top - 500;
+        var originY = $source.position().top + $source.height()/2;
 
         
-        var endingX = 80;
-        var endingY = $target.offset().top - 500;
+        var endingX = 57;
+        var endingY = $target.position().top + $target.height()/2;
 
-        var space = 20;
+        var space = 15;
         var color = colours[random(9)];
 
         // draw lines

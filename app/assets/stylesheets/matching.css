@@ -1,0 +1,55 @@
+.match_item {
+  border: 2px solid gray;
+  padding: 10px;
+  width: 232px;
+  margin-bottom: 10px;
+  background: white;
+}
+
+.match_item_content {
+  font-size: 0.9em;
+  text-align: left;
+}
+
+.match_item_content textarea {
+  height: 60;
+  width: 200;
+  resize: none;
+}
+
+.match_item_icons {
+  float:left;
+  text-align: right;
+  vertical-align: top;
+  width: 16px;
+}
+
+.match_item_remove_fields {
+  float: right;
+}
+
+#match_column_container {
+  display: table;
+  position: relative;
+  width: 100%;
+}
+
+#match_left_column {
+  display: table-cell;
+  width: 45%;
+  text-align: left;
+}
+
+#match_right_column {
+  display: table-cell;
+  width: 45%;
+  text-align: right;
+}
+
+#svg_div {
+  position: absolute;
+  top: 0px;
+  display: table-cell;
+  width: 10%;
+  height: 100%;
+}

@@ -18,7 +18,7 @@
 <%# We also have to make sure to use the Questions controller no matter what
     the question_type is, hence the :url directive %>
      
-<%= form_for @question, 
+<%= nested_form_for @question, 
              :as => :question, 
              :url => @question.id.nil? ? questions_path() : question_path(@question), 
              :html => {:autocomplete => "off"} do |f| %>

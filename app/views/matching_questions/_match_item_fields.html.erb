@@ -1,0 +1,25 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% # Clients of this partial must supply the following variables:
+   # f
+%>
+
+<div class='ui-corner-all ui-draggable match_item fields' %>
+  <%= f.hidden_field :right_column, :class => 'match_item_right_column_field' %>
+  <%= f.hidden_field :match_id, :class => 'match_item_match_id' %>
+  <span class='match_item_icons'>
+    <span class='ui-icon-arrow-4 ui-icon'></span>
+    <span class='ui-icon-shuffle ui-icon'></span>
+  </span>
+  <span class="match_item_remove_fields">
+    <%= f.link_to_remove "Remove this item" %>
+  </span>
+  <span class="match_item_content">
+    <%= f.text_area :content %>
+  </span>
+</div>
+
+<script type="text/javascript">
+  update_column_fields();
+</script>

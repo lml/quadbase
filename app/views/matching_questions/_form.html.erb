@@ -2,14 +2,11 @@
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
 
-  <% content_for :javascript_includes do %>
-    <%= javascript_include_tag "matching" %>
-  <% end %>
+<% content_for :javascript_includes do %>
+  <%= javascript_include_tag "matching" %>
+<% end %>
 
-
-
-    
-    <% content_for :after_form do %>
+<% content_for :after_form do %>
 
   <%= render :partial => 'shared/mark_it_up' %>
 
@@ -32,379 +29,109 @@
   <%= render :partial => 'attachable_assets/image_dialog_open_insert_close' %>
 
 <% end %>
-   
- <%= f.hidden_field :type, :value => "SimpleQuestion"%>
 
- <p>You are editing a 
-    <%= link_to_help "simple_questions", "matching question",
-                     {:height => 400, 
-                      :width => 700} %>. 
-    Need help <%= link_to_help "formatting", "formatting", 
-                                {:include_mathjax => true, 
-                                 :height => 400, 
-                                 :width =>900} %> your question?</p>
+<%= f.hidden_field :type, :value => "MatchingQuestion"%>
 
-  <% setup_blank = @question.question_setup.is_empty? %>
+<p>You are editing a 
+   <%= link_to_help "simple_questions", "matching question",
+                    {:height => 400, 
+                     :width => 700} %>. 
+   Need help <%= link_to_help "formatting", "formatting", 
+                               {:include_mathjax => true, 
+                                :height => 400, 
+                                :width =>900} %> your question?</p>
 
-  <% intro_options = {:style => "#{setup_blank ? 'display:none' : ''}", :id => 'intro_text_block'} %>
+<% setup_blank = @question.question_setup.is_empty? %>
 
-  <%= question_edit_block "The Introduction", intro_options do %>
+<% intro_options = {:style => "#{setup_blank ? 'display:none' : ''}", :id => 'intro_text_block'} %>
 
-    <% if @question.is_draft_in_multipart? %>
-      <%= @question.question_setup.content_html.html_safe %>
-    <% else %>
+<%= question_edit_block "The Introduction", intro_options do %>
 
-      <%= f.fields_for :question_setup do |setup_form| %>
+  <% if @question.is_draft_in_multipart? %>
+    <%= @question.question_setup.content_html.html_safe %>
+  <% else %>
+
+    <%= f.fields_for :question_setup do |setup_form| %>
       
-        <div class="question_edit_subblock" style="margin-top:0px">
-          <% class_to_reveal_on_logic_show = "reveal_on_logic_show_#{@logic_counter ||= (@logic_counter || -1) + 1}"%>
-          <%= render :partial => 'logics/form', 
-                     :locals => {:f => setup_form, 
-                                 :logicable => @question.question_setup,
-                                 :class_to_reveal_on_logic_show => class_to_reveal_on_logic_show} %>
-        </div>
-      
-      
-        <div class="question_edit_subblock">
-          <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
-               style="<%= @question.question_setup.logic.empty? ? 'display:none;' : '' %>">Introductory Text</div>
-      
-          <div class="field">
-             <%= setup_form.text_area :content, 
-                              :rows => 8, 
-                              :class => "mark_it_up", 
-                              :style => 'width:100%',
-                              'data-attachable_type'=>'intro' %>
-          </div>
-        </div>
-      <% end %>
-
-    <% end %>
-    
-  <% end %> 
-
-  <div style="<%= setup_blank ? '' : 'display:none' %>">
-    <%= link_to_function "Add a common introduction to this question.", 
-                         '$("#intro_text_block").show(); Quadbase.CodeMirrorUtils.refreshCodeMirrors(); $(this).parent().hide();'%> 
-    (optional)
-    <span style="float:right"><%= link_to_help "question_setup", "What is this?" %></span>
-  </div>
-
-  <%= question_edit_block "The Question" do %>
-
-
-    <div class="question_edit_subblock" style="margin-top:0px">
-      <% class_to_reveal_on_logic_show = "reveal_on_logic_show_#{@logic_counter ||= (@logic_counter || -1) + 1}"%>
-      <%= render :partial => 'logics/form', 
-                 :locals => {:f => f, 
-                             :logicable => @question,
-                             :class_to_reveal_on_logic_show => class_to_reveal_on_logic_show} %>
-    </div>
-    
-    <div class="question_edit_subblock">
-      <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
-           style="<%= @question.logic.empty? ? 'display:none;' : '' %>">Question Text</div>
-    
-      <div class="field">
-        <%= f.text_area :content, :rows => 8, :class => "mark_it_up", :style => 'width:100%' %>
+      <div class="question_edit_subblock" style="margin-top:0px">
+        <% class_to_reveal_on_logic_show = "reveal_on_logic_show_#{@logic_counter ||= (@logic_counter || -1) + 1}"%>
+        <%= render :partial => 'logics/form', 
+                   :locals => {:f => setup_form, 
+                               :logicable => @question.question_setup,
+                               :class_to_reveal_on_logic_show => class_to_reveal_on_logic_show} %>
       </div>
-    </div>
-    
-  <% end %>
 
-    
-    <p>
-        Drag and Drop the boxes on the left to their matching component on the right.
-    </p>
-<div id="helpheight" style="overflow:hidden">
-<% actcounter = 0 %>
-<% counter = 0 %>
-<% rightCounter = 0 %>
-<div style='float:right;'>
-<table>
-<tbody>
-<%= f.fields_for :match_items do |g| %>
-   <% actcounter = actcounter + 2 %>    
-   <% if g.object.column == "right" %>
-	<td style="vertical-align: top;">
-        <div style='border: 2px solid gray; padding: 10px; width: 225px; margin-bottom: 10px;' 
-                                class='ui-corner-all droppable ui-droppable fields' id='<%=g.object.match_id%>'> 
-                                <table cellspacing'0' cellpadding='0' style='width: 100%;'>
-				    <span style="float:right">  
-      <%= link_to_match_item_remove_fields "Delete this item", g %>
-    </span>
-                                    <tbody> 
-                                        <tr> 
-                                            <td style='width: 50px; text-align: center;' rowspan='2'> 
-                                                 </td> 
-                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'> 
-                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
-                                                </span>
-                                            </td> 
-                                        </tr> 
-                                        <tr> 
-                                            <td style='font-size: 0.9em; text-align: left;'>
-	<%= g.text_area :content, :style=>'height:60; width:200; resize:none' %>
-        </td>
-                                        </tr> 
-                                    </tbody> 
-                                </table>
-                                <%= g.hidden_field :match_id %>
-                                <%= g.hidden_field :right_column %>
-                            </div>
-        </td>
-        </tr>
-        <% counter = counter + 1 %>
-        <% end %>
-	
-<% end %>
-</tbody>
-</table>
-</div>
-
-<div style="float:left;">
- <table>
-  <tbody>
-
-<% rightCounter = counter %>
-<%= f.fields_for :match_items do |g| %>    
-	<% if g.object.column == "left" %>
-        <tr>
-	<td>
-	<div style='border: 2px solid gray; padding: 10px; width: 225px; margin-bottom: 10px;'
-                                class='ui-corner-all draggable ui-draggable fields' id='<%=g.object.choice_id%>'>
-                                <table cellspacing'0' cellpadding='0' style='width: 100%;'>
-                                  <span style="float:right">  
-      <%= link_to_match_item_remove_fields "Delete this item", g %>
-    </span>  
-                                  <tbody> 
-                                        <tr> 
-                                            <td style='width: 50px; text-align: center;' rowspan='2'>
-                                                 </td>
-                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'>
-                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
-                                                </span>
-                                            </td> 
-                                        </tr>
-                                        <tr>
-                                            <td style='font-size: 0.9em; text-align: left;'>
-	<%= g.text_area :content, :style=>'height:60; width:200; resize:none' %>
-                         </td>
-                                        </tr> 
-                                    </tbody> 
-                                </table> 
-                                <%= g.hidden_field :choice_id, :class => "valSelector" %>
-                                <%= g.hidden_field :matched_id, :class => "matchedSelector" %>
-                                <%= g.hidden_field :column %>
-                            </div>
-        </td>
-        </tr>
-        <% if g.object.choice_id != g.object.matched_id %>
-        <script type="text/javascript">
-        svgDrawLine($("#<%=g.object.matched_id%>"), $("#<%=g.object.choice_id%>"));
-        </script>
-        <% end %>
-        <% counter = counter + 1 %>
-        <% end %>
-       
-        
-<% end%>
-<% while counter < 2 * (rightCounter)%>
-<tr>
-<td>
-  <div style='border: 2px solid gray; padding: 10px; width: 100%; margin-bottom: 10px; visibility:hidden'
-                                class='ui-corner-all draggable ui-draggable' id='wrapper2'>
-                                <table cellspacing'0' cellpadding='0' style='width: 100%;'>
-                                    <tbody> 
-                                        <tr> 
-                                            <td style='width: 50px; text-align: center;' rowspan='2'>
-                                                 </td>
-                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'>
-                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'>
-                                                </span>
-                                            </td> 
-                                        </tr>
-                                        <tr>
-					  <textarea></textarea>
-                                        </tr> 
-                                    </tbody> 
-                                </table> 
-                            </div>
-        </td>
-        </tr>
-<% counter = counter + 1 %>
+      <div class="question_edit_subblock">
+        <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
+             style="<%= @question.question_setup.logic.empty? ? 'display:none;' : '' %>">Introductory Text</div>
       
+        <div class="field">
+           <%= setup_form.text_area :content, 
+                            :rows => 8, 
+                            :class => "mark_it_up", 
+                            :style => 'width:100%',
+                            'data-attachable_type'=>'intro' %>
+        </div>
+      </div>
+    <% end %>
+
+  <% end %>
+    
+<% end %> 
+
+<div style="<%= setup_blank ? '' : 'display:none' %>">
+  <%= link_to_function "Add a common introduction to this question.", 
+                       '$("#intro_text_block").show(); Quadbase.CodeMirrorUtils.refreshCodeMirrors(); $(this).parent().hide();'%> 
+  (optional)
+  <span style="float:right"><%= link_to_help "question_setup", "What is this?" %></span>
+</div>
+
+<%= question_edit_block "The Question" do %>
+
+
+  <div class="question_edit_subblock" style="margin-top:0px">
+    <% class_to_reveal_on_logic_show = "reveal_on_logic_show_#{@logic_counter ||= (@logic_counter || -1) + 1}"%>
+    <%= render :partial => 'logics/form', 
+               :locals => {:f => f, 
+                           :logicable => @question,
+                           :class_to_reveal_on_logic_show => class_to_reveal_on_logic_show} %>
+  </div>
+  
+  <div class="question_edit_subblock">
+    <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
+         style="<%= @question.logic.empty? ? 'display:none;' : '' %>">Question Text</div>
+  
+    <div class="field">
+      <%= f.text_area :content, :rows => 8, :class => "mark_it_up", :style => 'width:100%' %>
+    </div>
+  </div>
+  
 <% end %>
 
-</tbody>
- </table>
-</div>
-<div id="svgbasics" style="float:left; width:70px; height:100%; position:relative">  
-</div>
-       <div>
-            <table cellspacing="5" cellpadding="40" style="width: 100%; text-align: center;">
-                <tbody>
-                    <tr>
-                        <td id = "leftCol" style="width: 50%; vertical-align: top;">
- 
-                        </td>
-                        <td id = "rightCol" style="vertical-align: top;">
-                            
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-</div>
-    <div id="dialog" title="Reset persons mapping?" style="z-index: 10;">
-        <p>
-            <span class="ui-icon ui-icon-alert"></span>Do you wish to delete all connection
-            resetting the mapping to it's original positions?</p>
-    </div>
-    <div id="dialogMappingResult" title="Current Mapping" style="z-index: 10;">
-        <p>
-            Here is a list of the current mapping:
-        </p>
-        <ul style="list-style: none;">
-            <li>No mapping was done yet</li></ul>
-    </div>
-<div>
-    <a id="popButton" href="#" style="z-index: 10;">reset mapping</a> <a id="getMappings"
-        href="#" style="z-index: 10;">show mapping</a><a id="addLeft"
-        href="#" style="z-index: 10;">add left</a><a id="addRight"
-        href="#" style="z-index: 10;">add right</a>
-</div>
+<p>
+  Drag and Drop the boxes on the left to their matching component on the right.
+</p>
 
-<script type="text/javascript">
-  counter = <%= actcounter %>;
-  $('#addRight').bind('click', function() {
-    counter = counter + 1;
-    var s = "<div style='border: 2px solid gray; padding: 10px; width: 225px; margin-bottom: 10px; margin-left:75px;' \
-                                class='ui-corner-all droppable ui-droppable fields' id="+counter+"> \
-                                <table cellspacing'0' cellpadding='0' style='width: 100%;'> \
-                                <span style='float:right'> \
-                                   <input id='question_match_items_attributes_"+counter+"__destroy' type='hidden' value='false' name='question[match_items_attributes]["+counter+"][_destroy]' > \
-                                   <a onclick='match_item_remove_fields(this); return false;' href='#'>Delete this item</a> \
-                                  </span> \
-                                    <tbody> \
-                                        <tr> \
-                                            <td style='width: 50px; text-align: center;' rowspan='2'> \
-                                                 </td> \
-                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'> \
-                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'> \
-                                                </span> \
-                                            </td> \
-                                        </tr> \
-                                        <tr> \
-                                            <td style='font-size: 0.9em; text-align: left;'> \
-                                                <textarea style='height:60; width:200; resize:none' id='question_match_items_attributes_" + counter +"_content' name='question[match_items_attributes][" + counter + "][content]' ></textarea> \
-                                            </td> \
-                                        </tr> \
-                                    </tbody> \
-                                </table> \
-                                <input class='valSelector' value ="+counter+" id='question_match_items_attributes_" + counter + "_choice_id' name='question[match_items_attributes][" + counter + "][choice_id]' type='hidden' /> \
-                            <input class = 'matchedSelector' value ="+counter+" id='question_match_items_attributes_" + counter + "_matched_id' name='question[match_items_attributes][" + counter + "][matched_id]' type='hidden' /> \
-                           <input value ='right' id='question_match_items_attributes_" + counter + "_column' name='question[match_items_attributes][" + counter + "][column]' type='hidden' /> \
-                            </div>";
-    var t = document.createElement('div');
-    t.innerHTML = s;
-    document.getElementById('rightCol').appendChild(t);
-    $("div .droppable").droppable();
-    $("div .droppable").droppable({
-        hoverClass: "ui-state-hover",
-        helper: "clone",
-        cursor: "move",
-        drop: function (event, ui) {
-            // change class and image
-            $(this)
-				.addClass("ui-state-highlight")
-				.find("img")
-				.removeAttr("src")
-				.attr("src", ico_userChecked);
-
-            // disable it so it can"t be used anymore		
-            $(this).droppable("disable");
-
-            // change class and image of the source elemenet		
-            $(ui.draggable)
-				.addClass("ui-state-highlight")
-				.find("img")
-				.removeAttr("src")
-				.attr("src", ico_userChecked);
-
-            // change the icon of the source element				
-            $(ui.draggable)
-				.find(".ui-icon-shuffle")
-				.removeClass("ui-icon-shuffle")
-				.addClass("ui-icon-locked");
-
-            var sourceValue = $(ui.draggable).find(".valSelector").val();
-            var targetValue = $(this).find(".valSelector").val();
-
-            // remove mapping dialog box line if exists
-            if ($("#dialogMappingResult").find("ul > li:first").html() == "No mapping was done yet")
-                $("#dialogMappingResult").find("ul").empty();
-
-            // append the mapping to the dialog	
-            $("#dialogMappingResult")
-				.find("ul")
-				.append("<li>" + sourceValue + " >> " + targetValue + "</li>");
-        
-            // change the input element to contain the mapping target and source
-            $(ui.draggable)
-				.find(".valSelector")
-				.val(sourceValue);
-            $(ui.draggable)
-				.find(".matchedSelector")
-				.val(targetValue);
-
-            // disable it so it can"t be used anymore	
-            $(ui.draggable).draggable("disable");
-
-            svgDrawLine($(this), $(ui.draggable));
-        }
-    });
-  });
-  $('#addLeft').bind('click', function() {
-    counter = counter + 1;
-    var s = "<div style='border: 2px solid gray; padding: 10px; width: 225px; margin-bottom: 10px;' \
-                                class='ui-corner-all draggable ui-draggable fields' id="+counter+"> \
-                                <table cellspacing'0' cellpadding='0' style='width: 100%;'> \
-                                     <span style='float:right'> \
-                                   <input id='question_match_items_attributes_"+counter+"__destroy' type='hidden' value='false' name='question[match_items_attributes]["+counter+"][_destroy]' > \
-                                   <a onclick='match_item_remove_fields(this); return false;' href='#'>Delete this item</a> \
-                                  </span> \
-                                     <tbody> \
-                                        <tr> \
-                                            <td style='width: 50px; text-align: center;' rowspan='2'> \
-                                                 </td> \
-                                            <td style='text-align: right; vertical-align: top; width: 16px;' rowspan='2'> \
-                                                <span class='ui-icon-arrow-4 ui-icon'></span><span class='ui-icon-shuffle ui-icon'> \
-                                                </span> \
-                                            </td> \
-                                        </tr> \
-                                        <tr> \
-                                            <td style='font-size: 0.9em; text-align: left;'> \
-                                                <textarea style='height:60; width:200; resize:none' id='question_match_items_attributes_" + counter + "_content' rows='20' name='question[match_items_attributes][" + counter + "][content]' cols='40'></textarea> \
-                                            </td> \
-                                        </tr> \
-                                    </tbody> \
-                                </table> \
-                                <input class = 'valSelector' value =" + counter+ " id='question_match_items_attributes_" + counter + "_choice_id' name='question[match_items_attributes][" + counter + "][choice_id]' type='hidden' /> \
-                              <input class = 'matchedSelector' value ="+counter+" id='question_match_items_attributes_" + counter + "_matched_id' name='question[match_items_attributes][" + counter + "][matched_id]' type='hidden' /> \
-                             <input value ='left' id='question_match_items_attributes_" + counter + "_column' name='question[match_items_attributes][" + counter + "][column]' type='hidden' /> \
-                            </div>";
-    var t = document.createElement('div');
-    t.innerHTML = s;
-    document.getElementById('leftCol').appendChild(t);
-    $("div .draggable").draggable();
-        $("div .draggable").draggable({
-        revert: true,
-        snap: false
-        /*,helper: "clone"*/
-    });
-    
-
-  })
+<div id="match_column_container">
+  <div id="match_left_column" data-right_column="f">
+    <%= f.fields_for :match_items, @question.match_items.where(:right_column => false) do |nested| %>
+	    <%= render :partial => 'matching_questions/match_item_fields',
+	               :locals => { :f => nested } %>
+    <% end %>
+    <%= f.link_to_add "Add left", :match_items %>
+  </div>
   
-</script>
+  <div id="svg_div"></div>
+  
+  <div id="match_right_column" data-right_column="t">
+    <%= f.fields_for :match_items, @question.match_items.where(:right_column => true) do |nested| %>
+	    <%= render :partial => 'matching_questions/match_item_fields',
+	               :locals => { :f => nested } %>
+    <% end %>
+    <%= f.link_to_add "Add right", :match_items %>
+  </div>
+</div>
+
+<br clear="all">
+
+<%= link_to "Reset matching", "" %>
