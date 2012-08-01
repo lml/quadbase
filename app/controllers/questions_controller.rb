@@ -18,6 +18,7 @@ class QuestionsController < ApplicationController
   
   def index
     @where ||= 'Published Questions'
+    redirect_to root_path, :notice => "Question searching temporarily disabled"
   end
 
   def show
@@ -361,6 +362,9 @@ class QuestionsController < ApplicationController
   end
 
   def search
+    redirect_to root_path, :notice => 'Question search temporarily disabled'
+    return
+    
     @type = params[:type]
     @location = params[:location]
     @part = params[:part]
