@@ -47,6 +47,7 @@ set :use_sudo, false
 # Use this so we don't have to put sensitive data in the git repository (for security)
 
 after "deploy:create_symlink","custom:finishing_touches"
+# after "deploy:create_symlink", "rake:bullring"
 # after "deploy:assets:symlink", "custom:finishing_touches"
 
 namespace :deploy do
@@ -63,5 +64,14 @@ namespace :custom do
     run "ln -sFf #{deploy_to}/to_copy/secret_settings.yml #{current_path}/config/secret_settings.yml"
   end
 end
+
+# namespace :rake do  
+#   desc "Run a task on a remote server."  
+#   # run like: cap staging rake:invoke task=a_certain_task  
+#   task :bullring do  
+#     run("cd #{deploy_to}/current; /usr/bin/env bundle exec rake bullring:discard RAILS_ENV=#{rails_env}")  
+#   end  
+# end
+
 
 

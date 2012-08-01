@@ -104,6 +104,8 @@ class Question < ActiveRecord::Base
   before_validation :build_question_setup, :unless => Proc.new { |q| q.question_setup || q.is_published? }
   validates_presence_of :question_setup, :unless => :is_published?
 
+  validates_uniqueness_of :version, :scope => :number, :if => :is_published?
+
   before_save :clear_empty_logic
 
   validate :not_published, :on => :update
