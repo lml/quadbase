@@ -67,9 +67,8 @@ class ListQuestionsController < ApplicationController
       @list_questions.all?{|pq| pq.can_be_copied_by?(present_user)}
 
     ListQuestion.transaction do 
-      @list_questions.each do |pq|
-        pq.copy!(target_list, present_user)
-      end
+      @copied_questions = @list_questions.collect{ |lq|
+        lq.copy!(target_list, present_user)}
     end
 
     respond_to do |format|

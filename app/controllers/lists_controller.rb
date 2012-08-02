@@ -19,6 +19,7 @@ class ListsController < ApplicationController
     @list = List.find(params[:id])
     raise SecurityTransgression unless present_user.can_read?(@list)
     @target_lists = current_user.lists.reject { |w| w == @list}
+    @all_lists = current_user.lists
     respond_with(@list)
   end
 
