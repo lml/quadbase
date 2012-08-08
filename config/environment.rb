@@ -13,6 +13,8 @@ require 'asset_methods'
 require 'vote_methods'
 require 'form_builder_extensions'
 require 'acts_as_numberable'
+require 'variated_content_html'
+require 'will_paginate/array'
 
 ActionMailer::Base.delivery_method = :sendmail
 

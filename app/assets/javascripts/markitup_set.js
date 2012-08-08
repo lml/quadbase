@@ -8,11 +8,14 @@ onTab:    		{keepDefault:false, replaceWith:'    '},
 markupSet:  [ 	
 	{name:'Bold', key:'B', openWith:'\!\!', closeWith:'\!\!' },
 	{name:'Italic', key:'I', openWith:'\'\'', closeWith:'\'\''  },
+	{name:'Underline', key:'U', openWith:'\_\_', closeWith:'\_\_'},
 	{name:'Picture', key:'P', replaceWith:function (markItUp) {
                open_add_image_dialog(markItUp);
                return false;
            }
    },
+   
+  
 	{name:'Bullets', key:'Bl', openWith:'\n\*'},
 	
 	{name:'Number List', key:'N_L', openWith:'\n\#'},

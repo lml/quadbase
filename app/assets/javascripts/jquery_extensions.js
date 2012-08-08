@@ -4,7 +4,8 @@
 jQuery.fn.exists = function(){return jQuery(this).length>0;}
 
 jQuery.fn.closeOnClickOutside = function(){
+  var dialogx = this;
   $('.ui-widget-overlay').live("click",function(){
-    jQuery(this).dialog("close");
+    dialogx.dialog("close");
   });
 }

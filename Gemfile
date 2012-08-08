@@ -45,7 +45,7 @@ gem 'jsonify-rails', '~> 0.3.2'
 gem 'execjs', '~> 1.4.0'
 gem 'therubyracer', '~> 0.10.1'
 
-gem 'bullring', '~> 0.8.1'
+gem 'bullring', '~> 0.8.3'
 
 gem 'nested_form'
 

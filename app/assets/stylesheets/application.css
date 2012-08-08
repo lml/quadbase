@@ -16,4 +16,7 @@
  *= require quadbase-embed
  *= require quadbase
  *= require matching
+ *= require uploadify
+ *= require markitup
+ *= require codemirror
  */

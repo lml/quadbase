@@ -3,6 +3,7 @@
 
 class Question < ActiveRecord::Base
   include AssetMethods
+  include VariatedContentHtml
   
   acts_as_taggable
   
@@ -90,12 +91,6 @@ class Question < ActiveRecord::Base
            
 
   has_many :solutions, :dependent => :destroy
-
-  attr_writer :variated_content_html
-  
-  def variated_content_html
-    @variated_content_html || self.content_html
-  end
   
   has_one :comment_thread, :as => :commentable, :dependent => :destroy
   before_validation :build_comment_thread, :on => :create
@@ -108,6 +103,8 @@ class Question < ActiveRecord::Base
   # Should hopefully prevent question setup from ever being nil
   before_validation :build_question_setup, :unless => Proc.new { |q| q.question_setup || q.is_published? }
   validates_presence_of :question_setup, :unless => :is_published?
+
+  validates_uniqueness_of :version, :scope => :number, :if => :is_published?
 
   before_save :clear_empty_logic
 
@@ -132,7 +129,7 @@ class Question < ActiveRecord::Base
   }
   # Can read a question if any of those:
   #   - Question is published
-  #   - User is a member or a project that contains the question
+  #   - User is a member of a project that contains the question
   #   - User is a question collaborator with roles
   #   - User is a deputy of a question collaborator with roles
   scope :which_can_be_read_by, lambda { |user|
@@ -146,6 +143,9 @@ class Question < ActiveRecord::Base
     ((question_collaborators.is_author == true) |\
     (question_collaborators.is_copyright_holder == true)))}
   }
+  
+  scope :not_superseded, where{-exists(Question.select(1).from('`questions` `q`')
+    .where{(q.number == ~number) & (q.version > ~version)}.limit(1))}
 
   # This type is passed in some questions params; we need an accessor for it 
   # even though we don't explicitly save it.
@@ -471,7 +471,7 @@ class Question < ActiveRecord::Base
     end
 
     type_query = typify(type)
-    wtscope = wscope.where{question_type =~ type_query}
+    wtscope = wscope.includes{question_setup}.where{question_type =~ type_query}
 
     if !exclude_type.blank?
       exclude_type_query = typify(exclude_type)
@@ -479,62 +479,66 @@ class Question < ActiveRecord::Base
     end
 
     latest_only = true
-    case part
-    when 'ID/Number'
-      # Search by question ID or number (more relaxed than to_param)
-      if text.blank?
-        q = wtscope
-      elsif (text =~ /^\s?(\d+)\s?$/) # Format: (id or number)
-        id_query = $1
-        num_query = $1
-        q = wtscope.where{(id == id_query) | (number == num_query)}
-      elsif (text =~ /^\s?d\.?\s?(\d+)\s?$/) # Format: d(id)
-        id_query = $1
-        q = wtscope.where{id == id_query}
-        latest_only = false
-      elsif (text =~ /^\s?q\.?\s?(\d+)(,?\s?v\.?\s?(\d+))?\s?$/)
-        # Format: q(number) or q(number)v(version)
-        num_query = $1
-        if $2.nil?
-          q = wtscope.where{number == num_query}
-        elsif !$3.nil?
-          ver_query = $3
-          q = wtscope.where{(number == num_query) & (version == ver_query)}
+    if !text.blank?
+      case part
+      when 'ID/Number'
+        # Search by question ID or number (more relaxed than to_param)
+        if (text =~ /^\s?(\d+)\s?$/) # Format: (id or number)
+          id_query = $1
+          num_query = $1
+          q = wtscope.where{(id == id_query) | (number == num_query)}
+        elsif (text =~ /^\s?d\.?\s?(\d+)\s?$/) # Format: d(id)
+          id_query = $1
+          q = wtscope.where{id == id_query}
           latest_only = false
-        else # Invalid version
-          return Question.where{id == nil}.where{id != nil} # Empty
+        elsif (text =~ /^\s?q\.?\s?(\d+)(,?\s?v\.?\s?(\d+))?\s?$/)
+          # Format: q(number) or q(number)v(version)
+          num_query = $1
+          if $2.nil?
+            q = wtscope.where{number == num_query}
+          elsif !$3.nil?
+            ver_query = $3
+            q = wtscope.where{(number == num_query) & (version == ver_query)}
+            latest_only = false
+          else # Invalid version
+            return Question.none # Empty
+          end
+        else # Invalid ID/Number
+          return Question.none # Empty
         end
-      else # Invalid ID/Number
-        return Question.where{id == nil}.where{id != nil} # Empty
+      when 'Author/Copyright Holder'
+        # Search by author (or copyright holder)
+        q = wtscope.joins{question_collaborators.user}
+        text.gsub(",", "").split.each do |t|
+          query = t.blank? ? '%' : '%' + t + '%'
+          q = q.where{(question_collaborators.user.first_name =~ query) |\
+                      (question_collaborators.user.last_name =~ query)}
+        end
+      when 'Tags'
+        # Search by tags
+        q = wtscope.joins{taggings.tag}
+        text.split(",").each do |t|
+          query = t.blank? ? '%' : '%' + t + '%'
+          q = q.where{tags.name =~ query}
+        end
+      else # Content
+        query = '%' + text + '%'
+        q = wtscope.where{(content =~ query) | (question_setups.content =~ query)}
       end
-    when 'Author/Copyright Holder'
-      # Search by author (or copyright holder)
-      q = wtscope.joins{question_collaborators.user}
-      text.gsub(",", "").split.each do |t|
-        query = t.blank? ? '%' : '%' + t + '%'
-        q = q.where{(question_collaborators.user.first_name =~ query) |\
-                                    (question_collaborators.user.last_name =~ query)}
-      end
-    when 'Tags'
-      # Search by tags
-      q = wtscope.joins{taggings.tag}
-      text.split(",").each do |t|
-        query = t.blank? ? '%' : '%' + t + '%'
-        q = q.where{tags.name =~ query}
-      end
-    else # Content
-      query = text.blank? ? '%' : '%' + text + '%'
-      q = wtscope.joins{question_setup.outer}.where{(content =~ query) | (question_setup.content =~ query)}
+    else
+      q = wtscope
     end
     
     # Remove (in SQL) questions the user can't read
     q = q.which_can_be_read_by(user)
 
-    if latest_only # Remove old published versions
-      q = q.where{questions.id.in(Question.draft_questions) |\
-                  questions.id.in(Question.published_questions.group{number}.having{version == max(version)})}
-    end
-    q.group{questions.id}.order{number}
+    # Remove duplicates
+    q = q.group{questions.id}
+
+    # Remove old published versions
+    q = q.not_superseded if latest_only
+    
+    q.order{number}
   end
 
   def roleless_collaborators

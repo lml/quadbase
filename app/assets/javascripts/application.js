@@ -19,38 +19,19 @@
 //= require jquery-ui
 //= require jquery-ui-1.8.12.custom.min
 //= require jquery_extensions
-<% if Rails.env.development? %>
-//= require jquery-ui-timepicker-addon
-<% end %>
+//= require jcarousellite_1.0.1
+//= require jquery.easing.1.1.1
+//= require markitup
+//= require codemirror
+//= require uploadify
+//= require autocomplete-rails
+
+
 
 function remove_fields(link) {
   $(link).prev("input[type=hidden]").val("1");
   $(link).closest(".fields").hide();
 }
-
-function matching_remove_fields(link) {
-  $(link).prev("input[type=hidden]").val("1");
-  $(link).closest(".fields").hide();
-  var thischoice = $(link).parent().siblings(".valSelector").attr('value');
-  var thismatched = $(link).parent().siblings(".matchedSelector").attr('value');
-  if (thischoice != thismatched)
-    $(link).parent().siblings(".matchedSelector").val(thischoice);
-  if (thischoice == thismatched)
-    $(".fields").each(function(index) {
-    	var choicetemp = $(this).children(".valSelector").attr('value');
-        var matchedtemp = $(this).children(".matchedSelector").attr('value');
-        if (matchedtemp == thismatched)
-		$(this).children(".matchedSelector").val(choicetemp);
-    });
-  svgClear();
-  $(".fields").each(function(index) {
-  	var choicetemp = $(this).children(".valSelector").attr('value');
-        var matchedtemp = $(this).children(".matchedSelector").attr('value');
-        if(matchedtemp != choicetemp)
-           svgDrawLine($("#" + matchedtemp), $("#" + choicetemp));
-  });
-}
-
 
 function add_fields(elem_to_append_to, association, content) {
   var new_id = new Date().getTime();

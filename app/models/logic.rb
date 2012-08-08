@@ -59,8 +59,8 @@ class Logic < ActiveRecord::Base
     end
     
     def store!(results_hash)
-      @variables = results_hash["result"]
-      @console.push(results_hash["console"])
+      @variables = results_hash["result"] || {}
+      @console.push(results_hash["console"]) if !results_hash["console"].nil?
       self
     end
   end
@@ -78,6 +78,7 @@ class Logic < ActiveRecord::Base
 protected
 
   def code_compiles
+    return true if code.blank?
     code_errors = Bullring.check(code)
     code_errors.each do |code_error|
       next if code_error.nil?

@@ -67,6 +67,9 @@ module Quadbase
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
+    # https://github.com/rails/rails/issues/3984
+    config.assets.initialize_on_precompile = false
+
     # Trick to override devise controllers but still use the devise views
     # http://stackoverflow.com/questions/3546289/override-devise-registrations-controller
     #paths.app.views << "app/views/devise"

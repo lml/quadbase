@@ -78,6 +78,9 @@
 
  <div class="solution_div" style="float:left; width:85%">
    <% if !solution.explanation.blank? %>
+     <% if !solution.is_visible %>
+       <div id="notice" class="notice">This solution is not ready to be viewed.</div>
+     <% end %>
      <div class="solutionPartHeading" style="margin-top:0px">High-Level Explanation</div>
      <div id="solution_explanation_<%= solution.id.to_s %>" style="margin-left:20px">
        <%= simple_format solution.explanation %>

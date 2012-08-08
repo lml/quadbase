@@ -6,7 +6,7 @@
                                                    :locals => {:question => @question}) %>");
    <%= reload_mathjax("preview_dialog") %>
 
-   $("#preview_dialog").dialog('open');
+   $("#preview_dialog").dialog('open').closeOnClickOutside();   
 <% else %>
    // Submit the form so that the error messages display nicely with formatting
    // around the offending entries (use the trigger approach so we don't get

@@ -12,7 +12,7 @@ class QuestionsController < ApplicationController
   before_filter {select_tab(:write)}
   before_filter :except => [:index, :new, :get_started, :search] do @use_columns = true end
 
-  before_filter {@include_autocomplete=true}
+  # before_filter {@include_autocomplete=true}
     
   autocomplete :tag, :name, :class_name => 'ActsAsTaggableOn::Tag'
   
@@ -22,6 +22,7 @@ class QuestionsController < ApplicationController
 
   def show
     @question = Question.from_param(params[:id])
+    @unfinished_solutions = !@question.solutions.where{(is_visible == false) & (creator_id == my{present_user.id})}.first.nil?
     raise SecurityTransgression unless present_user.can_read?(@question)
     
     start_time = Time.now if logger.info?

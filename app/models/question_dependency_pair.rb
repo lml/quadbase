@@ -26,6 +26,8 @@ class QuestionDependencyPair < ActiveRecord::Base
 
   validate :dependent_question_unpublished
   validate :valid_kind
+  
+  attr_accessible :dependent_question_id, :kind, :independent_question_id
 
   def is_requirement?
     "requirement" == kind

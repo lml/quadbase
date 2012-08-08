@@ -17,6 +17,10 @@
   
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
+
+  <% if Rails.env.development? %>
+    <%= javascript_include_tag "jquery-ui-timepicker-addon" %>
+  <% end %>
  
   <% if content_for?(:stylesheets) %>
   <style type="text/css"><%= yield :stylesheets %></style>
@@ -44,32 +48,32 @@
      <% end %>
   <% end %>
 
-  <% if @include_autocomplete %>
-    <%= javascript_include_tag "autocomplete-rails" %>
-  <% end %>
+  <%# if @include_autocomplete %>
+    <%#= javascript_include_tag "autocomplete-rails" %>
+  <%# end %>
 
-  <% if @include_jcarousellite %>
-    <%= javascript_include_tag 'jcarousellite_1.0.1' %>
-  <% end %>
+  <%# if @include_jcarousellite %>
+    <%#= javascript_include_tag 'jcarousellite_1.0.1' %>
+  <%# end %>
 
-  <% if @include_easing %>
-    <%= javascript_include_tag 'jquery.easing.1.1.1' %>
-  <% end %>
+  <%# if @include_easing %>
+    <%#= javascript_include_tag 'jquery.easing.1.1.1' %>
+  <%# end %>
   
-  <% if @include_codemirror %>
-    <%= javascript_include_tag 'codemirror' %>
-    <%= stylesheet_link_tag 'codemirror' %>
-  <% end %>
+  <%# if @include_codemirror %>
+    <%#= javascript_include_tag 'codemirror' %>
+    <%#= stylesheet_link_tag 'codemirror' %>
+  <%# end %>
   
-  <% if @include_uploadify %>
-    <%= javascript_include_tag 'uploadify' %>
-    <%= stylesheet_link_tag 'uploadify' %>
-  <% end %>
+  <%# if @include_uploadify %>
+    <%#= javascript_include_tag 'uploadify' %>
+    <%#= stylesheet_link_tag 'uploadify' %>
+  <%# end %>
   
-  <% if @include_markitup %>
-    <%= javascript_include_tag "markitup" %>
-    <%= stylesheet_link_tag "markitup" %>
-  <% end %>
+  <%# if @include_markitup %>
+    <%#= javascript_include_tag "markitup" %>
+    <%#= stylesheet_link_tag "markitup" %>
+  <%# end %>
   
   <% if content_for?(:javascript_includes) %>
     <%= yield :javascript_includes %>
