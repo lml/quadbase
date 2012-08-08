@@ -11,18 +11,13 @@
   * Last Edit by Author: 29 September 2011
   */
 
-var svg = null,
-    colors = ['purple', 'red', 'orange', 'yellow', 'lime', 'green', 'blue', 'navy', 'black'];
+var svg = null;
 
 $(document).ready(function () {
   svg = Raphael('svg_div', '100%', '100%');
   drawAllLines();
   $('#match_column_container').css('visibility', 'visible');
 });
-
-function randInt(range) {
-  return Math.floor(Math.random() * range);
-}
 
 function svgDrawLine(eTarget, eSource) {
     // origin -> ending ... from left to right
@@ -35,7 +30,7 @@ function svgDrawLine(eTarget, eSource) {
     var endingY = eTarget.position().top + eTarget.height()/2;
 
     var space = 15;
-    var color = colors[randInt(9)];
+    var color = Raphael.getColor(1);
 
     // draw lines
     // http://raphaeljs.com/reference.html#path			
@@ -79,6 +74,7 @@ function clearMatchings() {
       
     $('.match_item_match_number').val('');
     svg.clear();
+    Raphael.getColor.reset();
   }
 }
 
@@ -134,6 +130,14 @@ function drawAllLines() {
       svgDrawLine(targetElement, $(this));
       disableDragDrop(targetElement);
       disableDragDrop($(this));
+    }
+  });
+  
+  $('#quad-match_items_left_column .match_item_show').each(function() {
+    var targetNumber = $(this).attr('data-match');
+    if (targetNumber != '') {
+      var targetElement = $('#match_item_' + targetNumber);
+      svgDrawLine(targetElement, $(this));
     }
   });
 }

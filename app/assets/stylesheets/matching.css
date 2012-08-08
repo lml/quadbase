@@ -12,8 +12,18 @@
   display: inline-block;
 }
 
+.match_item_show {
+  border: 2px solid gray;
+  padding: 10px;
+  width: 232px;
+  height: 85px;
+  margin-bottom: 10px;
+  background: white;
+  overflow: auto;
+}
+
 .match_item_content textarea {
-  height: 60;
+  height: 70;
   width: 200;
   resize: none;
 }
@@ -68,6 +78,26 @@ div.locked .match_item_remove_fields {
 
 #match_reset_div {
   text-align: center;
+}
+
+#quad-match_items {
+  display: table;
+  position: relative;
+  width: 100%;
+}
+
+#quad-match_items_left_column {
+  display: table-cell;
+  width: 45%;
+  text-align: left;
+  vertical-align: top;
+}
+
+#quad-match_items_right_column {
+  display: table-cell;
+  width: 45%;
+  text-align: right;
+  vertical-align: top;
 }
 
 #svg_div {
