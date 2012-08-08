@@ -38,12 +38,14 @@
   display: table-cell;
   width: 45%;
   text-align: left;
+  vertical-align: top;
 }
 
 #match_right_column {
   display: table-cell;
   width: 45%;
   text-align: right;
+  vertical-align: top;
 }
 
 #svg_div {
