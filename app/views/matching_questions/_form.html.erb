@@ -1,11 +1,6 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-
-<% content_for :javascript_includes do %>
-  <%= javascript_include_tag "matching" %>
-<% end %>
-
 <% content_for :after_form do %>
 
   <%= render :partial => 'shared/mark_it_up' %>
@@ -134,4 +129,6 @@
 
 <br clear="all">
 
-<%= link_to "Reset matchings", "", :onclick => "clearMatchings(); return false;" %>
+<div id="match_reset_div">
+  <%= link_to "Reset matchings", "", :onclick => "clearMatchings(); return false;" %>
+</div>

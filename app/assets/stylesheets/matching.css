@@ -4,11 +4,12 @@
   width: 232px;
   margin-bottom: 10px;
   background: white;
+  text-align: right;
 }
 
 .match_item_content {
   font-size: 0.9em;
-  text-align: left;
+  display: inline-block;
 }
 
 .match_item_content textarea {
@@ -24,12 +25,29 @@
   width: 16px;
 }
 
-.match_item_remove_fields {
-  float: right;
+.match_item_icons .ui-icon {
+  display: none;
+}
+
+div.draggable:not(.locked) .ui-icon-arrow-4 {
+  display: block;
+}
+
+div.droppable:not(.locked) .ui-icon-shuffle {
+  display: block;
+}
+
+div.locked .ui-icon-locked {
+  display: block;
+}
+
+div.locked .match_item_remove_fields {
+  visibility: hidden;
 }
 
 #match_column_container {
   display: table;
+  visibility: hidden;
   position: relative;
   width: 100%;
 }
@@ -46,6 +64,10 @@
   width: 45%;
   text-align: right;
   vertical-align: top;
+}
+
+#match_reset_div {
+  text-align: center;
 }
 
 #svg_div {

@@ -78,6 +78,7 @@ class QuestionsController < ApplicationController
       redirect_to(question_path(@question))
       return
     end
+    @include_matching = @question.question_type == 'MatchingQuestion'
     respond_with(@question)
   end
 
@@ -87,7 +88,6 @@ class QuestionsController < ApplicationController
   # we just want it to go to the questions view.
   def update
     @question = Question.from_param(params[:id])
-
     raise SecurityTransgression unless present_user.can_update?(@question)
     if (@no_lock = !@question.check_and_unlock!(present_user))
       flash[:alert] = @question.errors[:base]
@@ -96,6 +96,14 @@ class QuestionsController < ApplicationController
         format.js
       end
       return
+    end
+    
+    unless params[:question][:match_items_attributes].nil?
+      # Handle associations between newly created match items
+      match_item_numbers = params[:question][:match_items_attributes].collect{|a| a.first}
+      params[:question][:match_items_attributes].each do |k, m|
+        m[:match_number] = match_item_numbers.index(m[:match_number])
+      end
     end
 
     respond_to do |format|  
@@ -386,7 +394,7 @@ protected
   def create(question) 
     @question = question
     raise SecurityTransgression unless present_user.can_create?(@question)
-                    
+    
     begin
       @question.create!(current_user)
     

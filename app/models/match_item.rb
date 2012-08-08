@@ -3,9 +3,8 @@ class MatchItem < ActiveRecord::Base
   include AssetMethods
   
   belongs_to :question
-  belongs_to :match, :class_name => 'MatchItem'
 
-  attr_accessible :content, :match, :right_column
+  attr_accessible :content, :match_number, :right_column
   validates_presence_of :question
   validate :matching_question
   

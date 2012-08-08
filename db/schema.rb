@@ -155,7 +155,7 @@ ActiveRecord::Schema.define(:version => 20120730204006) do
 
   create_table "match_items", :force => true do |t|
     t.integer  "question_id"
-    t.integer  "match_id"
+    t.integer  "match_number"
     t.boolean  "right_column", :default => false
     t.text     "content"
     t.text     "content_html"
