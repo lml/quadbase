@@ -14,16 +14,6 @@
 var show_svg = null;
 var edit_svg = null;
 
-function loadSvg(edit) {
-  if (edit)
-    edit_svg = Raphael('edit_svg_div', '100%', '100%');
-  else
-    show_svg = Raphael('show_svg_div', '100%', '100%');
-  drawAllLines(edit);
-  if (edit)
-    $('#match_column_container').css('visibility', 'visible');
-}
-
 function svgDrawLine(eTarget, eSource, edit) {
     var svg = null;
     if (edit)
@@ -73,6 +63,58 @@ function disableDragDrop(element) {
 			   .removeClass('ui-state-disabled');
 }
 
+function drawAllLines(edit) {
+  if (edit) {
+    $('#match_left_column .match_item').each(function() {
+      var targetNumber = $(this).find('.match_item_match_number').val();
+      if (targetNumber != '') {
+        var targetElement = $('#question_match_items_attributes_' + targetNumber + '_right_column').parent();
+        svgDrawLine(targetElement, $(this), true);
+        disableDragDrop(targetElement);
+        disableDragDrop($(this));
+      }
+    });
+  }
+  else {
+    $('#quad-match_items_left_column .match_item_show').each(function() {
+      var targetNumber = $(this).attr('data-match');
+      if (targetNumber != '') {
+        var targetElement = $('#match_item_' + targetNumber);
+        svgDrawLine(targetElement, $(this), false);
+      }
+    });
+  }
+}
+
+function loadSvg(edit) {
+  if (edit)
+    edit_svg = Raphael('edit_svg_div', '100%', '100%');
+  else
+    show_svg = Raphael('show_svg_div', '100%', '100%');
+  drawAllLines(edit);
+  if (edit)
+    $('#match_column_container').css('visibility', 'visible');
+}
+
+function redrawEditLines() {
+  edit_svg.clear();
+  Raphael.getColor.reset();
+  drawAllLines(true);
+}
+
+function removeMatching() {
+  var thisField = $(this).parent().parent().find('.match_item_match_number')
+  var matchNumber = thisField.val();
+  thisField.val('');
+  
+  var otherField = $('#question_match_items_attributes_' + matchNumber + '_match_number')
+  otherField.val('');
+  otherField.parent().removeClass('ui-state-highlight locked')
+                   .draggable('enable')
+                   .droppable('enable');
+  setTimeout(redrawEditLines, 1);
+}
+
 function clearMatchings() {
   if (confirm('Are you sure you wish to reset all matchings?')) {
     $('div .draggable')
@@ -89,7 +131,7 @@ function clearMatchings() {
   }
 }
 
-function updateColumnFields() {
+function updateMatchForm() {
   $('#match_left_column .match_item')
     .addClass('draggable')
     .find('.match_item_right_column_field')
@@ -131,27 +173,6 @@ function updateColumnFields() {
           svgDrawLine($(this), $(ui.draggable), true);
       }
   });
-}
-
-function drawAllLines(edit) {
-  if (edit) {
-    $('#match_left_column .match_item').each(function() {
-      var targetNumber = $(this).find('.match_item_match_number').val();
-      if (targetNumber != '') {
-        var targetElement = $('#question_match_items_attributes_' + targetNumber + '_right_column').parent();
-        svgDrawLine(targetElement, $(this), true);
-        disableDragDrop(targetElement);
-        disableDragDrop($(this));
-      }
-    });
-  }
-  else {
-    $('#quad-match_items_left_column .match_item_show').each(function() {
-      var targetNumber = $(this).attr('data-match');
-      if (targetNumber != '') {
-        var targetElement = $('#match_item_' + targetNumber);
-        svgDrawLine(targetElement, $(this), false);
-      }
-    });
-  }
+  
+  $('.match_item_remove_fields a').on('click', removeMatching);
 }

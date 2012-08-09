@@ -98,8 +98,10 @@ class QuestionsController < ApplicationController
     end
     
     unless params[:question][:match_items_attributes].nil?
-      # Handle associations between newly created match items
-      match_item_numbers = params[:question][:match_items_attributes].collect{|a| a.first}
+      # Handle associations between newly created/deleted match items
+      match_item_numbers = params[:question][:match_items_attributes]
+        .select{|k, v| v[:_destroy].blank? || v[:_destroy] == 'false'}
+        .collect{|a| a.first}
       params[:question][:match_items_attributes].each do |k, m|
         m[:match_number] = match_item_numbers.index(m[:match_number])
       end

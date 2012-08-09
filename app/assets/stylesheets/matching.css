@@ -60,10 +60,6 @@ div.locked .ui-icon-locked {
   display: block;
 }
 
-div.locked .match_item_remove_fields {
-  visibility: hidden;
-}
-
 #match_column_container {
   display: table;
   visibility: hidden;
