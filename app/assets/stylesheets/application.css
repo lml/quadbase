@@ -18,4 +18,5 @@
  *= require uploadify
  *= require markitup
  *= require codemirror
+ *= require matching
  */

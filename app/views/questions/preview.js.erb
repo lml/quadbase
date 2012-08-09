@@ -3,10 +3,13 @@
 
 <% if @question.errors.empty? %>
    $("#preview_dialog").html("<%= escape_javascript(render :partial => "show", 
-                                                   :locals => {:question => @question}) %>");
+                                                   :locals => {:question => @question,
+                                                               :no_svg => true}) %>");
    <%= reload_mathjax("preview_dialog") %>
 
-   $("#preview_dialog").dialog('open').closeOnClickOutside();   
+   $("#preview_dialog").dialog('open').closeOnClickOutside();
+   
+   loadSvg(false);
 <% else %>
    // Submit the form so that the error messages display nicely with formatting
    // around the offending entries (use the trigger approach so we don't get

@@ -11,15 +11,26 @@
   * Last Edit by Author: 29 September 2011
   */
 
-var svg = null;
+var show_svg = null;
+var edit_svg = null;
 
-$(document).ready(function () {
-  svg = Raphael('svg_div', '100%', '100%');
-  drawAllLines();
-  $('#match_column_container').css('visibility', 'visible');
-});
+function loadSvg(edit) {
+  if (edit)
+    edit_svg = Raphael('edit_svg_div', '100%', '100%');
+  else
+    show_svg = Raphael('show_svg_div', '100%', '100%');
+  drawAllLines(edit);
+  if (edit)
+    $('#match_column_container').css('visibility', 'visible');
+}
 
-function svgDrawLine(eTarget, eSource) {
+function svgDrawLine(eTarget, eSource, edit) {
+    var svg = null;
+    if (edit)
+      svg = edit_svg;
+    else
+      svg = show_svg;
+    
     // origin -> ending ... from left to right
     // 10 + 10 (padding left + padding right) + 2 + 2 (border left + border right)
     var originX = 0;
@@ -73,7 +84,7 @@ function clearMatchings() {
       .droppable('enable');
       
     $('.match_item_match_number').val('');
-    svg.clear();
+    edit_svg.clear();
     Raphael.getColor.reset();
   }
 }
@@ -117,27 +128,30 @@ function updateColumnFields() {
            $(ui.draggable).find('.match_item_match_number')
 			       .val(targetNumber);
 			    
-          svgDrawLine($(this), $(ui.draggable));
+          svgDrawLine($(this), $(ui.draggable), true);
       }
   });
 }
 
-function drawAllLines() {
-  $('#match_left_column .match_item').each(function() {
-    var targetNumber = $(this).find('.match_item_match_number').val();
-    if (targetNumber != '') {
-      var targetElement = $('#question_match_items_attributes_' + targetNumber + '_right_column').parent();
-      svgDrawLine(targetElement, $(this));
-      disableDragDrop(targetElement);
-      disableDragDrop($(this));
-    }
-  });
-  
-  $('#quad-match_items_left_column .match_item_show').each(function() {
-    var targetNumber = $(this).attr('data-match');
-    if (targetNumber != '') {
-      var targetElement = $('#match_item_' + targetNumber);
-      svgDrawLine(targetElement, $(this));
-    }
-  });
+function drawAllLines(edit) {
+  if (edit) {
+    $('#match_left_column .match_item').each(function() {
+      var targetNumber = $(this).find('.match_item_match_number').val();
+      if (targetNumber != '') {
+        var targetElement = $('#question_match_items_attributes_' + targetNumber + '_right_column').parent();
+        svgDrawLine(targetElement, $(this), true);
+        disableDragDrop(targetElement);
+        disableDragDrop($(this));
+      }
+    });
+  }
+  else {
+    $('#quad-match_items_left_column .match_item_show').each(function() {
+      var targetNumber = $(this).attr('data-match');
+      if (targetNumber != '') {
+        var targetElement = $('#match_item_' + targetNumber);
+        svgDrawLine(targetElement, $(this), false);
+      }
+    });
+  }
 }

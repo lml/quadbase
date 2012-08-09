@@ -75,10 +75,10 @@
     <%#= stylesheet_link_tag "markitup" %>
   <%# end %>
   
-  <% if @include_matching %>
-    <%= javascript_include_tag "matching" %>
-    <%= stylesheet_link_tag "matching" %>
-  <% end %>
+  <%# if @include_matching %>
+    <%#= javascript_include_tag "matching" %>
+    <%#= stylesheet_link_tag "matching" %>
+  <%# end %>
   
   <% if content_for?(:javascript_includes) %>
     <%= yield :javascript_includes %>

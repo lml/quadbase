@@ -2,7 +2,10 @@
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
 $("#quickview_dialog").html("<%= escape_javascript(render :partial => 'show',
-                                                   :locals => {:question => @question}) %>");
+                                                   :locals => {:question => @question,
+                                                               :no_svg => true}) %>");
 <%= reload_mathjax("quickview_dialog") %>
 
-$("#quickview_dialog").dialog('open').closeOnClickOutside();  
+$("#quickview_dialog").dialog('open').closeOnClickOutside();
+
+loadSvg(false);

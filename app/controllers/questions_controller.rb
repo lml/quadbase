@@ -31,8 +31,6 @@ class QuestionsController < ApplicationController
     
     logger.info {"Variated question #{@question.to_param} with seed " +
                  "#{params[:seed] || '[unset]'}, duration = #{Time.now-start_time}"}
-                 
-    @include_matching = @question.question_type == 'MatchingQuestion'
           
     respond_to do |format|
       format.json
@@ -80,7 +78,6 @@ class QuestionsController < ApplicationController
       redirect_to(question_path(@question))
       return
     end
-    @include_matching = @question.question_type == 'MatchingQuestion'
     respond_with(@question)
   end
 

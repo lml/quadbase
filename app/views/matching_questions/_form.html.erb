@@ -116,7 +116,7 @@
     <%= f.link_to_add "Add left", :match_items %>
   </div>
   
-  <div id="svg_div"></div>
+  <div id="edit_svg_div" class="svg_div"></div>
   
   <div id="match_right_column" data-right_column="t">
     <%= f.fields_for :match_items, @question.match_items.where(:right_column => true) do |nested| %>
@@ -132,3 +132,9 @@
 <div id="match_reset_div">
   <%= link_to "Reset matchings", "", :onclick => "clearMatchings(); return false;" %>
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    loadSvg(true);
+  });
+</script>
