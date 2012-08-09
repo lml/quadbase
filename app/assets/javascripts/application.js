@@ -38,11 +38,6 @@ function add_fields(elem_to_append_to, association, content) {
   $(elem_to_append_to).append(content.replace(regexp, new_id));
 }
 
-function redraw_lines(){
-	alert('5');
-        return false;
-}
-
 // Use this method when you want to do an AJAX "DELETE", which 
 // rails/jquery likes to achieve as a POST with an extra field
 // passed in.
