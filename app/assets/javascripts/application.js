@@ -25,8 +25,7 @@
 //= require codemirror
 //= require uploadify
 //= require autocomplete-rails
-
-
+//= require matching
 
 function remove_fields(link) {
   $(link).prev("input[type=hidden]").val("1");

@@ -40,6 +40,9 @@ class SimpleQuestion < Question
 
   def add_other_prepublish_errors
     self.errors.add(:base,'Content must not be empty.') if content.blank?
+    answer_choices.each do |ac|
+      self.errors.add(:answer_choices, 'Content must not be empty.') if ac.content.blank?
+    end
   end
   
   def variate!(variator)

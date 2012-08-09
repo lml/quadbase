@@ -109,10 +109,6 @@ class MultipartQuestionTest < ActiveSupport::TestCase
     assert_raise(ActiveRecord::RecordNotFound) { QuestionSetup.find(old_mpq_setup_id)}
   end
   
-  test "add new part" do
-    mpq = FactoryGirl.create(:multipart_question)
-  end
-  
   test "cannot add part twice" do
     mpq = FactoryGirl.create(:multipart_question)
     sq = FactoryGirl.create(:simple_question, :question_setup_id => mpq.question_setup_id)

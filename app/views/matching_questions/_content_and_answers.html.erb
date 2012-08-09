@@ -1,0 +1,41 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% no_svg ||= false %>
+<% i = 0 %>
+
+<div class="quad-question_content">
+  <%= question.variated_content_html.html_safe %>
+</div>
+
+<% if !question.match_items.empty? %>
+  <div id="quad-match_items">
+    <div id="quad-match_items_left_column">
+      <% @question.match_items.where(:right_column => false).each do |m| %>
+	      <%= render :partial => 'matching_questions/match_item',
+	                 :locals => { :match_item => m,
+	                              :index => i } %>
+	      <% i += 1 %>
+      <% end %>
+    </div>
+  
+    <div id="show_svg_div" class="svg_div"></div>
+  
+    <div id="quad-match_items_right_column">
+      <% @question.match_items.where(:right_column => true).each do |m| %>
+	      <%= render :partial => 'matching_questions/match_item',
+	                 :locals => { :match_item => m,
+	                              :index => i } %>
+	      <% i += 1 %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<% unless no_svg %>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      loadSvg(false);
+    });
+  </script>
+<% end %>

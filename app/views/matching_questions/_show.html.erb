@@ -1,0 +1,13 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% no_svg ||= nil %>
+
+<% if !question.question_setup_id.nil? %>
+   <div class="quad-question_setup">
+      <%= question.question_setup.variated_content_html.html_safe %>
+   </div>
+<% end %>
+<%= render :partial => 'matching_questions/content_and_answers', 
+           :locals => {:question => question,
+                       :no_svg => no_svg} %>

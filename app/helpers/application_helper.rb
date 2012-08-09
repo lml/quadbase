@@ -39,7 +39,6 @@ module ApplicationHelper
   def link_to_remove_fields(name, f)
     f.hidden_field(:_destroy) + link_to_function(name, "remove_fields(this)")
   end
-
   
   # Options:
   #    options[:partial_name] - way to override the partial name (e.g. to include
@@ -54,7 +53,7 @@ module ApplicationHelper
                                       "\"#{association}\", " + 
                                       "\"#{escape_javascript(fields)}\")")
   end
-  
+
   def full_name_link(user)
     text = (user_signed_in? && current_user.id == user.id) ? "Me" : user.full_name
     link_to text, user

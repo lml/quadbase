@@ -1,0 +1,11 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% # Clients of this partial must supply the following variables:
+   # match_item
+   # index
+%>
+
+<div id="match_item_<%= index %>" class="ui-corner-all match_item_show" data-match="<%= match_item.match_number %>">
+  <%= match_item.content %>
+</div>

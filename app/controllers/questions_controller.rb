@@ -65,6 +65,10 @@ class QuestionsController < ApplicationController
   def create_multipart
     create(MultipartQuestion.new)
   end
+
+  def create_matching
+    create(MatchingQuestion.new)
+  end
   
   def edit
     @question = Question.from_param(params[:id])
@@ -83,7 +87,6 @@ class QuestionsController < ApplicationController
   # we just want it to go to the questions view.
   def update
     @question = Question.from_param(params[:id])
-
     raise SecurityTransgression unless present_user.can_update?(@question)
     if (@no_lock = !@question.check_and_unlock!(present_user))
       flash[:alert] = @question.errors[:base]
@@ -92,6 +95,16 @@ class QuestionsController < ApplicationController
         format.js
       end
       return
+    end
+    
+    unless params[:question][:match_items_attributes].nil?
+      # Handle associations between newly created/deleted match items
+      match_item_numbers = params[:question][:match_items_attributes]
+        .select{|k, v| v[:_destroy].blank? || v[:_destroy] == 'false'}
+        .collect{|a| a.first}
+      params[:question][:match_items_attributes].each do |k, m|
+        m[:match_number] = match_item_numbers.index(m[:match_number])
+      end
     end
 
     respond_to do |format|  
@@ -382,7 +395,7 @@ protected
   def create(question) 
     @question = question
     raise SecurityTransgression unless present_user.can_create?(@question)
-                    
+    
     begin
       @question.create!(current_user)
     

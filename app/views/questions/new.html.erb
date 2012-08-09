@@ -26,12 +26,13 @@
         <% end %>
       </td>
       <td style="text-align:center" width="34%">
-         <%= link_to image_tag("question_matching_v1.png", 
-                               { :border => 1, 
-                                 :alt => "Matching question", 
-                                 :style => "border-color: #b22222",
-                                 :title => "Matching question" }),
-                     nil, :onclick => "alert('Coming soon!');" %>
+         <%= form_tag create_matching_question_path, :method => :post do %>
+          <%= image_submit_tag("question_matching_v1.png", 
+                                { :border => 1, 
+                                  :style => "border-color: #b22222",                                  
+                                  :alt => "Matching question", 
+                                  :title => "Matching question" }) %>
+        <% end %>
       </td>
       <td style="text-align:center" width="33%">
         <%= form_tag create_multipart_question_path, :method => :post do %>

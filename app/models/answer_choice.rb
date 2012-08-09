@@ -7,7 +7,7 @@ class AnswerChoice < ActiveRecord::Base
   include VariatedContentHtml
   
   belongs_to :question
-  validates_presence_of :content, :credit
+  validates_presence_of :content, :credit, :question
   validate :parse_succeeds
   validates_numericality_of :credit,
                             :greater_than_or_equal_to => 0,
@@ -16,7 +16,10 @@ class AnswerChoice < ActiveRecord::Base
 
   before_save :cache_html
   before_destroy :question_not_published
-  validate :question_not_published, :on => :update
+  validate :question_not_published
+  validate :simple_question
+  
+  validate :question_not_changed, :on => :update
 
   attr_accessible :content, :credit, :updated_at
   
@@ -39,5 +42,17 @@ class AnswerChoice < ActiveRecord::Base
     return if !question.is_published?
     errors.add(:base, "Cannot modify a question answer after the question is published.")
     false
-  end                          
+  end
+  
+  def question_not_changed
+    return if !question_id_changed?
+    errors.add(:base, "Cannot move an answer choice to another question.")
+    false
+  end
+  
+  def simple_question
+    return if question.question_type == "SimpleQuestion"
+    errors.add(:base, "Only simple questions can have answer choices.")
+    false
+  end
 end

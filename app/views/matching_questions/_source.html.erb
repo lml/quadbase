@@ -1,0 +1,30 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% if !question.question_setup_id.nil? %>
+  <div class="sectionHeading">Common Introduction</div>
+   <div class="code-box">
+      <%= simple_format question.question_setup.content %>
+   </div>
+<% end %>
+
+  <div class="sectionHeading">Question Content</div>
+<div class="code-box">
+  <%= simple_format question.content %>
+</div>
+
+<% if !question.match_items.empty? %>
+     <div class="sectionHeading">Matchings</div>
+   <div style="margin-bottom:10px"></div>
+   <div class="quad-match_items">
+      <table width="100%">
+      <% question.match_items.each do |m| %>
+         <tr class="quad-match_items">
+            <td class="code-box" width="90%">
+               <%= simple_format m.match_id.to_s + " w/content | " + m.content + " | is matched to " + m.match_id.to_s %>
+            </td>
+         </tr>
+      <% end %>
+      </table>
+   </div>
+<% end %>

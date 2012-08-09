@@ -1,0 +1,140 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% content_for :after_form do %>
+
+  <%= render :partial => 'shared/mark_it_up' %>
+
+  <% @errors = @question.errors %>
+
+  <% add_human_field_names({:"question_setup.content" => "Content"} ) %>
+
+  <%# For the question setup ... %>
+  <%= render :partial => "attachable_assets/add_image_dialog",
+             :locals => {:attachable => @question.question_setup,
+                         :dialog_div_id => "image_dialog_intro",
+                         :include_open_insert_close_js => false} %>
+
+  <%# For the question ... %>
+  <%= render :partial => "attachable_assets/add_image_dialog",
+             :locals => {:attachable => @question,
+                         :include_open_insert_close_js => false} %>
+
+  <%# Add the JS glue only once, not twice %>
+  <%= render :partial => 'attachable_assets/image_dialog_open_insert_close' %>
+
+<% end %>
+
+<%= f.hidden_field :type, :value => "MatchingQuestion"%>
+
+<p>You are editing a 
+   <%= link_to_help "simple_questions", "matching question",
+                    {:height => 400, 
+                     :width => 700} %>. 
+   Need help <%= link_to_help "formatting", "formatting", 
+                               {:include_mathjax => true, 
+                                :height => 400, 
+                                :width =>900} %> your question?</p>
+
+<% setup_blank = @question.question_setup.is_empty? %>
+
+<% intro_options = {:style => "#{setup_blank ? 'display:none' : ''}", :id => 'intro_text_block'} %>
+
+<%= question_edit_block "The Introduction", intro_options do %>
+
+  <% if @question.is_draft_in_multipart? %>
+    <%= @question.question_setup.content_html.html_safe %>
+  <% else %>
+
+    <%= f.fields_for :question_setup do |setup_form| %>
+      
+      <div class="question_edit_subblock" style="margin-top:0px">
+        <% class_to_reveal_on_logic_show = "reveal_on_logic_show_#{@logic_counter ||= (@logic_counter || -1) + 1}"%>
+        <%= render :partial => 'logics/form', 
+                   :locals => {:f => setup_form, 
+                               :logicable => @question.question_setup,
+                               :class_to_reveal_on_logic_show => class_to_reveal_on_logic_show} %>
+      </div>
+
+      <div class="question_edit_subblock">
+        <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
+             style="<%= @question.question_setup.logic.empty? ? 'display:none;' : '' %>">Introductory Text</div>
+      
+        <div class="field">
+           <%= setup_form.text_area :content, 
+                            :rows => 8, 
+                            :class => "mark_it_up", 
+                            :style => 'width:100%',
+                            'data-attachable_type'=>'intro' %>
+        </div>
+      </div>
+    <% end %>
+
+  <% end %>
+    
+<% end %> 
+
+<div style="<%= setup_blank ? '' : 'display:none' %>">
+  <%= link_to_function "Add a common introduction to this question.", 
+                       '$("#intro_text_block").show(); Quadbase.CodeMirrorUtils.refreshCodeMirrors(); $(this).parent().hide();'%> 
+  (optional)
+  <span style="float:right"><%= link_to_help "question_setup", "What is this?" %></span>
+</div>
+
+<%= question_edit_block "The Question" do %>
+
+
+  <div class="question_edit_subblock" style="margin-top:0px">
+    <% class_to_reveal_on_logic_show = "reveal_on_logic_show_#{@logic_counter ||= (@logic_counter || -1) + 1}"%>
+    <%= render :partial => 'logics/form', 
+               :locals => {:f => f, 
+                           :logicable => @question,
+                           :class_to_reveal_on_logic_show => class_to_reveal_on_logic_show} %>
+  </div>
+  
+  <div class="question_edit_subblock">
+    <div class="question_edit_block_subtitle <%= class_to_reveal_on_logic_show %>" 
+         style="<%= @question.logic.empty? ? 'display:none;' : '' %>">Question Text</div>
+  
+    <div class="field">
+      <%= f.text_area :content, :rows => 8, :class => "mark_it_up", :style => 'width:100%' %>
+    </div>
+  </div>
+  
+<% end %>
+
+<p>
+  Drag and Drop the boxes on the left to their matching component on the right.
+</p>
+
+<div id="match_column_container">
+  <div id="match_left_column" data-right_column="f">
+    <%= f.fields_for :match_items, @question.match_items.where(:right_column => false) do |nested| %>
+	    <%= render :partial => 'matching_questions/match_item_fields',
+	               :locals => { :f => nested } %>
+    <% end %>
+    <%= f.link_to_add "Add left", :match_items %>
+  </div>
+  
+  <div id="edit_svg_div" class="svg_div"></div>
+  
+  <div id="match_right_column" data-right_column="t">
+    <%= f.fields_for :match_items, @question.match_items.where(:right_column => true) do |nested| %>
+	    <%= render :partial => 'matching_questions/match_item_fields',
+	               :locals => { :f => nested } %>
+    <% end %>
+    <%= f.link_to_add "Add right", :match_items %>
+  </div>
+</div>
+
+<br clear="all">
+
+<div id="match_reset_div">
+  <%= link_to "Reset matchings", "", :onclick => "clearMatchings(); return false;" %>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    loadSvg(true);
+  });
+</script>

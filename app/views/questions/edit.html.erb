@@ -18,7 +18,7 @@
 <%# We also have to make sure to use the Questions controller no matter what
     the question_type is, hence the :url directive %>
      
-<%= form_for @question, 
+<%= nested_form_for @question, 
              :as => :question, 
              :url => @question.id.nil? ? questions_path() : question_path(@question), 
              :html => {:autocomplete => "off"} do |f| %>
@@ -78,13 +78,13 @@
         return put_as_post('<%= question_preview_path(@question) %>', 
                              $('form').serializeArray());
       });
-   
+      
       $("#preview_dialog").dialog({ 
         autoOpen: false, 
         modal: true, 
-        height:600, 
+        height:600,
         width:600, 
-        buttons: { "Close": function() { $(this).dialog("close"); }}
+        buttons: { "Close": function() { $(this).dialog("close");}}
       });
 
       $('#save_button').live('click', function() {

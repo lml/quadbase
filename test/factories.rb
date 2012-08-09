@@ -68,6 +68,27 @@ def make_multipart_question(options = {})
   qq
 end
 
+def make_matching_question(options = {})
+  options[:match_items] ||= []
+  mq = options[:question_setup].nil? ? 
+       FactoryGirl.create(:matching_question) :
+       FactoryGirl.create(:matching_question, :question_setup => options[:question_setup])
+  mq.match_items = 
+    options[:match_items].map!{|c| FactoryGirl.build(:match_items, :content => c)}
+
+  mq.question_setup.content = "" if options[:no_setup] 
+  
+  user = FactoryGirl.create(:user)
+  
+  mq.create!(user) if (options[:method] == :create || options[:publish] || options[:published])
+
+  if (options[:publish] || options[:published])
+    mq.publish!(user)
+  end
+    
+  mq
+end
+
 def make_project(options = {})
   options[:num_questions] ||= 0
   options[:num_members] ||= 0
@@ -130,6 +151,14 @@ FactoryGirl.define do
     f.license_id { common_license.id }
     f.version nil
   end
+  
+  factory :matching_question do |f|
+    f.content { FactoryGirl.generate(:couple_of_words) }
+    f.association :question_setup
+    f.number { FactoryGirl.generate(:unique_number) }
+    f.license_id { common_license.id }
+    f.version nil
+  end
 
   factory :question_setup do |f|
     f.content {FactoryGirl.generate :content}
@@ -163,12 +192,20 @@ FactoryGirl.define do
                            FactoryGirl.build(:answer_choice)]
     end
   end
+  
+  factory :matching_question_with_match_items, :parent => :matching_question do |f|
+    f.after(:build) do |sq|
+      left = FactoryGirl.build(:left_match_item, :question => sq)
+      right = FactoryGirl.build(:right_match_item, :question => sq)
+      sq.match_items = [left, right]
+    end
+  end
 
   factory :answer_choice do |f|
     f.content {FactoryGirl.generate :content}
     f.credit 0
   end
-
+  
   factory :multipart_question do |f|
     f.association :question_setup
     f.license_id { common_license.id }
@@ -177,6 +214,23 @@ FactoryGirl.define do
   factory :question_part do |f|
     f.association :multipart_question
     f.association :child_question, :factory => :simple_question
+  end
+
+  factory :left_match_item do |f|
+    f.association :question, :factory => :matching_question
+    f.content {FactoryGirl.generate :content}
+    f.right_column false
+  end
+  
+  factory :right_match_item do |f|
+    f.association :question, :factory => :matching_question
+    f.content {FactoryGirl.generate :content}
+    f.right_column true
+  end
+  
+  factory :matching do |f|
+    f.association :left_match_item
+    f.association :right_match_item
   end
 
   factory :project do |f|
