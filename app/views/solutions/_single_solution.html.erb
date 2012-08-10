@@ -34,7 +34,7 @@
                       :remote => !destroy_not_remote) %>
     <% end %>
     </span>
-    <br/>
+    <br clear="all">
 
     <span style="float:right">
     <%= render :partial => 'shared/votes',
@@ -42,39 +42,6 @@
     </span>
 
  </div>
- 
- <% if false %>
- <span class="comment_actions">
-
-   <% if show_link %>
-     <%= link_to show_icon, solution_path(solution), :class => "show_link" %>
-   <% end %>
-
-   <% if present_user.can_update?(solution) %>
-     <%= link_to edit_icon, edit_solution_path(solution), :class => "edit_link" %>
-   <% end %>&nbsp;
-
-   <% if present_user.can_destroy?(solution) %>
-     <%= link_to(trash_icon, 
-                     solution, 
-                     :confirm => 'Are you sure you want to delete this solution?', 
-                     :method => :delete,
-                     :id => "delete_solution_#{solution.id.to_s}",
-                     :class => "delete_link",
-                     :remote => !destroy_not_remote) %>
-   <% end %>
-
- </span>
-
-
- <br/>
- 
- <span style="float:right">
- <%= render :partial => 'shared/votes',
-            :locals => {:votable => solution} %>
- </span>
- 
- <% end %>
 
  <div class="solution_div" style="float:left; width:85%">
    <% if !solution.explanation.blank? %>

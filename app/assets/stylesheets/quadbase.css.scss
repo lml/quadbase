@@ -479,6 +479,11 @@ a:active {
 	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#000000');
 }
 
+.votes_td {
+  vertical-align: middle;
+  padding-left: 5px;
+}
+
 /************ GENERIC LIST TABLE *********************/
 
 table.list {

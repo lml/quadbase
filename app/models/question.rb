@@ -401,12 +401,20 @@ class Question < ActiveRecord::Base
   def new_derivation!(user, project = nil)
     return if !is_published?
     derived_question = self.content_copy
+    solution_copies = valid_solutions_visible_for(user)
+                  .select{|s| has_role?(s.creator, :is_listed) ||
+                              s.creator == user}
+                  .collect{|s| s.content_copy}
     
     Question.transaction do
       derived_question.create!(user, :project => project)
       QuestionDerivation.create(:source_question_id => self.id, 
                                 :derived_question_id => derived_question.id,
                                 :deriver_id => user.id)
+      solution_copies.each do |s|
+        s.question = derived_question
+        s.save!
+      end
     end
     
     derived_question
