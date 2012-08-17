@@ -363,7 +363,7 @@ class QuestionsControllerTest < ActionController::TestCase
     assert_response(403)
   end
 
-  test "should create new project via derivation dialog if no projects" do
+  test "should create new list via derivation dialog if no lists" do
     sign_in @user
     @user.lists.delete_all
     assert @user.lists.empty?
