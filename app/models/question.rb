@@ -4,6 +4,7 @@
 class Question < ActiveRecord::Base
   include AssetMethods
   include VariatedContentHtml
+  include VoteMethods
   
   acts_as_taggable
   
@@ -18,6 +19,7 @@ class Question < ActiveRecord::Base
            :through => :question_collaborators,
            :source => :user
   has_many :project_questions, :dependent => :destroy
+  has_many :votes, :as => :votable, :dependent => :destroy
 
   belongs_to :license
   belongs_to :question_setup
@@ -678,6 +680,11 @@ class Question < ActiveRecord::Base
   def is_project_member?(user)
     project_questions.each { |wp| return true if wp.project.is_member?(user) }
     false
+  end
+  
+  def can_be_voted_on_by?(user)
+    is_a_collaborator = !collaborators.where{id == user.id}.first.nil?
+    can_be_read_by?(user) && !is_a_collaborator
   end
   
 #############################################################################

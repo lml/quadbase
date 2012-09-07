@@ -20,8 +20,15 @@
     <% if @unfinished_solutions %>
       <div id="notice" class="notice" style="font-size:14px">This question has unfinished solutions</div>
     <% end %>
+
+    <span style="float:right">
+      <%= render :partial => 'shared/votes',
+                 :locals => {:votable => @question} %>
+    </span>
+
     <%= render :partial => "show", 
                :locals => {:question => @question} %>
+    
   <% else %>
     This question cannot be shown because one or more errors occurred when retrieving it.
   <% end %>
