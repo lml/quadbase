@@ -20,7 +20,7 @@
 //= require jquery-ui-1.8.12.custom.min
 //= require jquery_extensions
 //= require jcarousellite_1.0.1
-//= require jquery.easing.1.1.1
+//= require jquery.easing.1.3
 //= require markitup
 //= require codemirror
 //= require uploadify
@@ -123,4 +123,13 @@ function refresh_datetime_pickers() {
      ampm:true, 
      hour:9, 
      minute:0});
+}
+
+function hide_question_until_loaded() {
+  $(".question-wrapper").hide();
+  $(".loading").show();
+  MathJax.Hub.Register.MessageHook("End Process", function (){
+      $(".loading").hide();
+      $(".question-wrapper").fadeIn('500');
+    });
 }
