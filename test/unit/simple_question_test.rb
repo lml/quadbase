@@ -95,6 +95,15 @@ class SimpleQuestionTest < ActiveSupport::TestCase
     sq.variate!(qv)
     ContentParseAndCache.enable_test_parser = false
   end
+
+  test "answer_can_be_sketched" do
+    simple = FactoryGirl.build(:simple_question, :content => 'hi', :answer_can_be_sketched => true)
+    simple2 = FactoryGirl.build(:simple_question, :content => 'bye')
+    assert_nothing_raised {simple.save!}
+    assert_nothing_raised {simple2.save!}
+    assert_equal true, simple.answer_can_be_sketched?
+    assert_equal nil, simple2.answer_can_be_sketched?
+  end
   
   # TODO implement the following tests
   # 

@@ -107,6 +107,9 @@
     
   <% end %>
 
+  <%= f.check_box(:answer_can_be_sketched) %>
+  <%= f.label :answer_can_be_sketched, "The answer to this question can be sketched." %>
+
   <div class="answer_choices">
     <%= f.fields_for :answer_choices do |ac_form| %>
       <%= render 'simple_questions/answer_choice_fields', :f => ac_form %>

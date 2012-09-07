@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120611193423) do
+ActiveRecord::Schema.define(:version => 20120717033002) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -261,16 +261,17 @@ ActiveRecord::Schema.define(:version => 20120611193423) do
     t.string   "question_type"
     t.text     "content"
     t.integer  "question_setup_id"
-    t.datetime "created_at",                                          :null => false
-    t.datetime "updated_at",                                          :null => false
+    t.datetime "created_at",                                               :null => false
+    t.datetime "updated_at",                                               :null => false
     t.integer  "license_id"
-    t.text     "content_html",      :limit => 255
-    t.integer  "locked_by",                        :default => -1
+    t.text     "content_html",           :limit => 255
+    t.integer  "locked_by",                             :default => -1
     t.datetime "locked_at"
     t.integer  "publisher_id"
-    t.boolean  "changes_solution",                 :default => false
+    t.boolean  "changes_solution",                      :default => false
     t.text     "code"
     t.string   "variables"
+    t.boolean  "answer_can_be_sketched"
   end
 
   add_index "questions", ["license_id"], :name => "index_questions_on_license_id"

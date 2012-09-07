@@ -11,3 +11,5 @@ if !question.answer_choices.empty?
     json.credit answer_choice.credit
   end
 end
+
+json.answer_can_be_sketched question.answer_can_be_sketched
