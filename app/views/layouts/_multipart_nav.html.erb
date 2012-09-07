@@ -13,6 +13,11 @@
     <%= link_to_unless_current "Main Question", on_edit_view && !multipart_question.is_published? ? 
                                                 edit_question_path(multipart_question) :
                                                 question_path(multipart_question) %>
+                                                
+    <% published_solutions_count = multipart_question.solutions.visible_for(AnonymousUser.instance).count %>
+    <% if published_solutions_count !=0 %>
+      <%= link_to image_tag('/assets/soln_badge_v1.jpeg'), question_solutions_path(multipart_question), {:title => "#{published_solutions_count} Published Solutions"} %>
+    <% end %>
   </div>
   
   <div style="margin-left:25px">
@@ -23,10 +28,13 @@
     <div class="multipartEntry <%= 'multipartSelected leftRoundedCorners5' if highlight %>">
       <%= link_to_if !highlight, 
                      "Part #{part.order}", part_edit_or_show_path(part, on_edit_view) %>
-                     
-                  
+
+      <% published_solutions_count = child_question.solutions.visible_for(AnonymousUser.instance).count %>
+      <% if published_solutions_count !=0 %>
+        <%= link_to image_tag('/assets/soln_badge_v1.jpeg'), question_solutions_path(child_question), {:title => "#{published_solutions_count} Published Solutions"} %>
+      <% end %>
     </div>
   <% end %>
-
+  
   </div>
 </div>

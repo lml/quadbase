@@ -1,6 +1,17 @@
 # Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
 # License version 3 or later.  See the COPYRIGHT file for details.
 
-json.solutions(@solutions) do |solution|
-  json.ingest! (render :partial=>'show', :locals => {:solution => solution})
+if @question.is_multipart?
+  json.parts(@question.child_question_parts) do |part|
+      child_question = part.child_question
+
+      json.solutions(child_question.solutions) do |solution|
+        json.ingest! (render :partial=>'show', :locals => {:solution => solution})
+      end
+  end
+
+else
+  json.solutions(@solutions) do |solution|
+    json.ingest! (render :partial=>'show', :locals => {:solution => solution})
+  end
 end
