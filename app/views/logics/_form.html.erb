@@ -23,7 +23,7 @@
 
 <% if !logic %>
   <span style="float:right">
-    <%= link_to_function "Make this question dynamic", 
+    <%= link_to "Make this question dynamic", nil, :remote=>true, :onclick=>
                          "$('.#{class_to_reveal_on_logic_show}').show(); Quadbase.CodeMirrorUtils.refreshCodeMirrors(); $(this).parent().hide();" %>
   </span>
 <% end %>
@@ -36,8 +36,8 @@
     <div class="question_edit_block_subtitle" style="margin-top:-10px">
       Logic for Computer-Generated Variations
       <div style="float:right; font-size:9px; font-style:normal; margin-top:-2px">
-        <%= link_to_function "<center><span class='lib_link_#{@logic_counter}'>Show</span><span class='lib_link_#{@logic_counter}' style='display:none'>Hide</span><br/>Libraries</center>".html_safe, 
-                             "$('#libraries_#{@logic_counter}').toggle(); $('.lib_link_#{@logic_counter}').toggle()" %>
+        <%= link_to "<center><span class='lib_link_#{@logic_counter}'>Show</span><span class='lib_link_#{@logic_counter}' style='display:none'>Hide</span><br/>Libraries</center>".html_safe, nil, :remote=>true,
+                                    :onclick => "$('#libraries_#{@logic_counter}').toggle(); $('.lib_link_#{@logic_counter}').toggle()" %>
       </div>
     </div>    
     
@@ -77,12 +77,13 @@
     </div>
 
     <div style="color:#555555; margin: 8px 0 0">
-      Show results for <%= link_to_function "this seed ", "Quadbase.CodeMirrorUtils.testLogic(#{@logic_counter})" %> 
+      Show results for <%= link_to "this seed ", nil, :remote=>true,
+                  :onclick => "Quadbase.CodeMirrorUtils.testLogic(#{@logic_counter})" %> 
       <%= text_field_tag "seed_#{@logic_counter}", Random.rand(100000), 
                          :class => 'question_code_text_field', 
                          :style => 'width:80px; border: #777 1px solid;' %>
       or for a 
-      <%= link_to_function 'new seed', 
+      <%= link_to 'new seed', nil, :remote=>true, :onclick =>
                            "$('#seed_#{@logic_counter}').val(Math.round(Math.random()*100000)); Quadbase.CodeMirrorUtils.testLogic(#{@logic_counter})" %>
     </div>
 

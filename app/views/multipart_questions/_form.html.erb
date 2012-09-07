@@ -35,8 +35,8 @@
            <b><i>OR</i></b>
          </span>
 
-         <%= link_to_function "Add an existing question ...", 
-                              "open_add_question_part_dialog()" %>
+         <%= link_to "Add an existing question ...", nil, :remote=> true,
+                                        :onclick => "open_add_question_part_dialog();" %>
       </center>
     </div>
   </div>

@@ -6,8 +6,8 @@
 <%= pageHeading((@solution.has_content? ? "Editing" : "New") + " Solution") %>
 
 
-<%= link_to_function "Show the question", 
-                      "$('.hidden_content').toggle();", :class => "hidden_content", :style => "float:right" %>
+<%= link_to "Show the question", nil, :remote=>true, :style=>"float_right",
+										:onclick => "$('.hidden_content').toggle();" %>
 <div class="hidden_content" style="display:none">
 
 <% @show_credit = true %>
