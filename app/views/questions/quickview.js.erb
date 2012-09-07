@@ -3,6 +3,7 @@
 
 $("#quickview_dialog").html("<%= escape_javascript(render :partial => 'show',
                                                    :locals => {:question => @question}) %>");
-<%= reload_mathjax("quickview_dialog") %>
+<%= reload_mathjax("quickview_dialog") %>  
 
 $("#quickview_dialog").dialog('open').closeOnClickOutside();  
+

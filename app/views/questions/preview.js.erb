@@ -4,6 +4,7 @@
 <% if @question.errors.empty? %>
    $("#preview_dialog").html("<%= escape_javascript(render :partial => "show", 
                                                    :locals => {:question => @question}) %>");
+ 
    <%= reload_mathjax("preview_dialog") %>
 
    $("#preview_dialog").dialog('open').closeOnClickOutside();   
