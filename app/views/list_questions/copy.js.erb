@@ -4,3 +4,15 @@
 <%= display_flash %>
 
 $("nav").find("ul").find("ul").hide();
+
+<% @copied_questions.each do |lq| %>
+$("#question_list").append("<%= escape_javascript(
+							render	:partial => 'questions/single_row',
+									:locals => {	:entry => lq,
+													:row_id_base => "question_",
+		          								    :show_checkboxes => true,
+		                    						:question => lq.question,
+		                    						:checkbox_options => {	:method_for_value => "id",
+		                                          							:name_base => "list_question_ids"}
+	                  							}) %>");
+<% end %>

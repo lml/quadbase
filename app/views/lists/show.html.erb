@@ -39,14 +39,14 @@
                                  :preposition => "to:",
                                  :base_action_path => "/list_questions/"} %>
         </td>
+    <% end %>
         <td>
           <%= render :partial => "lists_menu",
-                     :locals => {:lists => @target_lists,
+                     :locals => {:lists => @all_lists,
                                  :menu_action_name => "copy",
                                  :preposition => "to:",
                                  :base_action_path => "/list_questions/"} %>
         </td>
-    <% end %>
         <td>
           <%= submit_tag "Show Attribution", :class => "ui-state-default ui-corner-all",
                                         :id => "attribution_button", :name => "attribution" %>
