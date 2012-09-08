@@ -35,8 +35,8 @@ class AnonymousUser
     #case container_type
     #when 'question'
     #  return Question.find(container_id).can_be_joined_by?(self)
-    #when 'project'
-    #  return Project.find(container_id).can_be_joined_by?(self)
+    #when 'list'
+    #  return List.find(container_id).can_be_joined_by?(self)
     #end
     false
   end

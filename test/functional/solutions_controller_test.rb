@@ -10,8 +10,8 @@ class SolutionsControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     @solution = FactoryGirl.create(:solution, :creator => @user)
     @question = @solution.question
-    @project = Project.default_for_user!(@user)
-    @project_question = FactoryGirl.create(:project_question, :project => @project, :question => @question)
+    @list = List.default_for_user!(@user)
+    @list_question = FactoryGirl.create(:list_question, :list => @list, :question => @question)
     @published_question = make_simple_question(:method => :create, :published => true)
     @published_solution = FactoryGirl.create(:solution, :question => @published_question)
     @visible_published_solution = FactoryGirl.create(:solution, :question => @published_question,

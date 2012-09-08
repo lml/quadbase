@@ -98,7 +98,7 @@ class QuestionsController < ApplicationController
        if (@updated = @question.update_attributes(params[:question]))
         flash[:notice] = "Your draft has been saved.
                           Until you publish this draft, please remember that only members of " +
-                          @question.project.name +
+                          @question.list.name +
                           " will be able to see it."
         format.html { redirect_to question_path(@question) }
        else
@@ -296,7 +296,7 @@ class QuestionsController < ApplicationController
 
     raise SecurityTransgression unless @question.can_be_derived_by?(present_user)
 
-    @projects = current_user.projects
+    @lists = current_user.lists
 
     respond_to do |format|
       format.js
@@ -305,13 +305,13 @@ class QuestionsController < ApplicationController
 
   def new_derivation
     @source_question = Question.from_param(params[:question_id])
-    project = Project.find(params[:project].keys.first)
+    list = List.find(params[:list].keys.first)
     edit_now = params[:edit] == "now"
     raise SecurityTransgression unless (@source_question.can_be_derived_by?(present_user) &&
-      (!project.nil? && project.can_be_updated_by?(present_user)))
+      (!list.nil? && list.can_be_updated_by?(present_user)))
     
     begin
-      @question = @source_question.new_derivation!(present_user, project)
+      @question = @source_question.new_derivation!(present_user, list)
       flash[:notice] = "Derived question created."
       respond_to do |format|
         if edit_now

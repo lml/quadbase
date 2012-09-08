@@ -1,0 +1,18 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%= display_flash %>
+
+<% if @target_list != @list %>
+  <% @list_questions.each do |wq| %>
+    $("<%= "#question_" + wq.question.id.to_s %>").remove();
+  <% end %>
+
+  <% if @list.list_questions.empty? %>
+    <%= show_none %>
+    $("#publish_button").remove();
+    $("#move_menu").remove();
+    $("#copy_menu").remove();
+    $("#remove_button").remove();
+  <% end %>
+<% end %>

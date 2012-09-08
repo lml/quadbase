@@ -8,8 +8,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
          
   has_many :question_collaborators
-  has_many :project_members
-  has_many :projects, :through => :project_members
+  has_many :list_members
+  has_many :lists, :through => :list_members
   has_many :published_questions,
            :class_name => "Question",
            :foreign_key => "publisher_id"
@@ -126,8 +126,8 @@ class User < ActiveRecord::Base
     case container_type
     when 'question'
       return Question.find(container_id).can_be_joined_by?(self)
-    when 'project'
-      return Project.find(container_id).can_be_joined_by?(self)
+    when 'list'
+      return List.find(container_id).can_be_joined_by?(self)
     when 'message'
       return Message.find(container_id).can_be_joined_by?(self)
     end

@@ -27,7 +27,7 @@ class QuestionPart < ActiveRecord::Base
 
   def unlock!(user)
     return false if !child_question.is_published?
-    self.child_question = child_question.new_derivation!(user, multipart_question.project)
+    self.child_question = child_question.new_derivation!(user, multipart_question.list)
     self.save!
     multipart_question.check_and_unlock_setup!
     true

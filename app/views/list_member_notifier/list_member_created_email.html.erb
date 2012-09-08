@@ -1,0 +1,20 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<html>
+<head></head>
+<body>
+
+<p>Hi <%= @member.first_name %>,</p>
+
+<p><%= @user.full_name %> (<%= @user.email %>) has added you to <%= link_to @list.name, list_url(@list) %>:</p>
+
+<p><%= link_to "Visit your lists page", lists_url %></p>
+
+<p>Thanks!</p>
+
+<%= render 'shared/email_signature' %>
+<%= render 'shared/email_footer' %>
+
+</body>
+</html>

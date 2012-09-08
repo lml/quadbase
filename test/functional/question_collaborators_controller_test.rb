@@ -6,16 +6,16 @@ require 'test_helper'
 class QuestionCollaboratorsControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create(:user)
-    @question = FactoryGirl.create(:project_question,
-                               :project => Project.default_for_user!(@user)).question
-    @other_user_in_project = FactoryGirl.create(:user)
-    FactoryGirl.create(:project_member, :user => @other_user_in_project, 
-                                    :project => Project.default_for_user!(@user))
-    @published_question = FactoryGirl.create(:project_question,
-                                         :project => Project.default_for_user!(@user)).question
+    @question = FactoryGirl.create(:list_question,
+                               :list => List.default_for_user!(@user)).question
+    @other_user_in_list = FactoryGirl.create(:user)
+    FactoryGirl.create(:list_member, :user => @other_user_in_list, 
+                                    :list => List.default_for_user!(@user))
+    @published_question = FactoryGirl.create(:list_question,
+                                         :list => List.default_for_user!(@user)).question
     @question_collaborator = FactoryGirl.create(:question_collaborator, :question => @question, :is_author => true)
-    FactoryGirl.create(:project_member, :user => @question_collaborator.user, 
-                                    :project => Project.default_for_user!(@user))
+    FactoryGirl.create(:list_member, :user => @question_collaborator.user, 
+                                    :list => List.default_for_user!(@user))
     @published_question_collaborator = FactoryGirl.create(:question_collaborator, :question => @published_question, :is_copyright_holder => true)
     @published_question.version = @published_question.next_available_version
     @published_question.save!
@@ -121,7 +121,7 @@ class QuestionCollaboratorsControllerTest < ActionController::TestCase
   end
 
   test "should not destroy question_collaborator with roles" do
-    sign_in @other_user_in_project
+    sign_in @other_user_in_list
     assert_difference('QuestionCollaborator.count', 0) do
       delete :destroy, :question_id => @question.to_param,
                        :id => @question_collaborator.id

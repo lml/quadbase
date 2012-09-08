@@ -4,11 +4,11 @@
 <%# Example usage for this partial: 
 
         render :partial => 'questions/list', 
-               :locals => {:entries => @project.project_questions,
-                           :row_id_base => "project_question_",
+               :locals => {:entries => @list.list_questions,
+                           :row_id_base => "list_question_",
                            :method_for_question => "question",
                            :checkbox_options => {:method_for_value => "id",
-                                                 :name_base => "project_question_ids"}
+                                                 :name_base => "list_question_ids"}
                           }
 
     :method_for_question gives the method that can be called on elements of 

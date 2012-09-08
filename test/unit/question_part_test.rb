@@ -17,8 +17,8 @@ class QuestionPartTest < ActiveSupport::TestCase
 
     mpq = FactoryGirl.create(:multipart_question, :question_setup => qs)
 
-    FactoryGirl.create(:project_question, :project => Project.default_for_user!(user), :question => mpq)
-    sq = FactoryGirl.create(:project_question, :project => Project.default_for_user!(user)).question
+    FactoryGirl.create(:list_question, :list => List.default_for_user!(user), :question => mpq)
+    sq = FactoryGirl.create(:list_question, :list => List.default_for_user!(user)).question
     psq = make_simple_question(:published => true, :question_setup => qs)
 
     sq.question_setup = qs

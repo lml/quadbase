@@ -11,8 +11,8 @@ class QuestionPartsControllerTest < ActionController::TestCase
     @multipart_question = @qp1.multipart_question
     @qp2 = FactoryGirl.create(:question_part, :order => 2,
                                           :multipart_question => @multipart_question)
-    ProjectQuestion.create(:question => @multipart_question,
-                           :project => Project.default_for_user!(@user))
+    ListQuestion.create(:question => @multipart_question,
+                           :list => List.default_for_user!(@user))
   end
 
   test "should destroy question_part" do
@@ -45,8 +45,8 @@ class QuestionPartsControllerTest < ActionController::TestCase
     pq2 = make_simple_question(:published => true, :question_setup => qs)
     pqp2 = FactoryGirl.create(:question_part, :order => 2, :child_question => pq2,
                                           :multipart_question => multipart_question2)
-    ProjectQuestion.create(:question => multipart_question2,
-                           :project => Project.default_for_user!(@user))
+    ListQuestion.create(:question => multipart_question2,
+                           :list => List.default_for_user!(@user))
     multipart_question2.reload
 
     assert !multipart_question2.setup_is_changeable?
