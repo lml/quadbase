@@ -76,7 +76,8 @@ class ListMembersControllerTest < ActionController::TestCase
 
   test "should make_default list_member" do
     sign_in @member
-    put :make_default, :list_member_id => @list_member.to_param
+    list_member = FactoryGirl.create(:list_member, :user => @member)
+    put :make_default, :list_member_id => list_member.to_param
     assert_redirected_to lists_path
   end
 end

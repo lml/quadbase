@@ -37,7 +37,7 @@ class ListTest < ActiveSupport::TestCase
     ws = FactoryGirl.create(:list)
     wm = FactoryGirl.create(:list_member, :user => ww.members.first, :list => ws)
     
-    assert_not_equal ww, List.default_for_user(ww.members.first)
+    assert_equal ww, List.default_for_user(ww.members.first)
     wm.make_default!
     assert_equal ws, List.default_for_user(ww.members.first)
   end
@@ -78,16 +78,16 @@ class ListTest < ActiveSupport::TestCase
     ww1 = make_list(:num_questions => 4, :num_members => 2, :method => :create)
     ww2 = make_list(:num_questions => 5, :num_members => 3, :method => :create)
     user = FactoryGirl.create(:user)
-    assert List.all_for_user(user).empty?
+    assert_equal List.all_for_user(user).length, 1
     ww0.add_member!(user)
     ww0.save!
-    assert_equal List.all_for_user(user).length, 1
-    assert_equal List.all_for_user(user).first, ww0
+    assert_equal List.all_for_user(user).length, 2
+    assert_equal List.all_for_user(user).second, ww0
     ww1.add_member!(user)
     ww1.save!
     ww2.add_member!(user)
     ww2.save!
-    assert_equal List.all_for_user(user).length, 3
+    assert_equal List.all_for_user(user).length, 4
     assert List.all_for_user(user).include?(ww0)
     assert List.all_for_user(user).include?(ww1)
     assert List.all_for_user(user).include?(ww2)

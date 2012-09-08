@@ -317,4 +317,60 @@ class QuestionsControllerTest < ActionController::TestCase
     assert_redirected_to question_path(assigns(:question))
   end
 
+  test "should derive question and redirect to question edit page" do
+    sign_in @user
+    list = List.default_for_user!(@user)
+    put :new_derivation, :question_id => @published_question.to_param,
+                         :list => {list.id => list},
+                         :edit => "now"
+    assert_redirected_to edit_question_path(list.list_questions.last.question)
+    assert_not_nil assigns(:question)
+    assert @published_question == list.list_questions.last.question.source_question
+  end
+
+  test "should derive question and redirect to original question" do
+    sign_in @user
+    sign_in @user
+    list = List.default_for_user!(@user)
+    put :new_derivation, :question_id => @published_question.to_param,
+                         :list => {list.id => list},
+                         :edit => "later"
+    assert_redirected_to question_path(@published_question)
+    assert_not_nil assigns(:question)
+    assert @published_question == list.list_questions.last.question.source_question
+  end
+
+  test "should not derive question no authorized" do
+    user_login
+    list = List.default_for_user!(@user)
+    put :new_derivation, :question_id => @published_question.to_param,
+                             :list => {list.id => list}
+    assert_response(403)
+  end
+
+  test "should not derive question not logged in" do
+    list = List.default_for_user!(@user)
+    put :new_derivation, :question_id => @published_question.to_param,
+                         :list => {list.id => list}
+    assert_redirected_to login_path
+  end
+
+  test "should not derive question not published" do
+    sign_in @user
+    list = List.default_for_user!(@user)
+    put :new_derivation, :question_id => @question.to_param,
+                         :list => {list.id => list}
+    assert_response(403)
+  end
+
+  test "should create new list via derivation dialog if no lists" do
+    sign_in @user
+    @user.lists.delete_all
+    assert @user.lists.empty?
+    get :derivation_dialog, :question_id => @published_question.to_param
+    @user.reload
+    assert_equal @user.lists.count, 1
+    assert_equal @user.lists.first, List.default_for_user(@user)
+  end
+
 end

@@ -47,6 +47,24 @@ class ListsControllerTest < ActionController::TestCase
     assert_redirected_to list_path(assigns(:list))
   end
 
+  test "should auto default new list if no other default" do
+    sign_in @user
+    assert_difference('List.count', -1) do
+      delete :destroy, :id => @list.to_param
+    end
+    assert @user.lists.empty?
+    assert_difference('List.count') do
+      post :create, :list => @list.attributes
+    end
+    assert @user.lists.last.is_default_for_user?(@user)
+    assert_redirected_to list_path(assigns(:list))
+    assert_difference('List.count') do
+      post :create, :list => @list.attributes
+    end
+    assert !@user.lists.last.is_default_for_user?(@user)
+    assert_redirected_to list_path(assigns(:list))
+  end
+
   test "should not show list not logged in" do
     get :show, :id => @list.to_param
     assert_redirected_to login_path
