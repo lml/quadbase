@@ -312,7 +312,10 @@ class QuestionsController < ApplicationController
     
     begin
       @question = @source_question.new_derivation!(present_user, list)
-      flash[:notice] = "Derived question created."
+      flash[:notice] = "Derived question created.
+                        Please make sure to edit the solutions page before publishing,
+                        as you will be unable to remove others' solutions afterwards."
+
       respond_to do |format|
         if edit_now
           format.html { redirect_to edit_question_path(@question) }

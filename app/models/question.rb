@@ -135,7 +135,7 @@ class Question < ActiveRecord::Base
   #   - User is a member or a list that contains the question
   #   - User is a question collaborator with roles
   #   - User is a deputy of a question collaborator with roles
-  scope :which_can_be_read_by, lambda { |user|
+  scope :visible_for, lambda { |user|
     return published_questions if user.is_anonymous?
     joins{list_questions.outer.list.outer.list_members.outer}\
     .joins{question_collaborators.outer.user.outer.deputies.outer}\
@@ -408,12 +408,20 @@ class Question < ActiveRecord::Base
   def new_derivation!(user, list = nil)
     return if !is_published?
     derived_question = self.content_copy
+    solution_copies = valid_solutions_visible_for(user)
+                  .select{|s| has_role?(s.creator, :is_listed) ||
+                              s.creator == user}
+                  .collect{|s| s.content_copy}
     
     Question.transaction do
       derived_question.create!(user, :list => list)
       QuestionDerivation.create(:source_question_id => self.id, 
                                 :derived_question_id => derived_question.id,
                                 :deriver_id => user.id)
+      solution_copies.each do |s|
+        s.question = derived_question
+        s.save!
+      end
     end
     
     derived_question
@@ -537,7 +545,7 @@ class Question < ActiveRecord::Base
     end
     
     # Remove (in SQL) questions the user can't read
-    q = q.which_can_be_read_by(user)
+    q = q.visible_for(user)
 
     # Remove duplicates
     q = q.group{questions.id}

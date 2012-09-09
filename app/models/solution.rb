@@ -21,7 +21,10 @@ class Solution < ActiveRecord::Base
   attr_accessible :content, :explanation, :is_visible
   
   scope :visible_for, lambda { |user|
-    where{(creator_id == user.id) | (is_visible == true)}
+    joins{question}.where{(creator_id == user.id) | 
+                          (is_visible == true) | 
+                          ( question.version == nil && 
+                            question.id.in(Question.visible_for(user).select{id}) )}
   }
   
   before_save :auto_subscribe
@@ -42,13 +45,22 @@ class Solution < ActiveRecord::Base
   def auto_subscribe
     comment_thread.subscribe!(creator) if creator.user_profile.auto_author_subscribe
   end
+  
+  def content_copy
+    kopy = Solution.new
+    kopy.creator = self.creator
+    kopy.content = self.content
+    kopy.explanation = self.explanation
+    kopy.is_visible = self.is_visible
+    kopy
+  end
     
   #############################################################################
   # Access control methods
   #############################################################################
 
   def can_be_read_by?(user)
-    user.can_read?(question) && (is_visible || (!user.is_anonymous? && user == creator))
+    user.can_read?(question) && (is_visible || (!user.is_anonymous? && user == creator) || !question.is_published?)
   end
 
   def can_be_created_by?(user)
@@ -60,7 +72,8 @@ class Solution < ActiveRecord::Base
   end
 
   def can_be_destroyed_by?(user)
-    !user.is_anonymous? && (user == creator || user.is_administrator?)
+    !user.is_anonymous? && (user == creator || user.is_administrator? ||
+      (!question.is_published? && user.can_read?(question)))
   end
 
   def can_be_voted_on_by?(user)

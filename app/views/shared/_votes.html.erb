@@ -24,7 +24,7 @@
               :onmouseout => "this.src='/assets/thumbs_up.png'" %><br />
         <% end %>
       </td>
-      <td>
+      <td class="votes_td">
         <%= label_tag votable.votes.where{thumbs_up == true}.count %>
       </td>
     </tr>
@@ -44,7 +44,7 @@
               :onmouseout => "this.src='/assets/thumbs_down.png'" %><br />
         <% end %>
       </td>
-      <td>
+      <td class="votes_td">
         <%= label_tag votable.votes.where{thumbs_up == false}.count %>
       </td>
     </tr>

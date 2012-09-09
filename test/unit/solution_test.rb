@@ -21,6 +21,7 @@ class SolutionTest < ActiveSupport::TestCase
   end
 
   test "visible_for" do
+    # debugger
     q = FactoryGirl.create(:simple_question)
     u = FactoryGirl.create(:user)
     u2 = FactoryGirl.create(:user)

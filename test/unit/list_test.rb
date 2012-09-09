@@ -82,7 +82,7 @@ class ListTest < ActiveSupport::TestCase
     ww0.add_member!(user)
     ww0.save!
     assert_equal List.all_for_user(user).length, 2
-    assert_equal List.all_for_user(user).second, ww0
+    assert List.all_for_user(user).include?(ww0)
     ww1.add_member!(user)
     ww1.save!
     ww2.add_member!(user)
