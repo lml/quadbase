@@ -55,6 +55,7 @@ group :development, :test do
    gem 'timecop', '~> 0.3.5'
    gem 'thin', '~> 1.3.1'
    gem 'quiet_assets', '~> 1.0.1'
+   gem 'rvm-capistrano'
 end
 
 gem 'single_test', '~> 0.5.1'
