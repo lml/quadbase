@@ -1,0 +1,15 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%
+   @options ||= {}
+   @height = @options[:height] || 300
+   @width = @options[:width] || 400
+   @body ||= yield #'Specify a body argument!'
+   @title ||= ''
+%>
+
+open_specified_dialog('<%= @name %>', true, <%= @height %>, <%= @width %>, "<%= @title %>", "<%= escape_javascript(@body) %>");
+
+refresh_buttons();
+<%= reload_mathjax("#{@name}_dialog") %>

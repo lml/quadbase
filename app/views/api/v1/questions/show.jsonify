@@ -1,0 +1,10 @@
+# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+# License version 3 or later.  See the COPYRIGHT file for details.
+
+if @question.errors.none?
+  json.ingest! (render :partial => "#{view_dir(@question)}/show",
+                       :locals => {:question => @question})
+else
+  json.ingest! (render :partial => 'shared/errors',
+                       :locals => {:errors => @question.errors})
+end

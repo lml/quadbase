@@ -205,6 +205,11 @@
    <% if @include_help_dialog %>
      <div id="help_dialog" style="display:none" title="Quadbase Help"></div>
    <% end %>
+
+   <div id="message_dialog" style="display:none" title="">
+     <div id="message_dialog_errors"></div>
+     <div id="message_dialog_body"></div>
+   </div>  
    
    <%= yield :javascript %>	
 </body>

@@ -3,6 +3,16 @@
 
 Quadbase::Application.routes.draw do
 
+  namespace :api, defaults: {format: 'json'} do
+    scope module: :v1, constraints: ApiConstraints.new(version: 1) do
+      resources :questions, :only => [:show] do
+        resources :solutions, :only => [:index]
+      end
+      resources :solutions, :only => [:show]
+    end
+  end
+
+
   namespace :admin do 
     resources :logic_libraries do
       resources :logic_library_versions, :shallow => true
@@ -73,6 +83,7 @@ Quadbase::Application.routes.draw do
   resources :users, :only => [:index, :show, :edit, :update] do
     post 'become'
     post 'confirm'
+    resources :api_keys, :shallow => true, :only => [:new, :create]
   end
 
   resources :deputizations, :only => [:create, :destroy, :new] do

@@ -44,4 +44,16 @@ module JqueryHelper
             element_id + '")]);').html_safe
   end
 
+  def message_dialog(title=nil, options={}, &block)
+    specified_dialog("message", title, options, &block)
+  end
+  
+  def specified_dialog(name=nil, title=nil, options={}, &block)
+    @name ||= name
+    @title ||= title
+    @options = options
+    @body = capture(&block)
+    render :template => 'shared/specified_dialog'
+  end
+
 end

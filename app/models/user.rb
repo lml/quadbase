@@ -35,6 +35,8 @@ class User < ActiveRecord::Base
   has_many :deputizers,
            :through => :received_deputizations
 
+  has_one :api_key, :dependent => :destroy
+
   validates_presence_of :first_name, :last_name, :username, :user_profile
   validates_uniqueness_of :username, :case_sensitive => false
   validates_length_of :username, :in => 3..40

@@ -1,0 +1,15 @@
+
+json.content do 
+  json.markup question.content
+  json.html question.variated_content_html
+end
+
+if !question.answer_choices.empty?
+  json.answer_choices(question.answer_choices) do |answer_choice|
+    json.markup answer_choice.content
+    json.html answer_choice.variated_content_html
+    json.credit answer_choice.credit
+  end
+end
+
+json.answer_can_be_sketched question.answer_can_be_sketched

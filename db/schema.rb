@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120726211039) do
+ActiveRecord::Schema.define(:version => 20121108231643) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -34,6 +34,13 @@ ActiveRecord::Schema.define(:version => 20120726211039) do
   end
 
   add_index "answer_choices", ["question_id"], :name => "index_answer_choices_on_question_id"
+
+  create_table "api_keys", :force => true do |t|
+    t.string   "access_token"
+    t.integer  "user_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
 
   create_table "assets", :force => true do |t|
     t.string   "attachment_file_name"

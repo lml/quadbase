@@ -70,7 +70,7 @@ Quadbase::Application.configure do
   
   # Took ":string => true" out b/c session cookies weren't making it across the break
   # from https to http
-  config.middleware.use Rack::SslEnforcer, :only => /^\/users/ #, :strict => true
+  config.middleware.use Rack::SslEnforcer, :only => /^\/users|^\/api/ #, :strict => true
   #config.middleware.insert_before ActionDispatch::Cookies, Rack::SslEnforcer
 
   # Log the query plan for queries taking more than this (works

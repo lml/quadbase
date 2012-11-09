@@ -133,3 +133,27 @@ function hide_question_until_loaded() {
       $(".question-wrapper").fadeIn('500');
     });
 }
+
+function open_specified_dialog(name, is_modal, height, width, title, body) {
+  $('#' + name + '_dialog_errors').html('');
+  
+  $("#" + name + "_dialog_body").html(body);
+  
+  $("#" + name + "_dialog").dialog({ 
+    autoOpen: false, 
+    modal: is_modal, 
+    height: height, 
+    width: width,
+    title: title,
+    position: 'center'
+  });
+
+  refresh_buttons();
+  $("#" + name + "_dialog").dialog('open');
+  $("#" + name + "_dialog").scrollTop(0);   
+  $("#" + name + "_dialog").dialog('open').closeOnClickOutside();
+}
+
+function open_message_dialog(is_modal, height, width, title, body) {
+  open_specified_dialog('message', is_modal, height, width, title, body);
+}
