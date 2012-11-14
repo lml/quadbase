@@ -1,0 +1,25 @@
+<%= pageHeading "Oauth Applications" %> 
+
+  <table class="list" style="width:90%">
+    <thead>
+      <tr>
+        <th width="30%">Name</th>
+        <th width="60%">Callback url</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @applications.each do |application| %>
+        <tr id="application_<%= application.id %>">
+          <td><%= link_to application.name, [:oauth, application] %></td>
+          <td><%= application.redirect_uri %></td>
+          <td><%= link_to 'Edit', edit_oauth_application_path(application) %></td>
+          <td><%= link_to 'Destroy', [:oauth, application], :data => { :confirm => 'Are you sure?' }, :method => :delete %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+
+  <p><%= link_to 'New Application', new_oauth_application_path %></p>

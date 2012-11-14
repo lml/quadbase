@@ -47,6 +47,8 @@ gem 'therubyracer', '~> 0.10.1'
 
 gem 'bullring', '~> 0.8.3'
 
+gem 'doorkeeper', '~> 0.6.0'
+
 group :development, :test do
    gem 'sqlite3', '~> 1.3.6'
    gem 'debugger', '~> 1.1.4'

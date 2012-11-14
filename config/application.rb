@@ -83,6 +83,10 @@ module Quadbase
     # Example:
     # config.question_lock_timeout = 5.minutes
     config.question_lock_timeout = 0
+
+    config.to_prepare do
+      Doorkeeper::ApplicationController.layout "application"
+    end
   end
 end
 

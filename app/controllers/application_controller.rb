@@ -16,13 +16,15 @@ class ApplicationController < ActionController::Base
   
   helper_method :user_is_disabled?,
                 :site_in_maintenance?,
-                :user_is_admin?,
+                # :user_is_admin?,
                 :present_user,
                 :get_error_messages,
                 :protect_form,
                 :view_dir
 
   respond_to :html, :js
+
+  include SharedApplicationMethods
 
   unless Quadbase::Application.config.consider_all_requests_local
     rescue_from Exception, :with => :rescue_from_exception
@@ -97,9 +99,9 @@ class ApplicationController < ActionController::Base
     redirect_maintenance
   end
   
-  def user_is_admin?
-    user_signed_in? && current_user.is_administrator?
-  end
+  # def user_is_admin?
+  #   user_signed_in? && current_user.is_administrator?
+  # end
 
   def authenticate_admin!
     user_is_admin? || redirect_not_admin

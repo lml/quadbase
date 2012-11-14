@@ -4,6 +4,9 @@
 require 'digest/md5'
 
 module ApplicationHelper
+
+  include SharedApplicationMethods
+
   def trash_icon
     image_tag("trash.gif", {:border => 0, :alt => "Delete", :title => "Delete"})
     #{}"<span class=\"trashIcon\"></span>".html_safe

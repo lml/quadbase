@@ -2,7 +2,7 @@ module Api
   module V1
     class ApiController < ApplicationController      
       skip_before_filter :authenticate_user!
-      before_filter :check_token_and_get_user
+      # before_filter :check_token_and_get_user
       
       respond_to :json
 
@@ -10,11 +10,17 @@ module Api
       
     private
 
-      def check_token_and_get_user
-        authenticate_or_request_with_http_token do |token, options|
-          api_key = ApiKey.find_by_access_token(token)
-          @api_user = api_key.try(:user)
-          !api_key.nil?
+      # def check_token_and_get_user
+      #   authenticate_or_request_with_http_token do |token, options|
+      #     api_key = ApiKey.find_by_access_token(token)
+      #     @api_user = api_key.try(:user)
+      #     !api_key.nil?
+      #   end
+      # end
+
+      def current_user
+        if doorkeeper_token
+          @current_user ||= User.find(doorkeeper_token.resource_owner_id)
         end
       end
 

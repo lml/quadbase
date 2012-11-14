@@ -1,6 +1,8 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -142,7 +144,7 @@
                	</li>
                	<% end %>
 
-                  <% if user_is_admin? %>
+                <% if user_is_admin? %>
                	<li <%= "class=selected" if is_tab_selected?(:admin) %>>
                	   <%= link_to "Admin", admin_path %>
                	</li>

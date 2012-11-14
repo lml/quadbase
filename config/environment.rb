@@ -4,6 +4,7 @@
 # Load the rails application
 require File.expand_path('../application', __FILE__)
 
+require 'shared_application_methods'
 require 'extensions'
 require 'uri_validator'
 require 'quadbase_markup'
