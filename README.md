@@ -4,7 +4,7 @@
 Quadbase
 ========
 
-[![Build Status](https://secure.travis-ci.org/lml/quadbase.png)](http://travis-ci.org/lml/quadbase)
+[![Build Status](https://secure.travis-ci.org/lml/quadbase.png?branch=master)](http://travis-ci.org/lml/quadbase)
 
 Quadbase is an open homework and test question bank, where questions are written 
 by the community and access is free.

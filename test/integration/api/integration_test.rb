@@ -47,7 +47,9 @@ class Api::IntegrationTest < ActionDispatch::IntegrationTest
     if !got_oauth_error
       flunk(build_message(msg, "Expression did not produce an oauth error as expected"))
     elsif oauth_error_status != expected_status
-      flunk(build_message(msg, "Expression expected to produce an oauth error with status ? but had status ?", expected_status, oauth_error_status))
+      flunk(build_message(msg, 
+                          "Expression expected to produce an oauth error with status ? but had status ?", 
+                          expected_status, oauth_error_status))
     end
   end
 
