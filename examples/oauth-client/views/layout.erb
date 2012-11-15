@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Example Quadbase OAuth 2 Client</title>
+  <link type="text/css" rel="stylesheet" media="screen" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+  <link type="text/css" rel="stylesheet" media="screen" href="/application.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+</head>
+<body>
+  <div class="topbar" data-scrollspy="scrollspy">
+    <div class="fill">
+      <div class="container">
+        <a class="brand" href="/">Example Quadbase OAuth 2 Client</a>
+        <div class="nav-collapse collapse navbar-responsive-collapse">
+                  
+                  
+          <ul class="nav pull-right">
+            <li>
+              <% if signed_in? %>
+                <a href="/sign_out">Sign out</a>
+              <% else %>
+                <a href="/sign_in">Sign in with OAuth 2 provider »</a>
+              <% end %>
+            </li>
+          </ul>
+        </div
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <div class="container">
+    <%= yield %>
+  </div>
+
+  <script src="http://twitter.github.com/bootstrap/1.4.0/bootstrap-buttons.min.js"></script>
+  <script src="http://twitter.github.com/bootstrap/1.4.0/bootstrap-scrollspy.js"></script>
+  <script src="/application.js"></script>
+</body>
+</html>

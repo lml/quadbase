@@ -1,0 +1,19 @@
+<style type="text/css">
+pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }
+​
+</style>
+
+<h3>API endpoint /api/<%= @endpoint %> returns...</h3>
+
+<div id="result"></div>
+
+<script type='text/javascript'>
+  $(document).ready(function() {
+    $('#result').html("<pre>" + syntaxHighlight(<%= @json.to_json %>) + "</pre>");
+  });
+</script>
