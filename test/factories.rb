@@ -281,4 +281,9 @@ FactoryGirl.define do
     f.variables "x"
   end
 
+  factory :oauth_application, class: Doorkeeper::Application do |f|
+    f.name { FactoryGirl.generate(:couple_of_words) }
+    f.redirect_uri 'http://localhost:3000'
+  end
+
 end

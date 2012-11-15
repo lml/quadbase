@@ -56,4 +56,12 @@ Doorkeeper.configure do
   # (Similar behaviour: https://developers.google.com/accounts/docs/OAuth2InstalledApp#choosingredirecturi)
   #
   # test_redirect_uri 'urn:ietf:wg:oauth:2.0:oob'
+
+  # Enable password authentication in the test environment
+  if Rails.env.test?
+    resource_owner_from_credentials do |routes|
+      u = User.find_for_database_authentication(:email => params[:username])
+      u if u && u.valid_password?(params[:password])
+    end
+  end
 end
