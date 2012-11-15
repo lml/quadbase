@@ -18,8 +18,8 @@ class Api::IntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def oauth_token_wrapper(email, password)
-    client = OAuth2::Client.new(@oauth_application.uid, @oauth_application.secret) do |b|
+  def oauth_token_wrapper(application, email, password)
+    client = OAuth2::Client.new(application.uid, application.secret) do |b|
       b.request :url_encoded
       b.adapter :rack, Rails.application
     end

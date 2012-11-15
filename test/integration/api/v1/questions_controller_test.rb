@@ -1,5 +1,3 @@
-require 'test_helper'
-require 'json'
 require 'integration/api/integration_test'
 
 class Api::V1::QuestionsControllerTest < Api::IntegrationTest
@@ -22,7 +20,7 @@ class Api::V1::QuestionsControllerTest < Api::IntegrationTest
   end
 
   test "should get published question using non author oauth credentials" do
-    token = oauth_token_wrapper(@unpublished_question_user.email, "password")
+    token = oauth_token_wrapper(@oauth_application, @unpublished_question_user.email, "password")
     response = token.get("/api/questions/#{@published_question.to_param}", "v1")
     assert_equal 200, response.status
   end
@@ -33,13 +31,13 @@ class Api::V1::QuestionsControllerTest < Api::IntegrationTest
   end
 
   test "should get unpublished question using oauth credentials" do
-    token = oauth_token_wrapper(@unpublished_question_user.email, "password")
+    token = oauth_token_wrapper(@oauth_application, @unpublished_question_user.email, "password")
     response = token.get("/api/questions/#{@unpublished_question.to_param}", "v1")
     assert_equal 200, response.status
   end
 
   test "should not get unpublished question using wrong oauth credentials" do
-    token = oauth_token_wrapper(@published_question_user.email, "password")
+    token = oauth_token_wrapper(@oauth_application, @published_question_user.email, "password")
     assert_oauth_error (403) {
       token.get("/api/questions/#{@unpublished_question.to_param}", "v1")
     }
