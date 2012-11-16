@@ -15,8 +15,11 @@ class Api::V1::QuestionsControllerTest < Api::IntegrationTest
   end
 
   test "should be able to access published question without credentials" do
-    api_call :get, "/api/questions/#{@published_question.to_param}", "v1"
+    response = api_call :get, "/api/questions/#{@published_question.to_param}", "v1"
     assert_response :success
+    json = JSON.parse(@response.body)
+    # lame test that the api is working; ponder switch to rspec and https://github.com/collectiveidea/json_spec
+    assert json.has_key?("simple_question") 
   end
 
   test "should get published question using non author oauth credentials" do
