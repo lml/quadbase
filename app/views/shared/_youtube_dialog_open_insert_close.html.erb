@@ -1,0 +1,51 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%= content_for :javascript do %>
+  <%= javascript_tag do %>
+  
+  var target;
+  var div_id;
+  
+  function open_add_youtube_dialog(markitup)  {
+    target = markitup;
+
+    div_id = $(target.textarea).attr('data-attachable_type');
+    if (div_id == undefined) { 
+      div_id = "";
+    }
+    else {
+      div_id = "_" + div_id;
+    }
+    
+    div_id = "youtube_dialog" + div_id;
+    
+    $(".active_selection_window").removeClass("active_selection_window");
+    
+    $("#" + div_id + "_image_selection_window").addClass("active_selection_window");
+    
+    $( "#"+div_id ).dialog({
+      	resizable: true,
+      	height:120,
+      	width:800,
+      	modal: true
+      });
+  }
+  
+  $(document).ready(function() {
+    $('.youtube_ok').live("click", function(evt, data, status, xhr){
+       var youtube_val = $(this).siblings(".youtube_url").attr("value");
+       var pattern = /v=([\w\d_-]+)/i;
+       var match = pattern.exec(youtube_val);
+       if (match) {
+         youtube_val = match[1];
+       }
+       var youtube_tag = "{youtube:" + youtube_val + "}";
+       $(target.textarea).trigger('insertion', [{replaceWith: youtube_tag}]);
+       $("#"+div_id).dialog('close');
+       return false;
+    });
+  })
+  
+  <% end %>
+<% end %>

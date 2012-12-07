@@ -1,0 +1,37 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% # Clients may provide the following variables (otherwise they have defaults):
+   #    dialog_div_id
+   #    include_open_insert_close_js defaults to true
+%>
+<% 
+  dialog_div_id ||= "youtube_dialog"
+  include_open_insert_close_js = true if local_assigns[:include_open_insert_close_js].nil?
+%>
+
+<%
+  url_field_id = dialog_div_id + '_url'
+  ok_button_id = dialog_div_id + '_ok_button'
+  cancel_button_id = dialog_div_id + '_cancel_button'
+%>
+
+<div id="<%= dialog_div_id %>" style="display:none;" title="Add an youtube video">
+
+  <div id="dialog_message_bar"></div>
+
+  <%= form_tag do %>
+
+    Enter the video url:<br/>
+    <%= text_field_tag 'url_field_id', '', :class => "youtube_url", :size => 64 %>
+    
+    <button class="<%= submit_classes %> youtube_ok" 
+	    style="font-size:12px" 
+	    id="<%= ok_button_id %>">OK</button>
+  <% end %>
+  
+</div>
+
+<% if include_open_insert_close_js %>
+  <%= render :partial => 'shared/youtube_dialog_open_insert_close' %>
+<% end %>

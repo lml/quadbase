@@ -56,7 +56,8 @@ protected
     begin
       self.parse_tree = parser.parse(content)
     rescue Parslet::ParseFailed => error
-      # logger.debug {"Parsing failed " + parser.error_tree.inspect.to_s}
+      #logger.debug {"Parsing failed " + parser.error_tree.inspect.to_s}
+      puts error.cause.ascii_tree
       errors.add(:content, "contains a formatting error.")
       false
     end

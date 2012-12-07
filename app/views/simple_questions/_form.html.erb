@@ -17,14 +17,20 @@
              :locals => {:attachable => @question.question_setup,
                          :dialog_div_id => "image_dialog_intro",
                          :include_open_insert_close_js => false} %>
+  <%= render :partial => "shared/add_youtube_dialog",
+             :locals => {:dialog_div_id => "youtube_dialog_intro",
+                         :include_open_insert_close_js => false} %>
 
   <%# For the question ... %>
   <%= render :partial => "attachable_assets/add_image_dialog",
              :locals => {:attachable => @question,
                          :include_open_insert_close_js => false} %>
+  <%= render :partial => "shared/add_youtube_dialog",
+             :locals => {:include_open_insert_close_js => false} %>
 
   <%# Add the JS glue only once, not twice %>
   <%= render :partial => 'attachable_assets/image_dialog_open_insert_close' %>
+  <%= render :partial => 'shared/youtube_dialog_open_insert_close' %>
 
 <% end %>
    

@@ -19,7 +19,7 @@ class QuadbaseParser < Parslet::Parser
   rule(:paragraph) { (( line | bulleted_list | numbered_list ).repeat(1) >> spaces >> eol).as(:paragraph) }
   
   rule(:line) { (content >> eol).as(:line) }
-  rule(:content) { (math | image | bold | italic | underline | text).repeat(1) }
+  rule(:content) { (math | image | youtube | bold | italic | underline | text).repeat(1) }
 
   rule(:text) { (
                   ( # Escape characters
@@ -30,6 +30,7 @@ class QuadbaseParser < Parslet::Parser
                     numbered_item_tag.absent? >> 
                     bullet_tag.absent? >> 
                     image_start_tag.absent? >> 
+                    youtube_start_tag.absent? >>
                     bold_tag.absent? >> 
                     italic_tag.absent? >> 
                     underline_tag.absent? >>
@@ -58,6 +59,10 @@ class QuadbaseParser < Parslet::Parser
   rule(:filename) { match['a-zA-Z0-9_\.\-\(\) '].repeat(1) }
   rule(:image_start_tag) { str("{img:") }
   rule(:image) {  (image_start_tag >> filename.as(:filename) >> str("}")).as(:image) }
+
+  rule(:youtube_url) { match['a-zA-Z0-9_\-'].repeat(1) }
+  rule(:youtube_start_tag) { str("{youtube:") }
+  rule(:youtube) {  (youtube_start_tag >> youtube_url.as(:youtube_url) >> str("}")).as(:youtube) }
   
   rule(:math_inline_tag) { str("$") }
   rule(:math_display_tag) { str("$$") }
@@ -119,6 +124,8 @@ class QuadbaseHtmlTransformer < Parslet::Transform
   rule(:paragraphs => sequence(:entries)) { entries.join("\n") }
   rule(:filename => simple(:filename)) { "#{filename}" }
   rule(:image => simple(:filename)) { "<center>" + TagHelper.make_image_tag(filename) + "</center>" }
+  rule(:youtube_url => simple(:youtube_url)) { "#{youtube_url}" }
+  rule(:youtube => simple(:youtube_url)) { "<iframe width='420' height='315' src='http://www.youtube.com/embed/#{youtube_url}?rel=0' frameborder='0' allowfullscreen></iframe>" }
   rule(:bullet => sequence(:text)) { "<li>#{text.join}</li>" }
   rule(:bulleted_list => sequence(:bullets)) { "<ul>#{bullets.join("\n")}</ul>" }
   rule(:numbered_item => sequence(:text)) { "<li>#{text.join}</li>" }
