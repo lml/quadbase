@@ -126,7 +126,6 @@ FactoryGirl.define do
   factory :simple_question do |f|
     f.content { FactoryGirl.generate(:couple_of_words) }
     f.association :question_setup
-    f.number { FactoryGirl.generate(:unique_number) }
     f.license_id { common_license.id }
     f.version nil
   end
