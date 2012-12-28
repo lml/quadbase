@@ -131,15 +131,17 @@ class Question < ActiveRecord::Base
     published_questions.where{number == num}.order{updated_at.desc}
   }
   # Can read a question if any of those:
-  #   - Question is published
+  #   - Question is published and not embargoed
   #   - User is a member or a list that contains the question
   #   - User is a question collaborator with roles
   #   - User is a deputy of a question collaborator with roles
   scope :visible_for, lambda { |user|
     return published_questions if user.is_anonymous?
+    embargo_time = WebsiteConfiguration.get_value("question_embargo_time").to_i
+    first_published = Question.published_with_number(number).last.published_at
     joins{list_questions.outer.list.outer.list_members.outer}\
     .joins{question_collaborators.outer.user.outer.deputies.outer}\
-    .where{(version != nil) |\
+    .where{((version != nil) & ((embargoed == false) | ((publisher.is_privileged == false) & (first_published + embargo_time > Time.now)))) |\
     (list_question.list.list_members.user_id == user.id) |\
     (((question_collaborators.user_id == user.id) |\
     (question_collaborators.user.deputies.id == user.id)) &\
@@ -159,7 +161,7 @@ class Question < ActiveRecord::Base
   # but we don't want them deciding which questions share setups, etc)
   # Using whitelisting instead of blacklisting here.
   attr_accessible :content, :changes_solution, :question_setup_attributes, 
-                  :logic_attributes, :answer_can_be_sketched
+                  :logic_attributes, :answer_can_be_sketched, :embargoed
 
   def to_param
     if is_published?
@@ -295,6 +297,17 @@ class Question < ActiveRecord::Base
   
   def is_published?
     nil != version
+  end
+  
+  def published_at
+    return false unless is_published?
+    updated_at
+  end
+  
+  def is_embargoed?
+    embargo_time = WebsiteConfiguration.get_value("question_embargo_time").to_i
+    first_published = Question.published_with_number(number).last.published_at
+    embargoed == true && (publisher.is_privileged? || first_published + embargo_time < Time.now)
   end
   
   def content_change_allowed?
@@ -648,7 +661,7 @@ class Question < ActiveRecord::Base
   end
 
   def can_be_read_by?(user)
-    is_published? || 
+    (is_published? && !is_embargoed?) || 
     ( !user.is_anonymous? && 
       (is_list_member?(user) || has_role_permission?(user, :any)) )
   end
@@ -677,7 +690,7 @@ class Question < ActiveRecord::Base
   end
   
   def can_be_derived_by?(user)
-    is_published? && !user.is_anonymous?
+    !user.is_anonymous? && can_be_read_by?(user)
   end
   
   def can_be_tagged_by?(user)

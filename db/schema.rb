@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121214001042) do
+ActiveRecord::Schema.define(:version => 20121228160153) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -34,13 +34,6 @@ ActiveRecord::Schema.define(:version => 20121214001042) do
   end
 
   add_index "answer_choices", ["question_id"], :name => "index_answer_choices_on_question_id"
-
-  create_table "api_keys", :force => true do |t|
-    t.string   "access_token"
-    t.integer  "user_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-  end
 
   create_table "assets", :force => true do |t|
     t.string   "attachment_file_name"
@@ -187,53 +180,21 @@ ActiveRecord::Schema.define(:version => 20121214001042) do
   add_index "logics", ["logicable_id", "logicable_type"], :name => "index_logics_on_logicable_id_and_logicable_type", :unique => true
   add_index "logics", ["required_logic_library_version_ids"], :name => "index_logics_on_required_logic_library_version_ids"
 
+  create_table "match_items", :force => true do |t|
+    t.integer  "question_id"
+    t.integer  "match_number"
+    t.boolean  "right_column", :default => false
+    t.text     "content"
+    t.text     "content_html"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+  end
+
   create_table "messages", :force => true do |t|
     t.string   "subject"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
-
-  create_table "oauth_access_grants", :force => true do |t|
-    t.integer  "resource_owner_id", :null => false
-    t.integer  "application_id",    :null => false
-    t.string   "token",             :null => false
-    t.integer  "expires_in",        :null => false
-    t.string   "redirect_uri",      :null => false
-    t.datetime "created_at",        :null => false
-    t.datetime "revoked_at"
-    t.string   "scopes"
-  end
-
-  add_index "oauth_access_grants", ["token"], :name => "index_oauth_access_grants_on_token", :unique => true
-
-  create_table "oauth_access_tokens", :force => true do |t|
-    t.integer  "resource_owner_id"
-    t.integer  "application_id",    :null => false
-    t.string   "token",             :null => false
-    t.string   "refresh_token"
-    t.integer  "expires_in"
-    t.datetime "revoked_at"
-    t.datetime "created_at",        :null => false
-    t.string   "scopes"
-  end
-
-  add_index "oauth_access_tokens", ["refresh_token"], :name => "index_oauth_access_tokens_on_refresh_token", :unique => true
-  add_index "oauth_access_tokens", ["resource_owner_id"], :name => "index_oauth_access_tokens_on_resource_owner_id"
-  add_index "oauth_access_tokens", ["token"], :name => "index_oauth_access_tokens_on_token", :unique => true
-
-  create_table "oauth_applications", :force => true do |t|
-    t.string   "name",         :null => false
-    t.string   "uid",          :null => false
-    t.string   "secret",       :null => false
-    t.string   "redirect_uri", :null => false
-    t.integer  "owner_id"
-    t.string   "owner_type"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-  end
-
-  add_index "oauth_applications", ["owner_id", "owner_type"], :name => "index_oauth_applications_on_owner_id_and_owner_type"
-  add_index "oauth_applications", ["uid"], :name => "index_oauth_applications_on_uid", :unique => true
 
   create_table "question_collaborators", :force => true do |t|
     t.integer  "user_id"
@@ -321,6 +282,7 @@ ActiveRecord::Schema.define(:version => 20121214001042) do
     t.text     "code"
     t.string   "variables"
     t.boolean  "answer_can_be_sketched"
+    t.boolean  "embargoed",                             :default => false
   end
 
   add_index "questions", ["license_id"], :name => "index_questions_on_license_id"
@@ -374,12 +336,12 @@ ActiveRecord::Schema.define(:version => 20121214001042) do
   add_index "user_profiles", ["user_id"], :name => "index_user_profiles_on_user_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                  :default => "",    :null => false
-    t.string   "encrypted_password",     :default => "",    :null => false
+    t.string   "email",                   :default => "",    :null => false
+    t.string   "encrypted_password",      :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          :default => 0
+    t.integer  "sign_in_count",           :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -387,17 +349,19 @@ ActiveRecord::Schema.define(:version => 20121214001042) do
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.integer  "failed_attempts",        :default => 0
+    t.integer  "failed_attempts",         :default => 0
     t.string   "unlock_token"
     t.datetime "locked_at"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
     t.string   "first_name"
     t.string   "last_name"
-    t.boolean  "is_administrator",       :default => false
+    t.boolean  "is_administrator",        :default => false
     t.string   "username"
     t.datetime "disabled_at"
-    t.integer  "unread_message_count",   :default => 0
+    t.integer  "unread_message_count",    :default => 0
+    t.datetime "reset_password_sent_att"
+    t.boolean  "is_privileged",           :default => false
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

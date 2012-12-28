@@ -7,7 +7,8 @@ class WebsiteConfiguration < ActiveRecord::Base
   @@defaults = {
                   "in_maintenance" => [false, "boolean"],
                   "use_mathjax_cdn" => [true, "boolean"],
-                  "home_highlighted_questions" => ["", "text"]
+                  "home_highlighted_questions" => ["", "text"],
+                  "question_embargo_time" => [6.months, "text"]
                }
 
   validates_uniqueness_of :name

@@ -67,6 +67,10 @@ class User < ActiveRecord::Base
   def is_confirmed?
     !confirmed_at.nil?
   end
+  
+  def is_privileged?
+    is_privileged
+  end
 
   def is_disabled?
     !disabled_at.nil?
