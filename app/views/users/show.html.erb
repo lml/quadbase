@@ -22,15 +22,19 @@
       <td colspan="2"><%= tf_to_yn(@user.is_administrator) %></td>
    </tr>
    <tr>
+      <th>Privileged?</th>
+      <td colspan="2"><%= tf_to_yn(@user.is_privileged) %></td>
+   </tr>
+   <tr>
+      <th>Account Disabled?</th>
+      <td colspan="2"><%= tf_to_yn(@user.is_disabled?) %></td>
+   </tr>
+   <tr>
       <th>Confirmed?</th>
       <td><%= tf_to_yn(@user.is_confirmed?) %></td>
       <td><% if !@user.is_confirmed? %>
       <%= button_to 'Confirm', user_confirm_path(@user), :class => "button_link" %>
       <% end %></td>
-   </tr>
-   <tr>
-      <th>Account Disabled?</th>
-      <td colspan="2"><%= tf_to_yn(@user.is_disabled?) %></td>
    </tr>
    <% end %>
 </table>

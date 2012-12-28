@@ -95,6 +95,11 @@ class Question < ActiveRecord::Base
 
   has_many :solutions, :dependent => :destroy
   
+  has_many :questions_same_number,
+           :class_name => "Question",
+           :primary_key => "number",
+           :foreign_key => "number"
+  
   has_one :comment_thread, :as => :commentable, :dependent => :destroy
   before_validation :build_comment_thread, :on => :create
   validates_presence_of :comment_thread
@@ -130,23 +135,34 @@ class Question < ActiveRecord::Base
   scope :published_with_number, lambda { |num|
     published_questions.where{number == num}.order{updated_at.desc}
   }
+  
   # Can read a question if any of those:
   #   - Question is published and not embargoed
   #   - User is a member or a list that contains the question
   #   - User is a question collaborator with roles
   #   - User is a deputy of a question collaborator with roles
   scope :visible_for, lambda { |user|
-    return published_questions if user.is_anonymous?
     embargo_time = WebsiteConfiguration.get_value("question_embargo_time").to_i
-    first_published = Question.published_with_number(number).last.published_at
-    joins{list_questions.outer.list.outer.list_members.outer}\
-    .joins{question_collaborators.outer.user.outer.deputies.outer}\
-    .where{((version != nil) & ((embargoed == false) | ((publisher.is_privileged == false) & (first_published + embargo_time > Time.now)))) |\
-    (list_question.list.list_members.user_id == user.id) |\
-    (((question_collaborators.user_id == user.id) |\
-    (question_collaborators.user.deputies.id == user.id)) &\
-    ((question_collaborators.is_author == true) |\
-    (question_collaborators.is_copyright_holder == true)))}
+    if user.is_anonymous?
+      joins{publisher}.joins{questions_same_number}\
+      .where{(version != nil) & ((embargoed == false) |\
+      ((publisher.is_privileged == false) &\
+      (questions_same_number.version != nil) &\
+      (questions_same_number.updated_at < Time.now - embargo_time)))}
+    else
+      joins{list_questions.outer.list.outer.list_members.outer}\
+      .joins{question_collaborators.outer.user.outer.deputies.outer}\
+      .joins{publisher.outer}.joins{questions_same_number}\
+      .where{((version != nil) & ((embargoed == false) |\
+      ((publisher.is_privileged == false) &\
+      (questions_same_number.version != nil) &\
+      (questions_same_number.updated_at < Time.now - embargo_time)))) |\
+      (list_question.list.list_members.user_id == user.id) |\
+      (((question_collaborators.user_id == user.id) |\
+      (question_collaborators.user.deputies.id == user.id)) &\
+      ((question_collaborators.is_author == true) |\
+      (question_collaborators.is_copyright_holder == true)))}
+    end
   }
   
   scope :not_superseded, where{-exists(Question.select(1).from('`questions` `q`')
@@ -161,7 +177,7 @@ class Question < ActiveRecord::Base
   # but we don't want them deciding which questions share setups, etc)
   # Using whitelisting instead of blacklisting here.
   attr_accessible :content, :changes_solution, :question_setup_attributes, 
-                  :logic_attributes, :answer_can_be_sketched, :embargoed
+                  :logic_attributes, :answer_can_be_sketched
 
   def to_param
     if is_published?
@@ -304,10 +320,14 @@ class Question < ActiveRecord::Base
     updated_at
   end
   
-  def is_embargoed?
+  def embargoed_until
     embargo_time = WebsiteConfiguration.get_value("question_embargo_time").to_i
     first_published = Question.published_with_number(number).last.published_at
-    embargoed == true && (publisher.is_privileged? || first_published + embargo_time < Time.now)
+    first_published + embargo_time
+  end
+  
+  def is_embargoed?
+    embargoed == true && (publisher.is_privileged? || embargoed_until > Time.now)
   end
   
   def content_change_allowed?
@@ -690,7 +710,7 @@ class Question < ActiveRecord::Base
   end
   
   def can_be_derived_by?(user)
-    !user.is_anonymous? && can_be_read_by?(user)
+    is_published? && !user.is_anonymous? && can_be_read_by?(user)
   end
   
   def can_be_tagged_by?(user)

@@ -12,6 +12,11 @@ q. <%= question.number %>,
    <% if question.is_latest? %>
       (LATEST)
    <% end %>
+   <% if question.is_embargoed? %>
+     <br/>
+     Embargoed
+     <%= " until " + (question.embargoed_until).to_s unless question.publisher.is_privileged? %>
+   <% end %>
 <% end %>
 </div>
 <% end %>

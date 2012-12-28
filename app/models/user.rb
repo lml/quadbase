@@ -69,7 +69,7 @@ class User < ActiveRecord::Base
   end
   
   def is_privileged?
-    is_privileged
+    is_privileged || is_administrator
   end
 
   def is_disabled?

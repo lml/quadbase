@@ -10,7 +10,7 @@ class QuestionsControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     @user2 = FactoryGirl.create(:user)
     @question = FactoryGirl.create(:list_question,
-                               :list => List.default_for_user!(@user)).question
+                                   :list => List.default_for_user!(@user)).question
     @question_collaborator = FactoryGirl.create(:question_collaborator,
                                             :question => @question,
                                             :user => @user,
@@ -35,6 +35,11 @@ class QuestionsControllerTest < ActionController::TestCase
                                             :is_copyright_holder => true)
     @published_question = make_simple_question(:method => :create,
                                                :published => true)
+    @embargoed_published_question = make_simple_question(:method => :create, :set_license => true)
+    @embargoed_published_question.embargoed = true
+    @embargoed_published_question.save!
+    @embargoed_published_question.set_initial_question_roles(@user2)
+    @embargoed_published_question.publish!(@user2)
     ContentParseAndCache.enable_test_parser = false
   end
 
@@ -114,6 +119,20 @@ class QuestionsControllerTest < ActionController::TestCase
 
   test "should show published question" do
     get :show, :id => @published_question.to_param
+    assert_response :success
+  end
+  
+  test "should not show embargoed published question" do
+    get :show, :id => @embargoed_published_question.to_param
+    assert_response(403)
+    user_login
+    get :show, :id => @embargoed_published_question.to_param
+    assert_response(403)
+  end
+  
+  test "should show embargoed published question" do
+    sign_in @user2
+    get :show, :id => @embargoed_published_question.to_param
     assert_response :success
   end
 

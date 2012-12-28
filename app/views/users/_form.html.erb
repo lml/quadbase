@@ -19,7 +19,7 @@
      </tr>
      <tr>
         <th>Privileged?</th>
-        <td><%= check_box_tag "user[privileged]", "1", @user.is_privileged? %></td>
+        <td><%= f.check_box :is_privileged %></td>
      </tr>
      <tr>
         <th>Disable Account?</th>

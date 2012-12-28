@@ -248,6 +248,12 @@ class QuestionsController < ApplicationController
     end
     
     if params[:agreement_checkbox]
+      if params[:embargo_checkbox]
+        @questions.each { |q|
+          q.embargoed = true
+          q.save!
+        }
+      end
       @questions.each { |q|
         q.publish!(present_user)
       }
