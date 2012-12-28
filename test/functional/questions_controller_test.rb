@@ -130,8 +130,14 @@ class QuestionsControllerTest < ActionController::TestCase
     assert_response(403)
   end
   
-  test "should show embargoed published question" do
+  test "should show embargoed published question owner" do
     sign_in @user2
+    get :show, :id => @embargoed_published_question.to_param
+    assert_response :success
+  end
+  
+  test "should show expired embargoed published question" do
+    @embargoed_published_question.update_attribute(:embargo_time, 0)
     get :show, :id => @embargoed_published_question.to_param
     assert_response :success
   end

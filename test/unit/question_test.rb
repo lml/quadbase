@@ -136,9 +136,9 @@ class QuestionTest < ActiveSupport::TestCase
     assert !anon.can_read?(q2)
     assert !anon.can_read?(q3)
     
-    q.update_attribute(:updated_at, 7.months.ago)
-    q2.update_attribute(:updated_at, 7.months.ago)
-    q3.update_attribute(:updated_at, 7.months.ago)
+    q.update_attribute(:embargo_time, 0)
+    q2.update_attribute(:embargo_time, 0)
+    q3.update_attribute(:embargo_time, 0)
     
     assert !q.is_embargoed?
     assert !q2.is_embargoed?

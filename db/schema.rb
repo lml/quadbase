@@ -283,6 +283,7 @@ ActiveRecord::Schema.define(:version => 20121228160153) do
     t.string   "variables"
     t.boolean  "answer_can_be_sketched"
     t.boolean  "embargoed",                             :default => false
+    t.datetime "embargo_time"
   end
 
   add_index "questions", ["license_id"], :name => "index_questions_on_license_id"
