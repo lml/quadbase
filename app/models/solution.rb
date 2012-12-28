@@ -22,9 +22,9 @@ class Solution < ActiveRecord::Base
   
   scope :visible_for, lambda { |user|
     joins{question}.where{(question.id.in(Question.visible_for(user).select{id})) &
-                          (creator_id == user.id) | 
+                          ((creator_id == user.id) | 
                           (is_visible == true) | 
-                          (question.version == nil)}
+                          (question.version == nil))}
   }
   
   before_save :auto_subscribe
