@@ -180,16 +180,6 @@ ActiveRecord::Schema.define(:version => 20121228160153) do
   add_index "logics", ["logicable_id", "logicable_type"], :name => "index_logics_on_logicable_id_and_logicable_type", :unique => true
   add_index "logics", ["required_logic_library_version_ids"], :name => "index_logics_on_required_logic_library_version_ids"
 
-  create_table "match_items", :force => true do |t|
-    t.integer  "question_id"
-    t.integer  "match_number"
-    t.boolean  "right_column", :default => false
-    t.text     "content"
-    t.text     "content_html"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-  end
-
   create_table "messages", :force => true do |t|
     t.string   "subject"
     t.datetime "created_at", :null => false
@@ -337,12 +327,12 @@ ActiveRecord::Schema.define(:version => 20121228160153) do
   add_index "user_profiles", ["user_id"], :name => "index_user_profiles_on_user_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                   :default => "",    :null => false
-    t.string   "encrypted_password",      :default => "",    :null => false
+    t.string   "email",                  :default => "",    :null => false
+    t.string   "encrypted_password",     :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",           :default => 0
+    t.integer  "sign_in_count",          :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -350,19 +340,18 @@ ActiveRecord::Schema.define(:version => 20121228160153) do
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.integer  "failed_attempts",         :default => 0
+    t.integer  "failed_attempts",        :default => 0
     t.string   "unlock_token"
     t.datetime "locked_at"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
     t.string   "first_name"
     t.string   "last_name"
-    t.boolean  "is_administrator",        :default => false
+    t.boolean  "is_administrator",       :default => false
     t.string   "username"
     t.datetime "disabled_at"
-    t.integer  "unread_message_count",    :default => 0
-    t.datetime "reset_password_sent_att"
-    t.boolean  "is_privileged",           :default => false
+    t.integer  "unread_message_count",   :default => 0
+    t.boolean  "is_privileged",          :default => false
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
