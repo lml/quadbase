@@ -138,7 +138,6 @@ class QuestionsControllerTest < ActionController::TestCase
   
   test "should show expired embargoed published question" do
     @embargoed_published_question.update_attribute(:embargo_time, 0)
-    sleep 1 # second
     get :show, :id => @embargoed_published_question.to_param
     assert_response :success
   end

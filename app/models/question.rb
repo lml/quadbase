@@ -149,9 +149,9 @@ class Question < ActiveRecord::Base
       (questions_same_number.version != nil) &\
       ((embargo_time == nil) &
       (publisher.is_privileged == false) &\
-      (questions_same_number.updated_at < Time.now - max_embargo_time)) |\
+      (questions_same_number.updated_at <= Time.now - max_embargo_time)) |\
       ((embargo_time != nil) &\
-      (questions_same_number.updated_at + embargo_time < Time.now)))}
+      (questions_same_number.updated_at + embargo_time <= Time.now)))}
     else
       joins{list_questions.outer.list.outer.list_members.outer}\
       .joins{question_collaborators.outer.user.outer.deputies.outer}\
@@ -160,9 +160,9 @@ class Question < ActiveRecord::Base
       (questions_same_number.version != nil) &\
       ((embargo_time == nil) &
       (publisher.is_privileged == false) &\
-      (questions_same_number.updated_at < Time.now - max_embargo_time)) |\
+      (questions_same_number.updated_at <= Time.now - max_embargo_time)) |\
       ((embargo_time != nil) &\
-      (questions_same_number.updated_at + embargo_time < Time.now)))) |\
+      (questions_same_number.updated_at + embargo_time <= Time.now)))) |\
       (list_question.list.list_members.user_id == user.id) |\
       (((question_collaborators.user_id == user.id) |\
       (question_collaborators.user.deputies.id == user.id)) &\
@@ -688,8 +688,8 @@ class Question < ActiveRecord::Base
 
   def can_be_read_by?(user)
     (is_published? && !is_embargoed?) || 
-    ( !user.is_anonymous? && 
-      (is_list_member?(user) || has_role_permission?(user, :any)) )
+    (!user.is_anonymous? && 
+      (is_list_member?(user) || has_role_permission?(user, :any)))
   end
     
   def can_be_created_by?(user)
