@@ -145,10 +145,8 @@ class Question < ActiveRecord::Base
     max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
     if user.is_anonymous?
       joins{publisher}.joins{questions_same_number}\
-      .where{(version != nil) & ((embargoed == false) |\
-      (questions_same_number.version != nil) &\
-      ((embargo_time == nil) &
-      (publisher.is_privileged == false) &\
+      .where{(version != nil) & ((questions_same_number.version != nil) &\
+      ((embargo_time == nil) & (publisher.is_privileged == false) &\
       (questions_same_number.updated_at <= Time.now - max_embargo_time)) |\
       ((embargo_time != nil) &\
       (questions_same_number.updated_at + embargo_time <= Time.now)))}
@@ -156,10 +154,8 @@ class Question < ActiveRecord::Base
       joins{list_questions.outer.list.outer.list_members.outer}\
       .joins{question_collaborators.outer.user.outer.deputies.outer}\
       .joins{publisher.outer}.joins{questions_same_number}\
-      .where{((version != nil) & ((embargoed == false) |\
-      (questions_same_number.version != nil) &\
-      ((embargo_time == nil) &
-      (publisher.is_privileged == false) &\
+      .where{((version != nil) & ((questions_same_number.version != nil) &\
+      ((embargo_time == nil) & (publisher.is_privileged == false) &\
       (questions_same_number.updated_at <= Time.now - max_embargo_time)) |\
       ((embargo_time != nil) &\
       (questions_same_number.updated_at + embargo_time <= Time.now)))) |\
@@ -333,7 +329,7 @@ class Question < ActiveRecord::Base
   end
   
   def is_embargoed?
-    embargoed == true && (publisher.is_privileged? || embargoed_until > Time.now)
+    embargoed_until.nil? || embargoed_until > Time.now
   end
   
   def content_change_allowed?
@@ -721,6 +717,11 @@ class Question < ActiveRecord::Base
   
   def can_be_tagged_by?(user)
     can_be_updated_by?(user) || has_role_permission?(user, :any)
+  end
+
+  def can_be_embargoed_by?(user)
+    is_published? && !user.is_anonymous? && 
+    (is_list_member?(user) || has_role_permission?(user, :any))
   end
   
   # Special access method for role requests on this collaborator

@@ -36,7 +36,7 @@ class QuestionsControllerTest < ActionController::TestCase
     @published_question = make_simple_question(:method => :create,
                                                :published => true)
     @embargoed_published_question = make_simple_question(:method => :create, :set_license => true)
-    @embargoed_published_question.embargoed = true
+    @embargoed_published_question.embargo_time = nil
     @embargoed_published_question.save!
     @embargoed_published_question.set_initial_question_roles(@user2)
     @embargoed_published_question.publish!(@user2)

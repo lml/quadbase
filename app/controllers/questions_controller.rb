@@ -250,7 +250,7 @@ class QuestionsController < ApplicationController
     if params[:agreement_checkbox]
       if params[:embargo_checkbox]
         @questions.each { |q|
-          q.embargoed = true
+          q.embargo_time = nil
           q.save!
         }
       end
@@ -383,6 +383,18 @@ class QuestionsController < ApplicationController
       format.html do
         @questions = @questions.paginate(:page => params[:page], :per_page => @per_page)
       end
+      format.js
+    end
+  end
+
+  def set_embargo_time
+    @question = Question.from_param(params[:question_id])
+    raise SecurityTransgression unless @question.can_be_embargoed_by?(present_user)
+    embargo_time = params[:embargo_time] > max_embargo_time ? nil : params[:embargo_time]
+    @question.update_attribute(:embargo_time, embargo_time)
+    
+    respond_to do |format|
+      format.html { redirect_to question_path(@question) }
       format.js
     end
   end

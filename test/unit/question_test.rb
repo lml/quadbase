@@ -106,7 +106,7 @@ class QuestionTest < ActiveSupport::TestCase
     
     q2 = make_simple_question(:method => :create, :set_license => true)
     q2.set_initial_question_roles(u)
-    q2.embargoed = true
+    q2.embargo_time = nil
     q2.save!
     
     assert_nothing_raised(ActiveRecord::RecordInvalid) {q2.publish!(u)}
@@ -114,7 +114,7 @@ class QuestionTest < ActiveSupport::TestCase
     
     q3 = make_simple_question(:method => :create, :set_license => true)
     q3.set_initial_question_roles(u_priv)
-    q3.embargoed = true
+    q3.embargo_time = nil
     q3.save!
     
     assert_nothing_raised(ActiveRecord::RecordInvalid) {q3.publish!(u_priv)}
@@ -135,10 +135,10 @@ class QuestionTest < ActiveSupport::TestCase
     assert anon.can_read?(q)
     assert !anon.can_read?(q2)
     assert !anon.can_read?(q3)
-    
-    q.update_attribute(:embargo_time, 0)
-    q2.update_attribute(:embargo_time, 0)
-    q3.update_attribute(:embargo_time, 0)
+
+    q.update_attribute(:updated_at, 1.year.ago)
+    q2.update_attribute(:updated_at, 1.year.ago)
+    q3.update_attribute(:updated_at, 1.year.ago)
     
     assert !q.is_embargoed?
     assert !q2.is_embargoed?
@@ -150,6 +150,24 @@ class QuestionTest < ActiveSupport::TestCase
     assert anon.can_read?(q)
     assert anon.can_read?(q2)
     assert !anon.can_read?(q3)
+    
+    q.update_attribute(:embargo_time, 0)
+    q2.update_attribute(:embargo_time, 0)
+    q3.update_attribute(:embargo_time, 0)
+    q.update_attribute(:updated_at, Time.now)
+    q2.update_attribute(:updated_at, Time.now)
+    q3.update_attribute(:updated_at, Time.now)
+    
+    assert !q.is_embargoed?
+    assert !q2.is_embargoed?
+    assert !q3.is_embargoed?
+    
+    assert u.can_read?(q3)
+    assert u_priv.can_read?(q2)
+    
+    assert anon.can_read?(q)
+    assert anon.can_read?(q2)
+    assert anon.can_read?(q3)
   end
 
   # test "find by number and version" do 
