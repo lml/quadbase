@@ -1,0 +1,13 @@
+<%# Copyright 2013 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%# Clients of this partial must provide the following variable:
+  # question %>
+
+<% if question.is_embargoed? %>
+  <%= link_to "Embargoed" +\
+              (question.embargoed_until.nil? ? "" : " until " + question.embargoed_until.strftime('%Y-%m-%d %l:%M:%S %p %z')),
+              question_embargo_path(question), :remote => true %>
+<% else %>
+  <%= link_to "Embargo this question", question_embargo_path(question), :remote => true %>
+<% end %>

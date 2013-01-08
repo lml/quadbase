@@ -162,6 +162,9 @@ Quadbase::Application.routes.draw do
     
     get :autocomplete_tag_name, :on => :collection
 
+    get 'embargo'
+    put 'embargo_time'
+
     commentable
     votable
   end

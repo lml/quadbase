@@ -1,0 +1,21 @@
+<%# Copyright 201 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%= render :partial => 'embargo', :locals => {:question => @question} %>
+
+<% min_time = @question.updated_at
+   max_embargo_time = @question.publisher.is_privileged? ? nil : WebsiteConfiguration.get_value("question_embargo_max_time").to_i
+   max_time = min_time + max_embargo_time %>
+
+<% content_for :javascript do %>
+  <%= javascript_tag do %>
+    $("#embargo_time").datetimepicker({
+      dateFormat: 'yy-mm-dd',
+      timeFormat: 'hh:mm:ss TT',
+      stepMinute: 1,
+      ampm: true,
+      showSecond: true,
+      minDateTime: new Date(<%= min_time.year %>, <%= min_time.month-1 %>, <%= min_time.day %>, <%= min_time.hour %>, <%= min_time.min %>, <%= min_time.sec %>),
+      maxDateTime: new Date(<%= max_time.year %>, <%= max_time.month-1 %>, <%= max_time.day %>, <%= max_time.hour %>, <%= max_time.min %>, <%= max_time.sec %>)});
+  <% end %>
+<% end %>

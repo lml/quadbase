@@ -1,0 +1,16 @@
+<%# Copyright 2013 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%# Clients of this partial must pass the following variables:
+  # question %>
+
+Embargo until (UTC):
+
+<br/>
+
+<%= form_tag question_embargo_time_path(question), :remote => true,
+                                                   :method => 'put' do %>
+  <%= datetime_text_field_tag "embargo_time", question.embargoed_until.strftime('%Y-%m-%d %l:%M:%S %p') %>
+  <br/><br/>
+  <%= submit_tag "OK", :class => "#{submit_classes}" %>
+<% end %>

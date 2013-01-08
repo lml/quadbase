@@ -8,15 +8,17 @@ q. <%= question.number %>,
 <% if question.version.nil? %>
    unpublished 
 <% else %>
-   v. <%= question.version %>
-   <% if question.is_latest? %>
-      (LATEST)
-   <% end %>
-   <% if question.is_embargoed? %>
-     <br/>
-     Embargoed
-     <%= " until " + (question.embargoed_until).to_s unless question.publisher.is_privileged? %>
-   <% end %>
+  v. <%= question.version %>
+  <% if question.is_latest? %>
+     (LATEST)
+  <% end %>
+  <% if question.can_be_embargoed_by?(present_user) %>
+    <br/>
+    <div id="embargo">
+      <%= render :partial => 'embargo_info',
+                 :locals => {:question => question} %>
+    </div>
+  <% end %>
 <% end %>
 </div>
 <% end %>
