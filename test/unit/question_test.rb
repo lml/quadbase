@@ -404,7 +404,7 @@ class QuestionTest < ActiveSupport::TestCase
     assert search0.include?(sq1)
     assert !search0.include?(sq2)
 max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
-pp Question.joins{list_questions.outer.list.outer.list_members.outer}.joins{question_collaborators.outer.user.outer.deputies.outer}.joins{publisher.outer}.joins{questions_same_number}.where{((version != nil) & ((questions_same_number.version != nil) & ((embargo_time == nil) & (publisher.is_privileged == false) & (questions_same_number.updated_at <= Time.now - max_embargo_time)) | ((embargo_time != nil) & ((embargo_time + questions_same_number.updated_at) <= Time.now)))) | (list_question.list.list_members.user_id == user.id) | (((question_collaborators.user_id == user.id) | (question_collaborators.user.deputies.id == user.id)) & ((question_collaborators.is_author == true) | (question_collaborators.is_copyright_holder == true)))}.to_sql
+pp Question.joins{list_questions.outer.list.outer.list_members.outer}.joins{question_collaborators.outer.user.outer.deputies.outer}.joins{publisher.outer}.joins{questions_same_number}.where{((version != nil) & ((questions_same_number.version != nil) & ((embargo_time == nil) & (publisher.is_privileged == false) & (questions_same_number.updated_at <= Time.now - max_embargo_time)) | ((embargo_time != nil) & ((embargo_time + questions_same_number.updated_at) <= Time.now)))) | (list_question.list.list_members.user_id == user.id) | (((question_collaborators.user_id == user.id) | (question_collaborators.user.deputies.id == user.id)) & ((question_collaborators.is_author == true) | (question_collaborators.is_copyright_holder == true)))}.to_sql 
     assert search0.include?(sq3)
     assert search0.include?(sq4)
 
