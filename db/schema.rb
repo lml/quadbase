@@ -272,7 +272,6 @@ ActiveRecord::Schema.define(:version => 20121228160153) do
     t.text     "code"
     t.string   "variables"
     t.boolean  "answer_can_be_sketched"
-    t.boolean  "embargoed",                             :default => false
     t.integer  "embargo_time",                          :default => 0
   end
 
