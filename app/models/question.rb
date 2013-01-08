@@ -144,7 +144,7 @@ class Question < ActiveRecord::Base
   scope :visible_for, lambda { |user|
     max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
     if user.is_anonymous?
-      joins{publisher}.joins{questions_same_number}\
+      joins{publisher.outer}.joins{questions_same_number}\
       .where{(version != nil) & ((questions_same_number.version != nil) &\
       ((embargo_time == nil) & (publisher.is_privileged == false) &\
       (questions_same_number.updated_at <= Time.now - max_embargo_time)) |\

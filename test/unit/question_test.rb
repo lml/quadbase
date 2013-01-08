@@ -403,6 +403,9 @@ class QuestionTest < ActiveSupport::TestCase
     assert search0.include?(sq0)
     assert search0.include?(sq1)
     assert !search0.include?(sq2)
+pp sq3.updated_at
+pp Time.now
+pp sq3.embargoed_until
     assert search0.include?(sq3)
     assert search0.include?(sq4)
 
