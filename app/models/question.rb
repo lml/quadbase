@@ -149,7 +149,7 @@ class Question < ActiveRecord::Base
       ((embargo_time == nil) & (publisher.is_privileged == false) &\
       (questions_same_number.updated_at <= Time.now - max_embargo_time)) |\
       ((embargo_time != nil) &\
-      (questions_same_number.updated_at + embargo_time <= Time.now)))}
+      (cast(embargo_time.as datetime) + questions_same_number.updated_at <= Time.now)))}
     else
       joins{list_questions.outer.list.outer.list_members.outer}\
       .joins{question_collaborators.outer.user.outer.deputies.outer}\
@@ -158,7 +158,7 @@ class Question < ActiveRecord::Base
       ((embargo_time == nil) & (publisher.is_privileged == false) &\
       (questions_same_number.updated_at <= Time.now - max_embargo_time)) |\
       ((embargo_time != nil) &\
-      ((embargo_time + questions_same_number.updated_at) <= Time.now)))) |\
+      ((cast(embargo_time.as datetime) + questions_same_number.updated_at) <= Time.now)))) |\
       (list_question.list.list_members.user_id == user.id) |\
       (((question_collaborators.user_id == user.id) |\
       (question_collaborators.user.deputies.id == user.id)) &\
