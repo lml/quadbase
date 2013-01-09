@@ -8,7 +8,7 @@ Embargo until (UTC):
 
 <br/>
 
-<%= form_tag question_embargo_time_path(question), :remote => true,
+<%= form_tag question_embargo_until_path(question), :remote => true,
                                                    :method => 'put' do %>
   <%= datetime_text_field_tag "embargo_until", question.embargo_until.strftime('%Y-%m-%d %l:%M:%S %p') %>
   <br/><br/>

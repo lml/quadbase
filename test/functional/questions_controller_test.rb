@@ -36,7 +36,7 @@ class QuestionsControllerTest < ActionController::TestCase
     @published_question = make_simple_question(:method => :create,
                                                :published => true)
     @embargoed_published_question = make_simple_question(:method => :create, :set_license => true)
-    @embargoed_published_question.embargo_time = nil
+    @embargoed_published_question.embargo_until = nil
     @embargoed_published_question.save!
     @embargoed_published_question.set_initial_question_roles(@user2)
     @embargoed_published_question.publish!(@user2)
@@ -137,7 +137,7 @@ class QuestionsControllerTest < ActionController::TestCase
   end
   
   test "should show expired embargoed published question" do
-    @embargoed_published_question.update_attribute(:embargo_time, 0)
+    @embargoed_published_question.update_attribute(:embargo_until, @embargoed_published_question.updated_at)
     get :show, :id => @embargoed_published_question.to_param
     assert_response :success
   end

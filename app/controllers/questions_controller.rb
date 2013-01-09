@@ -392,7 +392,7 @@ class QuestionsController < ApplicationController
     raise SecurityTransgression unless @question.can_be_embargoed_by?(present_user)
     @min_time = @question.updated_at
     max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
-    @max_time = @question.publisher.is_privileged? ? nil : min_time + max_embargo_time
+    @max_time = @question.publisher.is_privileged? ? nil : @min_time + max_embargo_time
 
     respond_to do |format|
       format.html { redirect_to question_embargo_path(@question) }
