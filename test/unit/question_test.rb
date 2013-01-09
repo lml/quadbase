@@ -106,7 +106,7 @@ class QuestionTest < ActiveSupport::TestCase
     
     q2 = make_simple_question(:method => :create, :set_license => true)
     q2.set_initial_question_roles(u)
-    q2.embargo_time = nil
+    q2.embargo_until = nil
     q2.save!
     
     assert_nothing_raised(ActiveRecord::RecordInvalid) {q2.publish!(u)}
@@ -114,7 +114,7 @@ class QuestionTest < ActiveSupport::TestCase
     
     q3 = make_simple_question(:method => :create, :set_license => true)
     q3.set_initial_question_roles(u_priv)
-    q3.embargo_time = nil
+    q3.embargo_until = nil
     q3.save!
     
     assert_nothing_raised(ActiveRecord::RecordInvalid) {q3.publish!(u_priv)}
@@ -151,12 +151,9 @@ class QuestionTest < ActiveSupport::TestCase
     assert anon.can_read?(q2)
     assert !anon.can_read?(q3)
     
-    q.update_attribute(:embargo_time, 0)
-    q2.update_attribute(:embargo_time, 0)
-    q3.update_attribute(:embargo_time, 0)
-    q.update_attribute(:updated_at, Time.now)
-    q2.update_attribute(:updated_at, Time.now)
-    q3.update_attribute(:updated_at, Time.now)
+    q.update_attribute(:embargo_until, Time.now)
+    q2.update_attribute(:embargo_until, Time.now)
+    q3.update_attribute(:embargo_until, Time.now)
     
     assert !q.is_embargoed?
     assert !q2.is_embargoed?
@@ -403,8 +400,6 @@ class QuestionTest < ActiveSupport::TestCase
     assert search0.include?(sq0)
     assert search0.include?(sq1)
     assert !search0.include?(sq2)
-max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
-pp Question.joins{list_questions.outer.list.outer.list_members.outer}.joins{question_collaborators.outer.user.outer.deputies.outer}.joins{publisher.outer}.joins{questions_same_number}.where{((version != nil) & ((questions_same_number.version != nil) & ((embargo_time == nil) & (publisher.is_privileged == false) & (questions_same_number.updated_at <= Time.now - max_embargo_time)) | ((embargo_time != nil) & ((embargo_time + questions_same_number.updated_at) <= Time.now)))) | (list_question.list.list_members.user_id == user.id) | (((question_collaborators.user_id == user.id) | (question_collaborators.user.deputies.id == user.id)) & ((question_collaborators.is_author == true) | (question_collaborators.is_copyright_holder == true)))}.to_sql 
     assert search0.include?(sq3)
     assert search0.include?(sq4)
 

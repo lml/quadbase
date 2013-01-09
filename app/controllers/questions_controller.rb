@@ -390,6 +390,9 @@ class QuestionsController < ApplicationController
   def embargo
     @question = Question.from_param(params[:question_id])
     raise SecurityTransgression unless @question.can_be_embargoed_by?(present_user)
+    @min_time = @question.updated_at
+    max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
+    @max_time = @question.publisher.is_privileged? ? nil : min_time + max_embargo_time
 
     respond_to do |format|
       format.html { redirect_to question_embargo_path(@question) }
@@ -397,15 +400,15 @@ class QuestionsController < ApplicationController
     end
   end
 
-  def embargo_time
+  def embargo_until
     @question = Question.from_param(params[:question_id])
     raise SecurityTransgression unless @question.can_be_embargoed_by?(present_user)
     max_embargo_time = @question.publisher.is_privileged? ? nil : WebsiteConfiguration.get_value("question_embargo_max_time").to_i
-    @embargo_time = params[:embargo_time].to_time - @question.updated_at
-    @embargo_time = nil if @embargo_time > max_embargo_time
-    @embargo_time = 0 if @embargo_time < 0
+    @embargo_until = params[:embargo_until].to_time
+    @embargo_until = nil if @embargo_until > @question.updated_at + max_embargo_time
+    @embargo_until = @question.updated_at if @embargo_until < @question.updated_at
     # Update value without touching "updated_at"
-    @question.update_column(:embargo_time, @embargo_time)
+    @question.update_column(:embargo_until, @embargo_until)
     
     respond_to do |format|
       format.html { redirect_to question_path(@question) }

@@ -146,19 +146,19 @@ class Question < ActiveRecord::Base
     if user.is_anonymous?
       joins{publisher.outer}.joins{questions_same_number}\
       .where{(version != nil) & ((questions_same_number.version != nil) &\
-      ((embargo_time == nil) & (publisher.is_privileged == false) &\
+      ((publisher.is_privileged == false) &\
       (questions_same_number.updated_at <= Time.now - max_embargo_time)) |\
-      ((embargo_time != nil) &\
-      (cast(embargo_time.as datetime) + questions_same_number.updated_at <= Time.now)))}
+      ((embargo_until != nil) &\
+      (embargo_until <= Time.now)))}
     else
       joins{list_questions.outer.list.outer.list_members.outer}\
       .joins{question_collaborators.outer.user.outer.deputies.outer}\
       .joins{publisher.outer}.joins{questions_same_number}\
       .where{((version != nil) & ((questions_same_number.version != nil) &\
-      ((embargo_time == nil) & (publisher.is_privileged == false) &\
+      ((publisher.is_privileged == false) &\
       (questions_same_number.updated_at <= Time.now - max_embargo_time)) |\
-      ((embargo_time != nil) &\
-      ((cast(embargo_time.as datetime) + questions_same_number.updated_at) <= Time.now)))) |\
+      ((embargo_until != nil) &\
+      (embargo_until <= Time.now)))) |\
       (list_question.list.list_members.user_id == user.id) |\
       (((question_collaborators.user_id == user.id) |\
       (question_collaborators.user.deputies.id == user.id)) &\
@@ -322,14 +322,10 @@ class Question < ActiveRecord::Base
     updated_at
   end
   
-  def embargoed_until
-    max_embargo_time = publisher.is_privileged? ? nil : WebsiteConfiguration.get_value("question_embargo_max_time").to_i
-    first_published = Question.published_with_number(number).last.published_at
-    embargo_time.nil? ? (max_embargo_time.nil? ? nil : first_published + max_embargo_time) : first_published + embargo_time
-  end
-  
   def is_embargoed?
-    embargoed_until.nil? || embargoed_until > Time.now
+    max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
+    (embargo_until.nil? || embargo_until > Time.now) &&\
+    (publisher.is_privileged? || updated_at > Time.now - max_embargo_time)
   end
   
   def content_change_allowed?

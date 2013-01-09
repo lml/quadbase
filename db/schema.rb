@@ -261,8 +261,8 @@ ActiveRecord::Schema.define(:version => 20121228160153) do
     t.string   "question_type"
     t.text     "content"
     t.integer  "question_setup_id"
-    t.datetime "created_at",                                               :null => false
-    t.datetime "updated_at",                                               :null => false
+    t.datetime "created_at",                                                               :null => false
+    t.datetime "updated_at",                                                               :null => false
     t.integer  "license_id"
     t.text     "content_html",           :limit => 255
     t.integer  "locked_by",                             :default => -1
@@ -272,7 +272,7 @@ ActiveRecord::Schema.define(:version => 20121228160153) do
     t.text     "code"
     t.string   "variables"
     t.boolean  "answer_can_be_sketched"
-    t.integer  "embargo_time",                          :default => 0
+    t.datetime "embargo_until",                         :default => '1970-01-01 00:00:00'
   end
 
   add_index "questions", ["license_id"], :name => "index_questions_on_license_id"
