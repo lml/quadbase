@@ -321,11 +321,17 @@ class Question < ActiveRecord::Base
     return false unless is_published?
     updated_at
   end
+
+  def embargo_until_formatted
+    max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
+    embargo_time = embargo_until.nil? ? (publisher.try(:is_privileged?) ? nil : updated_at + max_embargo_time) : embargo_until
+    embargo_time.nil? ? "" : embargo_time.strftime('%Y-%m-%d %l:%M:%S %p %Z')
+  end
   
   def is_embargoed?
     max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
     (embargo_until.nil? || embargo_until > Time.now) &&\
-    (publisher.is_privileged? || updated_at > Time.now - max_embargo_time)
+    (publisher.try(:is_privileged?) || updated_at > Time.now - max_embargo_time)
   end
   
   def content_change_allowed?

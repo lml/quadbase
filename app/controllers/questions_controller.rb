@@ -395,7 +395,7 @@ class QuestionsController < ApplicationController
     @max_time = @question.publisher.is_privileged? ? nil : @min_time + max_embargo_time
 
     respond_to do |format|
-      format.html { redirect_to question_embargo_path(@question) }
+      format.html
       format.js
     end
   end
@@ -407,7 +407,8 @@ class QuestionsController < ApplicationController
     @embargo_until = params[:embargo_until].to_time
     @embargo_until = nil if @embargo_until > @question.updated_at + max_embargo_time
     @embargo_until = @question.updated_at if @embargo_until < @question.updated_at
-    # Update value without touching "updated_at"
+
+    # Update column value without touching "updated_at"
     @question.update_column(:embargo_until, @embargo_until)
     
     respond_to do |format|
