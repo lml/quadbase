@@ -95,6 +95,11 @@ class Question < ActiveRecord::Base
 
   has_many :solutions, :dependent => :destroy
   
+  has_many :questions_same_number,
+           :class_name => "Question",
+           :primary_key => "number",
+           :foreign_key => "number"
+  
   has_one :comment_thread, :as => :commentable, :dependent => :destroy
   before_validation :build_comment_thread, :on => :create
   validates_presence_of :comment_thread
@@ -130,21 +135,36 @@ class Question < ActiveRecord::Base
   scope :published_with_number, lambda { |num|
     published_questions.where{number == num}.order{updated_at.desc}
   }
+  
   # Can read a question if any of those:
-  #   - Question is published
+  #   - Question is published and not embargoed
   #   - User is a member or a list that contains the question
   #   - User is a question collaborator with roles
   #   - User is a deputy of a question collaborator with roles
   scope :visible_for, lambda { |user|
-    return published_questions if user.is_anonymous?
-    joins{list_questions.outer.list.outer.list_members.outer}\
-    .joins{question_collaborators.outer.user.outer.deputies.outer}\
-    .where{(version != nil) |\
-    (list_question.list.list_members.user_id == user.id) |\
-    (((question_collaborators.user_id == user.id) |\
-    (question_collaborators.user.deputies.id == user.id)) &\
-    ((question_collaborators.is_author == true) |\
-    (question_collaborators.is_copyright_holder == true)))}
+    max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
+    if user.is_anonymous?
+      joins{publisher.outer}.joins{questions_same_number}\
+      .where{(version != nil) & ((questions_same_number.version != nil) &\
+      ((publisher.is_privileged == false) &\
+      (questions_same_number.updated_at <= Time.now - max_embargo_time)) |\
+      ((embargo_until != nil) &\
+      (embargo_until <= Time.now)))}
+    else
+      joins{list_questions.outer.list.outer.list_members.outer}\
+      .joins{question_collaborators.outer.user.outer.deputies.outer}\
+      .joins{publisher.outer}.joins{questions_same_number}\
+      .where{((version != nil) & ((questions_same_number.version != nil) &\
+      ((publisher.is_privileged == false) &\
+      (questions_same_number.updated_at <= Time.now - max_embargo_time)) |\
+      ((embargo_until != nil) &\
+      (embargo_until <= Time.now)))) |\
+      (list_question.list.list_members.user_id == user.id) |\
+      (((question_collaborators.user_id == user.id) |\
+      (question_collaborators.user.deputies.id == user.id)) &\
+      ((question_collaborators.is_author == true) |\
+      (question_collaborators.is_copyright_holder == true)))}
+    end
   }
   
   scope :not_superseded, where{-exists(Question.select(1).from('`questions` `q`')
@@ -295,6 +315,23 @@ class Question < ActiveRecord::Base
   
   def is_published?
     nil != version
+  end
+  
+  def published_at
+    return false unless is_published?
+    updated_at
+  end
+
+  def embargo_until_formatted
+    max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
+    embargo_time = embargo_until.nil? ? (publisher.try(:is_privileged?) ? nil : updated_at + max_embargo_time) : embargo_until
+    embargo_time.nil? ? "" : embargo_time.strftime('%Y-%m-%d %l:%M:%S %p %Z')
+  end
+  
+  def is_embargoed?
+    max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
+    (embargo_until.nil? || embargo_until > Time.now) &&\
+    (publisher.try(:is_privileged?) || updated_at > Time.now - max_embargo_time)
   end
   
   def content_change_allowed?
@@ -648,9 +685,9 @@ class Question < ActiveRecord::Base
   end
 
   def can_be_read_by?(user)
-    is_published? || 
-    ( !user.is_anonymous? && 
-      (is_list_member?(user) || has_role_permission?(user, :any)) )
+    (is_published? && !is_embargoed?) || 
+    (!user.is_anonymous? && 
+      (is_list_member?(user) || has_role_permission?(user, :any)))
   end
     
   def can_be_created_by?(user)
@@ -677,11 +714,18 @@ class Question < ActiveRecord::Base
   end
   
   def can_be_derived_by?(user)
-    is_published? && !user.is_anonymous?
+    is_published? && !user.is_anonymous? && can_be_read_by?(user)
   end
   
   def can_be_tagged_by?(user)
     can_be_updated_by?(user) || has_role_permission?(user, :any)
+  end
+
+  def can_be_embargoed_by?(user)
+    max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
+    is_published? && !user.is_anonymous? && 
+    (is_list_member?(user) || has_role_permission?(user, :any)) &&
+    (updated_at + max_embargo_time > Time.now || publisher.is_privileged?)
   end
   
   # Special access method for role requests on this collaborator

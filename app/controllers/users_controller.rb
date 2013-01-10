@@ -22,6 +22,7 @@ class UsersController < AdminController
     @user = User.find(params[:id])
 
     @user.is_administrator = params[:user][:is_administrator]
+    @user.is_privileged = params[:user][:is_privileged]
     if params[:user][:disable].blank?
       @user.enable!
     else

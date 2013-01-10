@@ -1,0 +1,14 @@
+<%# Copyright 2013 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+$("#embargo").html("<%= escape_javascript(render :partial => 'embargo',
+                                                 :locals => {:question => @question}) %>");
+
+$("#embargo_until").datetimepicker({
+  dateFormat: 'yy-mm-dd',
+  timeFormat: 'hh:mm:ss TT',
+  stepMinute: 1,
+  ampm: true,
+  showSecond: true,
+  minDateTime: <%= "new Date(#{@min_time.year}, #{@min_time.month-1}, #{@min_time.day}, #{@min_time.hour}, #{@min_time.min}, #{@min_time.sec})" %>,
+  maxDateTime: <%= @max_time.nil? ? "null" : "new Date(#{@max_time.year}, #{@max_time.month-1}, #{@max_time.day}, #{@max_time.hour}, #{@max_time.min}, #{@max_time.sec})" %>});

@@ -10,7 +10,7 @@ class QuestionsControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     @user2 = FactoryGirl.create(:user)
     @question = FactoryGirl.create(:list_question,
-                               :list => List.default_for_user!(@user)).question
+                                   :list => List.default_for_user!(@user)).question
     @question_collaborator = FactoryGirl.create(:question_collaborator,
                                             :question => @question,
                                             :user => @user,
@@ -35,6 +35,11 @@ class QuestionsControllerTest < ActionController::TestCase
                                             :is_copyright_holder => true)
     @published_question = make_simple_question(:method => :create,
                                                :published => true)
+    @embargoed_published_question = make_simple_question(:method => :create, :set_license => true)
+    @embargoed_published_question.embargo_until = nil
+    @embargoed_published_question.save!
+    @embargoed_published_question.set_initial_question_roles(@user2)
+    @embargoed_published_question.publish!(@user2)
     ContentParseAndCache.enable_test_parser = false
   end
 
@@ -114,6 +119,26 @@ class QuestionsControllerTest < ActionController::TestCase
 
   test "should show published question" do
     get :show, :id => @published_question.to_param
+    assert_response :success
+  end
+  
+  test "should not show embargoed published question" do
+    get :show, :id => @embargoed_published_question.to_param
+    assert_response(403)
+    user_login
+    get :show, :id => @embargoed_published_question.to_param
+    assert_response(403)
+  end
+  
+  test "should show embargoed published question owner" do
+    sign_in @user2
+    get :show, :id => @embargoed_published_question.to_param
+    assert_response :success
+  end
+  
+  test "should show expired embargoed published question" do
+    @embargoed_published_question.update_attribute(:embargo_until, @embargoed_published_question.updated_at)
+    get :show, :id => @embargoed_published_question.to_param
     assert_response :success
   end
 
@@ -340,7 +365,7 @@ class QuestionsControllerTest < ActionController::TestCase
     assert @published_question == list.list_questions.last.question.source_question
   end
 
-  test "should not derive question no authorized" do
+  test "should not derive question not authorized" do
     user_login
     list = List.default_for_user!(@user)
     put :new_derivation, :question_id => @published_question.to_param,
@@ -373,4 +398,45 @@ class QuestionsControllerTest < ActionController::TestCase
     assert_equal @user.lists.first, List.default_for_user(@user)
   end
 
+  test "should not get embargo not logged in" do
+    get :embargo, :question_id => @embargoed_published_question.to_param
+    assert_redirected_to login_path
+  end
+
+  test "should not get embargo not authorized" do
+    user_login
+    get :embargo, :question_id => @embargoed_published_question.to_param
+    assert_response(403)
+  end
+
+  test "should get embargo" do
+    sign_in @user2
+    get :embargo, :question_id => @embargoed_published_question.to_param
+    assert_response :success
+  end
+
+  test "should not put embargo_until not logged in" do
+    put :embargo_until, :question_id => @embargoed_published_question.to_param,
+                        :embargo_until => Time.now
+    assert_redirected_to login_path
+  end
+
+  test "should not put embargo_until not authorized" do
+    user_login
+    put :embargo_until, :question_id => @embargoed_published_question.to_param,
+                        :embargo_until => Time.now
+    assert_response(403)
+  end
+
+  test "should put embargo_until" do
+    sign_in @user2
+    @published_at = @embargoed_published_question.published_at
+    assert_nil @embargoed_published_question.embargo_until
+    put :embargo_until, :question_id => @embargoed_published_question.to_param,
+                        :embargo_until => @published_at
+    @embargoed_published_question.reload
+    assert_equal @published_at.to_i, @embargoed_published_question.published_at.to_i
+    assert_equal @published_at.to_i, @embargoed_published_question.embargo_until.to_i
+    assert_redirected_to question_path(@embargoed_published_question)
+  end
 end

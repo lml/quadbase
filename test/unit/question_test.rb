@@ -87,6 +87,85 @@ class QuestionTest < ActiveSupport::TestCase
     assert !q.errors.empty?
     assert_nothing_raised(ActiveRecord::RecordNotFound) { Question.find(q.id) }
   end
+  
+  test "embargo" do
+    u_priv = FactoryGirl.create(:user)
+    u_priv.is_privileged = true
+    u_priv.save!
+    u = FactoryGirl.create(:user)
+    anon = AnonymousUser.instance
+    
+    assert u_priv.is_privileged?
+    assert !u.is_privileged?
+    
+    q = make_simple_question(:method => :create, :set_license => true)
+    q.set_initial_question_roles(u)
+    
+    assert_nothing_raised(ActiveRecord::RecordInvalid) {q.publish!(u)}
+    assert q.is_published?
+    
+    q2 = make_simple_question(:method => :create, :set_license => true)
+    q2.set_initial_question_roles(u)
+    q2.embargo_until = nil
+    q2.save!
+    
+    assert_nothing_raised(ActiveRecord::RecordInvalid) {q2.publish!(u)}
+    assert q2.is_published?
+    
+    q3 = make_simple_question(:method => :create, :set_license => true)
+    q3.set_initial_question_roles(u_priv)
+    q3.embargo_until = nil
+    q3.save!
+    
+    assert_nothing_raised(ActiveRecord::RecordInvalid) {q3.publish!(u_priv)}
+    assert q3.is_published?
+    
+    assert !q.is_embargoed?
+    assert q2.is_embargoed?
+    assert q3.is_embargoed?
+    
+    assert u.can_read?(q)
+    assert u.can_read?(q2)
+    assert !u.can_read?(q3)
+    
+    assert u_priv.can_read?(q)
+    assert !u_priv.can_read?(q2)
+    assert u_priv.can_read?(q3)
+    
+    assert anon.can_read?(q)
+    assert !anon.can_read?(q2)
+    assert !anon.can_read?(q3)
+
+    q.update_attribute(:updated_at, 1.year.ago)
+    q2.update_attribute(:updated_at, 1.year.ago)
+    q3.update_attribute(:updated_at, 1.year.ago)
+    
+    assert !q.is_embargoed?
+    assert !q2.is_embargoed?
+    assert q3.is_embargoed?
+    
+    assert !u.can_read?(q3)
+    assert u_priv.can_read?(q2)
+    
+    assert anon.can_read?(q)
+    assert anon.can_read?(q2)
+    assert !anon.can_read?(q3)
+    
+    q.update_attribute(:embargo_until, Time.now)
+    q2.update_attribute(:embargo_until, Time.now)
+    q3.update_attribute(:embargo_until, Time.now)
+    
+    assert !q.is_embargoed?
+    assert !q2.is_embargoed?
+    assert !q3.is_embargoed?
+    
+    assert u.can_read?(q3)
+    assert u_priv.can_read?(q2)
+    
+    assert anon.can_read?(q)
+    assert anon.can_read?(q2)
+    assert anon.can_read?(q3)
+  end
 
   # test "find by number and version" do 
   #   flunk "Not yet implemented"

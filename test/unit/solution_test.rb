@@ -22,9 +22,11 @@ class SolutionTest < ActiveSupport::TestCase
 
   test "visible_for" do
     # debugger
-    q = FactoryGirl.create(:simple_question)
     u = FactoryGirl.create(:user)
     u2 = FactoryGirl.create(:user)
+    q = FactoryGirl.create(:simple_question)
+    q.set_initial_question_roles(u2)
+    q.publish!(u2)
 
     s0 = Solution.new
     s0.question = q
