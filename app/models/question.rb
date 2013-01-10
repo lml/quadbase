@@ -722,8 +722,10 @@ class Question < ActiveRecord::Base
   end
 
   def can_be_embargoed_by?(user)
+    max_embargo_time = WebsiteConfiguration.get_value("question_embargo_max_time").to_i
     is_published? && !user.is_anonymous? && 
-    (is_list_member?(user) || has_role_permission?(user, :any))
+    (is_list_member?(user) || has_role_permission?(user, :any)) &&
+    (updated_at + max_embargo_time > Time.now || publisher.is_privileged?)
   end
   
   # Special access method for role requests on this collaborator

@@ -250,7 +250,7 @@ class QuestionsController < ApplicationController
     if params[:agreement_checkbox]
       if params[:embargo_checkbox]
         @questions.each { |q|
-          q.embargo_time = nil
+          q.embargo_until = nil
           q.save!
         }
       end
