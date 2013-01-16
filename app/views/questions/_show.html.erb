@@ -1,6 +1,11 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
+<%#Image used for loading icon %>
+<center>
+<%= image_tag "ajax-loader.gif", :class => 'loading', :style => 'display:none' %>
+</center>
+
 <div class="question-wrapper">
    <%= render :partial => "#{view_dir(question)}/show", 
               :locals => {:question => question} %>
@@ -10,11 +15,6 @@
    <%= render :partial => 'questions/attribution', 
               :locals => {:question => question }%>
 </div>
-
-<%#Image used for loading icon %>
-<center>
-<%= image_tag "ajax-loader.gif", :class => 'loading', :style => 'display:none' %>
-</center>
 
 <script type='text/javascript'>
 hide_question_until_loaded();

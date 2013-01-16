@@ -126,10 +126,12 @@ function refresh_datetime_pickers() {
 }
 
 function hide_question_until_loaded() {
-  $(".question-wrapper").hide();
+  $(".question-wrapper").css('visibility', 'hidden');
   $(".loading").show();
   MathJax.Hub.Register.MessageHook("End Process", function (){
       $(".loading").hide();
+      $(".question-wrapper").hide();
+      $(".question-wrapper").css('visibility', '');
       $(".question-wrapper").fadeIn('500');
     });
 }
