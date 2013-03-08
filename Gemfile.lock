@@ -192,6 +192,7 @@ GEM
     will_paginate (3.0.3)
     yajl-ruby (1.1.0)
     yajl-ruby (1.1.0-x86-mingw32)
+    yaml_db (0.2.3)
 
 PLATFORMS
   ruby
@@ -230,3 +231,4 @@ DEPENDENCIES
   uglifier (~> 1.2.4)
   will_paginate (~> 3.0.3)
   yajl-ruby (~> 1.1.0)
+  yaml_db
