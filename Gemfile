@@ -60,7 +60,7 @@ group :development, :test do
    gem 'rvm-capistrano'
 end
 
-gem 'single_test', '~> 0.5.1'
+# gem 'single_test', '~> 0.5.1'
 
 group :production do
 	gem 'mysql2', '~> 0.3.11'
