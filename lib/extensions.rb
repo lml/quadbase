@@ -1,6 +1,8 @@
 # Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
 # License version 3 or later.  See the COPYRIGHT file for details.
 
+require 'net/http'
+
 class SecurityTransgression < StandardError; end
 
 class AbstractMethodCalled < StandardError; end
@@ -10,6 +12,21 @@ class NotYetImplemented < StandardError; end
 class IllegalArgument < StandardError; end
 
 class IllegalState < StandardError; end
+
+def url_responds?(url)
+  begin # check header response
+    case Net::HTTP.get_response(URI.parse(url))
+      when Net::HTTPSuccess, Net::HTTPMovedPermanently, Net::HTTPMovedTemporarily then true
+      else false
+    end
+  rescue # Recover on DNS failures..
+    false
+  end
+end
+
+def online?
+  url_responds?("http://www.google.com")
+end
 
 def to_bool(string)
   return true if string== true || string =~ (/(true|t|yes|y|1)$/i)

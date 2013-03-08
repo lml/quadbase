@@ -119,7 +119,7 @@ FactoryGirl.define do
   factory :license do |f|
     f.short_name "Simple License"
     f.long_name "A Very Simple License"  
-    f.url "http://www.iana.org/domains/example/"
+    f.url "http://www.google.com"
     f.agreement_partial_name "Agreement Partial Name"
   end
 
