@@ -1,6 +1,10 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
+<%# Clients of this partial must supply the following variables:
+  question
+  hide_answers %>
+
 <% collaborators = question.question_collaborators %>
 
 <% author_names = collaborator_names(collaborators.select{|c| c.is_author}) %>
@@ -17,10 +21,10 @@ Licensed under <%= question.license_id.nil? ? "[unspecified]" : link_to(question
 <% if question.is_derivation? %>
   <% source_question = question.source_question %>
   <% source_collaborators = source_question.question_collaborators %>
-  <br/>Derived from <%= question_id_link(source_question) %> by 
+  <br/>Derived from <%= hide_answers ? question_id_text(question) : question_id_link(source_question) %> by 
   <%= collaborator_names(source_collaborators.select{|c| c.is_author}) %>.
 <% end %>
-<% if question.is_published? %>
+<% if question.is_published? && !hide_answers %>
   <%= link_to "Version History", 
         question_history_path(question) %>.
 <% end %>

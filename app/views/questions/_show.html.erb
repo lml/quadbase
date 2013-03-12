@@ -1,19 +1,27 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
+<% # Clients of this partial must supply the following variable:
+   # question
+   # Additionally, they can override the following variable:
+   hide_answers ||= false
+%>
+
 <%#Image used for loading icon %>
+
 <center>
-<%= image_tag "ajax-loader.gif", :class => 'loading', :style => 'display:none' %>
+  <%= image_tag "ajax-loader.gif", :class => 'loading', :style => 'display:none' %>
 </center>
 
 <div class="question-wrapper">
    <%= render :partial => "#{view_dir(question)}/show", 
-              :locals => {:question => question} %>
-
+              :locals => {:question => question,
+                          :hide_answers => hide_answers} %>
      <p></p>
 
    <%= render :partial => 'questions/attribution', 
-              :locals => {:question => question }%>
+              :locals => {:question => question,
+                          :hide_answers => hide_answers}%>
 </div>
 
 <script type='text/javascript'>

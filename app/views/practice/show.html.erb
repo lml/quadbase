@@ -1,0 +1,53 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<% if @question_ids.length > 1 %>
+  <%= link_to "Previous", practice_path(prev_params(params[:ids], @index, @part)) %>
+  <%= link_to "Next", practice_path(next_params(params[:ids], @index, @part)) %>
+<% end %>
+
+
+
+<div class="quad-question">
+  <%= render 'questions/show', question: @question, hide_answers: true %>
+</div>
+
+<div id="pre_answer_options">
+  <%= link_to "Show Answer Choices", nil, :id => 'show_answer_choices_link' %> | 
+  <%= link_to "Jump to Solution", nil, :id => 'jump_to_solutions_link' %> | 
+  <%= link_to "About this Question", nil, :id => 'about_this_question_link' %>
+</div>
+
+<div id="answer_choices" class="quad-answer_choices" style="display:none">
+  <%= render 'answer_choices', question: @question %>
+</div>
+
+<div id="the_answer">
+
+</div>
+
+<div class="quad-solutions">
+<%#= render :partial => 'solutions_and_navigation',
+             :locals => {:solutions => @solutions,
+                         :list => @list,
+                         :next_question => @next_question,
+                         :next_part => @next_part} %>
+
+</div>
+
+
+
+
+
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#show_answer_choices_link').click(function() {
+      $('#pre_answer_options').hide();
+      $('#answer_choices').slideDown(200);
+      return false;
+    });
+  });
+
+</script>
