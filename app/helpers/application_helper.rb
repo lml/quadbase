@@ -333,5 +333,19 @@ module ApplicationHelper
                 :method => :delete, 
                 :remote => options[:remote]
   end
+
+  def check_credit_icon(credit)
+    partial_height = 16 - (16 *credit) + 6
+    output = content_tag(:div, image_tag("checkCredit.png", 
+      {:class => "creditIcon", :border => 0, :alt => "#{credit} / Check", 
+      :title => "#{credit} / Check"}), 
+      :style=>"position:absolute; background-color: white; 
+      height:#{partial_height}px; color: white; line-height: 1; z-index: 2;")
+    output << content_tag(:div, image_tag("checkCredit.png", 
+      {:class => "creditIcon", :border => 0, :alt => "#{credit} / Check", 
+      :title => "#{credit} / Check"}), 
+      :style=>"position:absolute; background-color: green; 
+      height:22px; color: white; line-height: 1; z-index: 1;")
+  end
   
 end

@@ -13,27 +13,45 @@
   }
   .practice-answer-choice-index {
     vertical-align: middle;
+    padding-right:5px;
   }
-  .practice-answer-choice-content {}
+  .practice-answer-choice-content {
+    padding-left:10px;
+  }
+
+  .partial-credit {
+    display:none;
+    width:35px;
+    height:25px;
+    vertical-align: middle;
+  }
+  .radio-button {
+    width:35px;
+  }
+
 </style>
 
-<%= form_tag practice_submit_answer_path(question), :remote => true, :method => :get, :autocomplete => "off" do %>
-  <%#= hidden_field_tag :list_id, @list.id unless @list.nil? %>
-  <%#= hidden_field_tag :part, @part unless @part.nil? %>
-  <%#= hidden_field_tag :seed, @seed unless @seed.nil? %>
-  <%#= hidden_field_tag :embed, true if @layout == 'embed' %>
-  
   <table width="100%" class='practice-answer-choices'>
+    <%= hidden_field_tag 'question_id', question.to_param %>
 
     <% question.answer_choices.each_with_index do |answer_choice, ii| %>
        <tr class='practice-answer-choice'>
-          <td class="practice-answer-choice-radio" width="5%">
-            <%= radio_button_tag :selected_answer, ii %>
+          <td class="practice-answer-choice-radio">
+            <div class="radio-button">
+              <%= radio_button_tag :answer_index, ii%>
+            </div>
+            <div class="partial-credit">
+              <% if answer_choice.credit != 0 %>
+              <div style="position:relative; height: 25">
+                  <%= check_credit_icon(answer_choice.credit) %>
+              </div>
+              <% end %>
+            </div>
           </td>
           <td class="practice-answer-choice-index" width="5%">
              <p><%= choice_letter(ii) %>)</p>
           </td>
-          <td class="practice-answer-choice-content" width="90%">
+          <td class="gray-me practice-answer-choice-content" width="90%">
              <%= answer_choice.variated_content_html.html_safe %>
           </td>
        </tr>
@@ -41,10 +59,15 @@
 
   </table>
 
-  <center>
-    <div class="actions">
-      <%= submit_tag "Continue", :id => "submit_button" %>
-    </div>
-  </center>
-
-<% end %>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.radio-button').click(function() {
+      $('.radio-button').hide();
+      $('.partial-credit').show();
+      $('#practice-solutions').slideDown(200);
+    });
+    $('.practice-answer-choice').click(function() {
+      $(this).children('.gray-me').css('background-color','#ddd');
+    });
+  });
+</script>

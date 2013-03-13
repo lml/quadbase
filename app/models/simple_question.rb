@@ -46,6 +46,14 @@ class SimpleQuestion < Question
     super(variator)
     answer_choices.each {|ac| ac.variate!(variator)}
   end
+
+  def correct_answer_choice_indices
+    indices = []
+    answer_choices.each_with_index do |ac, ii|
+      indices.push(ii) if ac.credit == 1
+    end
+    indices
+  end
   
 protected
   

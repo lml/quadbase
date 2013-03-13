@@ -9,6 +9,8 @@ class PracticeController < ApplicationController
   end
 
   def submit_answer
+    @question = Question.from_param(params[:question_id])
+    raise SecurityTransgression unless present_user.can_read?(@question)
   end
 
 protected
