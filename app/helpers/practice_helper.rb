@@ -22,4 +22,8 @@ module PracticeHelper
     params
   end
 
+  def choice_letter(index)
+    ("a".ord + index).chr
+  end
+
 end

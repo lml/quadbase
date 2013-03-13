@@ -4,9 +4,6 @@
 Quadbase::Application.routes.draw do
 
   get "practice", :to => 'practice#show'
-  # get "practice/next", :to => 'practice#next'
-  # get "practice/prev", :to => 'practice#prev'
-  get "practice/submit_answer", :to => 'practice#submit_answer'
 
   namespace :admin do 
     resources :logic_libraries do
@@ -110,8 +107,6 @@ Quadbase::Application.routes.draw do
       end
     end
     
-    get 'practice', :to => "practice_widgets#show"
-    
     commentable
   end
   
@@ -170,9 +165,6 @@ Quadbase::Application.routes.draw do
     
     get :autocomplete_tag_name, :on => :collection
     
-    # get 'practice', :to => "practice_widgets#show"
-    # get 'practice/submit_answer', :to => "practice_widgets#submit_answer"
-
     commentable
     votable
   end

@@ -41,11 +41,6 @@ div.quad-answer_choices {
    padding: 2px 8px 4px 8px;
 }
 
-div.quad-answer_choice input {
-   float: left;
-   margin-left: -40px;
-}
-
 .quad-answer_choice_index {
 	font-weight: bold;
 	padding-right: 5px;
@@ -90,9 +85,4 @@ div.quad-answer_choice input {
 
 .quad-attribution a:active {
 	color: #000;
-}
-
-.quad-counter {
-  position:absolute;
-  margin-left: -20px
 }
