@@ -44,6 +44,10 @@
     font-size:18px;
   }
 
+  .quad-answer_choices {
+    display:none;
+  }
+
 </style>
 
 <div class='practice-content'>
@@ -63,7 +67,7 @@
   </div>
 
   <div class="quad-question practice-question">
-    <%= render 'questions/show', question: @question, hide_answers: true %>
+    <%= render 'questions/show', question: @question %>
   </div>
 
   <%

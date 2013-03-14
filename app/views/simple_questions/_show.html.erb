@@ -3,7 +3,7 @@
 
 <%# Clients of this partial must supply the following variables:
   question
-  hide_answers %>
+ %>
 
 <% if !question.question_setup_id.nil? %>
    <div class="quad-question_setup">
@@ -11,5 +11,4 @@
    </div>
 <% end %>
 <%= render :partial => 'simple_questions/content_and_answers', 
-           :locals => {:question => question,
-                       :hide_answers => hide_answers} %>
+           :locals => {:question => question} %>
