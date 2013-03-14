@@ -81,7 +81,8 @@
         <%= link_to "Show Answer Choices", nil, :id => 'show_answer_choices_link' %>
       <% end %>
       <% if solutions.any? %> 
-        | <%= link_to "Jump to Solution", nil, :id => 'jump_to_solutions_link' %>
+        <% if answer_choices.any? %> | <% end %>
+        <%= link_to "Jump to Solution", nil, :id => 'jump_to_solutions_link' %>
       <% end %>
     </center>
   </div>

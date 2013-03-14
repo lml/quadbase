@@ -1,20 +1,11 @@
 <div id="solutions_div">
   <% unless solutions.empty? %>
-    <%= section "Solutions" do %>
+    <div style="font-weight:bold; font-size:15px; border-top:1px solid black; padding-top:14px">Solutions</div>
+    <%#= section "Solutions" do %>
       <ol>
         <% solutions.each_with_index do |solution| %>
           <li> 
-           <div class="solution_div">
-            <div style="width: 250px; float:right; padding: 8px;">
-               <span  style="height:auto; float:left; padding-right:10px">
-                 <%= gravatar_image solution.creator, {:size => 35} %>
-               </span>
-               <span class="comment_creator" >
-                   <%= full_name_link(solution.creator) %>
-                 <br/>
-                 <span class="comment_timestamp"><%= modified_string(solution) %></span>
-               </span>
-             </div>
+           <div class="solution_div" style="clear:both">
              
              <% if !solution.explanation.blank? %>
                <div class="solutionPartHeading" style="margin-top:0px">High-Level Explanation</div>
@@ -37,11 +28,20 @@
                                         :show_images => true} %>
                </div>
              <% end %>
-             <br/>
+             
+             <div style="width: 250px; float:right; padding-bottom: 8px; margin-top:-8px">by 
+               <span  style="height:auto; float:left; padding-right:10px">
+                 <%= gravatar_image solution.creator, {:size => 18} %>
+               </span>
+               <span class="comment_creator" >
+                   <%= full_name_link(solution.creator) %>
+               </span>
+             </div>
+             
            </div>
           </li>
         <% end %>
       </ol>
-    <% end %>
+    <%# end %>
   <% end %>
 </div>
