@@ -3,6 +3,8 @@
 
 Quadbase::Application.routes.draw do
 
+  get "practice", :to => 'practice#show'
+
   namespace :admin do 
     resources :logic_libraries do
       resources :logic_library_versions, :shallow => true
@@ -104,6 +106,9 @@ Quadbase::Application.routes.draw do
         post 'search'
       end
     end
+
+    get 'embed'
+    
     commentable
   end
   
@@ -126,6 +131,7 @@ Quadbase::Application.routes.draw do
     put 'preview'
     get 'history'
     get 'quickview'
+    get 'embed'
 
     resources :question_collaborators, :only => [:index, :create, :destroy, :new] do
       collection do
@@ -161,7 +167,7 @@ Quadbase::Application.routes.draw do
     get 'tagged/:tags', :to => "questions#tagged", :as => 'tagged', :on => :collection
     
     get :autocomplete_tag_name, :on => :collection
-
+    
     commentable
     votable
   end

@@ -1,0 +1,18 @@
+<% @show_question_link = true %>
+
+<% iframe = "<iframe src=\"#{practice_url({embed: "true", ids: @question.to_param})}\" width=\"525px\" height=\"500px\" frameborder=\"0\"></iframe>" %>
+
+<%= pageHeading("Embedding Question #{question_id_text(@question)}") %>
+
+<p>To embed this question in another web page so that students can work it, copy the following snippet of HTML and paste it into your page's source. You can change the height parameter to be whatever you want.</p>
+
+<div style="font-family:courier; padding-left:20px">
+  <%= iframe %>
+</div>
+
+<p>When you embed the snippet above, the workable question will look like:</p>
+
+<%= iframe.html_safe %>
+
+
+

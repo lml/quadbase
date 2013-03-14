@@ -11,8 +11,6 @@ module QuestionsHelper
       "simple"
     when "MatchingQuestion"
       "matching"
-    when "MultistepQuestion"
-      "multistep"
     when "MultipartQuestion"
       "multipart"
     end
@@ -24,8 +22,6 @@ module QuestionsHelper
       !question.answer_choices.empty? ? "Choice" : "Free-form"
     when "MatchingQuestion"
       "Matching"
-    when "MultistepQuestion"
-      "Multi-step"
     when "MultipartQuestion"
       "Multi-part"
     end    
@@ -37,8 +33,8 @@ module QuestionsHelper
     "q#{question.number}"
   end
   
-  def question_id_link(question)
-    link_to(question_id_text(question), question_path(question))
+  def question_id_link(question, options={})
+    link_to(question_id_text(question), question_path(question), options)
   end
 
   def question_id_links(questions)
@@ -58,20 +54,6 @@ module QuestionsHelper
       output << '\nAre you sure you want to continue and drop these collaborators?");'
     end
     output
-  end
-
-  def check_credit_icon(credit)
-    partial_height = 16 - (16 *credit) + 6
-    output = content_tag(:div, image_tag("checkCredit.png", 
-      {:class => "creditIcon", :border => 0, :alt => "#{credit} / Check", 
-      :title => "#{credit} / Check"}), 
-      :style=>"position:absolute; background-color: white; 
-      height:#{partial_height}; color: white; line-height: 1; z-index: 2;")
-    output << content_tag(:div, image_tag("checkCredit.png", 
-      {:class => "creditIcon", :border => 0, :alt => "#{credit} / Check", 
-      :title => "#{credit} / Check"}), 
-      :style=>"position:absolute; background-color: green; 
-      height:22; color: white; line-height: 1; z-index: 1;")
   end
 
   def example_problem(param)

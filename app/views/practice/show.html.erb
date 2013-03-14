@@ -1,0 +1,120 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<style type="text/css">
+  .practice-content {
+    width: 500px;
+  }
+
+  .practice-header {
+    padding-bottom: 9px;
+    overflow:hidden;
+  }
+
+  .practice-question-id {
+    float: left;
+    font-style: italic;
+    color: #777;
+    padding-top: 5px;
+  }
+
+  .practice-navigation {
+    float: right;
+  }
+
+  .practice-question {
+    clear:both;
+  }
+
+  #practice-solutions {
+    display: none;
+  }
+
+  .quad-attribution {
+    display:none;
+    padding: 10px 0 20px;
+  }
+
+  #pre_answer_options {
+    padding-top:10px;
+  }
+
+  #answer_choices {
+    display:none;
+    font-size:18px;
+  }
+
+  .quad-answer_choices {
+    display:none;
+  }
+
+</style>
+
+<div class='practice-content'>
+
+  <div class='practice-header'>  
+    <div class="practice-question-id">
+      <%= question_id_link(@question, {:target => :blank}) %>
+      <%= link_to image_tag('info.png', :style => 'margin-bottom:-3px'), nil, :style => 'margin-left:10px', :id => 'info' %>
+    </div>
+
+    <% if @question_ids.length > 1 %>
+      <div class="practice-navigation">
+        <%= link_to image_tag('chevron_left.png'), practice_path(prev_params(params[:ids], @index, @part, @embed)) %>
+        <%= link_to image_tag('chevron_right.png'), practice_path(next_params(params[:ids], @index, @part, @embed)) %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="quad-question practice-question">
+    <%= render 'questions/show', question: @question %>
+  </div>
+
+  <%
+    answer_choices = @question.answer_choices
+    solutions = @question.solutions
+  %>
+
+  <div id="pre_answer_options">
+    <center>
+      <% if answer_choices.any? %>
+        <%= link_to "Show Answer Choices", nil, :id => 'show_answer_choices_link' %>
+      <% end %>
+      <% if solutions.any? %> 
+        | <%= link_to "Jump to Solution", nil, :id => 'jump_to_solutions_link' %>
+      <% end %>
+    </center>
+  </div>
+
+  <div id="answer_choices" class="quad-answer_choices">
+    <%= render 'practice/answer_choices', question: @question %>
+  </div>
+
+  <div id='practice-solutions' class="quad-solutions">
+    <%= render "practice/solutions", solutions: solutions %>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#show_answer_choices_link').click(function() {
+      $('#pre_answer_options').hide();
+      $('#answer_choices').slideDown(200);
+      return false;
+    });
+
+    $('#jump_to_solutions_link').click(function() {
+      $('#pre_answer_options').hide();
+      $('#practice-solutions').slideDown(200);
+      return false;
+    });
+
+    $('#info').click(function() {
+      $(this).hide();
+      $('.quad-attribution').slideDown(200);
+      return false;
+    });
+  });
+
+</script>

@@ -187,6 +187,10 @@ class Question < ActiveRecord::Base
       else
         q = find_by_number_and_version($1.to_i, $3.to_i) # Rails escapes this
       end
+    elsif (param =~ /^(\d+)$/)
+      q = Question.find($1.to_i)
+    elsif (param.is_a? Integer)
+      q = Question.find(param)
     else
       raise SecurityTransgression
     end

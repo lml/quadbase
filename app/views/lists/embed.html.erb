@@ -1,0 +1,18 @@
+<% @links = [ link_to('List', list_path(@list)) ] %>
+
+<% iframe = "<iframe src=\"#{practice_url({embed: "true", ids: "L"+@list.id.to_s})}\" width=\"525px\" height=\"500px\" frameborder=\"0\"></iframe>" %>
+
+<%= pageHeading("Embedding #{@list.name}") %>
+
+<p>To embed this list as a workable series of questions into another web page, copy the following snippet of HTML and paste it into your page's source. You can change the height parameter to be whatever you want.</p>
+
+<div style="font-family:courier; padding-left:20px">
+  <%= iframe %>
+</div>
+
+<p>When you embed the snippet above, the workable list will look like:</p>
+
+<%= iframe.html_safe %>
+
+
+

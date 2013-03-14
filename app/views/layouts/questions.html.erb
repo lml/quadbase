@@ -29,7 +29,7 @@
          <% end %>
          
          <% if @show_embed_link && @question.is_published? %>
-           <p><%= link_to "Embed", nil, :onclick => "alert('Coming soon!');" %>
+           <p><%= link_to "Embed", question_embed_path(@question) %>
          <% end %>
                      
          <% if @show_edit_question_link %>

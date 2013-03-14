@@ -57,9 +57,12 @@ module ApplicationHelper
                                                   "\"#{escape_javascript(fields)}\")")
   end
   
+  def full_name(user)
+    (user_signed_in? && current_user.id == user.id) ? "Me" : user.full_name
+  end
+  
   def full_name_link(user)
-    text = (user_signed_in? && current_user.id == user.id) ? "Me" : user.full_name
-    link_to text, user
+    link_to full_name(user), user
   end
   
   
@@ -329,6 +332,20 @@ module ApplicationHelper
                 :confirm => options[:confirm], 
                 :method => :delete, 
                 :remote => options[:remote]
+  end
+
+  def check_credit_icon(credit)
+    partial_height = 16 - (16 *credit) + 6
+    output = content_tag(:div, image_tag("checkCredit.png", 
+      {:class => "creditIcon", :border => 0, :alt => "#{credit} / Check", 
+      :title => "#{credit} / Check"}), 
+      :style=>"position:absolute; background-color: white; 
+      height:#{partial_height}px; color: white; line-height: 1; z-index: 2;")
+    output << content_tag(:div, image_tag("checkCredit.png", 
+      {:class => "creditIcon", :border => 0, :alt => "#{credit} / Check", 
+      :title => "#{credit} / Check"}), 
+      :style=>"position:absolute; background-color: green; 
+      height:22px; color: white; line-height: 1; z-index: 1;")
   end
   
 end

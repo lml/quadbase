@@ -1,0 +1,73 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<%# Clients of this partial must supply the following variables:
+      question
+%>
+
+<style type="text/css">
+  .practice-answer-choices {}
+  .practice-answer-choice {}
+  .practice-answer-choice-radio {
+    vertical-align: middle;
+  }
+  .practice-answer-choice-index {
+    vertical-align: middle;
+    padding-right:5px;
+  }
+  .practice-answer-choice-content {
+    padding-left:10px;
+  }
+
+  .partial-credit {
+    display:none;
+    width:35px;
+    height:25px;
+    vertical-align: middle;
+  }
+  .radio-button {
+    width:35px;
+  }
+
+</style>
+
+  <table width="100%" class='practice-answer-choices'>
+    <%= hidden_field_tag 'question_id', question.to_param %>
+
+    <% question.answer_choices.each_with_index do |answer_choice, ii| %>
+       <tr class='practice-answer-choice'>
+          <td class="practice-answer-choice-radio">
+            <div class="radio-button">
+              <%= radio_button_tag :answer_index, ii%>
+            </div>
+            <div class="partial-credit">
+              <% if answer_choice.credit != 0 %>
+              <div style="position:relative; height: 25">
+                  <%= check_credit_icon(answer_choice.credit) %>
+              </div>
+              <% end %>
+            </div>
+          </td>
+          <td class="practice-answer-choice-index" width="5%">
+             <p><%= choice_letter(ii) %>)</p>
+          </td>
+          <td class="gray-me practice-answer-choice-content" width="90%">
+             <%= answer_choice.variated_content_html.html_safe %>
+          </td>
+       </tr>
+    <% end %>
+
+  </table>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.radio-button').click(function() {
+      $('.radio-button').hide();
+      $('.partial-credit').show();
+      $('#practice-solutions').slideDown(200);
+    });
+    $('.practice-answer-choice').click(function() {
+      $(this).children('.gray-me').css('background-color','#ddd');
+    });
+  });
+</script>

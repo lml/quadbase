@@ -12,6 +12,10 @@ class MultipartQuestion < Question
   has_many :child_questions,
            :through => :child_question_parts
   
+  def num_parts
+    child_question_parts.count
+  end
+
   def add_other_prepublish_errors
     self.errors.add(:base,'A multi-part question must contain at least one part.') \
       if child_question_parts.empty?

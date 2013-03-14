@@ -1,6 +1,10 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
+<%# Clients of this partial must supply the following variables:
+  question
+ %>
+
 <% collaborators = question.question_collaborators %>
 
 <% author_names = collaborator_names(collaborators.select{|c| c.is_author}) %>
