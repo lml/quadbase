@@ -1,0 +1,69 @@
+<%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+    License version 3 or later.  See the COPYRIGHT file for details. %>
+
+<!DOCTYPE html>
+<html>
+<head>
+  
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+ 
+  <% if content_for?(:stylesheets) %>
+  <style type="text/css"><%= yield :stylesheets %></style>
+  <% end %>
+  
+  <% if @include_mathjax %>  
+     <script type="text/x-mathjax-config">
+       MathJax.Hub.Config({
+         tex2jax: {
+           inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+           processEscapes: true
+         }
+       });
+     </script>
+     
+     <% if WebsiteConfiguration.get_value('use_mathjax_cdn') %>
+       <% mj_url_base = request.ssl? ? 
+                        "https://d3eoax9i5htok0.cloudfront.net" : 
+                        "http://cdn.mathjax.org" %>
+       <script type="text/javascript"
+         src="<%= mj_url_base %>/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+       </script>
+     <% else %>
+       <%= javascript_include_tag 'MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML' %>
+     <% end %>
+  <% end %>
+  
+  <% if content_for?(:javascript_includes) %>
+    <%= yield :javascript_includes %>
+  <% end %>
+  
+  <%= csrf_meta_tag %>
+</head>
+<body>   
+   <div id="container">
+     <div id="main">
+       <%= yield %>
+     </div>
+   </div>
+   
+   <%= yield :javascript %>	
+</body>
+
+<% if false && Rails.env.production? %>
+<script type="text/javascript">
+ 
+   var _gaq = _gaq || [];
+   _gaq.push(['_setAccount', 'UA-23761609-3']);
+   _gaq.push(['_trackPageview']);
+ 
+   (function() {
+     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+   })();
+ 
+</script>
+<% end %>
+
+</html>

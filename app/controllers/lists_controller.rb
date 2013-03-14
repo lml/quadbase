@@ -57,5 +57,10 @@ class ListsController < ApplicationController
     @list.destroy
     respond_with(@list)
   end
+
+  def embed
+    @list = List.find(params[:list_id])
+    raise SecurityTransgression unless present_user.can_read?(@list)
+  end
   
 end

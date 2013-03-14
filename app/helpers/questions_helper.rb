@@ -33,8 +33,8 @@ module QuestionsHelper
     "q#{question.number}"
   end
   
-  def question_id_link(question)
-    link_to(question_id_text(question), question_path(question))
+  def question_id_link(question, options={})
+    link_to(question_id_text(question), question_path(question), options)
   end
 
   def question_id_links(questions)

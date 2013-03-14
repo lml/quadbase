@@ -2,7 +2,8 @@
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
 <% @links = [ link_to('Edit List', edit_list_path(@list)), 
-              link_to('My Lists', lists_path) ] %>
+              link_to('My Lists', lists_path),
+              link_to('Embed', list_embed_path(@list)) ] %>
 
 <%= pageHeading("#{@list.name} Details") %>
 

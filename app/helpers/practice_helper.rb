@@ -1,17 +1,17 @@
 module PracticeHelper
 
-  def next_params(ids, index, part)
-    directional_params(ids, :next, index, part)
+  def next_params(ids, index, part, embed)
+    directional_params(ids, :next, index, part, embed)
   end
 
-  def prev_params(ids, index, part)
-    directional_params(ids, :prev, index, part)
+  def prev_params(ids, index, part, embed)
+    directional_params(ids, :prev, index, part, embed)
   end
 
-  def directional_params(ids, direction, index, part)
+  def directional_params(ids, direction, index, part, embed)
     change = direction == :next ? 1 : -1
 
-    params = {ids: ids}
+    params = {ids: ids, embed: embed ? 'true' : 'false'}
     if part.nil?
       params[:on] = index + change
     else

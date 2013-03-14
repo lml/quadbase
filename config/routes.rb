@@ -106,6 +106,8 @@ Quadbase::Application.routes.draw do
         post 'search'
       end
     end
+
+    get 'embed'
     
     commentable
   end
@@ -129,6 +131,7 @@ Quadbase::Application.routes.draw do
     put 'preview'
     get 'history'
     get 'quickview'
+    get 'embed'
 
     resources :question_collaborators, :only => [:index, :create, :destroy, :new] do
       collection do

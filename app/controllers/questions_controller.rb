@@ -47,6 +47,11 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def embed
+    @question = Question.from_param(params[:question_id])
+    raise SecurityTransgression unless present_user.can_read?(@question)
+  end
+
   def history
     @question = Question.from_param(params[:question_id])
     raise SecurityTransgression unless present_user.can_read?(@question)

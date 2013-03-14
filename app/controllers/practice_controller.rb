@@ -6,11 +6,8 @@ class PracticeController < ApplicationController
   def show
     @question = current_question
     raise SecurityTransgression unless present_user.can_read?(@question)
-  end
-
-  def submit_answer
-    @question = Question.from_param(params[:question_id])
-    raise SecurityTransgression unless present_user.can_read?(@question)
+    @embed = params[:embed] == "true"
+    render :layout => (@embed ? 'practice_embed' : 'application')
   end
 
 protected

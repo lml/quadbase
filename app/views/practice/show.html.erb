@@ -50,14 +50,14 @@
 
   <div class='practice-header'>  
     <div class="practice-question-id">
-      <%= question_id_text(@question) %>
+      <%= question_id_link(@question, {:target => :blank}) %>
       <%= link_to image_tag('info.png', :style => 'margin-bottom:-3px'), nil, :style => 'margin-left:10px', :id => 'info' %>
     </div>
 
     <% if @question_ids.length > 1 %>
       <div class="practice-navigation">
-        <%= link_to image_tag('chevron_left.png'), practice_path(prev_params(params[:ids], @index, @part)) %>
-        <%= link_to image_tag('chevron_right.png'), practice_path(next_params(params[:ids], @index, @part)) %>
+        <%= link_to image_tag('chevron_left.png'), practice_path(prev_params(params[:ids], @index, @part, @embed)) %>
+        <%= link_to image_tag('chevron_right.png'), practice_path(next_params(params[:ids], @index, @part, @embed)) %>
       </div>
     <% end %>
   </div>
@@ -91,8 +91,6 @@
   </div>
 
 </div>
-
-
 
 <script type="text/javascript">
   $(document).ready(function() {
