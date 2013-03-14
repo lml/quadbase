@@ -3,7 +3,7 @@
 
 require 'test_helper'
 
-class PracticeWidgetsHelperTest < ActionView::TestCase
+class PracticeHelperTest < ActionView::TestCase
   test 'choice_letter' do
     assert_equal 'a', choice_letter(0)
     assert_equal 'b', choice_letter(1)

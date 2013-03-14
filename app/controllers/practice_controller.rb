@@ -6,11 +6,19 @@ class PracticeController < ApplicationController
   def show
     @question = current_question
     raise SecurityTransgression unless present_user.can_read?(@question)
+    GoogleAnalyticsWrapper.new(cookies, request).event('Practice Widget', params[:ids], @question.to_param)
     @embed = params[:embed] == "true"
     render :layout => (@embed ? 'practice_embed' : 'application')
   end
 
 protected
+
+  # The code below is all about iterating through a list of questions (which 
+  # may be pulled from "lists" and individual questions), without knowing
+  # in advance which questions are multipart.
+  # 
+  # Normally the iteration order is "random", but for multipart questions
+  # we go through the parts in order.
 
   def current_question
     question = Question.from_param(current_question_id)
