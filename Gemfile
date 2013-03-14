@@ -49,6 +49,8 @@ gem 'bullring', '~> 0.8.3'
 
 gem 'yaml_db'
 
+gem 'gabba', "~> 1.0.1"
+
 group :development, :test do
    gem 'sqlite3', '~> 1.3.6'
    gem 'debugger', '~> 1.1.4'
