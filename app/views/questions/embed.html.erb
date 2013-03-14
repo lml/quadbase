@@ -10,7 +10,13 @@
   <%= iframe %>
 </div>
 
-<p>When you embed the snippet above, the workable question will look like:</p>
+<p>You can also change the link colors by passing in RGB values in the iframe, e.g.:</p>
+
+<div style="font-family:courier; padding-left:20px">
+  <%= "<iframe src=\"#{practice_url({embed: "true", ids: @question.to_param, linkcolor: '333333', linkvisited: '00ff00', linkhover: '000000'})}\" width=\"525px\" height=\"500px\" frameborder=\"0\"></iframe>" %>
+</div>
+
+<p>When you embed the top-most snippet above, the workable question will look like:</p>
 
 <%= iframe.html_safe %>
 

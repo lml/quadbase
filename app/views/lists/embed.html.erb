@@ -10,9 +10,16 @@
   <%= iframe %>
 </div>
 
-<p>When you embed the snippet above, the workable list will look like:</p>
+<p>You can also change the link colors by passing in RGB values in the iframe, e.g.:</p>
 
+<div style="font-family:courier; padding-left:20px">
+  <%= "<iframe src=\"#{practice_url({embed: "true", ids: "L"+@list.id.to_s, linkcolor: '333333', linkvisited: '00ff00', linkhover: '000000'})}\" width=\"525px\" height=\"500px\" frameborder=\"0\"></iframe>" %>
+</div>
+
+
+<p>When you embed the top-most snippet above, the workable list will look like:</p>
+
+<div style="padding-left:20px">
 <%= iframe.html_safe %>
-
-
+</div>
 

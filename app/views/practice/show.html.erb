@@ -48,6 +48,24 @@
     display:none;
   }
 
+  <% if params[:linkcolor] %>
+    a:link {
+      color: #<%= params[:linkcolor] %>;
+    }
+  <% end %>
+
+  <% if params[:linkvisited] %>
+    a:visited {
+      color: #<%= params[:linkvisited] %>;
+    }
+  <% end %>
+
+  <% if params[:linkhover] %>
+    a:visited {
+      color: #<%= params[:linkhover] %>;
+    }
+  <% end %>
+
 </style>
 
 <div class='practice-content'>
