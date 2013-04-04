@@ -3,13 +3,13 @@
 
 <%= question_id_text_no_version(pair.independent_question) %>
 <span class="<%= form_id_class %>" style="display:none">
-  <% form_tag question_dependency_pair_path(pair), 
+  <%= form_tag question_dependency_pair_path(pair), 
               :method => "delete", 
               :style => "display:inline", 
               :remote => true do %>
     <%= hidden_field_tag :question_part_id, part.id %>
     <%= submit_tag "",
-              :style => "border:none; background-color:white; display:inline; margin: -3px",
+              :style => "border:none; background-color:white; display:inline; margin: -3px; padding: 0px;",
               :class => "ui-icon ui-icon-closethick",
               :confirm => "Are you sure you want to remove " +    
                           question_id_text_no_version(pair.independent_question) +
