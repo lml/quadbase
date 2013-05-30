@@ -36,6 +36,13 @@ end
 
 module ActiveRecord
   class Base
+    def dup_becomes(klass)
+      became_id = self.id
+      became = self.dup.becomes(klass)
+      became.id = became_id
+      became
+    end
+
     def better_becomes(klass)
       became = self.becomes(klass)
       became.instance_variable_set("@errors", @errors)
