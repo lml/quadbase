@@ -1,0 +1,4 @@
+json.questions(@questions) do |question|
+  json.ingest! (render :partial => "#{view_dir(question)}/show",
+                       :locals => {:question => question})
+end

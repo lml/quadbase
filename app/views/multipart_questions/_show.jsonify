@@ -3,9 +3,9 @@
 
 json.multipart_question do
   json.ingest! (render :partial => 'questions/common',
-                       :locals => {:question => @question})
+                       :locals => {:question => question})
   
-  qs = @question.question_setup
+  qs = question.question_setup
   unless qs.nil?
     json.introduction do
       json.markup qs.content
@@ -13,7 +13,7 @@ json.multipart_question do
     end
   end
 
-  json.parts(@question.child_question_parts) do |part|
+  json.parts(question.child_question_parts) do |part|
     child_question = part.child_question
 
     json.prerequisites(child_question.prerequisite_questions) do |pq|
@@ -30,5 +30,6 @@ json.multipart_question do
                                      :skip_attribution => true})
   end
 
-  json.ingest! (render :partial => 'questions/attribution')
+  json.ingest! (render :partial => 'questions/attribution',
+                       :locals => {:question => question})
 end
