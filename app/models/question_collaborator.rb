@@ -7,7 +7,7 @@ class QuestionCollaborator < ActiveRecord::Base
   has_many :question_role_requests, :dependent => :destroy
   
   validates_presence_of :user, :question
-  validate :question_not_published
+  validate :question_not_published, :unless => :changes_ok_for_published_questions
   validates_uniqueness_of :user_id, :scope => :question_id, :message => "This user is already collaborating with this question."
   validates_uniqueness_of :position, :scope => :question_id, :allow_nil => true
   
@@ -17,6 +17,8 @@ class QuestionCollaborator < ActiveRecord::Base
   after_destroy :grant_other_requests_if_this_is_last_roleholder
   
   attr_accessible :user, :question
+
+  attr_accessor :changes_ok_for_published_questions
 
   def content_copy
     kopy = QuestionCollaborator.create(:user => self.user, :question => self.question)

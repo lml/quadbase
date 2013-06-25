@@ -24,6 +24,7 @@ class ChangeCollaboratorsInBulk
         question.question_collaborators.each do |qc|
           qc.is_author = false
           qc.is_copyright_holder = false
+          qc.changes_ok_for_published_questions = true
           qc.save
           qc.destroy
         end
@@ -33,6 +34,7 @@ class ChangeCollaboratorsInBulk
         new_qc = QuestionCollaborator.new(:user => new_collaborator[:user], :question => question)
         new_qc.is_author = new_collaborator[:is_author]
         new_qc.is_copyright_holder = new_collaborator[:is_copyright_holder]
+        new_qc.changes_ok_for_published_questions = true
         new_qc.save
       end
     end
