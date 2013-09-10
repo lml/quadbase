@@ -89,12 +89,12 @@ class ListsController < ApplicationController
     # Let's assume only simple questions for now
     @questions = questions.collect do |q|
       {
-        :id => q.id,
-        :html => q.content_html,
+        :question_id => q.id,
+        :question_html => q.content_html,
         :answer_choices => q.answer_choices.collect do |ac|
           {
-            :id => ac.id,
-            :html => ac.content_html
+            :answer_choice_id => ac.id,
+            :answer_choice_html => ac.content_html
           }
         end
       }
