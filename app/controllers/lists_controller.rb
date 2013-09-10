@@ -66,7 +66,7 @@ class ListsController < ApplicationController
     @list = List.find(params[:id])
     raise SecurityTransgression unless present_user.can_read?(@list)
 
-    qtype = params[:question_types] || :simple
+    qtype = params[:question_type] || :simple
     exclude_ids = params[:exclude_ids] || []
     qnum = params[:number_of_questions] || 10
 
