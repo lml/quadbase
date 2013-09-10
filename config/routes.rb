@@ -108,6 +108,7 @@ Quadbase::Application.routes.draw do
     end
 
     get 'embed'
+    get 'practice', :on => :member
     
     commentable
   end
@@ -132,6 +133,7 @@ Quadbase::Application.routes.draw do
     get 'history'
     get 'quickview'
     get 'embed'
+    get 'evaluate', :on => :member
 
     resources :question_collaborators, :only => [:index, :create, :destroy, :new] do
       collection do

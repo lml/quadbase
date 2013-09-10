@@ -138,4 +138,21 @@ class ListsControllerTest < ActionController::TestCase
     end
     assert_redirected_to lists_path
   end
+
+  test "should not get practice not logged in" do
+    get :practice, :id => @list.to_param, :format => :json
+    assert_response(401)
+  end
+
+  test "should not get practice not authorized" do
+    user_login
+    get :practice, :id => @list.to_param, :format => :json
+    assert_response(403)
+  end
+
+  test "should get practice" do
+    sign_in @user
+    get :practice, :id => @list.to_param, :format => :json
+    assert_response :success
+  end
 end

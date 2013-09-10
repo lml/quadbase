@@ -385,6 +385,21 @@ class QuestionsController < ApplicationController
       format.js
     end
   end
+
+  def evaluate
+    question = Question.find(params[:id])
+    # not using from_param here since it's simpler for the other API call
+    raise SecurityTransgression unless present_user.can_read?(question)
+
+    @answer_choice = AnswerChoice.find(params[:answer_choice_id])
+    raise SecurityTransgression unless @answer_choice.question == question
+
+    respond_to do |format|
+      format.json do
+        render :json => {:type => "bool", :value => @answer_choice.credit >= 1}
+      end
+    end
+  end
   
 protected
 
