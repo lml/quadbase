@@ -383,6 +383,7 @@ class QuestionsController < ApplicationController
         @questions = @questions.paginate(:page => params[:page], :per_page => @per_page)
       end
       format.js
+      format.json
     end
   end
 

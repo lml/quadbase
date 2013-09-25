@@ -5,7 +5,8 @@
     votable
 %>
 
-<% votable = votable.becomes(votable.class.base_class)%>
+<%# Use 'dup_becomes' so effect doesn't trickle out of this partial %>
+<% votable = votable.dup_becomes(votable.class.base_class)%>
 <% can_vote = present_user.can_vote_on?(votable) %>
 <% vote = get_vote_for(votable, present_user) if can_vote %>
 

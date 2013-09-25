@@ -19,7 +19,7 @@ module Quadbase
     # -- all .rb files in that directory are automatically loaded.
 
     # Custom directories with classes and modules you want to be autoloadable.
-    # config.autoload_paths += %W(#{config.root}/extras)
+    config.autoload_paths += %W(#{config.root}/app/features)
 
     %w(middleware).each do |dir|
        config.autoload_paths << "#{Rails.root.to_s}/app/#{dir}"

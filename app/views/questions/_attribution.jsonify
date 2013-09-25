@@ -1,7 +1,7 @@
 # Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
 # License version 3 or later.  See the COPYRIGHT file for details.
 
-collaborators = @question.question_collaborators
+collaborators = question.question_collaborators
 
 authors = collaborators.select{|c| c.is_author}
 copyright_holders = collaborators.select{|c| c.is_copyright_holder}
@@ -18,7 +18,7 @@ json.attribution do
   end
 
   json.license do
-    json.name @question.license.long_name
-    json.url @question.license.url  
+    json.name question.license.long_name
+    json.url question.license.url  
   end
 end
