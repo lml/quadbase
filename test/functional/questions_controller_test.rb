@@ -10,7 +10,8 @@ class QuestionsControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     @user2 = FactoryGirl.create(:user)
     @question = FactoryGirl.create(:list_question,
-                               :list => List.default_for_user!(@user)).question
+                               :list => List.default_for_user!(@user),
+                               :question => FactoryGirl.create(:simple_question_with_choices)).question
     @question_collaborator = FactoryGirl.create(:question_collaborator,
                                             :question => @question,
                                             :user => @user,
@@ -373,4 +374,26 @@ class QuestionsControllerTest < ActionController::TestCase
     assert_equal @user.lists.first, List.default_for_user(@user)
   end
 
+  test "should not evaluate answer not logged in" do
+    get :evaluate, :id => @question.id, :answer_choice_id => @question.answer_choices.first.id, :format => :json
+    assert_response(401)
+  end
+
+  test "should not evaluate answer not authorized" do
+    user_login
+    get :evaluate, :id => @question.id, :answer_choice_id => @question.answer_choices.first.id, :format => :json
+    assert_response(403)
+  end
+
+  test "should not evaluate answer wrong question" do
+    sign_in @user
+    get :evaluate, :id => @question2.id, :answer_choice_id => @question.answer_choices.first.id, :format => :json
+    assert_response(403)
+  end
+
+  test "should evaluate answer" do
+    sign_in @user
+    get :evaluate, :id => @question.id, :answer_choice_id => @question.answer_choices.first.id, :format => :json
+    assert_response :success
+  end
 end
