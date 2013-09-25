@@ -62,6 +62,7 @@ class ListsController < ApplicationController
     raise SecurityTransgression unless present_user.can_read?(@list)
   end
 
+  # GET /lists/1/practice?number_of_questions=10&exclude_ids[]=1&exclude_ids[]=2&format=json
   def practice
     @list = List.find(params[:id])
     raise SecurityTransgression unless present_user.can_read?(@list)
@@ -83,7 +84,7 @@ class ListsController < ApplicationController
       tscope = lscope
     end
 
-    tscope = tscope.where{id.not_eq_any exclude_ids} unless exclude_ids.blank?
+    tscope = tscope.where{id.not_eq_all exclude_ids} unless exclude_ids.blank?
     questions = Question.uncached { tscope.random(qnum) }
 
     # Let's assume only simple questions for now
