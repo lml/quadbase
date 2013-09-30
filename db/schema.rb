@@ -112,17 +112,6 @@ ActiveRecord::Schema.define(:version => 20130930182910) do
 
   add_index "licenses", ["is_default"], :name => "index_licenses_on_is_default"
 
-  create_table "linkifier_resources", :force => true do |t|
-    t.integer  "app_resource_id"
-    t.string   "app_resource_type"
-    t.integer  "linkify_resource_id"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
-  end
-
-  add_index "linkifier_resources", ["app_resource_id", "app_resource_type"], :name => "index_linkifier_r_on_app_r_id_and_app_r_type", :unique => true
-  add_index "linkifier_resources", ["linkify_resource_id"], :name => "index_linkifier_resources_on_linkify_resource_id", :unique => true
-
   create_table "list_members", :force => true do |t|
     t.integer  "list_id"
     t.integer  "user_id"
