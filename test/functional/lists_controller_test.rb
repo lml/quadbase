@@ -9,16 +9,17 @@ class ListsControllerTest < ActionController::TestCase
     @list = List.default_for_user!(@user)
   end
 
-  test "should not get index not logged in" do
+  test "should get index not logged in" do
     get :index
-    assert_redirected_to login_path
+    assert_response :success
+    assert_nil assigns(:lists)
   end
 
   test "should get index" do
     sign_in @user
     get :index
     assert_response :success
-    assert_not_nil assigns(:list_members)
+    assert_not_nil assigns(:lists)
   end
 
   test "should not get new not logged in" do
@@ -78,6 +79,13 @@ class ListsControllerTest < ActionController::TestCase
 
   test "should show list" do
     sign_in @user
+    get :show, :id => @list.to_param
+    assert_response :success
+  end
+
+  test "should show public list" do
+    @list.is_public = true
+    @list.save!
     get :show, :id => @list.to_param
     assert_response :success
   end

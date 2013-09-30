@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121214001042) do
+ActiveRecord::Schema.define(:version => 20130930182910) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -112,6 +112,17 @@ ActiveRecord::Schema.define(:version => 20121214001042) do
 
   add_index "licenses", ["is_default"], :name => "index_licenses_on_is_default"
 
+  create_table "linkifier_resources", :force => true do |t|
+    t.integer  "app_resource_id"
+    t.string   "app_resource_type"
+    t.integer  "linkify_resource_id"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "linkifier_resources", ["app_resource_id", "app_resource_type"], :name => "index_linkifier_r_on_app_r_id_and_app_r_type", :unique => true
+  add_index "linkifier_resources", ["linkify_resource_id"], :name => "index_linkifier_resources_on_linkify_resource_id", :unique => true
+
   create_table "list_members", :force => true do |t|
     t.integer  "list_id"
     t.integer  "user_id"
@@ -135,8 +146,9 @@ ActiveRecord::Schema.define(:version => 20121214001042) do
 
   create_table "lists", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.boolean  "is_public",  :default => false
   end
 
   create_table "logic_libraries", :force => true do |t|

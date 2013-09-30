@@ -16,17 +16,19 @@
       <th></th>
    </tr>
 
-   <% @list_members.each do |member| %>
-      <% list = member.list %>
+   <% @lists.each do |list| %>
+     <% member = list.list_member_for(present_user) %>
      <tr>
        <td><%= link_to list.name, list_path(list) %></td>
        <td>
-         <% if member.is_default %>  
-            (DEFAULT)
-         <% else %>
-            <%= link_to "Set as default", 
-                        list_member_make_default_path(member),
-                        :method => :put %>
+         <% unless member.nil? %>
+           <% if member.is_default %>  
+              (DEFAULT)
+           <% else %>
+              <%= link_to "Set as default", 
+                          list_member_make_default_path(member),
+                          :method => :put %>
+           <% end %>
          <% end %>
        </td>
        <td style="text-align:center"><%= list.list_questions.size %></td>

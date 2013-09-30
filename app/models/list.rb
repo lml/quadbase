@@ -15,7 +15,16 @@ class List < ActiveRecord::Base
   accepts_nested_attributes_for :list_members, :allow_destroy => true
   accepts_nested_attributes_for :list_questions, :allow_destroy => true
 
-  attr_accessible :name, :list_members_attributes, :list_questions_attributes
+  attr_accessible :name, :is_public, :list_members_attributes, :list_questions_attributes
+
+  scope :publicly_visible, where(:is_public => true)
+  scope :visible_for, lambda { |user|
+    return publicly_visible if user.is_anonymous?
+
+    joins{members}\
+    .where{(is_public == true) |\
+           (members.id == user.id)}
+  }
   
   # Returns the default list for the specified user, or nil if it doesn't exist.  
   def self.default_for_user(user)    
@@ -40,6 +49,11 @@ class List < ActiveRecord::Base
     List.default_for_user!(user) if ListMember.all_for_user(user).empty?
     ListMember.all_for_user(user).collect{|wm| wm.list}
   end
+
+  def list_member_for(user)
+    return nil if user.is_anonymous?
+    list_members.where(:user_id => user.id).first
+  end
   
   def is_default_for_user?(user)
     default_member = ListMember.default_for_user(user)
@@ -56,7 +70,7 @@ class List < ActiveRecord::Base
   end
   
   def is_member?(user)
-    members.include?(user)
+    !list_member_for(user).nil?
   end
 
   def has_question?(question, reload=true)
@@ -72,7 +86,7 @@ class List < ActiveRecord::Base
   #############################################################################
 
   def can_be_read_by?(user)
-    !user.is_anonymous? && is_member?(user)
+    is_public || (!user.is_anonymous? && is_member?(user))
   end
     
   def can_be_created_by?(user)
