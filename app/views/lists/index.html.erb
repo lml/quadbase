@@ -38,7 +38,7 @@
        <td><%= link_to show_icon, list %></td>
        <td><% if list.can_be_updated_by?(present_user) %><%= link_to edit_icon, edit_list_path(list) %><% end %></td>
        <td><% unless member.nil? %>
-             <%= link_to x_icon, list, 
+             <%= link_to x_icon, member, 
                          :confirm => "Are you sure you want to leave #{list.name}?", 
                          :method => :delete %>
            <% end %></td>

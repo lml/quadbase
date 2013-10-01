@@ -23,7 +23,8 @@ class List < ActiveRecord::Base
 
     joins{members}\
     .where{(is_public == true) |\
-           (members.id == user.id)}
+           (members.id == user.id)}\
+    .group(:id)
   }
   
   # Returns the default list for the specified user, or nil if it doesn't exist.  
