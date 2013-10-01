@@ -12,14 +12,14 @@ class ListsControllerTest < ActionController::TestCase
   test "should get index not logged in" do
     get :index
     assert_response :success
-    assert_nil assigns(:lists)
+    assert_empty assigns(:lists)
   end
 
   test "should get index" do
     sign_in @user
     get :index
     assert_response :success
-    assert_not_nil assigns(:lists)
+    assert_not_empty assigns(:lists)
   end
 
   test "should not get new not logged in" do
@@ -68,7 +68,7 @@ class ListsControllerTest < ActionController::TestCase
 
   test "should not show list not logged in" do
     get :show, :id => @list.to_param
-    assert_redirected_to login_path
+    assert_response(403)
   end
 
   test "should not show list not authorized" do
