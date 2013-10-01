@@ -2,6 +2,7 @@
 # License version 3 or later.  See the COPYRIGHT file for details.
 
 class ListsController < ApplicationController
+  skip_before_filter :authenticate_user!, :only => [:index, :show]
   before_filter :include_jquery, :only => [:show, :index]
   before_filter :include_mathjax, :only => :show
 
@@ -11,14 +12,16 @@ class ListsController < ApplicationController
   helper :questions
 
   def index
-    respond_with(@list_members = current_user.list_members)
+    respond_with(@lists = List.visible_for(present_user))
   end
 
   def show
     @list = List.find(params[:id])
     raise SecurityTransgression unless present_user.can_read?(@list)
-    @target_lists = current_user.lists.reject { |w| w == @list}
-    @all_lists = current_user.lists
+    unless current_user.nil?
+      @target_lists = current_user.lists.reject { |w| w == @list}
+      @all_lists = current_user.lists
+    end
     respond_with(@list)
   end
 

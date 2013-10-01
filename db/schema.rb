@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121214001042) do
+ActiveRecord::Schema.define(:version => 20130930182910) do
 
   create_table "announcements", :force => true do |t|
     t.integer  "user_id"
@@ -135,8 +135,9 @@ ActiveRecord::Schema.define(:version => 20121214001042) do
 
   create_table "lists", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.boolean  "is_public",  :default => false
   end
 
   create_table "logic_libraries", :force => true do |t|
