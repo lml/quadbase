@@ -1,13 +1,14 @@
 <%# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
     License version 3 or later.  See the COPYRIGHT file for details. %>
 
-<% @links = [ link_to('Edit List', edit_list_path(@list)), 
-              link_to('My Lists', lists_path),
-              link_to('Embed', list_embed_path(@list)) ] %>
+<% @links = [ link_to('My Lists', lists_path) ]
+   @links += [ link_to('Edit List', edit_list_path(@list)),
+               link_to('Embed', list_embed_path(@list)) ] unless present_user.is_anonymous? %>
 
 <%= pageHeading("#{@list.name} Details") %>
 
 <span style="float:right">
+  <%= @list.is_public ? 'Public' : 'Private' %> list
   <%= pluralize(@list.list_members.count, "Member")%> 
   (<%= link_to "Change", edit_list_path(@list) %>)
 </span>
@@ -19,20 +20,21 @@
     <%= render :partial => 'questions/list', 
                :locals => {:entries => @list.list_questions,
                            :method_for_question => "question",
-                           :checkbox_options => {:method_for_value => "id",
-                                                 :name_base => "list_question_ids"}
+                           :checkbox_options => present_user.is_anonymous? ? nil :
+                                                  {:method_for_value => "id",
+                                                   :name_base => "list_question_ids"}
                           } %>
 
 <%# Display the appropriate buttons for the listed questions and available lists %>
 
 <br/>
-  <% if !@list.list_questions.empty? %>
+  <% if !@list.list_questions.empty? && @list.can_be_updated_by?(present_user) %>
     <table>
       <tr>
         <td>
           <%= submit_tag "Publish...", :class => "ui-state-default ui-corner-all", :id => "publish_button", :name => "publish" %>
         </td>
-    <% if !@target_lists.blank? %>
+    <% unless @target_lists.blank? %>
         <td>
           <%= render :partial => "lists_menu",
                      :locals => {:lists => @target_lists,

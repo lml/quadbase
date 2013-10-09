@@ -16,26 +16,32 @@
       <th></th>
    </tr>
 
-   <% @list_members.each do |member| %>
-      <% list = member.list %>
+   <% @lists.each do |list| %>
+     <% member = list.list_member_for(present_user) %>
      <tr>
        <td><%= link_to list.name, list_path(list) %></td>
        <td>
-         <% if member.is_default %>  
-            (DEFAULT)
-         <% else %>
-            <%= link_to "Set as default", 
-                        list_member_make_default_path(member),
-                        :method => :put %>
+         <% if !member.nil? %>
+           <% if member.is_default %>  
+              (DEFAULT)
+           <% else %>
+              <%= link_to "Set as default", 
+                          list_member_make_default_path(member),
+                          :method => :put %>
+           <% end %>
+         <% elsif list.is_public %>
+           (PUBLIC)
          <% end %>
        </td>
        <td style="text-align:center"><%= list.list_questions.size %></td>
        <td style="text-align:center"><%= list.list_members.size %></td>       
        <td><%= link_to show_icon, list %></td>
-       <td><%= link_to edit_icon, edit_list_path(list) %></td>
-       <td><%= link_to x_icon, list, 
-                       :confirm => "Are you sure you want to leave #{list.name}?", 
-                       :method => :delete %></td>
+       <td><% if list.can_be_updated_by?(present_user) %><%= link_to edit_icon, edit_list_path(list) %><% end %></td>
+       <td><% unless member.nil? %>
+             <%= link_to x_icon, member, 
+                         :confirm => "Are you sure you want to leave #{list.name}?", 
+                         :method => :delete %>
+           <% end %></td>
      </tr>
    <% end %>
    

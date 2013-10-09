@@ -10,6 +10,10 @@
          <th>List Name</th>
          <td><%= f.text_field :name %></td>
       </tr>
+      <tr>
+         <th>Public List?</th>
+         <td><%= f.check_box :is_public %></td>
+      </tr>
    </table>
    <br/>
    <%= f.submit(nil , :class => "#{submit_classes}") %>
