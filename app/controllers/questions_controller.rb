@@ -4,7 +4,7 @@
 class QuestionsController < ApplicationController
   include ActionView::Helpers::TextHelper
 
-  skip_before_filter :authenticate_user!, :only => [:index, :get_started, :show, :search, :tagged, :quickview]
+  skip_before_filter :authenticate_user!, :only => [:index, :get_started, :show, :search, :tagged, :quickview, :evaluate]
 
   before_filter :include_mathjax, :only => [:index, :show, :edit, :search, :show_part, :update, :get_started]
   before_filter :include_jquery
@@ -387,9 +387,9 @@ class QuestionsController < ApplicationController
     end
   end
 
-  # GET /questions/1/evaluate?answer_choice_id=1&format=json
+  # GET /questions/1/evaluate.json?answer_choice_id=1
   def evaluate
-    question = Question.find(params[:id])
+    question = Question.from_param(params[:id])
     # not using from_param here since it's simpler for the other API call
     raise SecurityTransgression unless present_user.can_read?(question)
 
@@ -398,6 +398,7 @@ class QuestionsController < ApplicationController
 
     respond_to do |format|
       format.json do
+        headers['Access-Control-Allow-Origin'] = '*'
         render :json => {:type => "bool", :value => @answer_choice.credit >= 1}
       end
     end

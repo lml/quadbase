@@ -149,7 +149,7 @@ class ListsControllerTest < ActionController::TestCase
 
   test "should not get practice not logged in" do
     get :practice, :id => @list.to_param, :format => :json
-    assert_response(401)
+    assert_response(403)
   end
 
   test "should not get practice not authorized" do
