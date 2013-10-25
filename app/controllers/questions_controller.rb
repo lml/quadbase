@@ -387,7 +387,7 @@ class QuestionsController < ApplicationController
     end
   end
 
-  # GET /questions/1/evaluate?answer_choice_id=1&format=json
+  # GET /questions/1/evaluate.json?answer_choice_id=1
   def evaluate
     question = Question.from_param(params[:id])
     # not using from_param here since it's simpler for the other API call
