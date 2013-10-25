@@ -2,7 +2,7 @@
 # License version 3 or later.  See the COPYRIGHT file for details.
 
 class ListsController < ApplicationController
-  skip_before_filter :authenticate_user!, :only => [:index, :show]
+  skip_before_filter :authenticate_user!, :only => [:index, :show, :practice]
   before_filter :include_jquery, :only => [:show, :index]
   before_filter :include_mathjax, :only => :show
 
@@ -65,7 +65,7 @@ class ListsController < ApplicationController
     raise SecurityTransgression unless present_user.can_read?(@list)
   end
 
-  # GET /lists/1/practice?number_of_questions=10&exclude_ids[]=1&exclude_ids[]=2&format=json
+  # GET /lists/1/practice.json?number_of_questions=10&exclude_ids[]=1&exclude_ids[]=2
   def practice
     @list = List.find(params[:id])
     raise SecurityTransgression unless present_user.can_read?(@list)
@@ -93,7 +93,7 @@ class ListsController < ApplicationController
     # Let's assume only simple questions for now
     @questions = questions.collect do |q|
       {
-        :question_id => q.id,
+        :question_id => q.to_param,
         :question_html => q.content_html,
         :answer_choices => q.answer_choices.collect do |ac|
           {
@@ -106,6 +106,7 @@ class ListsController < ApplicationController
 
     respond_to do |format|
       format.json do
+        headers['Access-Control-Allow-Origin'] = '*'
         render :json => {:list_id => params[:id], :list_name => @list.name, :questions => @questions}
       end
     end
