@@ -375,25 +375,25 @@ class QuestionsControllerTest < ActionController::TestCase
   end
 
   test "should not evaluate answer not logged in" do
-    get :evaluate, :id => @question.id, :answer_choice_id => @question.answer_choices.first.id, :format => :json
-    assert_response(401)
+    get :evaluate, :id => @question.to_param, :answer_choice_id => @question.answer_choices.first.id, :format => :json
+    assert_response(403)
   end
 
   test "should not evaluate answer not authorized" do
     user_login
-    get :evaluate, :id => @question.id, :answer_choice_id => @question.answer_choices.first.id, :format => :json
+    get :evaluate, :id => @question.to_param, :answer_choice_id => @question.answer_choices.first.id, :format => :json
     assert_response(403)
   end
 
   test "should not evaluate answer wrong question" do
     sign_in @user
-    get :evaluate, :id => @question2.id, :answer_choice_id => @question.answer_choices.first.id, :format => :json
+    get :evaluate, :id => @question2.to_param, :answer_choice_id => @question.answer_choices.first.id, :format => :json
     assert_response(403)
   end
 
   test "should evaluate answer" do
     sign_in @user
-    get :evaluate, :id => @question.id, :answer_choice_id => @question.answer_choices.first.id, :format => :json
+    get :evaluate, :id => @question.to_param, :answer_choice_id => @question.answer_choices.first.id, :format => :json
     assert_response :success
   end
 end
