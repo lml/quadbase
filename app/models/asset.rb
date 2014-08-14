@@ -2,7 +2,7 @@
 # License version 3 or later.  See the COPYRIGHT file for details.
 
 class Asset < ActiveRecord::Base
-  has_attached_file :attachment, :styles => { :medium => "350x350>", :thumb => "100x100>" },
+  has_attached_file :attachment, :styles => { :medium => "350x1000>", :thumb => "100x100>" },
                                  :path => ":rails_root/public/system/:attachment/:id/:style/:filename",
                                  :url => "/system/:attachment/:id/:style/:filename"
   
