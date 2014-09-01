@@ -38,7 +38,7 @@
      
      <% if WebsiteConfiguration.get_value('use_mathjax_cdn') %>
        <% mj_url_base = request.ssl? ? 
-                        "https://c328740.ssl.cf1.rackcdn.com" : 
+                        "https://cdn.mathjax.org" : 
                         "http://cdn.mathjax.org" %>
        <script type="text/javascript"
          src="<%= mj_url_base %>/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
