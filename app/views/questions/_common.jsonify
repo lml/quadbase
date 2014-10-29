@@ -1,5 +1,9 @@
 # Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
 # License version 3 or later.  See the COPYRIGHT file for details.
 
+@export ||= false
+
 json.id question.to_param
-json.url question_url(question)
+unless @export
+  json.url question_url(question)
+end
