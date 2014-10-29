@@ -1,20 +1,32 @@
 # Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
 # License version 3 or later.  See the COPYRIGHT file for details.
 
+@export ||= false
+
 collaborators = question.question_collaborators
 
 authors = collaborators.select{|c| c.is_author}
 copyright_holders = collaborators.select{|c| c.is_copyright_holder}
 
+def print_user(json, user)
+  json.id user.id
+  json.name user.full_name
+
+  if @export
+    json.first_name user.first_name
+    json.last_name user.last_name
+    json.username user.username
+    json.email user.email
+  end
+end
+
 json.attribution do
   json.authors(authors) do |author|
-    json.id author.user.id
-    json.name author.user.full_name
+    print_user(json, author.user)
   end
 
   json.copyright_holders(copyright_holders) do |copyright_holder|
-    json.id copyright_holder.user.id
-    json.name copyright_holder.user.full_name
+    print_user(json, copyright_holder.user)
   end
 
   json.license do
