@@ -30,9 +30,10 @@ namespace :questions do
           i += 1
           next if i == 1 && skip_first_row
 
-          #chapter = row[0]
-          #chapter_section = row[1]
-          tags = row[2].split(' ')
+          chapter = row[0]
+          chapter_section = row[1]
+          tags = [chapter, chapter_section] + row[2].split(' ')
+          tags = tags.collect{|t| "cc-#{t}"}
           list_name = row[3]
           content = row[4]
           explanation = row[5]
