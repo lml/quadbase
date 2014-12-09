@@ -57,7 +57,6 @@ namespace :questions do
 
           q = SimpleQuestion.new
           q.content = content
-          puts tags.inspect
           q.tag_list.add(*tags)
           q.save!
           q.reload
