@@ -97,7 +97,7 @@ namespace :questions do
             lm = ListMember.new
             lm.user = user
             lm.list = list
-            lm.save!
+            lm.save
           end
 
           lq = ListQuestion.new
