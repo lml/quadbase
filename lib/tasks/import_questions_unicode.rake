@@ -1,27 +1,37 @@
 # Copyright 2014 Rice University. Licensed under the Affero General Public 
 # License version 3 or later.  See the COPYRIGHT file for details.
 
-# Imports a csv spreadsheet
+# Imports a unicode tab-delimited txt file saved from Excel
 # Arguments are, in order:
 # filename, Author/CR holder user's id, skip_first_row,
 # column separator and row separator
-# Example: rake questions:import:csv[questions.csv,1]
-#          will import questions from questions.csv and
+# Example: rake questions:import:unicode[questions.txt,physics,1]
+#          will import questions from questions.txt and
 #          assign the user with ID 1 as the author,
 #          CR holder and solution author
 
 require 'csv'
 
+def clean(text)
+  return nil if text.nil?
+  text.gsub(/[\u201C\u201D\u201E\u201F\u2033\u2036]/, '"')
+      .gsub(/[\u2018\u2019\u201A\u201B\u2032\u2035]/, "'")
+      .gsub(/\r-\s/, "\n* ").gsub(/\r[\d]+\.\s/, "\n# ").strip
+end
+
 namespace :questions do
   namespace :import do
-    task :csv, [:filename, :user_id, :skip_first_row,
-                :col_sep, :row_sep] => :environment do |t, args|
-      filename = args[:filename] || 'questions.csv'
+    task :unicode, [:filename, :user_id, :skip_first_row,
+                    :col_sep, :row_sep] => :environment do |t, args|
+      filename = args[:filename] || 'questions.txt'
       user = User.where(:id => args[:user_id]).first
       skip_first_row = args[:skip_first_row].nil? ? \
                          true : args[:skip_first_row]
-      options = {:col_sep => args[:col_sep] || ',',
-                 :row_sep => args[:row_sep] || "\n"}
+      content = File.read(filename)
+      encoding = CharlockHolmes::EncodingDetector.detect(content)[:encoding]
+      options = {:encoding => encoding,
+                 :col_sep => args[:col_sep] || "\t",
+                 :row_sep => args[:row_sep] || "\r\n"}
 
       puts 'Importing questions. Please wait...'
       i = 0
@@ -30,19 +40,24 @@ namespace :questions do
           i += 1
           next if i == 1 && skip_first_row
 
-          chapter = row[0]
-          chapter_section = row[1]
-          tags = [chapter, chapter_section] + row[2].split(' ')
-          tags = tags.collect{|t| "cc-#{t}"}
-          list_name = row[3]
-          content = row[4]
-          explanation = row[5]
-          #free_response = row[6].downcase == 'yes'
-          correct_answer_index = row[7].each_byte.first - 97
-          answers = row[8..-1]
+          book = clean(row[0])
+          type_tag = clean(row[1].downcase)
+          subject = clean(row[2].downcase)
+          chapter_section = clean(row[3].gsub('.', '-'))
+          chapter_tag = "#{subject} #{chapter_section}"
+          content_tags = (row[4] || '').downcase.gsub('.', ',').split(',')
+                                                .collect { |r| clean(r) }
+          tags = [book, chapter_tag, content_tags, type_tag].flatten
+          list_name = clean(row[5])
+          content = clean(row[6])
+          explanation = clean(row[7])
+          #free_response = row[8].downcase.strip == 'yes'
+          correct_answer_index = row[9].downcase.strip.each_byte.first - 97
+          answers = row[10..-1].collect{|a| clean(a)}
 
           q = SimpleQuestion.new
           q.content = content
+          puts tags.inspect
           q.tag_list.add(*tags)
           q.save!
           q.reload
@@ -57,7 +72,7 @@ namespace :questions do
           end
 
           answers.each_with_index do |a, j|
-            next if a.nil?
+            next if a.blank?
             ac = AnswerChoice.new
             ac.question = q
             ac.content = a

@@ -53,6 +53,9 @@ gem 'gabba', "~> 1.0.1"
 
 gem 'randumb', '~> 0.3.1'
 
+# Detect import encoding
+gem 'charlock_holmes'
+
 group :development, :test do
    gem 'sqlite3', '~> 1.3.6'
    gem 'debugger', '~> 1.1.4'
