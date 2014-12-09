@@ -5,7 +5,7 @@
 # Arguments are, in order:
 # filename, Author/CR holder user's id, skip_first_row,
 # column separator and row separator
-# Example: rake questions:import:unicode[questions.txt,physics,1]
+# Example: rake questions:import:unicode[questions.txt,1]
 #          will import questions from questions.txt and
 #          assign the user with ID 1 as the author,
 #          CR holder and solution author
@@ -24,7 +24,13 @@ namespace :questions do
     task :unicode, [:filename, :user_id, :skip_first_row,
                     :col_sep, :row_sep] => :environment do |t, args|
       filename = args[:filename] || 'questions.txt'
-      user = User.where(:id => args[:user_id]).first
+
+      puts "Reading from #{filename}"
+
+      user = User.find(args[:user_id])
+
+      puts "Setting #{user.full_name} as Author and Copyright Holder"
+
       skip_first_row = args[:skip_first_row].nil? ? \
                          true : args[:skip_first_row]
       content = File.read(filename)
@@ -34,6 +40,7 @@ namespace :questions do
                  :row_sep => args[:row_sep] || "\r\n"}
 
       puts 'Importing questions. Please wait...'
+
       i = 0
       SimpleQuestion.transaction do
         CSV.foreach(filename, options) do |row|
@@ -61,14 +68,12 @@ namespace :questions do
           q.save!
           q.reload
 
-          unless user.nil?
-            qc = QuestionCollaborator.new
-            qc.question = q
-            qc.user = user
-            qc.is_author = true
-            qc.is_copyright_holder = true
-            qc.save!
-          end
+          qc = QuestionCollaborator.new
+          qc.question = q
+          qc.user = user
+          qc.is_author = true
+          qc.is_copyright_holder = true
+          qc.save!
 
           answers.each_with_index do |a, j|
             next if a.blank?
@@ -79,17 +84,25 @@ namespace :questions do
             ac.save!
           end
 
-          unless user.nil?
-            s = Solution.new
-            s.question = q
-            s.content = explanation
-            s.creator = user
-            s.save!
+          s = Solution.new
+          s.question = q
+          s.content = explanation
+          s.creator = user
+          s.save!
+
+          list = List.where(:name => list_name).first
+          if list.nil?
+            puts "Creating new list #{list_name}"
+            list = List.create(:name => list_name)
+            lm = ListMember.new
+            lm.user = user
+            lm.list = list
+            lm.save!
           end
 
           lq = ListQuestion.new
           lq.question = q
-          lq.list = List.where(:name => list_name).first
+          lq.list = list
           lq.save!
         end
 
