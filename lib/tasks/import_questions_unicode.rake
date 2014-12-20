@@ -3,14 +3,17 @@
 
 # Imports a unicode tab-delimited txt file saved from Excel
 # Arguments are, in order:
-# filename, Author/CR holder user's id, skip_first_row,
-# column separator and row separator
-# Example: rake questions:import:unicode[questions.txt,1]
+# filename, author's user id, copyright holder's user id,
+# skip_first_row, column separator and row separator
+# Example: rake questions:import:unicode[questions.txt,155,224]
 #          will import questions from questions.txt and
-#          assign the user with ID 1 as the author,
-#          CR holder and solution author
+#          assign the user with ID 155 as the author and
+#          solution author, and the user with ID 224 as the CR holder
 
 require 'csv'
+
+DEFAULT_AUTHOR_ID = 155
+DEFAULT_CH_ID = 224
 
 def clean(text)
   return nil if text.nil?
@@ -21,15 +24,17 @@ end
 
 namespace :questions do
   namespace :import do
-    task :unicode, [:filename, :user_id, :skip_first_row,
+    task :unicode, [:filename, :author_id, :ch_id, :skip_first_row,
                     :col_sep, :row_sep] => :environment do |t, args|
       filename = args[:filename] || 'questions.txt'
 
       puts "Reading from #{filename}"
 
-      user = User.find(args[:user_id])
+      author = User.find(args[:author_id] || DEFAULT_AUTHOR_ID)
+      ch = User.find(args[:ch_id] || DEFAULT_CH_ID)
 
-      puts "Setting #{user.full_name} as Author and Copyright Holder"
+      puts "Setting #{author.full_name} as Author"
+      puts "Setting #{ch.full_name} as Copyright Holder"
 
       skip_first_row = args[:skip_first_row].nil? ? \
                          true : args[:skip_first_row]
@@ -70,10 +75,19 @@ namespace :questions do
 
           qc = QuestionCollaborator.new
           qc.question = q
-          qc.user = user
+          qc.user = author
           qc.is_author = true
-          qc.is_copyright_holder = true
+          qc.is_copyright_holder = author == ch
           qc.save!
+
+          unless author == ch
+            qc2 = QuestionCollaborator.new
+            qc2.question = q
+            qc2.user = ch
+            qc2.is_author = false
+            qc2.is_copyright_holder = true
+            qc2.save!
+          end
 
           answers.each_with_index do |a, j|
             next if a.blank?
@@ -87,15 +101,21 @@ namespace :questions do
           s = Solution.new
           s.question = q
           s.content = explanation
-          s.creator = user
+          s.creator = author
           s.save!
 
           list = List.where(:name => list_name).first
           if list.nil?
             puts "Creating new list #{list_name}"
             list = List.create(:name => list_name)
+
             lm = ListMember.new
-            lm.user = user
+            lm.user = author
+            lm.list = list
+            lm.save
+
+            lm = ListMember.new
+            lm.user = ch
             lm.list = list
             lm.save
           end
