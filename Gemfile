@@ -56,6 +56,9 @@ gem 'randumb', '~> 0.3.1'
 # Detect import encoding
 gem 'charlock_holmes'
 
+# Export xlsx files
+gem 'axlsx'
+
 group :development, :test do
    gem 'sqlite3', '~> 1.3.6'
    gem 'debugger', '~> 1.1.4'
