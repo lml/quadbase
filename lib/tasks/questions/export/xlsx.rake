@@ -27,14 +27,14 @@ namespace :questions do
 
           questions.each do |question|
             tags = question.tags.collect{|t| t.name}.join(",")
-            list_name = question.list_questions.first.list.name
+            list_name = question.list_questions.first.list.try(:name) || ''
             content = question.content
-            explanation = question.solutions.first.content
+            explanation = question.solutions.first.try(:content) || ''
             free_response = 'N/A'
-            correct_answer = question.answer_choices.to_a
-                                     .find_index{|a| a.credit > 0}
-                                     .try(:+, 97).try(:chr)
-            answers = question.answer_choices.collect{|a| a.content}
+            answer_array = question.answer_choices.to_a
+            correct_answer = answer_array.find_index{|a| a.credit > 0}
+                                         .try(:+, 97).try(:chr)
+            answers = answer_array.collect{|a| a.content}
 
             s.add_row [tags, list_name, content, explanation,
                        free_response, correct_answer, *answers]
