@@ -81,14 +81,24 @@
                           question_edit_license_path(@question) %></p>
          <% end %>
 
-         <% if @show_list_link && !@question.is_published? %>
+         <% if @show_nav_links && !@question.is_published? %>
            <% list = @question.list %>
            <% if present_user.can_read?(list) %>
-             <p><%= link_to "Open List", 
+             <p><%= link_to "Open List",
                             list_path(list) %></p>
-           <% end %>         
+             <% next_draft = @question.next_draft %>
+             <% if !next_draft.nil? %>
+               <p><%= link_to "Next Draft",
+                              question_path(next_draft.to_param) %></p>
+             <% end %>
+             <% prev_draft = @question.prev_draft %>
+             <% if !prev_draft.nil? %>
+               <p><%= link_to "Previous Draft",
+                              question_path(prev_draft.to_param) %></p>
+             <% end %>
+           <% end %>
          <% end %>
-        
+
          <% if @show_publish_link && @question.can_be_published_by?(present_user) %>                        
             <p><%= link_to "Publish...", 
                            publish_questions_path(:question_ids => [@question.id]) %></p>                        

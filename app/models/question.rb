@@ -589,6 +589,24 @@ class Question < ActiveRecord::Base
     raise IllegalState if is_published?
     list_questions.first.list
   end
+
+  def next_draft
+    list_id = list.id
+    ordered_drafts = Question.joins{list_questions}\
+                     .where{(list_questions.list_id == my{list_id}) & (version == nil)}
+    draft_index = ordered_drafts.index(self) + 1
+    return nil if draft_index >= ordered_drafts.size
+    ordered_drafts[draft_index]
+  end
+
+  def prev_draft
+    list_id = list.id
+    ordered_drafts = Question.joins{list_questions}\
+                     .where{(list_questions.list_id == my{list_id}) & (version == nil)}
+    draft_index = ordered_drafts.index(self) - 1
+    return nil if draft_index < 0
+    ordered_drafts[draft_index]
+  end
   
   # In some cases, there could be some outstanding role requests on this question
   # but no role holders left to approve/reject them.  This method is a utility for
