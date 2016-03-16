@@ -21,6 +21,7 @@ class Question < ActiveRecord::Base
 
   has_many :votes, :as => :votable, :dependent => :destroy
   has_many :list_questions, :dependent => :destroy
+  has_many :lists, through: :list_questions
 
   belongs_to :license
   belongs_to :question_setup
@@ -494,7 +495,8 @@ class Question < ActiveRecord::Base
     end
 
     type_query = typify(type)
-    wtscope = wscope.includes{question_setup}.where{question_type =~ type_query}
+    wtscope = wscope.includes([:question_setup, :lists, {taggings: :tag}])
+                    .where{question_type =~ type_query}
 
     if !exclude_type.blank?
       exclude_type_query = typify(exclude_type)
@@ -542,11 +544,12 @@ class Question < ActiveRecord::Base
         q = wtscope.joins{taggings.tag}
         text.split(",").each do |t|
           query = t.blank? ? '%' : '%' + t + '%'
-          q = q.where{tags.name =~ query}
+          q = q.where{taggings.tag.name =~ query}
         end
       else # Content
         query = '%' + text + '%'
-        q = wtscope.where{(content =~ query) | (question_setups.content =~ query)}
+        q = wtscope.joins{question_setup.outer}
+                   .where{(content =~ query) | (question_setup.content =~ query)}
       end
     else
       q = wtscope

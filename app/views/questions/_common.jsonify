@@ -1,4 +1,4 @@
-# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+# Copyright 2011-2012 Rice University. Licensed under the Affero General Public
 # License version 3 or later.  See the COPYRIGHT file for details.
 
 @export ||= false
@@ -7,3 +7,5 @@ json.id question.to_param
 unless @export
   json.url question_url(question)
 end
+json.lists question.lists.visible_for(present_user).map(&:name)
+json.tags question.taggings.map{ |tagging| tagging.tag.name }
