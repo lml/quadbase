@@ -1,21 +1,21 @@
-# Copyright 2011-2012 Rice University. Licensed under the Affero General Public 
+# Copyright 2011-2012 Rice University. Licensed under the Affero General Public
 # License version 3 or later.  See the COPYRIGHT file for details.
 
 class Question < ActiveRecord::Base
   include AssetMethods
   include VariatedContentHtml
   include VoteMethods
-  
+
   acts_as_taggable
-  
+
   @@lock_timeout = Quadbase::Application.config.question_lock_timeout
 
   self.inheritance_column = "question_type"
-  
-  has_many :question_collaborators, 
-           :order => :position, 
+
+  has_many :question_collaborators,
+           :order => :position,
            :dependent => :destroy
-  has_many :collaborators, 
+  has_many :collaborators,
            :through => :question_collaborators,
            :source => :user
 
@@ -25,34 +25,34 @@ class Question < ActiveRecord::Base
   belongs_to :license
   belongs_to :question_setup
   belongs_to :publisher, :class_name => "User"
-  
+
   has_one :logic, :as => :logicable, :dependent => :destroy
 
   accepts_nested_attributes_for :question_setup, :logic
-  
-  has_one :question_source, 
+
+  has_one :question_source,
           :class_name => "QuestionDerivation",
           :foreign_key => "derived_question_id"
   has_one :source_question, :through => :question_source
-           
+
   has_many :question_derivations,
            :foreign_key => "source_question_id"
   has_many :derived_questions, :through => :question_derivations
-    
-  has_many :parent_question_parts, 
+
+  has_many :parent_question_parts,
            :class_name => "QuestionPart",
            :foreign_key => :child_question_id,
            :dependent => :destroy
   has_many :multipart_questions, :through => :parent_question_parts
-  
+
   has_many :attachable_assets, :as => :attachable, :dependent => :destroy
   has_many :assets, :through => :attachable_assets
 
-  
+
   # Sometimes question A is required to be shown before question B.  In this
   # situation, question A is called a prerequisite of question B.  Question B
   # is called a dependent of question A.
-  
+
   has_many :prerequisite_question_pairs,
            :class_name => "QuestionDependencyPair",
            :foreign_key => "dependent_question_id",
@@ -61,19 +61,19 @@ class Question < ActiveRecord::Base
   has_many :prerequisite_questions,
            :through => :prerequisite_question_pairs,
            :source => :independent_question
-           
+
   has_many :dependent_question_pairs,
            :class_name => "QuestionDependencyPair",
            :foreign_key => "independent_question_id",
            :conditions => { :kind => "requirement" },
-           :dependent => :destroy         
+           :dependent => :destroy
   has_many :dependent_questions,
            :through => :dependent_question_pairs
-  
+
   # Sometimes if someone solves question A, it will be easier for them to solve
   # question B.  In this case, A is a supporting question to B.  B is a
   # supported question of A.
-   
+
   has_many :supporting_question_pairs,
            :class_name => "QuestionDependencyPair",
            :foreign_key => "dependent_question_id",
@@ -91,10 +91,10 @@ class Question < ActiveRecord::Base
   has_many :supported_questions,
            :through => :supported_question_pairs,
            :source => :dependent_question
-           
+
 
   has_many :solutions, :dependent => :destroy
-  
+
   has_one :comment_thread, :as => :commentable, :dependent => :destroy
   before_validation :build_comment_thread, :on => :create
   validates_presence_of :comment_thread
@@ -102,7 +102,7 @@ class Question < ActiveRecord::Base
   before_destroy :not_published
 
   after_destroy :destroy_childless_question_setup
-  
+
   # Should hopefully prevent question setup from ever being nil
   before_validation :build_question_setup, :unless => Proc.new { |q| q.question_setup || q.is_published? }
   validates_presence_of :question_setup, :unless => :is_published?
@@ -146,7 +146,7 @@ class Question < ActiveRecord::Base
     ((question_collaborators.is_author == true) |\
     (question_collaborators.is_copyright_holder == true)))}
   }
-  
+
   scope :not_superseded, where{-exists(Question.select(1).from('`questions` `q`')
     .where{(q.number == ~number) & (q.version > ~version)}.limit(1))}
 
@@ -154,15 +154,15 @@ class Question < ActiveRecord::Base
   scope :matching, where(:question_type => 'MatchingQuestion')
   scope :multipart, where(:question_type => 'MultipartQuestion')
 
-  # This type is passed in some questions params; we need an accessor for it 
+  # This type is passed in some questions params; we need an accessor for it
   # even though we don't explicitly save it.
   attr_accessor :type
-  
+
   # Disallow mass assignment for certain attributes that should only be
   # modifiable by the system (note that users can modify question_setup data
   # but we don't want them deciding which questions share setups, etc)
   # Using whitelisting instead of blacklisting here.
-  attr_accessible :content, :changes_solution, :question_setup_attributes, 
+  attr_accessible :content, :changes_solution, :question_setup_attributes,
                   :logic_attributes, :answer_can_be_sketched
 
   def to_param
@@ -172,7 +172,7 @@ class Question < ActiveRecord::Base
       "d#{id}"
     end
   end
-  
+
   def self.exists?(param)
     begin
       from_param(param)
@@ -198,23 +198,23 @@ class Question < ActiveRecord::Base
     else
       raise SecurityTransgression
     end
-    
+
     raise ActiveRecord::RecordNotFound if q.nil?
     q
   end
-  
+
   def self.latest_published(number)
     Question.published_with_number(number).first
   end
-  
+
   def prior_version
-    has_earlier_versions? ? 
+    has_earlier_versions? ?
       Question.where{(number == my{number}) & (version == my{version - 1})}.first :
       nil
   end
-    
+
   # Called to create the first-ever role for a question, where by default
-  # the creator is given all three roles.  Must assign explicitly as the 
+  # the creator is given all three roles.  Must assign explicitly as the
   # roles cannot be mass assigned for security reasons.
   def set_initial_question_roles(user)
     q = question_collaborators.create(:user => user)
@@ -223,58 +223,58 @@ class Question < ActiveRecord::Base
     q.save!
     comment_thread.subscribe!(user)
   end
-  
+
   def run_prepublish_error_checks
     self.errors.add(:base, 'This question has pending role requests.') \
       if !question_role_requests.empty?
 
     self.errors.add(:base, 'The two question roles are not filled for this question.') \
       if !has_all_roles?
-        
+
     self.errors.add(:base, 'A license has not yet been specified for this question.') \
       if !has_license?
-    
+
     self.errors.add(:base, 'This question is already published.') \
       if is_published?
-    
-    self.errors.add(:base, 'Newer versions of this question already exist! ' + 
+
+    self.errors.add(:base, 'Newer versions of this question already exist! ' +
                           'Please start modifications again from the latest version.') \
       if superseded?
-        
-    # Test that the logic in this question runs successfully.  variate! already 
+
+    # Test that the logic in this question runs successfully.  variate! already
     # adds errors to self if there are any logic problems.
     variator = QuestionVariator.new(rand(2e8), true)
     variate!(variator)
-    
-    # If we don't have errors, run the variation again to make sure that the same content 
+
+    # If we don't have errors, run the variation again to make sure that the same content
     # is generated for the same seed
     if self.errors.none?
       first_run_hash = variator.output_hash
-      
+
       variator = QuestionVariator.new(variator.seed, true)
       variate!(variator)
       second_run_hash = variator.output_hash
-      
+
       self.errors.add(:base, 'This question produced different content for the same seed; this is not allowed.') \
         if first_run_hash != second_run_hash
     end
-        
+
     add_other_prepublish_errors
   end
-  
+
   # A template method allowing child classes to add to the errors that must
   # be corrected before publishing will be allowed
-  def add_other_prepublish_errors 
+  def add_other_prepublish_errors
   end
-  
+
   def ready_to_be_published?
-    run_prepublish_error_checks  
-    self.errors.empty?    
+    run_prepublish_error_checks
+    self.errors.empty?
   end
-  
+
   def publish!(user)
     return if !ready_to_be_published?
-    
+
     # This hook allows child classes to implement class-specific code that
     # should run before publishing
     run_prepublish_hooks(user)
@@ -282,12 +282,12 @@ class Question < ActiveRecord::Base
     roleless_collaborators.each { |rc| rc.destroy }
     comment_thread.clear!
     comment_thread(true) # because .clear! makes new thread!
-    
+
     question_collaborators.each do |qc|
-      comment_thread.subscribe!(qc.user) if (qc.has_role?(:author) && 
+      comment_thread.subscribe!(qc.user) if (qc.has_role?(:author) &&
                                              qc.user.user_profile.auto_author_subscribe)
     end
-    
+
     self.version = next_available_version
     self.publisher = user
 
@@ -300,88 +300,88 @@ class Question < ActiveRecord::Base
     self.save!
     setup.destroy_if_unattached if self.question_setup.nil?
   end
-  
+
   def is_published?
     nil != version
   end
-  
+
   def content_change_allowed?
     !is_published?
-  end  
-  
+  end
+
   def setup_is_changeable?
     !is_published? && question_setup.content_change_allowed?
   end
-  
+
   def has_all_roles?
     author_filled = false
     copyright_filled = false
-    
+
     question_collaborators.each do |qc|
       author_filled ||= qc.is_author
       copyright_filled ||= qc.is_copyright_holder
     end
-    
+
     author_filled && copyright_filled
   end
-  
+
   def has_license?
     nil != license_id
   end
-  
+
   def superseded?
-    !latest_published_same_number.nil? && 
+    !latest_published_same_number.nil? &&
     latest_published_same_number.updated_at > self.created_at
   end
-  
+
   def is_latest?
     latest_published_same_number == self
   end
-  
+
   def next_available_version
-    latest_published_same_number.nil? ? 
+    latest_published_same_number.nil? ?
       1 : latest_published_same_number.version + 1
   end
 
   def latest_published_same_number
     Question.latest_published(self.number)
   end
-  
+
   def is_draft_in_multipart?
     !is_published? && !multipart_questions.empty?
   end
-  
+
   def is_multipart?
     false
   end
-  
+
   def modified_at
     updated_at
   end
-  
+
   def content_summary_string
     raise AbstractMethodCalled
   end
-  
+
   def has_role?(user, role)
-    qc = question_collaborators.select{|qc| qc.user_id == user.id}.first    
+    qc = question_collaborators.select{|qc| qc.user_id == user.id}.first
     qc.nil? ? false : qc.has_role?(role)
   end
-  
+
   def is_collaborator?(user)
     question_collaborators.any?{|qc| qc.user_id == user.id}
   end
-  
+
   def has_role_permission_as_deputy?(user, role)
     # TODO this is probably fairly costly and only applies to a small number
     # of users; so implement a counter_cache of num deputizers and check that
-    # before doing this; also User.is_deputy_for? could benefit from what we 
+    # before doing this; also User.is_deputy_for? could benefit from what we
     # do here
     user.deputizers.any? do |deputizer|
       has_role?(deputizer, role)
     end
   end
-  
+
   def has_role_permission?(user, role)
     !user.is_anonymous? && (has_role?(user, role) || has_role_permission_as_deputy?(user, role))
   end
@@ -393,7 +393,7 @@ class Question < ActiveRecord::Base
   def answer_can_be_sketched?
     answer_can_be_sketched
   end
-  
+
   # Saves the question (for the first time), assigns roles to the given user,
   # and puts the question in the user's default list.  Throws exceptions
   # on errors.
@@ -412,7 +412,7 @@ class Question < ActiveRecord::Base
                                              options[:deriver_id])
     end
   end
-  
+
   def new_derivation!(user, list = nil)
     return if !is_published?
     derived_question = self.content_copy
@@ -420,10 +420,10 @@ class Question < ActiveRecord::Base
                   .select{|s| has_role?(s.creator, :is_listed) ||
                               s.creator == user}
                   .collect{|s| s.content_copy}
-    
+
     Question.transaction do
       derived_question.create!(user, :list => list)
-      QuestionDerivation.create(:source_question_id => self.id, 
+      QuestionDerivation.create(:source_question_id => self.id,
                                 :derived_question_id => derived_question.id,
                                 :deriver_id => user.id)
       solution_copies.each do |s|
@@ -431,20 +431,20 @@ class Question < ActiveRecord::Base
         s.save!
       end
     end
-    
+
     derived_question
   end
-  
+
   def new_version!(user, list = nil)
     new_version = self.content_copy
     new_version.number = self.number
     new_version.version = nil
-    
+
     new_version.create!(user, {:list => list, :set_initial_roles => false})
     QuestionCollaborator.copy_roles(self, new_version)
     new_version
   end
-  
+
   # Makes a new question that has a copy of the content in this question
   def content_copy
     raise AbstractMethodCalled
@@ -458,15 +458,15 @@ class Question < ActiveRecord::Base
     kopy.logic = self.logic.content_copy if !self.logic.nil?
     kopy
   end
-  
+
   def is_derivation?
     !question_source.nil?
   end
-  
+
   def has_earlier_versions?
     0 != version && !version.nil?
   end
-  
+
   def get_ancestor_question
     has_earlier_versions? ? prior_version : (is_derivation? ? source_question : nil)
   end
@@ -474,7 +474,7 @@ class Question < ActiveRecord::Base
   def can_be_joined_by?(user)
     !has_role?(user, :is_listed)
   end
-  
+
   def self.search(type, location, part, text, user, exclude_type = '')
     # This should the most efficient way to do the search (I hope)
     # It does not use tagged_with and instead searches the database directly
@@ -551,7 +551,7 @@ class Question < ActiveRecord::Base
     else
       q = wtscope
     end
-    
+
     # Remove (in SQL) questions the user can't read
     q = q.visible_for(user)
 
@@ -560,7 +560,10 @@ class Question < ActiveRecord::Base
 
     # Remove old published versions
     q = q.not_superseded if latest_only
-    
+
+    # Remove parts of multipart questions
+    q = q.joins{parent_question_parts.outer}.where(parent_question_parts: {id: nil})
+
     q.order{number}
   end
 
@@ -580,7 +583,7 @@ class Question < ActiveRecord::Base
     end
     s
   end
-  
+
   def base_class
     Question
   end
@@ -589,7 +592,7 @@ class Question < ActiveRecord::Base
     raise IllegalState if is_published?
     list_questions.first.list
   end
-  
+
   # In some cases, there could be some outstanding role requests on this question
   # but no role holders left to approve/reject them.  This method is a utility for
   # automatically granting all of those roles.
@@ -600,8 +603,8 @@ class Question < ActiveRecord::Base
       end
     end
   end
-  
-  # Visitor pattern.  The variator visits parts of the question (setup, 
+
+  # Visitor pattern.  The variator visits parts of the question (setup,
   # subparts, etc) and helps build up the info for this specific variation.
   def variate!(variator)
     begin
@@ -615,7 +618,7 @@ class Question < ActiveRecord::Base
       self.errors.add(:base, "There is a malformed formatting string in this question: #{e.message}")
     end
   end
-  
+
   #############################################################################
   # Access control methods
   #############################################################################
@@ -656,42 +659,42 @@ class Question < ActiveRecord::Base
   end
 
   def can_be_read_by?(user)
-    is_published? || 
-    ( !user.is_anonymous? && 
+    is_published? ||
+    ( !user.is_anonymous? &&
       (is_list_member?(user) || has_role_permission?(user, :any)) )
   end
-    
+
   def can_be_created_by?(user)
     !user.is_anonymous?
   end
-  
+
   def can_be_updated_by?(user)
-    !is_published? && !user.is_anonymous? && 
+    !is_published? && !user.is_anonymous? &&
     (is_list_member?(user) || has_role_permission?(user, :any))
   end
-  
+
   def can_be_destroyed_by?(user)
-    !is_published? && !user.is_anonymous? && 
+    !is_published? && !user.is_anonymous? &&
     (is_list_member?(user) || has_role_permission?(user, :any))
   end
-  
+
   def can_be_published_by?(user)
     !is_published? && !user.is_anonymous? && has_role_permission?(user, :any)
   end
-  
+
   def can_be_new_versioned_by?(user)
     is_published? && is_latest? &&
     !user.is_anonymous? && has_role_permission?(user, :any)
   end
-  
+
   def can_be_derived_by?(user)
     is_published? && !user.is_anonymous?
   end
-  
+
   def can_be_tagged_by?(user)
     can_be_updated_by?(user) || has_role_permission?(user, :any)
   end
-  
+
   # Special access method for role requests on this collaborator
   # defined here b/c called from different places
   def role_requests_can_be_created_by?(user)
@@ -702,23 +705,23 @@ class Question < ActiveRecord::Base
     list_questions.each { |wp| return true if wp.list.is_member?(user) }
     false
   end
-  
+
   def can_be_voted_on_by?(user)
     is_a_collaborator = !collaborators.where{id == user.id}.first.nil?
     can_be_read_by?(user) && !is_a_collaborator
   end
-  
+
 #############################################################################
 protected
 #############################################################################
-    
+
   # Only assign a question number if the current number is nil.  When a new version
   # of an existing question is made, the number will already be set to the correct
   # value before this method is called.
   def assign_number
     self.number ||= (Question.maximum('number') || 1) + 1
   end
-  
+
   def not_published
     return if (version_was.nil?)
     errors.add(:base, "Changes cannot be made to a published question.#{self.changes}")
@@ -727,7 +730,7 @@ protected
 
   def clear_empty_logic
     if !logic.nil? && logic.empty?
-      logic.destroy 
+      logic.destroy
       self.logic = nil
     end
   end
@@ -762,7 +765,7 @@ protected
   def self.typify(text)
     (text.blank? || text == 'All Questions') ? '%' : text.gsub(' ', '').classify
   end
-  
+
   # Template method overridable by a child class for child-specific behavior
   def run_prepublish_hooks(user); end
 
