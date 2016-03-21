@@ -7,5 +7,7 @@ json.id question.to_param
 unless @export
   json.url question_url(question)
 end
-json.lists question.lists.visible_for(present_user).map(&:name)
+lists = question.lists
+lists = lists.visible_for(present_user) unless @export
+json.lists lists.map(&:name)
 json.tags question.taggings.map{ |tagging| tagging.tag.name }
