@@ -15,6 +15,10 @@ namespace :questions do
                             .where{(question_collaborators.user_id == user_id) | \
                                    (list_questions.list.list_members.user_id == user_id)}
 
+      # Remove parts of multipart questions
+      questions = questions.joins{parent_question_parts.outer}
+                           .where(parent_question_parts: {id: nil})
+
       questions = questions.includes(:taggings => :tag)
                            .includes(:list_questions => :list)
                            .includes(:solutions).uniq.to_a
