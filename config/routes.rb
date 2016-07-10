@@ -99,6 +99,7 @@ Quadbase::Application.routes.draw do
   get 'help/messages', :to => 'help#message_help', :as => "messages"
   get 'help/roles', :to => 'help#roles_help', :as => 'roles'
   get 'help/topic/:topic_name', :to => 'help#topic', :as => 'topic_help'
+  get 'questions/use', :to => 'questions#use', :as => 'use' 
   
   resources :lists do
     resources :list_members, :only => [:create, :new] do
