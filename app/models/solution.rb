@@ -52,6 +52,7 @@ class Solution < ActiveRecord::Base
     kopy.content = self.content
     kopy.explanation = self.explanation
     kopy.is_visible = self.is_visible
+    self.attachable_assets.each {|aa| kopy.attachable_assets.push(aa.content_copy) }
     kopy
   end
     
