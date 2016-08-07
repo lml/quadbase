@@ -14,6 +14,11 @@ markupSet:  [
                return false;
            }
    },
+	{name:'Youtube Video', key:'Y', replaceWith:function (markItUp) {
+               open_add_youtube_dialog(markItUp);
+               return false;
+           }
+   },
    
   
 	{name:'Bullets', key:'Bl', openWith:'\n\*'},
