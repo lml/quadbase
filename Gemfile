@@ -28,7 +28,7 @@ gem 'mime-types', '~> 1.18', :require => 'mime/types'
 # Search
 gem 'squeel', '~> 1.0.5'
 
-gem 'will_paginate', '~> 3.0.3'
+gem 'will_paginate', '~> 3.0.5'
 
 gem 'acts-as-taggable-on', '~> 2.3.1'
 
