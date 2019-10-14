@@ -21,7 +21,7 @@ gem 'devise', '~> 2.1.0'
 # Assets
 gem 'parslet', '~> 1.4.0'
 
-gem 'paperclip', '~> 3.0.4'
+gem 'paperclip', '~> 4.3.7'
 
 gem 'mime-types', '~> 1.18', :require => 'mime/types'
 
