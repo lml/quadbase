@@ -37,7 +37,7 @@ gem 'rails3-jquery-autocomplete', '~> 1.0.7'
 # reCAPTCHA
 gem 'recaptcha', '~> 0.3.4', :require => 'recaptcha/rails'
 
-gem 'yajl-ruby', '~> 1.1.0'
+gem 'yajl-ruby', '~> 1.4.3'
 
 gem 'jsonify', '~> 0.3.1'
 gem 'jsonify-rails', '~> 0.3.2'
