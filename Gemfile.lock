@@ -206,8 +206,7 @@ GEM
     warden (1.2.1)
       rack (>= 1.0)
     will_paginate (3.0.3)
-    yajl-ruby (1.1.0)
-    yajl-ruby (1.1.0-x86-mingw32)
+    yajl-ruby (1.4.3)
     yaml_db (0.2.3)
 
 PLATFORMS
@@ -249,5 +248,5 @@ DEPENDENCIES
   timecop (~> 0.3.5)
   uglifier (~> 1.2.4)
   will_paginate (~> 3.0.3)
-  yajl-ruby (~> 1.1.0)
+  yajl-ruby (~> 1.4.3)
   yaml_db
